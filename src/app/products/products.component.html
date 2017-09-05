@@ -1,4 +1,22 @@
 
-<p>dane z bazy</p>
-<p *ngFor="let i of products">
-    {{i.id}} / {{i.capacity}} / {{i.price}} / {{i.productName}} /
+            <p>dane z bazy</p>
+            <table class="table">
+                <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nazwa Produktu</th>
+                    <th>Cena</th>
+                    <th>Pojemność</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr *ngFor="let prod of products">
+
+                    <td>{{prod.id}}</td>
+                    <td>{{prod.productName}}</td>
+                    <td>{{prod.price}}</td>
+                    <td>{{prod.capacity}}</td>
+                </tr>
+
+                </tbody>
+            </table>

@@ -6,15 +6,17 @@ import { ProductsComponent } from './products/products.component';
 import {ProductsService} from './products/products.service';
 import {HttpModule} from '@angular/http';
 import { NavComponent } from './nav/nav.component';
-
+import {LeftNavComponent} from "./left_nav/left_nav.componeent";
+import {MenuModule} from 'primeng/primeng';
 @NgModule({
   declarations: [
     AppComponent,
     ProductsComponent,
-    NavComponent
+    NavComponent,
+    LeftNavComponent
   ],
   imports: [
-    BrowserModule,HttpModule
+    BrowserModule,HttpModule,MenuModule
   ],
   providers: [ProductsService],
   bootstrap: [AppComponent]
