@@ -1,0 +1,42 @@
+
+<p>Dodaj Produkt  {{jsonProduct}}</p>
+
+
+
+<form id="productForm" novalidate #form="ngForm" (submit)="submitForm(form)">
+    <div class="form-group">
+        <small id="nameDescript" class="text-muted">Nazwa</small>
+        <input type="text" name="name" class="form-control" [(ngModel)]="product.productName" #name="ngModel" aria-describedby="nameDescript" required >
+        <ul class="text-danger list-unstyled" *ngIf="name.dirty|| formSubmitted">
+            <li  *ngIf="name.errors?.required">To pole nie może być puste</li>
+        </ul>
+    </div>
+
+    <div class="form-group">
+        <small id="typeDescript" class="text-muted">Typ</small>
+        <input type="text" name="type" class="form-control"  aria-describedby="typeDescript">
+    </div>
+
+    <div class="form-group">
+        <small id="capacityDescript" class="text-muted">Pojemność</small>
+        <input type="text" name="capacity " class="form-control"  [(ngModel)]="product.capacity" #capacity="ngModel" aria-describedby="capacityDescript" required pattern="^[0-9]*$" >
+        <ul class="text-danger list-unstyled" *ngIf="capacity.dirty|| formSubmitted">
+            <li  *ngIf="capacity.errors?.required">To pole nie może być puste</li>
+            <li  *ngIf="capacity.errors?.pattern">Pole musi zawierać same cyfry</li>
+        </ul>
+    </div>
+
+    <div class="form-group">
+        <small id="priceDescript" class="text-muted">Cena</small>
+        <input type="text" name="price" class="form-control"  [(ngModel)]="product.price" aria-describedby="priceDescript">
+    </div>
+
+    <div class="form-group">
+        <small id="qantityDescript" class="text-muted">Stan magazynu</small>
+        <input type="text" name="quantity" class="form-control" [(ngModel)]="product.quantity"  aria-describedby="qantityDescript" >
+    </div>
+
+
+    <button class="btn bg-primary pull-right" type="submit" > Zatwierdź</button>
+
+</form>

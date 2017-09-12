@@ -28,7 +28,10 @@
             // other libraries
             'rxjs':                      'npm:rxjs',
             'angular-in-memory-web-api': 'npm:angular-in-memory-web-api/bundles/in-memory-web-api.umd.js',
-            'primeng':                   'npm:primeng'
+            'primeng':                   'npm:primeng',
+            '@angular/animations': 'node_modules/@angular/animations/bundles/animations.umd.min.js',
+            '@angular/animations/browser':'node_modules/@angular/animations/bundles/animations-browser.umd.js',
+            '@angular/platform-browser/animations': 'node_modules/@angular/platform-browser/bundles/platform-browser-animations.umd.js'
         },
         // packages tells the System loader how to load when no filename and/or no extension
         packages: {

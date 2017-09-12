@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 
 @Component({
-  selector: 'app-nav',
-  templateUrl: './nav.component.html',
-  styleUrls: ['./nav.component.css']
+  selector: 'top-nav',
+  templateUrl: './top-nav.component.html',
+  styleUrls: ['./top-nav.component.css']
 })
 export class NavComponent implements OnInit {
 
