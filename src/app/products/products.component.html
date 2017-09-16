@@ -1,19 +1,28 @@
 <div class="products_box">
-    <div class="ui-widget-header" style="padding:4px 10px;border-bottom: 0 none">
-        <i class="fa fa-search" style="margin:4px 4px 0 0"></i>
-        <input #gb type="text" pInputText size="50" placeholder="Szukaj">
-        <i class="fa fa-refresh pull-right" aria-hidden="true" (click)="refreshData()"></i>
-    </div>
 
-    <p-dataTable [value]="products" [rows]="10" [paginator]="true" [globalFilter]="gb" #dt resizableColumns="true" columnResizeMode="expand"
+        <div class="input-group search_bar">
+            <span class="input-group-addon" id="basic-addon1">
+                 <i class="fa fa-search" aria-hidden="true"></i>
+            </span>
+            <input #gb type="text" class="form-control search_input" pInputText size="50" placeholder="Szukaj"aria-describedby="basic-addon1">
+
+              <i class="fa fa-refresh pull-right refresh_icon fa-2x" aria-hidden="true" (click)="refreshData()"></i>
+        </div>
+
+    <p-dataTable [value]="products" [rows]="20" [paginator]="true" [globalFilter]="gb" #dt
                  [loading]="loading" loadingIcon="fa-circle-o-notch">
         <p-header>Lista Produktów</p-header>
-        <p-column field="id" header="ID" [sortable]="true"></p-column>
+        <p-column field="id" header="ID" [sortable]="true" [style]="{'width':'70px'}"></p-column>
         <p-column field="productName" header="Nazwa" [sortable]="true"></p-column>
         <p-column field="productType.typeName" header="Rodzaj"  [sortable]="true" ></p-column>
         <p-column field="capacity" header="Pojemność" [sortable]="true"></p-column>
-        <p-column field="price" header="Cena"  [sortable]="true" ></p-column>
-        <p-column field="quantity" header="Stan"  [sortable]="true" ></p-column>
+        <p-column field="price" header="Cena"  [sortable]="true" [style]="{'width':'70px'}"></p-column>
+        <p-column field="quantity" header="Stan"  [sortable]="true" [style]="{'width':'70px'}"></p-column>
+        <p-column  header="Akcja"[style]="{'width':'120px'}">
+            <ng-template let-product="rowData" pTemplate="body">
+                <button class="btn btn-primary" type="button" pButton [routerLink]="['/product/', product.id]" >Edytuj</button>
+            </ng-template>
+        </p-column>
 
     </p-dataTable>
 </div>
