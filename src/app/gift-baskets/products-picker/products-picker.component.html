@@ -1,0 +1,29 @@
+<div class="products_box">
+    <p-fieldset legend="Lista produktów" [toggleable]="true">
+        <p-dataTable [value]="products" [rows]="10" [paginator]="true" [globalFilter]="gb" #dt
+                     [loading]="loading" loadingIcon="fa-circle-o-notch" (onRowDblclick)="addProductToGiftBasket($event.data)">
+                <p-column field="id" header="ID" [sortable]="true" [style]="{'width':'70px'}"></p-column>
+                <p-column field="productName" header="Nazwa" [sortable]="true"></p-column>
+                <p-column field="productType.typeName" header="Rodzaj"  [sortable]="true" ></p-column>
+                <p-column field="capacity" header="Pojemność" [sortable]="true"></p-column>
+
+                <p-column field="price" styleClass="price_col" header="Cena"  [sortable]="true">
+                    <ng-template let-row="rowData" pTemplate="body"  >
+                        {{row.price}} zł
+                    </ng-template>
+                </p-column>
+
+                <p-column field="quantity" styleClass="quantity_col" header="Stan"  [sortable]="true">
+                    <ng-template let-row="rowData" pTemplate="body">
+                        {{row.quantity}} szt.
+                    </ng-template>
+
+                </p-column>
+
+        </p-dataTable>
+    </p-fieldset>
+</div>
+
+
+
+<basket-summary [productLines] = "productLines"></basket-summary>

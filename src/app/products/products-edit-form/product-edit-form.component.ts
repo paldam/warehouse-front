@@ -2,25 +2,23 @@ import {Component, OnInit} from '@angular/core';
 import {Products} from '../../model/products.model';
 import {FormsModule, NgForm} from '@angular/forms';
 import {ProductsService} from '../products.service';
-import {Http,Response,Headers} from "@angular/http";
-import * as http from 'selenium-webdriver/http';
-import {Observable} from 'rxjs/Observable';
 import {ProductType} from '../../model/product_type.model';
-import {Router} from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 
 @Component({
-    selector: 'product-form',
-    templateUrl: './product-form.component.html',
-    styleUrls: ['./product-form.component.css']
+    selector: 'product-edit-form',
+    templateUrl: './product-edit-form.component.html',
+    //styleUrls: ['./product-edit-form.component.css']
 })
 
-export class ProductFormComponent implements OnInit {
+export class ProductEditFormComponent implements OnInit {
 
     product: Products = new Products();
     productsTypes: ProductType[];
     formSubmitted: boolean = false;
 
-    constructor(private productsService: ProductsService, private router: Router) {
+    constructor(private productsService: ProductsService, private router: Router, activeRoute: ActivatedRoute) {
+        productsService.getProduct(activeRoute.snapshot.params["id"]).subscribe(data => this.product = data);
         productsService.getProductsTypes().subscribe(data => this.productsTypes = data)
     }
 
@@ -39,7 +37,7 @@ export class ProductFormComponent implements OnInit {
                     form.reset();
                     this.formSubmitted = false;
                     this.router.navigateByUrl('/product');
-                    },
+                },
                 err =>  console.log("error" ));
         }
     }

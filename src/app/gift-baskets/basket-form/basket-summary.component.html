@@ -1,0 +1,31 @@
+<div class="row">
+    <div class="picked_products_list">
+        <p-fieldset legend="Zawartość koszyka" [toggleable]="true">
+            <table *ngIf="isProductLinesEmpty()==false">
+                <thead>
+                <tr>
+                    <th>nazwa</th>
+                    <th class="col_quantity">ilość</th>
+                    <th>usuń</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr *ngFor="let i of productLines">
+                    <td scope="row">{{i.product.productName}}</td>
+                    <td><input type="number" class="form-control" name="" id="" aria-describedby="helpId" placeholder="" min="0" value="{{i.quantity}}"></td>
+                    <td class="col_delete"><i class="fa fa-trash" aria-hidden="true" (click)="deleteProductLine(i.product.id)"></i></td>
+                </tr>
+                </tbody>
+            </table>
+            <p *ngIf="isProductLinesEmpty()==true"> Koszyk jest pusty</p>
+        </p-fieldset>
+    </div>
+
+    <div class="basket_summary">
+        <p-fieldset legend="Podsumowanie koszyka" [toggleable]="true">
+            <i class="fa fa-trash" aria-hidden="true" (click)="totalLines()"></i>
+            <p>Suma: {{suma}}</p>
+        </p-fieldset>
+
+    </div>
+</div>

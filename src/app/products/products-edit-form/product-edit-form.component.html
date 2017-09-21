@@ -1,7 +1,5 @@
 
-<p>Dodaj Produkt  {{jsonProduct}}</p>
-
-
+<p>Edytuj produkt</p>
 
 <form id="productForm" novalidate #form="ngForm" (submit)="submitForm(form)">
     <div class="form-group">
@@ -16,7 +14,7 @@
         <small id="typeDescript" class="text-muted">Typ</small>
 
         <select class="form-control" [(ngModel)]="product.productType" name="product_type" >
-            <option *ngFor="let item of productsTypes" [ngValue]="item">{{item.typeName}}</option>
+            <option *ngFor="let item of productsTypes" [ngValue]="item" selected="product.productType">{{item.typeName}}</option>
         </select>
 
     </div>

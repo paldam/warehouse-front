@@ -1,5 +1,6 @@
 .products_box {
-    padding: 50px;
+    padding: 5px;
+    padding-top: 20px;
 }
 
 .search_bar {
@@ -26,7 +27,7 @@
     width: 120px;
 }
 body .ui-datatable .ui-datatable-data tr.ui-datatable-even {
- }
+}
 
 body .ui-datatable .ui-datatable-data tr.ui-datatable-odd {
     background-color:#eaeaea;

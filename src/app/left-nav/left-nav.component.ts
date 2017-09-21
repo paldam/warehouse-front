@@ -41,25 +41,8 @@ export class LeftNavComponent implements OnInit {
                 label: 'Kosze',
                 icon: 'fa-question',
                 items: [
-                    {
-                        label: 'Contents'
-                    },
-                    {
-                        label: 'Search',
-                        icon: 'fa-search',
-                        items: [
-                            {
-                                label: 'Text',
-                                items: [
-                                    {
-                                        label: 'Workspace'
-                                    }
-                                ]
-                            },
-                            {
-                                label: 'File'
-                            }
-                        ]}
+                    {label: 'Kreator Koszy', icon: 'fa-search',routerLink:['/baskets']}
+
                 ]
             },
             {
