@@ -1,8 +1,7 @@
 export class ProductType {
     constructor(
-    public typeId: number,
-    public typeName: string
+        public typeId: number,
+        public typeName: string
     ){
-
     }
 }

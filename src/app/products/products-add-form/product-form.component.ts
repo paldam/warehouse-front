@@ -1,10 +1,8 @@
 import {Component, OnInit} from '@angular/core';
-import {Products} from '../../model/products.model';
+import {Product} from '../../model/product.model';
 import {FormsModule, NgForm} from '@angular/forms';
 import {ProductsService} from '../products.service';
-import {Http,Response,Headers} from "@angular/http";
-import * as http from 'selenium-webdriver/http';
-import {Observable} from 'rxjs/Observable';
+
 import {ProductType} from '../../model/product_type.model';
 import {Router} from '@angular/router';
 
@@ -16,7 +14,7 @@ import {Router} from '@angular/router';
 
 export class ProductFormComponent implements OnInit {
 
-    product: Products = new Products();
+    product: Product = new Product();
     productsTypes: ProductType[];
     formSubmitted: boolean = false;
 
@@ -35,7 +33,7 @@ export class ProductFormComponent implements OnInit {
         if (form.valid) {
             this.productsService.saveProduct(this.product).subscribe(
                 order => {
-                    this.product = new Products();
+                    this.product = new Product();
                     form.reset();
                     this.formSubmitted = false;
                     this.router.navigateByUrl('/product');

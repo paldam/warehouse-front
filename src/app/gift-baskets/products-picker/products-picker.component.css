@@ -19,7 +19,7 @@
     text-align: right;
     width: 70px;
 }
-.quantity_col{
+.stock_col{
     width: 90px;
     text-align: right;
 }
@@ -39,4 +39,21 @@ body .ui-datatable .ui-datatable-data tr.ui-datatable-even:hover {
 
 body .ui-datatable .ui-datatable-data tr.ui-datatable-odd:hover {
     background-color:#eff484;
+}
+
+.picked_products_list{
+    width: 400px;
+    font-size: 12px;
+    padding-left: 20px;
+    padding-top: 10px;
+}
+.col_quantity{
+    width: 85px;
+}
+.col_delete{
+    text-align: center;
+}
+.basket_summary{
+    padding-left: 20px;
+    padding-top: 10px;
 }

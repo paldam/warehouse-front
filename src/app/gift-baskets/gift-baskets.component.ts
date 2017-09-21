@@ -1,7 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {ProductsService} from '../products/products.service';
-import {Router} from '@angular/router';
-import {Products} from '../model/products.model';
+import {Product} from '../model/product.model';
 
 @Component({
     selector: 'gift-baskets',
@@ -11,10 +9,9 @@ import {Products} from '../model/products.model';
 
 export class GiftBasketComponent implements OnInit {
 
-    public products: Products[]=[];
+    public products: Product[]=[];
 
     constructor(){
-
     }
 
     ngOnInit() {

@@ -1,8 +1,7 @@
 import {Component, OnInit, ViewEncapsulation} from '@angular/core';
 import {ProductsService} from './products.service';
-import {Products} from '../model/products.model';
+import {Product} from '../model/product.model';
 import 'rxjs/add/operator/map';
-import {DataTableModule,SharedModule} from 'primeng/primeng';
 import {Router} from '@angular/router';
 
 @Component({
@@ -14,7 +13,7 @@ import {Router} from '@angular/router';
 export class ProductsComponent implements OnInit {
 
   public loading: boolean;
-  public products: Products[]=[];
+  public products: Product[]=[];
 
   constructor(private productsService : ProductsService, private router: Router) {
     productsService.getProducts().subscribe(data=> this.products = data)

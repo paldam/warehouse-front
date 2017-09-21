@@ -13,9 +13,9 @@
                     </ng-template>
                 </p-column>
 
-                <p-column field="quantity" styleClass="quantity_col" header="Stan"  [sortable]="true">
+                <p-column field="stock" styleClass="stock_col" header="Stan"  [sortable]="true">
                     <ng-template let-row="rowData" pTemplate="body">
-                        {{row.quantity}} szt.
+                        {{row.stock}} szt.
                     </ng-template>
 
                 </p-column>
@@ -24,6 +24,37 @@
     </p-fieldset>
 </div>
 
+<div class="row">
+    <div class="picked_products_list">
+        <p-fieldset legend="Zawartość koszyka" [toggleable]="true">
+            <table *ngIf="isProductLinesEmpty()==false">
+                <thead>
+                <tr>
+                    <th>nazwa</th>
+                    <th class="col_quantity">ilość</th>
+                    <th>usuń</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr *ngFor="let basketItems of basketItems">
+                    <td scope="row">{{basketItems.product.productName}}</td>
+                    <td><input type="number" class="form-control" name="" id="" aria-describedby="helpId" placeholder="" min="0" [value]="basketItems.quantity" (change)="updateQuantity(basketItems,$event.target.value)"  ></td>
+                    <td class="col_delete"><i class="fa fa-trash" aria-hidden="true" (click)="deleteProductLine(basketItems.product.id)"></i></td>
+                </tr>
+                </tbody>
+            </table>
+            <p *ngIf="isProductLinesEmpty()==true"> Koszyk jest pusty</p>
+        </p-fieldset>
+    </div>
 
+    <div class="basket_summary">
+        <p-fieldset legend="Podsumowanie koszyka" [toggleable]="true">
+            <p>Suma: {{total}}  Total: {{total*((markUp/100)+1)}}</p>
+            <div class="form-group">
+                <input type="number" class="form-control" name="" id="" aria-describedby="helpId" placeholder="" step="0.1" [value]="markUp">
+                <small id="helpId" class="form-text text-muted">marża % </small>
+            </div>
+        </p-fieldset>
 
-<basket-summary [productLines] = "productLines"></basket-summary>
+    </div>
+</div>
