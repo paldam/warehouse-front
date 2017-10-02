@@ -49,11 +49,34 @@
 
     <div class="basket_summary">
         <p-fieldset legend="Podsumowanie koszyka" [toggleable]="true">
-            <p>Suma: {{total}}  Total: {{total*((markUp/100)+1)}}</p>
-            <div class="form-group">
-                <input type="number" class="form-control" name="" id="" aria-describedby="helpId" placeholder="" step="0.1" [value]="markUp">
-                <small id="helpId" class="form-text text-muted">marża % </small>
-            </div>
+            <p>Cena Netto: {{total}} zł</p>
+            <p>Cena z marżą: {{total*((markUp/100)+1)}} zł</p>
+
+            <form id="BasketForm" novalidate #form="ngForm" (submit)="submitForm(form)">
+                <div class="form-group">
+                    <div class="input-group">
+                        <input type="number" name="tax" class="form-control"  aria-describedby="taxDesc" step="0.1" [value]="markUp">
+                        <span class="input-group-addon" id="taxDesc">marża %</span>
+                    </div>
+
+                    <div class="input-group">
+                        <input type="text" name="basketName" class="form-control"  aria-describedby="nameDesc" [(ngModel)]="basket.basketName">
+                        <span class="input-group-addon" id="nameDesc">nazwa koszyka</span>
+                    </div>
+
+                    <div class="input-group">
+                        <select class="form-control" name="basket_type" [(ngModel)]="basket.basketType" >
+                        <option *ngFor="let item of basketTypes" [ngValue]="item" aria-describedby="basketTypeDesc">{{item.basketTypeName}}</option>
+                        </select>
+                        <span class="input-group-addon" id="basketTypeDesc">Typ koszyka</span>
+                    </div>
+
+
+                    <button class="btn bg-primary pull-right" type="submit" > Zapisz Kosz</button>
+                </div>
+
+                <i class="fa fa-trash" aria-hidden="true" (click)="createBasket()"></i>
+            </form>
         </p-fieldset>
 
     </div>

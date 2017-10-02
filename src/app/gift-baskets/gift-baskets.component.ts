@@ -1,5 +1,6 @@
 import {Component, OnInit} from '@angular/core';
-import {Product} from '../model/product.model';
+import {Basket} from '../model/basket.model';
+import {BasketService} from './gift-basket.service';
 
 @Component({
     selector: 'gift-baskets',
@@ -9,9 +10,10 @@ import {Product} from '../model/product.model';
 
 export class GiftBasketComponent implements OnInit {
 
-    public products: Product[]=[];
+    private baskets: Basket[]=[];
 
-    constructor(){
+    constructor(private basketService : BasketService) {
+        basketService.getBaskets().subscribe(data=> this.baskets = data)
     }
 
     ngOnInit() {

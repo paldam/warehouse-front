@@ -1,1 +1,25 @@
 <products-picker> </products-picker>
+
+
+<div *ngFor="let row of baskets.basketItems">
+    {{row.quantity}}
+</div>
+
+
+<p-dataTable [value]="baskets" [rows]="20" [paginator]="true" [globalFilter]="gb" #dt
+             [loading]="loading" loadingIcon="fa-circle-o-notch" expandableRows="true">
+    <p-header>Lista Koszy</p-header>
+    <p-column expander="true" styleClass="col-icon"></p-column>
+    <p-column field="basketId" header="ID" [sortable]="true" ></p-column>
+    <p-column field="basketName" header="Nazwa" [sortable]="true"></p-column>
+    <p-column field="basketType.basketTypeName" header="Nazwa" [sortable]="true"></p-column>
+
+    <ng-template let-basket pTemplate="rowexpansion">
+        <div *ngFor="let i of basket.basketItems">
+            {{i.product.productName}} / {{i.product.capacity}} / {{i.product.price}} / {{i.quantity}}
+        </div>
+    </ng-template>
+
+
+
+</p-dataTable>

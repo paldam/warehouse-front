@@ -17,24 +17,24 @@ export class ProductsService {
 
 
   getProducts(): Observable<Product[]> {
-    return this.http.get(`http://localhost:8080/products`)
+    return this.http.get(this.baseUrl+`/products`)
         .map((response: Response) =>
             response.json());
   }
   getProduct(id: number): Observable<Product> {
-    return this.http.get(`http://localhost:8080/products/${id}`)
+    return this.http.get(this.baseUrl+`/products/${id}`)
         .map((response: Response) =>
             response.json());
   }
 
   getProductsTypes(): Observable<ProductType[]> {
-    return this.http.get(`http://localhost:8080/products/types`)
+    return this.http.get(this.baseUrl+`/products/types`)
         .map((response: Response) =>
             response.json());
   }
 
   saveProduct(product: Product): Observable<Response> {
-    return this.http.post(`http://localhost:8080/products/`, product)
+    return this.http.post(this.baseUrl+`/products/`, product)
         //.map((response: Response) => response.json());
 
   }

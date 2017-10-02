@@ -15,6 +15,7 @@ import {FormsModule} from '@angular/forms'
 import {ProductEditFormComponent} from './products/products-edit-form/product-edit-form.component';
 import {ProductPickerComponent} from './gift-baskets/products-picker/products-picker.component';
 import {GiftBasketComponent} from './gift-baskets/gift-baskets.component';
+import {BasketService} from './gift-baskets/gift-basket.service';
 @NgModule({
   declarations: [
     AppComponent,
@@ -29,7 +30,7 @@ import {GiftBasketComponent} from './gift-baskets/gift-baskets.component';
   imports: [
     BrowserModule,HttpModule,BrowserAnimationsModule,FormsModule,PanelMenuModule,DataTableModule,SharedModule,FieldsetModule,routing
   ],
-  providers: [ProductsService],
+  providers: [ProductsService,BasketService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

@@ -2,6 +2,10 @@ import {Component,OnInit, ViewEncapsulation} from '@angular/core';
 import {ProductsService} from '../../products/products.service';
 import {Product} from '../../model/product.model';
 import {BasketItems} from '../../model/basket_items.model';
+import {Basket} from '../../model/basket.model';
+import {BasketType} from '../../model/basket_type.model';
+import {BasketService} from '../gift-basket.service';
+import {NgForm} from '@angular/forms';
 
 @Component({
     selector: 'products-picker',
@@ -10,13 +14,17 @@ import {BasketItems} from '../../model/basket_items.model';
     encapsulation: ViewEncapsulation.None
 })
 export class ProductPickerComponent implements OnInit {
-    public products: Product[]=[];
-    public basketItems: BasketItems[]=[];
-    public total: number=0;
-    public markUp: number =10;
+    private products: Product[]=[];
+    private basketItems: BasketItems[]=[];
+    private basketTypes: BasketType[]=[];
+    private basket: Basket= new Basket();
+    private total: number=0;
+    private markUp: number =10;
+    private formSubmitted: boolean = false;
 
-    constructor(private productsService : ProductsService) {
-        productsService.getProducts().subscribe(data=> this.products = data)
+    constructor(private productsService : ProductsService, private basketService :BasketService,) {
+        productsService.getProducts().subscribe(data=> this.products = data);
+        basketService.getBasketsTypes().subscribe(data=>this.basketTypes = data);
     }
 
     ngOnInit() {
@@ -63,8 +71,31 @@ export class ProductPickerComponent implements OnInit {
         this.basketItems.forEach(data=> {
             this.total += data.product.price * data.quantity;
         })
+    }
 
+    createBasket(){
+        let basket = new Basket()
+        basket.basketType = new BasketType(2,"nowy");
+        basket.basketItems=this.basketItems;
+        basket.basketName="koszyk_dam";
+        let json = JSON.stringify(basket);
+        console.log(json);
 
+        this.basketService.saveBasket(basket).subscribe(data=>
+        console.log(data.status));
+    }
+
+    submitForm(form: NgForm) {
+        this.formSubmitted = true;
+
+        if (form.valid) {
+            this.basket.basketItems= this.basketItems;
+            this.basketService.saveBasket(this.basket).subscribe(data=>{
+                    let json = JSON.stringify(this.basket);
+                    console.log(json);
+            },
+                err =>  console.log("error" ));
+        }
     }
 
 }

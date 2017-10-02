@@ -33,6 +33,7 @@ export class ProductFormComponent implements OnInit {
         if (form.valid) {
             this.productsService.saveProduct(this.product).subscribe(
                 order => {
+                    console.log(JSON.stringify(this.product));
                     this.product = new Product();
                     form.reset();
                     this.formSubmitted = false;
