@@ -1,6 +1,80 @@
 body{
-  font-size: 13px;
+  font-size: 14px;
+  font-family: 'Oswald', sans-serif;
 }
 legend {
-  font-size: 13px;
+  font-size: 16px;
 }
+body .ui-datatable .ui-datatable-data tr.ui-datatable-even:hover {
+  background-color: #d6f2c2;
+}
+
+body .ui-datatable .ui-datatable-data tr.ui-datatable-odd:hover {
+  background-color:#d6f2c2;
+}
+body .ui-datatable .ui-datatable-data tr.ui-datatable-even {
+}
+
+body .ui-datatable .ui-datatable-data tr.ui-datatable-odd {
+  background-color:#eaeaea;
+}
+.bg-primary{
+  background-color:#a4abaf!important;
+}
+.input-group-addon{
+  background-color:#a4abaf;
+  color: white;
+}
+.ui-widget{
+  font-family: 'Oswald', sans-serif;
+  font-size: 14px;
+}
+
+.ui-panelmenu{
+  background-color:#363a41;
+  font-size: 14px;
+  border: none;
+}
+.ui-panelmenu .ui-menuitem-text{
+  color: white;
+}
+
+.ui-state-default a{
+  color: white;
+}
+.ui-panelmenu .ui-panelmenu-header.ui-state-active,.ui-panelmenu .ui-panelmenu-header.ui-state-active a{
+  background-color:#282b30;
+  border-color: #282b30;
+}
+.ui-panelmenu .ui-menuitem-link{
+  border-color:#363a41;
+  background-color:#363a41 ;
+  color: white;
+}
+
+.ui-panelmenu .ui-panelmenu-header{
+   border-color:#363a41;
+   background-color:#363a41 ;
+ }
+.ui-panelmenu .ui-panelmenu-header a :hover{
+  background-color:#4a4d54;
+}
+.ui-panelmenu :hover{
+  background-color: #4a4d54;
+
+}
+.ui-panelmenu .ui-panelmenu-content{
+  background-color:#282b30;
+}
+
+.input-group-addon{
+  font-size: 12px;
+  padding-top: 3px;
+}
+.input-group{
+  padding-top: 5px;
+}
+.row{
+}
+
+

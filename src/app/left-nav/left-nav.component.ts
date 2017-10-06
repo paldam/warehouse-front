@@ -1,5 +1,9 @@
 import {Component, OnInit, ViewEncapsulation} from '@angular/core';
 import {MenuItem} from 'primeng/primeng';
+
+declare var jquery:any;
+declare var $ :any;
+
 @Component({
     selector: 'left-nav',
     templateUrl: './left-nav.component.html',
@@ -9,63 +13,45 @@ import {MenuItem} from 'primeng/primeng';
 
 export class LeftNavComponent implements OnInit {
 
-    private items: MenuItem[];
+     clickNavNumber: number=0;
 
     ngOnInit() {
-        this.items = [
-            {
-                label: 'Home',
-                icon: 'fa-file-o',
-                items: [{
-                    label: 'New',
-                    icon: 'fa-plus',
-                    items: [
-                        {label: 'Project'},
-                        {label: 'Other'},
-                    ]
-                },
-                    {label: 'Open'},
-                    {label: 'Quit'}
-                ]
-            },
-            {
-                label: 'Produkty',
-                icon: 'fa-edit',
-                items: [
-                    {label: 'Przeglądaj', icon: 'fa-plus ', routerLink:['/product']},
-                    {label: 'Dodaj', icon: 'fa-plus ', routerLink:['/product/add']},
-                    {label: 'Aktualizuj', icon: 'fa-mail-reply',routerLink:['/product/add'] }
-                ]
-            },
-            {
-                label: 'Kosze',
-                icon: 'fa-question',
-                items: [
-                    {label: 'Kreator Koszy', icon: 'fa-search',routerLink:['/baskets']}
-
-                ]
-            },
-            {
-                label: 'Profil',
-                icon: 'fa-gear',
-                items: [
-                    {
-                        label: 'Edit',
-                        icon: 'fa-refresh',
-                        items: [
-                            {label: 'Save', icon: 'fa-save'},
-                            {label: 'Update', icon: 'fa-save'},
-                        ]
-                    },
-                    {
-                        label: 'Other',
-                        icon: 'fa-phone',
-                        items: [
-                            {label: 'Delete', icon: 'fa-minus'}
-                        ]
-                    }
-                ]
-            }
-        ];
     }
+    ngAfterViewInit(): void{
+        $(document).ready(function(){
+            $("#menu h3").click(function(){
+                //slide up all the link lists
+
+                    $("#menu ul ul" ).slideUp();
+
+                //slide down the link list below the h3 clicked - only if its closed
+                if(!$(this).next().is(":visible" ))
+                {
+                    $(this).next().slideDown();
+                }
+            })
+
+            $("#accordian h3").click(function() {
+
+            })
+        })
+    }
+
+     slidNav(){
+        if(this.clickNavNumber%2==0) {
+            $("#menu_slide_icon").addClass("fa-rotate-180");
+            $("#mySidenav").css("width", "0px");
+            $("#main").css("marginLeft", "0px");
+            this.clickNavNumber+=1;
+
+        }else{
+            $("#menu_slide_icon").removeClass("fa-rotate-180")
+            $("#mySidenav").css("width", "190px");
+            $("#main").css("marginLeft", "190px");
+            this.clickNavNumber+=1;
+        }
+
+     }
+
 }
+

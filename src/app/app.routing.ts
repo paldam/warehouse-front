@@ -2,11 +2,13 @@ import { Routes, RouterModule } from '@angular/router';
 import {ProductsComponent} from './products/products.component';
 import {ProductFormComponent} from './products/products-add-form/product-form.component';
 import {ProductEditFormComponent} from './products/products-edit-form/product-edit-form.component';
-import {GiftBasketComponent} from './gift-baskets/gift-baskets.component';
+import {ProductPickerComponent} from './gift-baskets/products-picker/products-picker.component';
+import {BasketOrderComponent} from './gift-baskets/gift-baskets-order/basket-order.component';
 const routes: Routes = [
     { path: 'product', component: ProductsComponent },
     { path: 'product/add', component: ProductFormComponent },
     { path: 'product/:id', component: ProductEditFormComponent },
-    { path: 'baskets', component: GiftBasketComponent },
+    { path: 'baskets/add', component: ProductPickerComponent},
+    { path: 'baskets/order', component:BasketOrderComponent}
 ];
 export const routing = RouterModule.forRoot(routes);

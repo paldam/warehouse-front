@@ -1,6 +1,5 @@
 import {Http,Response} from '@angular/http';
 import {Injectable} from '@angular/core';
-import {Product} from '../model/product.model';
 import {Observable} from 'rxjs/Observable';
 import {Basket} from '../model/basket.model';
 import {BasketType} from '../model/basket_type.model';

@@ -7,7 +7,7 @@ import {ProductsService} from './products/products.service';
 import {HttpModule} from '@angular/http';
 import { NavComponent } from './top-nav/top-nav.component';
 import {LeftNavComponent} from './left-nav/left-nav.component';
-import {PanelMenuModule, DataTableModule, SharedModule, FieldsetModule} from 'primeng/primeng';
+import {PanelMenuModule, DataTableModule, SharedModule, FieldsetModule, OverlayPanelModule, LightboxModule} from 'primeng/primeng';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {routing} from './app.routing';
 import {ProductFormComponent} from './products/products-add-form/product-form.component';
@@ -16,6 +16,9 @@ import {ProductEditFormComponent} from './products/products-edit-form/product-ed
 import {ProductPickerComponent} from './gift-baskets/products-picker/products-picker.component';
 import {GiftBasketComponent} from './gift-baskets/gift-baskets.component';
 import {BasketService} from './gift-baskets/gift-basket.service';
+import {BasketOrderComponent} from './gift-baskets/gift-baskets-order/basket-order.component';
+import {CustomerService} from './gift-baskets/gift-baskets-order/customer.service';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -25,12 +28,13 @@ import {BasketService} from './gift-baskets/gift-basket.service';
     ProductFormComponent,
     ProductEditFormComponent,
       ProductPickerComponent,
-      GiftBasketComponent
+      GiftBasketComponent,
+      BasketOrderComponent
   ],
   imports: [
-    BrowserModule,HttpModule,BrowserAnimationsModule,FormsModule,PanelMenuModule,DataTableModule,SharedModule,FieldsetModule,routing
+    BrowserModule,HttpModule,BrowserAnimationsModule,FormsModule,PanelMenuModule,DataTableModule,SharedModule,FieldsetModule,LightboxModule,OverlayPanelModule,routing
   ],
-  providers: [ProductsService,BasketService],
+  providers: [ProductsService,BasketService,CustomerService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

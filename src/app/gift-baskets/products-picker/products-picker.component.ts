@@ -1,4 +1,4 @@
-import {Component,OnInit, ViewEncapsulation} from '@angular/core';
+import {Component,OnInit, ViewEncapsulation,ViewChild} from '@angular/core';
 import {ProductsService} from '../../products/products.service';
 import {Product} from '../../model/product.model';
 import {BasketItems} from '../../model/basket_items.model';
@@ -6,6 +6,7 @@ import {Basket} from '../../model/basket.model';
 import {BasketType} from '../../model/basket_type.model';
 import {BasketService} from '../gift-basket.service';
 import {NgForm} from '@angular/forms';
+import {GiftBasketComponent} from '../gift-baskets.component';
 
 @Component({
     selector: 'products-picker',
@@ -13,7 +14,9 @@ import {NgForm} from '@angular/forms';
     styleUrls: ['./products-picker.component.css'],
     encapsulation: ViewEncapsulation.None
 })
-export class ProductPickerComponent implements OnInit {
+export class ProductPickerComponent  {
+
+
     private products: Product[]=[];
     private basketItems: BasketItems[]=[];
     private basketTypes: BasketType[]=[];
@@ -21,14 +24,13 @@ export class ProductPickerComponent implements OnInit {
     private total: number=0;
     private markUp: number =10;
     private formSubmitted: boolean = false;
+    @ViewChild(GiftBasketComponent) giftBasketComponent : GiftBasketComponent;
 
-    constructor(private productsService : ProductsService, private basketService :BasketService,) {
+    constructor(private productsService : ProductsService, private basketService :BasketService) {
         productsService.getProducts().subscribe(data=> this.products = data);
         basketService.getBasketsTypes().subscribe(data=>this.basketTypes = data);
     }
 
-    ngOnInit() {
-    }
 
     addProductToGiftBasket(product: Product){
         let line = this.basketItems.find(data => data.product.id == product.id );
@@ -65,7 +67,6 @@ export class ProductPickerComponent implements OnInit {
         this.recalculate();
     }
 
-
     recalculate(){
         this.total = 0;
         this.basketItems.forEach(data=> {
@@ -73,29 +74,23 @@ export class ProductPickerComponent implements OnInit {
         })
     }
 
-    createBasket(){
-        let basket = new Basket()
-        basket.basketType = new BasketType(2,"nowy");
-        basket.basketItems=this.basketItems;
-        basket.basketName="koszyk_dam";
-        let json = JSON.stringify(basket);
-        console.log(json);
-
-        this.basketService.saveBasket(basket).subscribe(data=>
-        console.log(data.status));
-    }
-
     submitForm(form: NgForm) {
         this.formSubmitted = true;
 
         if (form.valid) {
             this.basket.basketItems= this.basketItems;
+            this.basket.basketTotalPrice=this.total;
+            console.log(JSON.stringify(this.basket));
             this.basketService.saveBasket(this.basket).subscribe(data=>{
-                    let json = JSON.stringify(this.basket);
-                    console.log(json);
+                   this.basket=new Basket();
+                   this.basketItems=[];
+                   form.resetForm();
+                   this.recalculate();
+                   this.giftBasketComponent.refreshData();
             },
-                err =>  console.log("error" ));
+                err =>  console.log("error " ));
         }
     }
+
 
 }

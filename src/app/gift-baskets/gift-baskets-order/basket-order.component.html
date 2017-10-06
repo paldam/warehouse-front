@@ -1,0 +1,95 @@
+<div class="basketList">
+    <p-fieldset legend="Lista Koszy" [toggleable]="true">
+
+        <div class="input-group search_bar">
+            <span class="input-group-addon" id="basic-addon1">
+                 <i class="fa fa-search" aria-hidden="true"></i>
+            </span>
+            <input #gb type="text" class="form-control search_input" pInputText size="50" placeholder="Szukaj"aria-describedby="basic-addon1">
+        </div>
+
+        <p-dataTable [value]="baskets" [rows]="10" [paginator]="true" [globalFilter]="gb" #dt
+                     [loading]="loading" loadingIcon="fa-circle-o-notch" expandableRows="true" (onRowDblclick)="addBasketToOrder($event.data)">
+            <p-column expander="true" styleClass="col-icon"></p-column>
+            <p-column field="basketId" header="ID" [sortable]="true" ></p-column>
+            <p-column field="basketName" header="Nazwa" [sortable]="true"></p-column>
+            <p-column field="basketType.basketTypeName" header="Nazwa" [sortable]="true"></p-column>
+            <ng-template let-basket pTemplate="rowexpansion">
+                <div *ngFor="let i of basket.basketItems">
+                    {{i.product.productName}} / {{i.product.capacity}} / {{i.product.price}} / {{i.quantity}}
+                </div>
+            </ng-template>
+
+        </p-dataTable>
+    </p-fieldset>
+</div>
+
+
+<div class="row">
+    <div class="picked_products_list col-sm-6">
+        <p-fieldset legend="Pozycje zamówienia" [toggleable]="true">
+            <table *ngIf="isBasketLinesEmpty()==false">
+                <thead>
+                <tr>
+                    <th>nazwa</th>
+                    <th class="col_quantity">ilość</th>
+                    <th>usuń</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr *ngFor="let orderItems of orderItems">
+                    <td scope="row">{{orderItems.basket.basketName}}</td>
+                    <td><input type="number" class="form-control" name="" id="" aria-describedby="helpId" placeholder="" min="0" [value]="orderItems.quantity" (change)="updateQuantity(orderItems,$event.target.value)"  ></td>
+                    <td class="col_delete"><i class="fa fa-trash" aria-hidden="true" (click)="deleteProductLine(orderItems.basket.basketId)"></i></td>
+                </tr>
+                </tbody>
+            </table>
+            <p *ngIf="isBasketLinesEmpty()==true">Brak pozycji w zamówieniu</p>
+        </p-fieldset>
+    </div>
+</div>
+<div #basketsummary class="basket_summary col-sm-6">
+    <p-fieldset legend="Podsumowanie koszyka" [toggleable]="true">
+        <div class="row">
+            <div class="col">
+                <p>Cena Netto: {{total}} zł</p>
+                <p>Cena z marżąd: zł</p>
+                <button class="btn bg-primary pull-left" type="submit" form="BasketForm" > Zapisz Kosz</button>
+            </div>
+
+            <div class="col-8">
+                <form id="BasketForm" novalidate #form="ngForm" (submit)="submitForm(form)">
+                    <div class="form-group">
+
+                    </div>
+                </form>
+            </div>
+        </div>
+    </p-fieldset>
+</div>
+
+<div [ngClass]="PopUpBackgroundStyle">
+</div>
+
+    <p-overlayPanel #op (onAfterShow)="setPopUpDarkBackgroudTrue()" (onAfterHide)="setPopUpDarkBackgroudFalse()" >
+        <div #popup_frame class="popup_frame">
+            <div class="input-group search_bar">
+                <span class="input-group-addon" id="basic-addon1">
+                    <i class="fa fa-search" aria-hidden="true"></i>
+                </span>
+                    <input #globalfilter type="text" class="form-control search_input" pInputText size="50" placeholder="Szukaj"aria-describedby="basic-addon1">
+
+            </div>
+            <p-dataTable [value]="customers" [rows]="10" [paginator]="true"  #dt (onRowDblclick)="op.hide();pickCustomer($event.data)"
+                         [loading]="loading" loadingIcon="fa-circle-o-notch" [globalFilter]="globalfilter">
+                <p-column field="customerFirstName" header="ID" [sortable]="true" ></p-column>
+                <p-column field="customerLastName" header="Nazwa" [sortable]="true"></p-column>
+                <p-column field="address" header="Nazwa" [sortable]="true"></p-column>
+                <p-column field="email" header="Nazwa" [sortable]="true"></p-column>
+
+            </p-dataTable>
+        </div>
+    </p-overlayPanel>
+
+<button type="text" pButton label="Custom Target" (click)="op.show($event,popup_frame)">uruchom</button>
+

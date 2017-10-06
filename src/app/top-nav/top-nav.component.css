@@ -1,0 +1,26 @@
+#top_nav{
+    height: 50px;
+    width: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    background-image:  url("top_nav_background.png") ;
+    background-repeat: repeat-y;
+    z-index: 997;
+    box-shadow: 3px 3px 5px #888888;
+}
+p{
+    font-size: 30px;
+    padding-left: 10px;
+    color: white;
+    font-family: 'Oswald', sans-serif;
+}
+
+.slide_nav{
+    position: absolute;
+    left: 175px;
+    top: 10px;
+    transition: 0.5s;
+    color: #363a41;
+}
+

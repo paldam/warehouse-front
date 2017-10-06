@@ -1,5 +1,12 @@
 <div class="products_box">
     <p-fieldset legend="Lista produktów" [toggleable]="true">
+        <div class="input-group search_bar">
+            <span class="input-group-addon" id="basic-addon1">
+                 <i class="fa fa-search" aria-hidden="true"></i>
+            </span>
+            <input #gb type="text" class="form-control search_input" pInputText size="50" placeholder="Szukaj"aria-describedby="basic-addon1">
+
+        </div>
         <p-dataTable [value]="products" [rows]="10" [paginator]="true" [globalFilter]="gb" #dt
                      [loading]="loading" loadingIcon="fa-circle-o-notch" (onRowDblclick)="addProductToGiftBasket($event.data)">
                 <p-column field="id" header="ID" [sortable]="true" [style]="{'width':'70px'}"></p-column>
@@ -25,7 +32,7 @@
 </div>
 
 <div class="row">
-    <div class="picked_products_list">
+    <div class="picked_products_list col-sm-6">
         <p-fieldset legend="Zawartość koszyka" [toggleable]="true">
             <table *ngIf="isProductLinesEmpty()==false">
                 <thead>
@@ -47,37 +54,40 @@
         </p-fieldset>
     </div>
 
-    <div class="basket_summary">
+    <div class="basket_summary col-sm-6">
         <p-fieldset legend="Podsumowanie koszyka" [toggleable]="true">
-            <p>Cena Netto: {{total}} zł</p>
-            <p>Cena z marżą: {{total*((markUp/100)+1)}} zł</p>
-
-            <form id="BasketForm" novalidate #form="ngForm" (submit)="submitForm(form)">
-                <div class="form-group">
-                    <div class="input-group">
-                        <input type="number" name="tax" class="form-control"  aria-describedby="taxDesc" step="0.1" [value]="markUp">
-                        <span class="input-group-addon" id="taxDesc">marża %</span>
+            <div class="row">
+                    <div class="col">
+                        <p>Cena Netto: {{total}} zł</p>
+                        <p>Cena z marżą: {{total*((markUp/100)+1)}} zł</p>
+                        <button class="btn bg-primary pull-left" type="submit" form="BasketForm" > Zapisz Kosz</button>
                     </div>
 
-                    <div class="input-group">
-                        <input type="text" name="basketName" class="form-control"  aria-describedby="nameDesc" [(ngModel)]="basket.basketName">
-                        <span class="input-group-addon" id="nameDesc">nazwa koszyka</span>
+                    <div class="col-8">
+                        <form id="BasketForm" novalidate #form="ngForm" (submit)="submitForm(form)">
+                            <div class="form-group">
+                                <div class="input-group">
+                                    <input type="number" name="tax" class="form-control"  aria-describedby="taxDesc" step="0.1" [value]="markUp">
+                                    <span class="input-group-addon" id="taxDesc">% marża</span>
+                                </div>
+
+                                <div class="input-group">
+                                    <input type="text" name="basketName" class="form-control"  size="30" aria-describedby="nameDesc" [(ngModel)]="basket.basketName">
+                                    <span class="input-group-addon" id="nameDesc">nazwa koszyka</span>
+                                </div>
+
+                                <div class="input-group">
+                                    <select class="form-control" name="basket_type" [(ngModel)]="basket.basketType" >
+                                        <option *ngFor="let item of basketTypes" [ngValue]="item" aria-describedby="basketTypeDesc">{{item.basketTypeName}}</option>
+                                    </select>
+                                    <span class="input-group-addon" id="basketTypeDesc">typ koszyka</span>
+                                </div>
+
+                            </div>
+                        </form>
                     </div>
-
-                    <div class="input-group">
-                        <select class="form-control" name="basket_type" [(ngModel)]="basket.basketType" >
-                        <option *ngFor="let item of basketTypes" [ngValue]="item" aria-describedby="basketTypeDesc">{{item.basketTypeName}}</option>
-                        </select>
-                        <span class="input-group-addon" id="basketTypeDesc">Typ koszyka</span>
-                    </div>
-
-
-                    <button class="btn bg-primary pull-right" type="submit" > Zapisz Kosz</button>
-                </div>
-
-                <i class="fa fa-trash" aria-hidden="true" (click)="createBasket()"></i>
-            </form>
+            </div>
         </p-fieldset>
-
     </div>
-</div>
+    </div>
+<gift-baskets></gift-baskets>

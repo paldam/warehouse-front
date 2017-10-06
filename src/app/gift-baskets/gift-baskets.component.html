@@ -1,7 +1,7 @@
 <div class="basketList">
     <p-fieldset legend="Lista Koszy" [toggleable]="true">
 
-        <div class="input-group search_bar">
+        <div *ngIf="url=='/baskets/order'" class="input-group search_bar">
             <span class="input-group-addon" id="basic-addon1">
                  <i class="fa fa-search" aria-hidden="true"></i>
             </span>
@@ -14,6 +14,7 @@
             <p-column field="basketId" header="ID" [sortable]="true" ></p-column>
             <p-column field="basketName" header="Nazwa" [sortable]="true"></p-column>
             <p-column field="basketType.basketTypeName" header="Nazwa" [sortable]="true"></p-column>
+            <p-column field="basketTotalPrice" header="Cena" [sortable]="true"></p-column>
             <ng-template let-basket pTemplate="rowexpansion">
                 <div *ngFor="let i of basket.basketItems">
                     {{i.product.productName}} / {{i.product.capacity}} / {{i.product.price}} / {{i.quantity}}

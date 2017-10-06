@@ -1,3 +1,118 @@
 .ui-panelmenu {
     margin: 20px 0 0 0;
 }
+.sidenav {
+    height: 100%;
+    width: 190px;
+    position: fixed;
+    z-index: 998;
+    top: 50px;
+    left: 0;
+    background-color:#363a41;
+    overflow-x: hidden;
+    transition: 0.5s;
+    padding-top: 60px;
+    box-shadow: 3px 0px 5px #888888;
+}
+#main {
+    transition: margin-left .5s;
+    padding: 16px;
+    margin-left: 250px;
+}
+
+.sidenav a {
+
+    transition: 0.3s;
+}
+
+.sidenav a:hover {
+    color: #f1f1f1;
+}
+
+.sidenav .closebtn {
+    position: absolute;
+    top: 0;
+    right: 25px;
+    font-size: 36px;
+    margin-left: 50px;
+}
+
+@media screen and (max-height: 450px) {
+    .sidenav {padding-top: 15px;}
+    .sidenav a {font-size: 18px;}
+}
+
+
+
+
+#menu {
+    background: #363a41;
+    width: 190px;
+    color: white;
+    padding: 0px;
+    margin: 0px;
+    position: absolute;
+    left: 0;
+
+}
+
+#menu h3 {
+    font-family: 'Oswald', sans-serif;
+    font-size: 23px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    padding-left: 20px;
+    cursor: pointer;
+    background: #363a41;
+    margin: 0px;
+}
+
+#menu h3:hover {
+    background-color: #4a4d54;
+}
+
+#menu h3 span {
+    font-size: 16px;
+    margin-right: 10px;
+    padding-bottom: 5px;
+}
+
+#menu li {
+    list-style-type: none;
+}
+
+#menu ul ul li a {
+    color: white;
+    text-decoration: none;
+    font-size: 15px;
+    line-height: 34px;
+    display: block;
+    padding-left: 50px;
+
+    transition: all 0.15s;
+}
+
+#menu ul ul li a:hover {
+    background: #4a4d54;
+}
+
+#menu ul ul {
+    display: none;
+}
+#menu ul {
+    padding: 0;
+}
+#menu li.active_main ul {
+    display: block;
+}
+
+#menu ul li ul li.active {
+    display: block;
+    background: #4a4d54;
+    border-left: 5px solid #92c774;
+}
+#menu ul li ul li a.active {
+    background: #4a4d54;
+    border-left: 6px solid #92c774;
+    padding-left: 44px;
+}

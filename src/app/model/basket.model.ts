@@ -7,7 +7,8 @@ export class Basket{
         public basketId?: number,
         public basketName?: string,
         public basketType?: BasketType,
-        public basketItems?: BasketItems[]
+        public basketItems?: BasketItems[],
+        public basketTotalPrice?: number
         ) {
     }
 }
