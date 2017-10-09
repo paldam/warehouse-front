@@ -1,5 +1,5 @@
 <div class="basketList">
-    <p-fieldset legend="Lista Koszy" [toggleable]="true">
+    <p-fieldset legend="Lista dostępnych koszy" [toggleable]="true">
 
         <div class="input-group search_bar">
             <span class="input-group-addon" id="basic-addon1">
@@ -26,47 +26,179 @@
 
 
 <div class="row">
-    <div class="picked_products_list col-sm-6">
-        <p-fieldset legend="Pozycje zamówienia" [toggleable]="true">
-            <table *ngIf="isBasketLinesEmpty()==false">
-                <thead>
-                <tr>
-                    <th>nazwa</th>
-                    <th class="col_quantity">ilość</th>
-                    <th>usuń</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr *ngFor="let orderItems of orderItems">
-                    <td scope="row">{{orderItems.basket.basketName}}</td>
-                    <td><input type="number" class="form-control" name="" id="" aria-describedby="helpId" placeholder="" min="0" [value]="orderItems.quantity" (change)="updateQuantity(orderItems,$event.target.value)"  ></td>
-                    <td class="col_delete"><i class="fa fa-trash" aria-hidden="true" (click)="deleteProductLine(orderItems.basket.basketId)"></i></td>
-                </tr>
-                </tbody>
-            </table>
-            <p *ngIf="isBasketLinesEmpty()==true">Brak pozycji w zamówieniu</p>
+    <div class="picked_products_list col-6">
+            <p-fieldset legend="Pozycje zamówienia" [toggleable]="true">
+                <table *ngIf="isBasketLinesEmpty()==false">
+                    <thead>
+                    <tr>
+                        <th>nazwa kosza</th>
+                        <th class="col_quantity">ilość</th>
+                        <th>usuń</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr *ngFor="let orderItems of orderItems">
+                        <td scope="row">{{orderItems.basket.basketName}}</td>
+                        <td><input type="number" class="form-control" name="" id="" aria-describedby="helpId" placeholder="" min="0" [value]="orderItems.quantity" (change)="updateQuantity(orderItems,$event.target.value)"  ></td>
+                        <td class="col_delete"><i class="fa fa-trash" aria-hidden="true" (click)="deleteProductLine(orderItems.basket.basketId)"></i></td>
+                    </tr>
+                    </tbody>
+                </table>
+                <p *ngIf="isBasketLinesEmpty()==true">Brak pozycji w zamówieniu</p>
+            </p-fieldset>
+    </div>
+
+    <div #basketsummary class="basket_summary col-6">
+        <p-fieldset legend="Podsumowanie koszyka" [toggleable]="true">
+            <div class="row">
+                <div class="col">
+                    <p>Cena Netto: {{total}} zł</p>
+                    <p>Cena z marżąd: zł</p>
+                    <button class="btn bg-primary pull-left" type="submit" form="BasketForm" > Zapisz Kosz</button>
+                </div>
+
+                <div class="col-8">
+                    <form id="BasketForm" novalidate #form="ngForm" (submit)="submitForm(form)">
+                        <div class="form-group">
+
+                        </div>
+                    </form>
+                </div>
+            </div>
         </p-fieldset>
     </div>
 </div>
-<div #basketsummary class="basket_summary col-sm-6">
-    <p-fieldset legend="Podsumowanie koszyka" [toggleable]="true">
-        <div class="row">
-            <div class="col">
-                <p>Cena Netto: {{total}} zł</p>
-                <p>Cena z marżąd: zł</p>
-                <button class="btn bg-primary pull-left" type="submit" form="BasketForm" > Zapisz Kosz</button>
-            </div>
 
-            <div class="col-8">
-                <form id="BasketForm" novalidate #form="ngForm" (submit)="submitForm(form)">
+<div class="row">
+    <div class="order_summary col-12">
+        <p-fieldset legend="Szczegóły zamówienia" [toggleable]="true">
+            <div class="row">
+                <div class="customer_data_form col-6">
+                <p-panel header="Dane osoby zamawiającej">
+
+                    <button type="text" pButton label="Custom Target" (click)="op.show($event,popup_frame)">Wybierz klienta</button>
+                    <button type="text" pButton label="Custom Target" (click)="cleanForm(form,formAdidtional)">Wyczyść</button>
+
                     <div class="form-group">
+                        <form id="OrderForm" novalidate #form="ngForm" (submit)="submitOrderForm(form,formAdidtional)">
+                           <div class="form-group">
+                                <div class="input-group">
+                                    <input type="text" name="name" #name="ngModel" class="form-control"  size="30" aria-describedby="nameDesc" [readonly]="isFormReadOnly()"  [(ngModel)]="selectedCustomer.customerFirstName" required >
+                                    <span class="input-group-addon" id="nameDesc">Imię </span>
+                                </div>
+                               <ul class="text-danger list-unstyled" *ngIf="name.dirty|| formSubmitted">
+                                   <li  *ngIf="name.errors?.required">To pole nie może być puste</li>
+                               </ul>
+                           </div>
 
+                            <div class="form-group">
+                                <div class="input-group">
+                                    <input type="text" name="last_name" #last_name="ngModel" class="form-control"  size="30" aria-describedby="last_nameDesc" [readonly]="isFormReadOnly()" [(ngModel)]="selectedCustomer.customerLastName" required >
+                                    <span class="input-group-addon" id="last_nameDesc">Nazwisko</span>
+                                </div>
+                                <ul class="text-danger list-unstyled" *ngIf="last_name.dirty|| formSubmitted">
+                                    <li  *ngIf="last_name.errors?.required">To pole nie może być puste</li>
+                                </ul>
+                            </div>
+
+                            <div class="form-group">
+                                <div class="input-group">
+                                    <input type="text" name="organization" #organization="ngModel" class="form-control"  size="30" aria-describedby="organizationDesc"  [readonly]="isFormReadOnly()" [(ngModel)]="selectedCustomer.organizationName">
+                                    <span class="input-group-addon" id="organizationDesc">Nazwa Firmy</span>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <div class="input-group">
+                                    <input type="text" name="address" #address="ngModel" class="form-control"  size="30" aria-describedby="streetDesc" [readonly]="isFormReadOnly()" [(ngModel)]="selectedCustomer.address" required>
+                                    <span class="input-group-addon" id="streetDesc">Ulica / nr. lokalu</span>
+                                </div>
+                                <ul class="text-danger list-unstyled" *ngIf="address.dirty|| formSubmitted">
+                                    <li  *ngIf="address.errors?.required">To pole nie może być puste</li>
+                                </ul>
+                            </div>
+
+                            <div class="form-group">
+                                <div class="input-group">
+                                    <input type="text" name="zip_code" #zip_code="ngModel" class="form-control"  size="30" aria-describedby="zip_codeDesc" [readonly]="isFormReadOnly()" [(ngModel)]="selectedCustomer.zipCode" required>
+                                    <span class="input-group-addon" id="zip_codeDesc">Kod pocztowy</span>
+                                </div>
+                                <ul class="text-danger list-unstyled" *ngIf="zip_code.dirty|| formSubmitted">
+                                    <li  *ngIf="zip_code.errors?.required">To pole nie może być puste</li>
+                                </ul>
+                            </div>
+
+                            <div class="form-group">
+                                <div class="input-group">
+                                    <input type="text" name="city_name" #city_name="ngModel" class="form-control"  size="30" aria-describedby="city_nameDesc" [readonly]="isFormReadOnly()" [(ngModel)]="selectedCustomer.cityName" required="">
+                                    <span class="input-group-addon" id="city_nameDesc">Miejscowość</span>
+                                </div>
+                                <ul class="text-danger list-unstyled" *ngIf="city_name.dirty|| formSubmitted">
+                                    <li  *ngIf="city_name.errors?.required">To pole nie może być puste</li>
+                                </ul>
+                            </div>
+
+                            <div class="form-group">
+                                <div class="input-group">
+                                    <input type="email" name="email" class="form-control"  size="30" aria-describedby="emailDesc" [readonly]="isFormReadOnly()" [(ngModel)]="selectedCustomer.email">
+                                    <span class="input-group-addon" id="emailDesc">Email</span>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <div class="input-group">
+                                    <input type="tel" name="tel" class="form-control"  size="30" aria-describedby="telDesc" [readonly]="isFormReadOnly()" [(ngModel)]="selectedCustomer.phoneNumber" >
+                                    <span class="input-group-addon" id="telDesc">Telefon</span>
+                                </div>
+                            </div>
+                        </form>
                     </div>
-                </form>
+                </p-panel>
             </div>
-        </div>
-    </p-fieldset>
+                <div class="order_detail_form col-6">
+                    <p-panel header="Dodatkowe informacje">
+                            <form id="OrderFormAdditional" novalidate #formAdidtional="ngForm">
+
+
+                            <div class="form-group">
+                                <small id="delivery_typeDesc" class="text-muted">Rodzaj dostawy</small>
+                                <select class="form-control" [(ngModel)]="order.deliveryType" name="delivery_type" #delivery_type="ngModel" required >
+                                    <option *ngFor="let item of deliveryTypes" [ngValue]="item">{{item.deliveryTypeName}}</option>
+                                </select>
+                                <ul class="text-danger list-unstyled" *ngIf="delivery_type.dirty|| formSubmitted">
+                                    <li  *ngIf="delivery_type.errors?.required">Wybierz typ dostawy</li>
+                                </ul>
+                            </div>
+
+
+
+                            <div class="form-group">
+                                <div class="input-group">
+                                    <input type="date" name="delivery_date" #delivery_date="ngModel"  class="form-control"  aria-describedby="delivery_dateDesc" required [(ngModel)]="order.deliveryDate">
+                                    <span class="input-group-addon" id="taxDesc">Data dostawy</span>
+                                </div>
+                                <ul class="text-danger list-unstyled" *ngIf="delivery_date.dirty|| formSubmitted">
+                                    <li  *ngIf="delivery_date.errors?.required">Wprowadz planowaną datę dostawy</li>
+                                </ul>
+                            </div>
+                            <div class="form-group">
+                                <div class="form-group">
+                                    <small id="additional_informationDesc" class="text-muted">Dodatkowe informacje</small>
+                                    <textarea class="form-control" name="additional_information" id="additional_information" rows="3" [(ngModel)]="order.additionalInformation"></textarea>
+                                </div>
+                            </div>
+                        </form>
+                        <button class="btn bg-primary " type="submit" form="OrderForm" >Zapisz Zamówienie</button>
+                    </p-panel>
+
+                </div>
+            </div>
+
+        </p-fieldset>
+    </div>
 </div>
+
+
 
 <div [ngClass]="PopUpBackgroundStyle">
 </div>
@@ -82,14 +214,18 @@
             </div>
             <p-dataTable [value]="customers" [rows]="10" [paginator]="true"  #dt (onRowDblclick)="op.hide();pickCustomer($event.data)"
                          [loading]="loading" loadingIcon="fa-circle-o-notch" [globalFilter]="globalfilter">
-                <p-column field="customerFirstName" header="ID" [sortable]="true" ></p-column>
-                <p-column field="customerLastName" header="Nazwa" [sortable]="true"></p-column>
-                <p-column field="address" header="Nazwa" [sortable]="true"></p-column>
-                <p-column field="email" header="Nazwa" [sortable]="true"></p-column>
+                <p-column field="customerFirstName" header="Imię" [sortable]="true" ></p-column>
+                <p-column field="customerLastName" header="Nazwisko" [sortable]="true"></p-column>
+                <p-column field="organizationName" header="Firma" [sortable]="false"></p-column>
+                <p-column field="address" header="Adres" [sortable]="false"></p-column>
+                <p-column field="zipCode" header="Kod" [sortable]="false"></p-column>
+                <p-column field="cityName" header="Miasto" [sortable]="false"></p-column>
+                <p-column field="phoneNumber" header="Telefon" [sortable]="false"></p-column>
+                <p-column field="email" header="Email" [sortable]="false"></p-column>
 
             </p-dataTable>
         </div>
     </p-overlayPanel>
 
-<button type="text" pButton label="Custom Target" (click)="op.show($event,popup_frame)">uruchom</button>
+
 

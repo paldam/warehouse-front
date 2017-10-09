@@ -76,12 +76,6 @@
                                     <span class="input-group-addon" id="nameDesc">nazwa koszyka</span>
                                 </div>
 
-                                <div class="input-group">
-                                    <select class="form-control" name="basket_type" [(ngModel)]="basket.basketType" >
-                                        <option *ngFor="let item of basketTypes" [ngValue]="item" aria-describedby="basketTypeDesc">{{item.basketTypeName}}</option>
-                                    </select>
-                                    <span class="input-group-addon" id="basketTypeDesc">typ koszyka</span>
-                                </div>
 
                             </div>
                         </form>

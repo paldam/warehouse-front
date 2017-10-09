@@ -23,4 +23,10 @@ p{
     transition: 0.5s;
     color: #363a41;
 }
+.basket_img{
+    z-index: 9999;
+    position: absolute;
+    right: 15px;
+    top: 2px;
+}
 

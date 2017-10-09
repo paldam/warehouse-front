@@ -18,7 +18,7 @@
                 {{row.orderDate| date: 'dd/MM/yyyy HH:mm:ss'}}
             </ng-template>
         </p-column>
-        <p-column field="deliveryType" header="Transport"  [sortable]="true" ></p-column>
+        <p-column field="deliveryType.deliveryTypeName" header="Transport"  [sortable]="true" ></p-column>
         <p-column field="additionalInformation" header="Dodatkowe informacje" [sortable]="true"></p-column>
         <p-column field="deliveryDate" header="Data dostawy" [sortable]="true"></p-column>
 
