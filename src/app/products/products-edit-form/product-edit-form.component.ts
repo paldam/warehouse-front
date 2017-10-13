@@ -13,9 +13,9 @@ import {ActivatedRoute, Router} from '@angular/router';
 
 export class ProductEditFormComponent implements OnInit {
 
-    product: Product = new Product();
-    productsTypes: ProductType[];
-    formSubmitted: boolean = false;
+    public product: Product = new Product();
+    public productsTypes: ProductType[];
+    public formSubmitted: boolean = false;
 
     constructor(private productsService: ProductsService, private router: Router, activeRoute: ActivatedRoute) {
         productsService.getProduct(activeRoute.snapshot.params["id"]).subscribe(data => this.product = data);

@@ -19,15 +19,16 @@ import {DeliveryType} from '../../model/delivery_type.model';
 })
 
 export class BasketOrderComponent implements OnInit {
-    private orderItems: OrderItem[]=[];
-    private baskets: Basket[]=[];
-    private customers: Customer[]=[];
-    private deliveryTypes: DeliveryType[]=[];
-    private selectedCustomer: Customer = new Customer();
-    private order: Order = new Order();
-    private total: number = 0;
-    private formSubmitted: boolean = false;
-    private isReadOnlyProp: boolean = false;
+    public orderItems: OrderItem[]=[];
+    public baskets: Basket[]=[];
+    public customers: Customer[]=[];
+    public deliveryTypes: DeliveryType[]=[];
+    public selectedCustomer: Customer = new Customer();
+    public order: Order = new Order();
+    public total: number = 0;
+    public formSubmitted: boolean = false;
+    public isReadOnlyProp: boolean = false;
+    public loading: boolean;
     public PopUpBackgroundStyle = {
         'dark_background': false,
     }
@@ -53,6 +54,14 @@ export class BasketOrderComponent implements OnInit {
         }
         this.recalculate();
     }
+    updateQuantity(basketLine: OrderItem, quantity: number) {
+        let line = this.orderItems.find(line => line.basket.basketId== basketLine.basket.basketId);
+        if (line != undefined) {
+            line.quantity = Number(quantity);
+        }
+        this.recalculate();
+    }
+
     isBasketLinesEmpty() : boolean{
         if (this.orderItems.length == 0) {
             return true
@@ -66,12 +75,16 @@ export class BasketOrderComponent implements OnInit {
         if (index > -1){
             this.orderItems.splice(index,1);
         }
+        this.recalculate();
     }
+
 
     recalculate(){
         this.total = 0;
-        this.orderItems.forEach(data=> {
-            this.total += data.basket.basketTotalPrice * data.quantity;
+        this.orderItems.forEach(orderItem=> {
+            orderItem.basket.basketItems.forEach(basketItem=>{
+                this.total+=basketItem.product.price * basketItem.quantity
+            })
         })
     }
     isFormReadOnly() : boolean{

@@ -39,3 +39,10 @@
 .basket_summary{
     padding-top: 10px;
 }
+.input-group-addon{
+    min-width: 100px;
+}
+.alert{
+    padding: 5px;
+    margin-top: 5px;
+}

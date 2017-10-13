@@ -13,4 +13,4 @@ const routes: Routes = [
     { path: 'baskets/order', component:BasketOrderComponent},
     { path: 'orders', component:OrderComponent}
 ];
-export const routing = RouterModule.forRoot(routes);
+export const routing = RouterModule.forRoot(routes,{ useHash: true });

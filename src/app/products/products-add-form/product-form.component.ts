@@ -14,9 +14,9 @@ import {Router} from '@angular/router';
 
 export class ProductFormComponent implements OnInit {
 
-    product: Product = new Product();
-    productsTypes: ProductType[];
-    formSubmitted: boolean = false;
+    public product: Product = new Product();
+    public productsTypes: ProductType[];
+    public formSubmitted: boolean = false;
 
     constructor(private productsService: ProductsService, private router: Router) {
         productsService.getProductsTypes().subscribe(data => this.productsTypes = data)

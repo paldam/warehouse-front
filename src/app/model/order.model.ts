@@ -9,7 +9,7 @@ export class Order{
         public orderItems?: OrderItem[],
         public orderDate?: Date,
         public deliveryType?: DeliveryType,
-        public additionalInofrmation?: string,
+        public additionalInformation?: string,
         public deliveryDate?: Date,
     ){
 

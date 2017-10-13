@@ -13,7 +13,7 @@ declare var $ :any;
 
 export class LeftNavComponent implements OnInit {
 
-     clickNavNumber: number=0;
+    public clickNavNumber: number=0;
 
     ngOnInit() {
     }

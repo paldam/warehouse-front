@@ -10,8 +10,8 @@ import {OrderService} from './order.service';
 })
 
 export class OrderComponent implements OnInit {
-    private loading: boolean= false;
-    private orders: Order[]=[];
+    public loading: boolean= false;
+    public orders: Order[]=[];
 
     constructor(private orderService :OrderService) {
         orderService.getOreders().subscribe(data=> this.orders=data);

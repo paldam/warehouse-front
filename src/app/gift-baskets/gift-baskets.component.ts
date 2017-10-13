@@ -12,9 +12,10 @@ import {Router} from '@angular/router';
 
 export class GiftBasketComponent implements OnInit {
 
-    private baskets: Basket[] = [];
-    private loading: boolean;
-    private url: string ='';
+    public baskets: Basket[] = [];
+    public loading: boolean;
+    public url: string ='';
+    public gb: any;
 
     constructor(private basketService: BasketService, private router :Router) {
         basketService.getBaskets().subscribe(data => this.baskets = data);

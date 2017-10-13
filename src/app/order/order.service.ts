@@ -7,9 +7,9 @@ import {DeliveryType} from '../model/delivery_type.model';
 @Injectable()
 export class OrderService {
 
-    private protocol: string = "http";
-    private port: number = 8080;
-    private baseUrl: string;
+    public protocol: string = "http";
+    public port: number = 8080;
+    public baseUrl: string;
 
     public constructor(private http: Http) {
         this.baseUrl = `${this.protocol}://${location.hostname}:${this.port}`;

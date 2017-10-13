@@ -17,13 +17,14 @@ import {GiftBasketComponent} from '../gift-baskets.component';
 export class ProductPickerComponent  {
 
 
-    private products: Product[]=[];
-    private basketItems: BasketItems[]=[];
-    private basketTypes: BasketType[]=[];
-    private basket: Basket= new Basket();
-    private total: number=0;
-    private markUp: number =10;
-    private formSubmitted: boolean = false;
+    public products: Product[]=[];
+    public basketItems: BasketItems[]=[];
+    public basketTypes: BasketType[]=[];
+    public basket: Basket= new Basket();
+    public total: number=0;
+    public markUp: number =10;
+    public formSubmitted: boolean = false;
+    public loading: boolean;
     @ViewChild(GiftBasketComponent) giftBasketComponent : GiftBasketComponent;
 
     constructor(private productsService : ProductsService, private basketService :BasketService) {
@@ -77,7 +78,7 @@ export class ProductPickerComponent  {
     submitForm(form: NgForm) {
         this.formSubmitted = true;
 
-        if (form.valid) {
+        if (form.valid && this.basketItems.length>0) {
             this.basket.basketItems= this.basketItems;
             this.basket.basketTotalPrice=this.total;
             console.log(JSON.stringify(this.basket));
@@ -85,6 +86,7 @@ export class ProductPickerComponent  {
                    this.basket=new Basket();
                    this.basketItems=[];
                    form.resetForm();
+                    this.formSubmitted = false;
                    this.recalculate();
                    this.giftBasketComponent.refreshData();
             },

@@ -7,9 +7,9 @@ import {ProductType} from '../model/product_type.model';
 @Injectable()
 export class ProductsService {
 
-  private protocol: string = "http";
-  private port: number = 8080;
-  private baseUrl: string;
+  public protocol: string = "http";
+  public port: number = 8080;
+  public baseUrl: string;
 
   constructor(private http: Http) {
     this.baseUrl = `${this.protocol}://${location.hostname}:${this.port}`;
