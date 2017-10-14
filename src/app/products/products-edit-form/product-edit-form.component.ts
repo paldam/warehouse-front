@@ -14,12 +14,10 @@ import {ActivatedRoute, Router} from '@angular/router';
 export class ProductEditFormComponent implements OnInit {
 
     public product: Product = new Product();
-    public productsTypes: ProductType[];
     public formSubmitted: boolean = false;
 
     constructor(private productsService: ProductsService, private router: Router, activeRoute: ActivatedRoute) {
         productsService.getProduct(activeRoute.snapshot.params["id"]).subscribe(data => this.product = data);
-        productsService.getProductsTypes().subscribe(data => this.productsTypes = data)
     }
 
     ngOnInit() {

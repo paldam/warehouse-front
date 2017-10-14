@@ -24,5 +24,15 @@
 .action_col{
     width: 120px;
 }
+.name_col{
+    width: 30%;
+}
+.deliver_col{
+     width: 15%;
+ }
+
+.capacity_col{
+    width: 7%;
+}
 
 

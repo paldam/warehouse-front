@@ -13,13 +13,12 @@
                  [loading]="loading" loadingIcon="fa-circle-o-notch">
         <p-header>Lista Produktów</p-header>
         <p-column field="id" header="ID" [sortable]="true" [style]="{'width':'70px'}"></p-column>
-        <p-column field="productName" header="Nazwa" [sortable]="true"></p-column>
-        <p-column field="productType.typeName" header="Rodzaj"  [sortable]="true" ></p-column>
-        <p-column field="capacity" header="Pojemność" [sortable]="true"></p-column>
-
+        <p-column field="productName" styleClass="name_col" header="Nazwa" [sortable]="true"></p-column>
+        <p-column field="capacity" styleClass="capacity_col" header="Pojemność" [sortable]="true"></p-column>
+        <p-column field="deliver" styleClass="deliver_col" header="Dostawca"  [sortable]="true" ></p-column>
         <p-column field="price" styleClass="price_col" header="Cena"  [sortable]="true">
             <ng-template let-row="rowData" pTemplate="body"  >
-                {{row.price}} zł
+                {{row.price |number: '1.2-2'}} zł
             </ng-template>
         </p-column>
 
