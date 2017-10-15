@@ -6,6 +6,11 @@
             </span>
             <input #gb type="text" class="form-control search_input" pInputText size="50" placeholder="Szukaj"aria-describedby="basic-addon1">
 
+            <label class="form-check-label">
+                <input class="form-check-input" type="checkbox"  (change)="filtrOnlyAvaileble($event)"> Tylko dostępne
+            </label>
+
+
         </div>
         <p-dataTable [value]="products" [rows]="10" [paginator]="true" [globalFilter]="gb" #dt
                      [loading]="loading" loadingIcon="fa-circle-o-notch" (onRowDblclick)="addProductToGiftBasket($event.data)">
@@ -33,7 +38,7 @@
 
 <div class="row">
     <div class="picked_products_list col-sm-6">
-        <p-fieldset legend="Zawartość koszyka" [toggleable]="true">
+        <p-fieldset legend="Zawartość kosza" [toggleable]="true">
             <table *ngIf="isProductLinesEmpty()==false">
                 <thead>
                 <tr>
@@ -58,7 +63,7 @@
         <p-fieldset legend="Podsumowanie kosza" [toggleable]="true">
             <div class="row">
                     <div class="col">
-                        <p>Cena Netto: {{total}} zł</p>
+                        <p>Cena Netto: {{total| number : '1.2-2'}} zł</p>
                         <p>Cena z marżą: {{total*((markUp/100)+1)| number : '1.2-2'}} zł</p>
                         <button class="btn bg-primary pull-left" type="submit" form="BasketForm" > Zapisz Kosz</button>
                     </div>
@@ -67,7 +72,7 @@
                         <form id="BasketForm" novalidate #form="ngForm" (submit)="submitForm(form)">
                             <div class="form-group">
                                 <div class="input-group">
-                                    <input type="number" name="tax" class="form-control"  aria-describedby="taxDesc" step="0.1" [value]="markUp">
+                                    <input type="number" name="tax" class="form-control"  aria-describedby="taxDesc" step="0.1" [(ngModel)]="markUp" >
                                     <span class="input-group-addon" id="taxDesc">% marża</span>
                                 </div>
                             <div class="form-group">
@@ -81,7 +86,7 @@
                             </div>
 
                                 <div class="form-group">
-                                    <small id="basket_typeDesc" class="text-muted">Rodzaj dostawy</small>
+                                    <small id="basket_typeDesc" class="text-muted">Typ koszyka</small>
                                     <select class="form-control" #basket_type="ngModel" name="basket_type" [(ngModel)]="basket.basketType" required="">
                                         <option *ngFor="let item of basketTypes" [ngValue]="item" aria-describedby="basketTypeDesc">{{item.basketTypeName}}</option>
                                     </select>

@@ -3,6 +3,8 @@ import {ProductsService} from './products.service';
 import {Product} from '../model/product.model';
 import 'rxjs/add/operator/map';
 import {Router} from '@angular/router';
+import {ConfirmationService} from "primeng/primeng";
+
 
 @Component({
   selector: 'app-products',
@@ -15,7 +17,7 @@ export class ProductsComponent implements OnInit {
   public loading: boolean;
   public products: Product[]=[];
 
-  constructor(private productsService : ProductsService, private router: Router) {
+  constructor(private productsService : ProductsService, private router: Router,private confirmationService: ConfirmationService) {
     productsService.getProducts().subscribe(data=> this.products = data)
 
     }
@@ -24,6 +26,7 @@ export class ProductsComponent implements OnInit {
 
   }
 
+
   refreshData() {
     this.loading = true;
     setTimeout(() => {
@@ -31,9 +34,24 @@ export class ProductsComponent implements OnInit {
       this.loading = false;
     }, 1000);
   }
-    selectProduct( id : number){
+
+  selectProduct( id : number){
       this.router.navigateByUrl('/products/${id}');
-    }
+  }
+
+  ShowConfirmModal(product: Product) {
+    this.confirmationService.confirm({
+      message: 'Jesteś pewny że chcesz usunąć produkt: ' + product.productName + ' ?',
+      accept: () => {
+          this.productsService.deleteProduct(product.id).subscribe();
+          this.refreshData();
+      },
+      reject:()=>{
+
+      }
+    });
+  }
+
 
 
 }

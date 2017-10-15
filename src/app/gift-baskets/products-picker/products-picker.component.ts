@@ -18,6 +18,7 @@ export class ProductPickerComponent  {
 
 
     public products: Product[]=[];
+    public productTmp: Product[]=[];
     public basketItems: BasketItems[]=[];
     public basketTypes: BasketType[]=[];
     public basket: Basket= new Basket();
@@ -42,6 +43,19 @@ export class ProductPickerComponent  {
             line.quantity= line.quantity + 1;
         }
         this.recalculate();
+    }
+
+    filtrOnlyAvaileble(event) {
+        var isChecked = event.target.checked;
+
+        if (isChecked) {
+            if(this.productTmp.length == 0 ){
+                this.productTmp = this.products;
+            }
+            this.products = this.products.filter(data => data.stock > 0);
+        }else{
+            this.products = this.productTmp;
+        }
     }
 
     isProductLinesEmpty() : boolean{

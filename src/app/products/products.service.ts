@@ -36,6 +36,9 @@ export class ProductsService {
   saveProduct(product: Product): Observable<Response> {
     return this.http.post(this.baseUrl+`/products/`, product)
         //.map((response: Response) => response.json());
+  }
 
+  deleteProduct(id: number): Observable<Response>{
+    return this.http.delete(this.baseUrl+`/products/${id}`)
   }
 }

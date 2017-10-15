@@ -22,8 +22,10 @@
     text-align: right;
 }
 .action_col{
-    width: 120px;
+    width: 80px;
+    text-align: center;
 }
+
 .name_col{
     width: 30%;
 }
@@ -34,5 +36,9 @@
 .capacity_col{
     width: 7%;
 }
-
+.edit_icon{
+    position: relative;
+    right: 0px;
+    top: -2px;
+}
 

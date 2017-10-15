@@ -9,7 +9,7 @@ import { NavComponent } from './top-nav/top-nav.component';
 import {LeftNavComponent} from './left-nav/left-nav.component';
 import {
   PanelMenuModule, DataTableModule, SharedModule, FieldsetModule, OverlayPanelModule, LightboxModule,
-  PanelModule
+  PanelModule, ConfirmationService, ConfirmDialogModule
 } from 'primeng/primeng';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {routing} from './app.routing';
@@ -38,9 +38,9 @@ import {OrderComponent} from './order/order.component';
       OrderComponent
   ],
   imports: [
-    BrowserModule,HttpModule,BrowserAnimationsModule,FormsModule,PanelMenuModule,PanelModule,DataTableModule,SharedModule,FieldsetModule,LightboxModule,OverlayPanelModule,routing
+    BrowserModule,HttpModule,BrowserAnimationsModule,FormsModule,ConfirmDialogModule,PanelMenuModule,PanelModule,DataTableModule,SharedModule,FieldsetModule,LightboxModule,OverlayPanelModule,routing
   ],
-  providers: [ProductsService,BasketService,CustomerService,OrderService],
+  providers: [ProductsService,BasketService,CustomerService,OrderService,ConfirmationService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
