@@ -6,8 +6,8 @@
             </span>
             <input #gb type="text" class="form-control search_input" pInputText size="50" placeholder="Szukaj"aria-describedby="basic-addon1">
 
-            <label class="form-check-label">
-                <input class="form-check-input" type="checkbox"  (change)="filtrOnlyAvaileble($event)"> Tylko dostępne
+            <label class="form-check-label only_availeble_product_checkbox">
+                <input class="form-check-input" type="checkbox"  (change)="filtrOnlyAvaileble($event)"> pokaż tylko dostępne produkty
             </label>
 
 
@@ -21,7 +21,7 @@
 
                 <p-column field="price" styleClass="price_col" header="Cena"  [sortable]="true">
                     <ng-template let-row="rowData" pTemplate="body"  >
-                        {{row.price}} zł
+                        {{row.price | number : '1.2-2'}} zł
                     </ng-template>
                 </p-column>
 
@@ -72,13 +72,13 @@
                         <form id="BasketForm" novalidate #form="ngForm" (submit)="submitForm(form)">
                             <div class="form-group">
                                 <div class="input-group">
-                                    <input type="number" name="tax" class="form-control"  aria-describedby="taxDesc" step="0.1" [(ngModel)]="markUp" >
+                                    <input type="number" name="tax" class="form-control"  aria-describedby="taxDesc"  step="0.1" [(ngModel)]="markUp" >
                                     <span class="input-group-addon" id="taxDesc">% marża</span>
                                 </div>
                             <div class="form-group">
                                 <div class="input-group">
                                     <input type="text" name="basketName" #basketName="ngModel" class="form-control"  size="30" aria-describedby="nameDesc" [(ngModel)]="basket.basketName" required>
-                                    <span class="input-group-addon" id="nameDesc">nazwa koszyka</span>
+                                    <span class="input-group-addon" id="nameDesc">nazwa kosza</span>
                                 </div>
                                 <ul class="text-danger list-unstyled" *ngIf="basketName.dirty|| formSubmitted">
                                     <li  *ngIf="basketName.errors?.required">To pole nie może być puste</li>
@@ -86,7 +86,7 @@
                             </div>
 
                                 <div class="form-group">
-                                    <small id="basket_typeDesc" class="text-muted">Typ koszyka</small>
+                                    <small id="basket_typeDesc" class="text-muted">Typ kosza</small>
                                     <select class="form-control" #basket_type="ngModel" name="basket_type" [(ngModel)]="basket.basketType" required="">
                                         <option *ngFor="let item of basketTypes" [ngValue]="item" aria-describedby="basketTypeDesc">{{item.basketTypeName}}</option>
                                     </select>

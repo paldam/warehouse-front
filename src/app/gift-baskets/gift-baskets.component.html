@@ -16,7 +16,7 @@
             <p-column field="basketType.basketTypeName" header="Typ kosza" [sortable]="true" [style]="{'width':'130px'}"></p-column>
             <p-column field="basketTotalPrice"  header="Cena kosza netto"  [sortable]="true" [style]="{'width':'140px'}">
                 <ng-template let-row="rowData" pTemplate="body">
-                    {{row.basketTotalPrice}} zł.
+                    {{row.basketTotalPrice| number : '1.2-2'}} zł.
                 </ng-template>
 
             </p-column>
@@ -36,7 +36,7 @@
                             <tr class="product_tab_row" *ngFor="let i of basket.basketItems">
                                 <td>{{i.product.productName}}</td>
                                 <td>{{i.product.capacity}}</td>
-                                <td>{{i.product.price}} zł</td>
+                                <td>{{i.product.price| number : '1.2-2'}} zł</td>
                                 <td>{{i.quantity}} szt.</td>
                             </tr>
                             </tbody>

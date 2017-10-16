@@ -87,3 +87,7 @@ p-fieldset{
 .search_bar {
   padding-bottom: 20px;
 }
+.alert {
+  padding: 5px;
+  margin-top: 5px;
+}

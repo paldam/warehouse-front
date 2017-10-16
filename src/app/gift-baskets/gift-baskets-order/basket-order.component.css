@@ -91,3 +91,37 @@ select.ng-dirty.ng-valid { border: 1px solid #6bc502 }
 .product_tab_row{
     text-align: left;
 }
+.markup_percent {
+    max-width: 240px;
+}
+.markup_const{
+    max-width: 240px;
+}
+.markup_const_check{
+    position:relative;
+    top: 12px;
+}
+.markup_const_percent{
+    position:relative;
+    top: 12px;
+}
+.total{
+    color:#66f504;
+    font-size: 17px;
+
+    width: 230px;
+    padding: 5px;
+    margin-top: 10px;
+}
+.tot{
+    padding: 5px;
+    padding-top: 10px;
+}
+
+.markup_const .input-group-addon{
+    min-width: 145px;
+    font-size: 14px;
+}
+.kw{
+    width: 100%;
+}

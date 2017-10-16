@@ -2,6 +2,7 @@
 <p-panel header="Dodaj Produkt">
 
 <form id="productForm" novalidate #form="ngForm" (submit)="submitForm(form)">
+
     <div class="form-group">
         <small id="nameDescript" class="text-muted">Nazwa</small>
         <input type="text" name="name" class="form-control" [(ngModel)]="product.productName" #name="ngModel" aria-describedby="nameDescript" required >
@@ -12,7 +13,7 @@
 
     <div class="form-group">
         <small id="capacityDescript" class="text-muted">Pojemność</small>
-        <input type="text" name="capacity " class="form-control"  [(ngModel)]="product.capacity" #capacity="ngModel" aria-describedby="capacityDescript" required >
+        <input type="text" name="capacity" class="form-control"  [(ngModel)]="product.capacity" #capacity="ngModel" aria-describedby="capacityDescript" required >
         <ul class="text-danger list-unstyled" *ngIf="capacity.dirty|| formSubmitted">
             <li  *ngIf="capacity.errors?.required">To pole nie może być puste</li>
         </ul>
@@ -25,14 +26,19 @@
 
     <div class="form-group">
         <small id="priceDescript" class="text-muted">Cena</small>
-        <input type="text" name="price" class="form-control"  [(ngModel)]="product.price" aria-describedby="priceDescript">
+        <input type="text" name="price" class="form-control"  [(ngModel)]="product.price" #price="ngModel" aria-describedby="priceDescript" pattern="^\d+(\.)\d{1,2}$">
+        <ul class="text-danger list-unstyled" *ngIf="price.dirty|| formSubmitted">
+            <li  *ngIf="price.errors?.pattern">To pole musi zawierać format waluty z kropką np : 0.59 , 0.5 , 00,99</li>
+        </ul>
     </div>
 
     <div class="form-group">
         <small id="stockDescript" class="text-muted">Stan magazynu</small>
-        <input type="text" name="stock" class="form-control" [(ngModel)]="product.stock"  aria-describedby="stockDescript" >
+        <input type="text" name="stock" class="form-control" [(ngModel)]="product.stock" #stock="ngModel" aria-describedby="stockDescript" pattern="^[0-9]*$" >
+        <ul class="text-danger list-unstyled" *ngIf="stock.dirty|| formSubmitted">
+            <li  *ngIf="stock.errors?.pattern">To pole musi zawierać same cyfry</li>
+        </ul>
     </div>
-
 
     <button class="btn bg-primary " type="submit" > Zatwierdź</button>
 

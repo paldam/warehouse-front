@@ -89,11 +89,14 @@ export class ProductPickerComponent  {
         })
     }
 
+
+
     submitForm(form: NgForm) {
         this.formSubmitted = true;
 
         if (form.valid && this.basketItems.length>0) {
             this.basket.basketItems= this.basketItems;
+            console.log(this.basket.basketTotalPrice)
             this.basket.basketTotalPrice=this.total;
             console.log(JSON.stringify(this.basket));
             this.basketService.saveBasket(this.basket).subscribe(data=>{
@@ -103,9 +106,11 @@ export class ProductPickerComponent  {
                     this.formSubmitted = false;
                    this.recalculate();
                    this.giftBasketComponent.refreshData();
+                    this.markUp=10;
             },
                 err =>  console.log("error " ));
         }
+
     }
 
 

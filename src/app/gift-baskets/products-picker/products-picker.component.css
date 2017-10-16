@@ -39,7 +39,7 @@
 .input-group-addon{
     min-width: 100px;
 }
-.alert{
-    padding: 5px;
+.only_availeble_product_checkbox{
+    margin-left: 40px;
     margin-top: 5px;
 }

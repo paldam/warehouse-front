@@ -9,6 +9,7 @@ import {NgForm} from '@angular/forms';
 import {Order} from '../../model/order.model';
 import {OrderService} from '../../order/order.service';
 import {DeliveryType} from '../../model/delivery_type.model';
+import {OrderStatus} from "../../model/OrderStatus";
 
 @Component({
     selector: 'basket-order',
@@ -29,6 +30,12 @@ export class BasketOrderComponent implements OnInit {
     public formSubmitted: boolean = false;
     public isReadOnlyProp: boolean = false;
     public loading: boolean;
+    public totalPlusMarkUp: number=0;
+    public markupPercent: number = 10;
+    public markupConst: number=0;
+    public markUpOption: number =0;
+    public IsMarkUpConstActive: boolean= true;
+    public IsMarkUpPercentActive: boolean= false;
     public PopUpBackgroundStyle = {
         'dark_background': false,
     }
@@ -42,7 +49,32 @@ export class BasketOrderComponent implements OnInit {
     }
 
     ngOnInit() {
+
     }
+
+    recalculateTotalPlusMarkUp(){
+        if (this.markUpOption ==0 ){
+            this.totalPlusMarkUp = this.total * ((this.markupPercent/100)+1)
+        }else{
+            this.totalPlusMarkUp = this.total + this.markupConst;
+        }
+    }
+
+    updateMarkupOption(event) {
+        if(event.target.value==0){
+            this.totalPlusMarkUp = this.total * ((this.markupPercent/100)+1)
+            this.markUpOption=0;
+            this.IsMarkUpConstActive= true;
+            this.IsMarkUpPercentActive= false;
+        }else{
+            this.totalPlusMarkUp = this.total + this.markupConst;
+            this.markUpOption=1;
+            this.IsMarkUpConstActive= false;
+            this.IsMarkUpPercentActive= true;
+        }
+
+    }
+
 
     addBasketToOrder(basket: Basket){
         let line = this.orderItems.find(data => data.basket.basketId == basket.basketId );
@@ -53,6 +85,7 @@ export class BasketOrderComponent implements OnInit {
             line.quantity= line.quantity + 1;
         }
         this.recalculate();
+        this.recalculateTotalPlusMarkUp();
     }
     updateQuantity(basketLine: OrderItem, quantity: number) {
         let line = this.orderItems.find(line => line.basket.basketId== basketLine.basket.basketId);
@@ -60,6 +93,7 @@ export class BasketOrderComponent implements OnInit {
             line.quantity = Number(quantity);
         }
         this.recalculate();
+        this.recalculateTotalPlusMarkUp();
     }
 
     isBasketLinesEmpty() : boolean{
@@ -76,17 +110,23 @@ export class BasketOrderComponent implements OnInit {
             this.orderItems.splice(index,1);
         }
         this.recalculate();
+        this.recalculateTotalPlusMarkUp();
     }
 
 
     recalculate(){
         this.total = 0;
         this.orderItems.forEach(orderItem=> {
+            let totalBasketPrice =0;
             orderItem.basket.basketItems.forEach(basketItem=>{
-                this.total+=basketItem.product.price * basketItem.quantity
+                totalBasketPrice+=(basketItem.product.price * basketItem.quantity)
             })
+            this.total += (totalBasketPrice * orderItem.quantity);
         })
     }
+
+
+
     isFormReadOnly() : boolean{
         return this.isReadOnlyProp;
     }
@@ -112,11 +152,10 @@ export class BasketOrderComponent implements OnInit {
     submitOrderForm(form: NgForm, formAdidtional: NgForm) {
         this.formSubmitted = true;
 
-        if (form.valid && formAdidtional.valid) {
+        if (form.valid && formAdidtional.valid && this.orderItems.length>0) {
             this.order.orderItems = this.orderItems;
             this.order.customer = this.selectedCustomer;
-
-            console.log(JSON.stringify(this.order));
+            this.order.orderStatus = new OrderStatus(1);
 
             this.orderService.saveOrder(this.order).subscribe(data=>{
                     this.order=new Order();
@@ -127,12 +166,18 @@ export class BasketOrderComponent implements OnInit {
                     formAdidtional.resetForm();
                     this.recalculate();
                     this.formSubmitted = false;
-                //         this.giftBasketComponent.refreshData();
                     },
                     err =>  console.log("error " ));
             }
 
     }
+
+    onShowPopUp(){
+        this.setPopUpDarkBackgroudTrue();
+        this.customerService.getCustomers().subscribe(data=> this.customers = data);
+
+    }
+
 
     setPopUpDarkBackgroudTrue(){
         this.PopUpBackgroundStyle= {

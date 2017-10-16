@@ -19,7 +19,7 @@ export class ProductFormComponent implements OnInit {
     public formSubmitted: boolean = false;
 
     constructor(private productsService: ProductsService, private router: Router) {
-        productsService.getProductsTypes().subscribe(data => this.productsTypes = data)
+
     }
 
     ngOnInit() {
@@ -33,7 +33,6 @@ export class ProductFormComponent implements OnInit {
         if (form.valid) {
             this.productsService.saveProduct(this.product).subscribe(
                 order => {
-                    console.log(JSON.stringify(this.product));
                     this.product = new Product();
                     form.reset();
                     this.formSubmitted = false;
