@@ -45,6 +45,7 @@
     min-width: 100px;
 }
 .customer_data_form{
+    margin-bottom: 26px;
 }
 .order_detail_form{
 }
@@ -97,17 +98,10 @@ select.ng-dirty.ng-valid { border: 1px solid #6bc502 }
 .markup_const{
     max-width: 240px;
 }
-.markup_const_check{
-    position:relative;
-    top: 12px;
-}
-.markup_const_percent{
-    position:relative;
-    top: 12px;
-}
 .total{
-    color:#66f504;
+    color:#91c176;
     font-size: 17px;
+    font-weight: bold;
 
     width: 230px;
     padding: 5px;
@@ -122,6 +116,27 @@ select.ng-dirty.ng-valid { border: 1px solid #6bc502 }
     min-width: 145px;
     font-size: 14px;
 }
-.kw{
-    width: 100%;
+.order_summary{
+    padding-left: 0px;
+    padding-right: 0px;
+}
+.tax_input1{
+     position: relative;
+     top: -28px;
+    margin-left: 22px;
+ }
+.tax_input2{
+    position: relative;
+    top: -55px;
+    margin-left: 22px;
+}
+.markup_const_check{
+    position:relative;
+    top: 0px;
+    left: 20px;
+}
+.markup_const_percent{
+    position:relative;
+    top: 30px;
+    left: 20px;
 }

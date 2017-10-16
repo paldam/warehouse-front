@@ -12,7 +12,8 @@ export class Order{
         public deliveryType?: DeliveryType,
         public additionalInformation?: string,
         public deliveryDate?: Date,
-        public orderStatus? : OrderStatus
+        public orderStatus? : OrderStatus,
+        public orderTotalAmount? : number
     ){
 
     }

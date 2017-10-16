@@ -19,6 +19,12 @@ export class LeftNavComponent implements OnInit {
     }
     ngAfterViewInit(): void{
         $(document).ready(function(){
+            if($(window).width() < 650) {
+                $("#black").addClass("black_background");
+            }
+
+
+
             $("#menu h3").click(function(){
                 //slide up all the link lists
 
@@ -42,12 +48,21 @@ export class LeftNavComponent implements OnInit {
             $("#menu_slide_icon").addClass("fa-rotate-180");
             $("#mySidenav").css("width", "0px");
             $("#main").css("marginLeft", "0px");
+            $("#black").removeClass("black_background");
             this.clickNavNumber+=1;
 
         }else{
             $("#menu_slide_icon").removeClass("fa-rotate-180")
-            $("#mySidenav").css("width", "190px");
-            $("#main").css("marginLeft", "190px");
+            if($(window).width() > 650){
+                $("#mySidenav").css("width", "190px");
+                $("#main").css("marginLeft", "190px");
+
+
+            }else{
+                $("#mySidenav").css("width", "190px");
+                $("#main").css("marginLeft", "0px");
+                $("#black").addClass("black_background")
+            }
             this.clickNavNumber+=1;
         }
 

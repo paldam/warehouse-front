@@ -18,11 +18,31 @@
                 {{row.orderDate| date: 'dd/MM/yyyy HH:mm:ss'}}
             </ng-template>
         </p-column>
-        <p-column field="deliveryType.deliveryTypeName" header="Transport"  [sortable]="true" ></p-column>
-        <p-column field="additionalInformation" header="Dodatkowe informacje" [sortable]="true"></p-column>
-        <p-column field="deliveryDate" header="Data dostawy" [sortable]="true"></p-column>
 
 
+        <p-column field="customer.customerFirstName" header="Nabywca" [sortable]="true">
+            <ng-template let-row="rowData" pTemplate="body"  >
+                {{row.customer.customerFirstName}} {{row.customer.lastName}} {{row.customer.organizationName}}
+            </ng-template>
+        </p-column>
+
+        <!--Hide columns, only to global search purpose-->
+        <p-column field="customer.lastName" header=""  hidden="true"></p-column>
+        <p-column field="customer.organizationName" header=""  hidden="true"></p-column>
+
+        <p-column field="orderStatus.orderStatusName" header="Status" ></p-column>
+
+        <p-column field="additionalInformation" header="Dodatkowe informacje" ></p-column>
+        <p-column field="deliveryDate" header="Data dostawy" [sortable]="true">
+            <ng-template let-row="rowData" pTemplate="body"  >
+            {{row.deliveryDate| date: 'dd/MM/yyyy'}}
+            </ng-template>
+        </p-column>
+        <p-column field="orderTotalAmount" header="total" [sortable]="true">
+            <ng-template let-row="rowData" pTemplate="body"  >
+                {{row.orderTotalAmount/100 | number : '1.2-2'}} zł
+            </ng-template>
+        </p-column>
         <p-column  header="Akcja" styleClass="action_col">
             <ng-template let-product="rowData" pTemplate="body">
                 <button class="btn btn-primary" [routerLink]="['/product/', product.id]" >Edytuj</button>

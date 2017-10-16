@@ -13,10 +13,10 @@
             <p-column expander="true" header="Zawartość" styleClass="col-icon" [style]="{'width':'70px'}"></p-column>
             <p-column field="basketId" header="ID" [sortable]="true" [style]="{'width':'70px'}"></p-column>
             <p-column field="basketName" header="Nazwa kosza" [sortable]="true"></p-column>
-            <p-column field="basketType.basketTypeName" header="Typ kosza" [sortable]="true" [style]="{'width':'130px'}"></p-column>
-            <p-column field="basketTotalPrice"  header="Cena kosza netto"  [sortable]="true" [style]="{'width':'140px'}">
+            <p-column field="basketType.basketTypeName" header="Typ kosza" [sortable]="true" ></p-column>
+            <p-column field="basketTotalPrice"  header="Cena kosza netto"  [sortable]="true" >
                 <ng-template let-row="rowData" pTemplate="body">
-                    {{row.basketTotalPrice| number : '1.2-2'}} zł.
+                    {{row.basketTotalPrice/100| number : '1.2-2'}} zł.
                 </ng-template>
 
             </p-column>
@@ -50,9 +50,8 @@
     </p-fieldset>
 </div>
 
-
 <div class="row">
-    <div class="picked_products_list col-6 ">
+    <div class="picked_products_list col-md-6 ">
             <p-fieldset legend="Pozycje zamówienia" [toggleable]="true">
                 <table *ngIf="isBasketLinesEmpty()==false">
                     <thead>
@@ -74,38 +73,35 @@
             </p-fieldset>
     </div>
 
-    <div #basketsummary class="basket_summary col-6">
+    <div #basketsummary class="basket_summary col-md-6">
         <p-fieldset legend="Podsumowanie koszyka" [toggleable]="true">
             <div class="row">
-                <div class="col-4">
-                    <p class="tot">Cena Netto: {{total| number : '1.2-2'}} zł</p>
-                    <p class="total">Cena z marżą: {{totalPlusMarkUp| number : '1.2-2'}} zł</p>
-
+                <div class="col-lg-5">
+                    <p class="tot">Cena Netto: {{total/100| number : '1.2-2'}} zł</p>
+                    <p class="total">Cena z marżą: {{totalPlusMarkUp/100| number : '1.2-2'}} zł</p>
 
                 </div>
 
-                <div class="col-8 ">
-                    <div class="row">
-                        <div class="form-check markup_const_percent ">
-                            <input type="radio"  checked class="form-check-input" (change)="updateMarkupOption($event)"  name="markup_options" id="optionsRadios1" value="0" >
-                        </div>
+                <div class="col-lg-7">
 
-                        <div class="input-group markup_const">
-                            <input [disabled]="IsMarkUpPercentActive" type="number" name="tax" class="form-control"  aria-describedby="taxDesc"  step="0.1"  (change)="recalculateTotalPlusMarkUp()" [(ngModel)]="markupPercent" >
-                            <span  class="input-group-addon" id="taxDesc">Marża procentowa + %</span>
-                        </div>
-                    </div>
+                            <div class="form-check markup_const_percent ">
+                                <input type="radio"  class="form-check-input" (change)="updateMarkupOption($event)"  name="markup_options" id="optionsRadios1" value="0" >
+                            </div>
 
-                    <div class="row">
-                        <div class="form-check markup_const_check">
-                                <input type="radio" class="form-check-input" (change)="updateMarkupOption($event)"  name="markup_options" id="optionsRadios2" value="1" >
-                        </div>
+                                <div class="form-group tax_input1">
+                                    <small id="additional_tax_percent_Desc" class="text-muted">Marża procentowa + %</small>
+                                    <input [disabled]="IsMarkUpPercentActive" type="number" name="tax" class="form-control"  aria-describedby="taxDesc"  step="0.1"  (change)="recalculateTotalPlusMarkUp()" [(ngModel)]="markupPercent" >
+                                </div>
 
-                        <div class="input-group markup_const">
-                            <input [disabled]="IsMarkUpConstActive" type="number" name="tax" class="form-control"  aria-describedby="taxDesc"  step="0.1" (change)="recalculateTotalPlusMarkUp()" [(ngModel)]="markupConst" >
-                            <span class="input-group-addon" id="taxDesc">Marża kwotowa + zł</span>
-                        </div>
-                    </div>
+
+                            <div class="form-check markup_const_check">
+                                    <input type="radio" checked class="form-check-input" (change)="updateMarkupOption($event)"  name="markup_options" id="optionsRadios2" value="1" >
+                            </div>
+
+                            <div class="form-group tax_input2">
+                                <small id="additional_tax_const_Desc" class="text-muted">Marża kwotowa + zł</small>
+                                <input [disabled]="IsMarkUpConstActive" type="number" name="tax" class="form-control"  aria-describedby="taxDesc"  step="0.1" (change)="recalculateTotalPlusMarkUp()" [(ngModel)]="markupConst" >
+                            </div>
 
 
                 </div>
@@ -114,11 +110,11 @@
     </div>
 </div>
 
-<div class="row">
+
     <div class="order_summary col-12">
         <p-fieldset legend="Szczegóły zamówienia" [toggleable]="true">
             <div class="row">
-                <div class="customer_data_form col-6">
+                <div class="customer_data_form col-md-6">
                 <p-panel header="Dane osoby zamawiającej">
 
                     <button class="btn bg-primary text" (click)="op.show($event,popup_frame)">Wybierz klienta</button>
@@ -200,7 +196,7 @@
                     </div>
                 </p-panel>
             </div>
-                <div class="order_detail_form col-6">
+                <div class="order_detail_form col-md-6">
                     <p-panel header="Dodatkowe informacje">
                             <form id="OrderFormAdditional" novalidate #formAdidtional="ngForm">
 
@@ -244,7 +240,6 @@
 
         </p-fieldset>
     </div>
-</div>
 
 
 

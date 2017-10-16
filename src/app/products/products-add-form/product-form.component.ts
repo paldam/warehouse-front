@@ -31,6 +31,7 @@ export class ProductFormComponent implements OnInit {
         this.formSubmitted = true;
 
         if (form.valid) {
+            this.product.price*=100;
             this.productsService.saveProduct(this.product).subscribe(
                 order => {
                     this.product = new Product();

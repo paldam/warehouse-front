@@ -16,12 +16,11 @@
                      [loading]="loading" loadingIcon="fa-circle-o-notch" (onRowDblclick)="addProductToGiftBasket($event.data)">
                 <p-column field="id" header="ID" [sortable]="true" [style]="{'width':'70px'}"></p-column>
                 <p-column field="productName" header="Nazwa" [sortable]="true"></p-column>
-                <p-column field="productType.typeName" header="Rodzaj"  [sortable]="true" ></p-column>
-                <p-column field="capacity" header="Pojemność" [sortable]="true"></p-column>
-
+            <p-column field="capacity" header="Pojemność" [sortable]="true" [style]="{'width':'120px'}" ></p-column>
+                <p-column field="deliver" header="Dostawca"  [sortable]="true" ></p-column>
                 <p-column field="price" styleClass="price_col" header="Cena"  [sortable]="true">
                     <ng-template let-row="rowData" pTemplate="body"  >
-                        {{row.price | number : '1.2-2'}} zł
+                        {{row.price/100| number : '1.2-2'}} zł
                     </ng-template>
                 </p-column>
 
@@ -62,13 +61,12 @@
     <div class="basket_summary col-sm-6">
         <p-fieldset legend="Podsumowanie kosza" [toggleable]="true">
             <div class="row">
-                    <div class="col">
-                        <p>Cena Netto: {{total| number : '1.2-2'}} zł</p>
-                        <p>Cena z marżą: {{total*((markUp/100)+1)| number : '1.2-2'}} zł</p>
-                        <button class="btn bg-primary pull-left" type="submit" form="BasketForm" > Zapisz Kosz</button>
+                    <div class="col-lg-4">
+                        <p>Cena Netto: {{total/100| number : '1.2-2'}} zł</p>
+                        <p>Cena z marżą: {{(total*((markUp/100)+1))/100| number : '1.2-2'}} zł</p>
                     </div>
 
-                    <div class="col-8">
+                    <div class="col-lg-8">
                         <form id="BasketForm" novalidate #form="ngForm" (submit)="submitForm(form)">
                             <div class="form-group">
                                 <div class="input-group">
@@ -98,10 +96,8 @@
                                 <div *ngIf="basketItems.length<1 && formSubmitted" class="alert alert-danger" role="alert">
                                     <strong>Błąd. Zawartość kosza nie może być pusta</strong>
                                 </div>
-
-
-
                             </div>
+                            <button class="btn bg-primary pull-right" type="submit" form="BasketForm" > Zapisz Kosz</button>
                         </form>
                     </div>
             </div>

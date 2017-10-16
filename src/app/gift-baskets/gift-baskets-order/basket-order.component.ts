@@ -33,9 +33,9 @@ export class BasketOrderComponent implements OnInit {
     public totalPlusMarkUp: number=0;
     public markupPercent: number = 10;
     public markupConst: number=0;
-    public markUpOption: number =0;
-    public IsMarkUpConstActive: boolean= true;
-    public IsMarkUpPercentActive: boolean= false;
+    public markUpOption: number =1;
+    public IsMarkUpConstActive: boolean= false;
+    public IsMarkUpPercentActive: boolean= true;
     public PopUpBackgroundStyle = {
         'dark_background': false,
     }
@@ -153,15 +153,18 @@ export class BasketOrderComponent implements OnInit {
         this.formSubmitted = true;
 
         if (form.valid && formAdidtional.valid && this.orderItems.length>0) {
+            this.order.orderTotalAmount = this.totalPlusMarkUp;'o'
             this.order.orderItems = this.orderItems;
             this.order.customer = this.selectedCustomer;
             this.order.orderStatus = new OrderStatus(1);
+            console.log(this.order);
 
             this.orderService.saveOrder(this.order).subscribe(data=>{
                     this.order=new Order();
                     this.selectedCustomer= new Customer();
                     this.orderItems=[];
                     this.isReadOnlyProp= false;
+                    this.totalPlusMarkUp=0;
                     form.resetForm();
                     formAdidtional.resetForm();
                     this.recalculate();

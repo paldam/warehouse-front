@@ -17,7 +17,7 @@
         <p-column field="deliver" styleClass="deliver_col" header="Dostawca"  [sortable]="true" ></p-column>
         <p-column field="price" styleClass="price_col" header="Cena"  [sortable]="true">
             <ng-template let-row="rowData" pTemplate="body"  >
-                {{row.price |number: '1.2-2'}} zł
+                {{row.price /100 |number: '1.2-2'}} zł
             </ng-template>
         </p-column>
 

@@ -14,10 +14,14 @@ import {ActivatedRoute, Router} from '@angular/router';
 export class ProductEditFormComponent implements OnInit {
 
     public product: Product = new Product();
+    public productPrice : number ;
     public formSubmitted: boolean = false;
 
     constructor(private productsService: ProductsService, private router: Router, activeRoute: ActivatedRoute) {
-        productsService.getProduct(activeRoute.snapshot.params["id"]).subscribe(data => this.product = data);
+        productsService.getProduct(activeRoute.snapshot.params["id"]).subscribe(data =>{
+            this.product = data;
+            this.productPrice = data.price/100;
+        });
     }
 
     ngOnInit() {
@@ -29,6 +33,7 @@ export class ProductEditFormComponent implements OnInit {
         this.formSubmitted = true;
 
         if (form.valid) {
+            this.product.price= this.productPrice*100;
             this.productsService.saveProduct(this.product).subscribe(
                 order => {
                     this.product = new Product();

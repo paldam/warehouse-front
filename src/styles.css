@@ -91,3 +91,13 @@ p-fieldset{
   padding: 5px;
   margin-top: 5px;
 }
+
+@media screen and (max-width: 650px) {
+  .sidenav {
+    box-shadow: 1px 0px 1px #888888
+  }
+  #main{
+    margin-left: 0px;
+  }
+
+}

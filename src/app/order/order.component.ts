@@ -15,6 +15,7 @@ export class OrderComponent implements OnInit {
 
     constructor(private orderService :OrderService) {
         orderService.getOreders().subscribe(data=> this.orders=data);
+
     }
 
     refreshData() {
