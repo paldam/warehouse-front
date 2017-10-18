@@ -1,0 +1,165 @@
+
+<div class="order_summary col-12">
+  <p-fieldset [legend]="'Szczegóły zamówienia nr '+ order.orderId"  [toggleable]="true">
+    <div class="row">
+      <div class="customer_data_form col-md-6">
+        <p-panel header="Dane osoby zamawiającej">
+
+          <!--<button class="btn bg-primary text" (click)="op.show($event,popup_frame)">Wybierz klienta</button>-->
+          <!--<button class="btn bg-primary text"  (click)="cleanForm(form,formAdidtional)">Wyczyść</button>-->
+
+          <div class="form-group">
+            <form id="OrderForm" novalidate #form="ngForm" (submit)="submitOrderForm(form,formAdidtional)">
+              <div class="form-group">
+                <div class="input-group">
+                  <input type="text" name="name"  #name="ngModel" class="form-control"  size="30" aria-describedby="nameDesc" [readonly]="isFormReadOnly()"  [(ngModel)]="customer.customerFirstName" required >
+                  <span class="input-group-addon" id="nameDesc">Imię </span>
+                </div>
+                <ul class="text-danger list-unstyled" *ngIf="name.dirty|| formSubmitted">
+                  <li  *ngIf="name.errors?.required">To pole nie może być puste</li>
+                </ul>
+              </div>
+
+              <div class="form-group">
+                <div class="input-group">
+                  <input type="text" name="last_name" #last_name="ngModel" class="form-control"  size="30" aria-describedby="last_nameDesc" [readonly]="isFormReadOnly()" [(ngModel)]="customer.customerLastName" required >
+                  <span class="input-group-addon" id="last_nameDesc">Nazwisko</span>
+                </div>
+                <ul class="text-danger list-unstyled" *ngIf="last_name.dirty|| formSubmitted">
+                  <li  *ngIf="last_name.errors?.required">To pole nie może być puste</li>
+                </ul>
+              </div>
+
+              <div class="form-group">
+                <div class="input-group">
+                  <input type="text" name="organization" #organization="ngModel" class="form-control"  size="30" aria-describedby="organizationDesc"  [readonly]="isFormReadOnly()" [(ngModel)]="customer.organizationName">
+                  <span class="input-group-addon" id="organizationDesc">Nazwa Firmy</span>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <div class="input-group">
+                  <input type="text" name="address" #address="ngModel" class="form-control"  size="30" aria-describedby="streetDesc" [readonly]="isFormReadOnly()" [(ngModel)]="customer.address" required>
+                  <span class="input-group-addon" id="streetDesc">Ulica / nr. lokalu</span>
+                </div>
+                <ul class="text-danger list-unstyled" *ngIf="address.dirty|| formSubmitted">
+                  <li  *ngIf="address.errors?.required">To pole nie może być puste</li>
+                </ul>
+              </div>
+
+              <div class="form-group">
+                <div class="input-group">
+                  <input type="text" name="zip_code" #zip_code="ngModel" class="form-control"  size="30" aria-describedby="zip_codeDesc" [readonly]="isFormReadOnly()" [(ngModel)]="customer.zipCode" required>
+                  <span class="input-group-addon" id="zip_codeDesc">Kod pocztowy</span>
+                </div>
+                <ul class="text-danger list-unstyled" *ngIf="zip_code.dirty|| formSubmitted">
+                  <li  *ngIf="zip_code.errors?.required">To pole nie może być puste</li>
+                </ul>
+              </div>
+
+              <div class="form-group">
+                <div class="input-group">
+                  <input type="text" name="city_name" #city_name="ngModel" class="form-control"  size="30" aria-describedby="city_nameDesc" [readonly]="isFormReadOnly()" [(ngModel)]="customer.cityName" required="">
+                  <span class="input-group-addon" id="city_nameDesc">Miejscowość</span>
+                </div>
+                <ul class="text-danger list-unstyled" *ngIf="city_name.dirty|| formSubmitted">
+                  <li  *ngIf="city_name.errors?.required">To pole nie może być puste</li>
+                </ul>
+              </div>
+
+              <div class="form-group">
+                <div class="input-group">
+                  <input type="email" name="email" class="form-control"  size="30" aria-describedby="emailDesc" [readonly]="isFormReadOnly()" [(ngModel)]="customer.email">
+                  <span class="input-group-addon" id="emailDesc">Email</span>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <div class="input-group">
+                  <input type="tel" name="tel" class="form-control"  size="30" aria-describedby="telDesc" [readonly]="isFormReadOnly()" [(ngModel)]="customer.phoneNumber" >
+                  <span class="input-group-addon" id="telDesc">Telefon</span>
+                </div>
+              </div>
+            </form>
+          </div>
+        </p-panel>
+      </div>
+      <div class="order_detail_form col-md-6">
+        <p-panel header="Dodatkowe informacje">
+          <form id="OrderFormAdditional" novalidate #formAdidtional="ngForm">
+
+            <div class="form-group">
+              <div class="form-group">
+                <small id="order_date_Desc" class="text-muted">Data złożenia zamówienia</small>
+                <input type="text" name="order_date" class="form-control"  size="30" aria-describedby="order_date_Desc" [readonly]="isFormReadOnly()" [value]="order.orderDate| date: 'dd/MM/yyyy HH:mm:ss'"  >
+              </div>
+            </div>
+
+
+            <div class="form-group">
+              <small id="statusDesc" class="text-muted">Status zamówienia</small>
+              <select [compareWith]="compareOrderStatus" class="form-control" #status="ngModel" [(ngModel)]="order.orderStatus" name="status"  required [disabled]="false">
+                <option *ngFor="let item of orderStatus"  [ngValue]="item"  >{{item.orderStatusName}}</option>
+              </select>
+            </div>
+
+
+
+            <div class="form-group">
+              <div class="form-group">
+                <small id="total_Desc" class="text-muted">Wartość zamówienia</small>
+                <input type="text" name="total" class="form-control"  size="30" aria-describedby="total_Desc" [readonly]="isFormReadOnly()" [(ngModel)]="totalAmount"  >
+              </div>
+            </div>
+
+            <div class="form-group">
+              <small id="delivery_typeDesc" class="text-muted">Rodzaj dostawy</small>
+              <select [compareWith]="compareDeliveryType" class="form-control" #delivery_type="ngModel" [(ngModel)]="order.deliveryType" name="delivery_type"  required [disabled]="isFormReadOnly()">
+                <option *ngFor="let item of deliveryTypes"  [ngValue]="item"  >{{item.deliveryTypeName}}</option>
+              </select>
+              <ul class="text-danger list-unstyled" *ngIf="delivery_type.dirty|| formSubmitted">
+                <li  *ngIf="delivery_type.errors?.required">Wybierz typ dostawy</li>
+              </ul>
+            </div>
+
+
+
+            <div class="form-group">
+              <div class="input-group">
+                <input type="date" name="delivery_date"   class="form-control" #delivery_date="ngModel" [(ngModel)]="order.deliveryDate"  aria-describedby="delivery_dateDesc" required [readonly]="isFormReadOnly()">
+                <span class="input-group-addon" id="taxDesc">Data dostawy</span>
+              </div>
+              <ul class="text-danger list-unstyled" *ngIf="delivery_date.dirty|| formSubmitted">
+                <li  *ngIf="delivery_date.errors?.required">Wprowadz planowaną datę dostawy</li>
+              </ul>
+            </div>
+
+            <div class="form-group">
+              <div class="form-group">
+                <small id="additional_informationDesc" class="text-muted">Dodatkowe informacje</small>
+                <textarea class="form-control" name="additional_information" id="additional_information" rows="3" [(ngModel)]="order.additionalInformation" [readonly]="isFormReadOnly()"></textarea>
+              </div>
+            </div>
+
+
+
+          </form>
+          <button class="btn bg-primary " (click)="editOrderForm()"  >Edytuj zamówienie</button>
+          <div *ngIf="orderItems.length<1 && formSubmitted" class="alert alert-danger" role="alert">
+            <strong>Błąd. Zamówienie nie może być puste</strong>
+          </div>
+        </p-panel>
+
+      </div>
+    </div>
+
+  </p-fieldset>
+</div>
+<p-fieldset legend="Pozycje zamówienia" [toggleable]="true" [styleClass]="dd">
+    <p-dataTable [value]="orderItems" [rows]="50"
+      [loading]="loading" loadingIcon="fa-circle-o-notch" expandableRows="true">
+        <p-column expander="true" header="Zawartość" styleClass="col-icon" [style]="{'width':'70px'}"></p-column>
+       <p-column field="basket.basketName" header="nazwa kosza" [sortable]="true" ></p-column>
+        <p-column field="quantity" header="Liczba" [sortable]="true" ></p-column>
+    </p-dataTable>
+</p-fieldset>

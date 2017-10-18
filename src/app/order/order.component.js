@@ -16,13 +16,13 @@ var OrderComponent = (function () {
         this.orderService = orderService;
         this.loading = false;
         this.orders = [];
-        orderService.getOreders().subscribe(function (data) { return _this.orders = data; });
+        orderService.getOrders().subscribe(function (data) { return _this.orders = data; });
     }
     OrderComponent.prototype.refreshData = function () {
         var _this = this;
         this.loading = true;
         setTimeout(function () {
-            _this.orderService.getOreders().subscribe(function (data) { return _this.orders = data; });
+            _this.orderService.getOrders().subscribe(function (data) { return _this.orders = data; });
             _this.loading = false;
         }, 1000);
     };

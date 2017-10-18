@@ -1,0 +1,55 @@
+.ui-overlaypanel{
+    width: 0%;
+    z-index: 0;
+    position: fixed;
+    top: 30%;
+    left: -30px;
+}
+.ui-overlaypanel-content{
+    width: 80%;
+    z-index: 99    ;
+    position: fixed;
+    top: 20%;
+    left: 10% ;
+
+}
+.ui-overlaypanel-content .ui-datatable {
+    padding: 20px;
+    padding-top: 8px;
+}
+
+.input-group-addon{
+    min-width: 100px;
+}
+.customer_data_form{
+    margin-bottom: 26px;
+}
+.order_detail_form{
+}
+.errorDesc{
+    display:inline-block;
+}
+.form-group{
+    margin-bottom: 5px;
+}
+input.ng-dirty.ng-invalid { border: 1px solid #ff0000 }
+input.ng-dirty.ng-valid { border: 1px solid #6bc502 }
+
+select.ng-dirty.ng-invalid { border: 1px solid #ff0000 }
+select.ng-dirty.ng-valid { border: 1px solid #6bc502 }
+
+
+.order_summary{
+    padding-left: 0px;
+    padding-right: 0px;
+}
+
+button i {
+    padding-right: 10px;
+}
+
+/*.ui-fieldset-legend{*/
+    /*font-size: 25px;*/
+    /*color:#1e3850;*/
+/*}*/
+

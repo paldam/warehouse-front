@@ -27,7 +27,7 @@ var OrderService = (function () {
             return response.json();
         });
     };
-    OrderService.prototype.getOreders = function () {
+    OrderService.prototype.getOrders = function () {
         return this.http.get(this.baseUrl + "/orders/")
             .map(function (response) {
             return response.json();

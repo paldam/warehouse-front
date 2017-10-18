@@ -1,6 +1,5 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-
 import { AppComponent } from './app.component';
 import { ProductsComponent } from './products/products.component';
 import {ProductsService} from './products/products.service';
@@ -9,7 +8,7 @@ import { NavComponent } from './top-nav/top-nav.component';
 import {LeftNavComponent} from './left-nav/left-nav.component';
 import {
   PanelMenuModule, DataTableModule, SharedModule, FieldsetModule, OverlayPanelModule, LightboxModule,
-  PanelModule, ConfirmationService, ConfirmDialogModule
+  PanelModule, ConfirmationService, ConfirmDialogModule, DialogModule
 } from 'primeng/primeng';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {routing} from './app.routing';
@@ -23,6 +22,9 @@ import {BasketOrderComponent} from './gift-baskets/gift-baskets-order/basket-ord
 import {CustomerService} from './gift-baskets/gift-baskets-order/customer.service';
 import {OrderService} from './order/order.service';
 import {OrderComponent} from './order/order.component';
+import { OrderDetailsComponent } from './order-details/order-details.component';
+import { LoginComponent } from './login/login.component';
+import {AuthGuard} from "./auth.guard";
 
 @NgModule({
   declarations: [
@@ -35,12 +37,14 @@ import {OrderComponent} from './order/order.component';
       ProductPickerComponent,
       GiftBasketComponent,
       BasketOrderComponent,
-      OrderComponent
+      OrderComponent,
+      OrderDetailsComponent,
+      LoginComponent
   ],
   imports: [
-    BrowserModule,HttpModule,BrowserAnimationsModule,FormsModule,ConfirmDialogModule,PanelMenuModule,PanelModule,DataTableModule,SharedModule,FieldsetModule,LightboxModule,OverlayPanelModule,routing
+    BrowserModule,HttpModule,BrowserAnimationsModule,FormsModule,DialogModule,ConfirmDialogModule,PanelMenuModule,PanelModule,DataTableModule,SharedModule,FieldsetModule,LightboxModule,OverlayPanelModule,routing
   ],
-  providers: [ProductsService,BasketService,CustomerService,OrderService,ConfirmationService],
+  providers: [ProductsService,BasketService,CustomerService,OrderService,ConfirmationService,AuthGuard,],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

@@ -1,5 +1,4 @@
 import {Component, OnInit, ViewEncapsulation} from '@angular/core';
-import {BasketItems} from '../../model/basket_items.model';
 import {Basket} from '../../model/basket.model';
 import {OrderItem} from '../../model/order_item';
 import {BasketService} from '../gift-basket.service';
@@ -10,6 +9,7 @@ import {Order} from '../../model/order.model';
 import {OrderService} from '../../order/order.service';
 import {DeliveryType} from '../../model/delivery_type.model';
 import {OrderStatus} from "../../model/OrderStatus";
+import {ConfirmationService} from "primeng/primeng";
 
 @Component({
     selector: 'basket-order',
@@ -36,13 +36,15 @@ export class BasketOrderComponent implements OnInit {
     public markUpOption: number =1;
     public IsMarkUpConstActive: boolean= false;
     public IsMarkUpPercentActive: boolean= true;
+    public confirmDialogShow: boolean = false;
+    public generatedOrderId: number = null; //id too print PDF
     public PopUpBackgroundStyle = {
         'dark_background': false,
     }
 
 
 
-    constructor(private basketService : BasketService, private  customerService: CustomerService, private orderService: OrderService) {
+    constructor(private basketService : BasketService, private  customerService: CustomerService, private orderService: OrderService,private confirmationService: ConfirmationService) {
         basketService.getBaskets().subscribe(data=> this.baskets = data);
         customerService.getCustomers().subscribe(data=> this.customers = data);
         orderService.getDeliveryTypes().subscribe(data=> this.deliveryTypes = data);
@@ -56,7 +58,7 @@ export class BasketOrderComponent implements OnInit {
         if (this.markUpOption ==0 ){
             this.totalPlusMarkUp = this.total * ((this.markupPercent/100)+1)
         }else{
-            this.totalPlusMarkUp = this.total + this.markupConst;
+            this.totalPlusMarkUp = this.total + (this.markupConst*100);
         }
     }
 
@@ -126,7 +128,6 @@ export class BasketOrderComponent implements OnInit {
     }
 
 
-
     isFormReadOnly() : boolean{
         return this.isReadOnlyProp;
     }
@@ -153,34 +154,61 @@ export class BasketOrderComponent implements OnInit {
         this.formSubmitted = true;
 
         if (form.valid && formAdidtional.valid && this.orderItems.length>0) {
-            this.order.orderTotalAmount = this.totalPlusMarkUp;'o'
-            this.order.orderItems = this.orderItems;
-            this.order.customer = this.selectedCustomer;
-            this.order.orderStatus = new OrderStatus(1);
-            console.log(this.order);
-
+            this.setUpOrderBeforeSave();
             this.orderService.saveOrder(this.order).subscribe(data=>{
-                    this.order=new Order();
-                    this.selectedCustomer= new Customer();
-                    this.orderItems=[];
-                    this.isReadOnlyProp= false;
-                    this.totalPlusMarkUp=0;
-                    form.resetForm();
-                    formAdidtional.resetForm();
+                    console.log(JSON.stringify(this.order));
+                    this.generatedOrderId  = data.orderId;
+                    this.cleanAfterSave(form,formAdidtional);
                     this.recalculate();
-                    this.formSubmitted = false;
-                    },
-                    err =>  console.log("error " ));
-            }
+                    this.showAddOrderConfirmModal();
 
+                    },
+                    err =>  {
+                     console.log("Wystąpił błąd " );
+                    }
+            );
+        }
     }
+
+    setUpOrderBeforeSave(){
+        this.order.orderTotalAmount = this.totalPlusMarkUp;
+        this.order.orderItems = this.orderItems;
+        this.order.customer = this.selectedCustomer;
+        this.order.orderStatus = new OrderStatus(1);
+    }
+
+    cleanAfterSave(form: NgForm, formAdidtional: NgForm){
+        this.formSubmitted = false;
+        this.selectedCustomer= new Customer();
+        this.orderItems=[];
+        this.isReadOnlyProp= false;
+        this.totalPlusMarkUp=0;
+        form.resetForm();
+        formAdidtional.resetForm();
+    }
+
+    printPdf() {
+        this.orderService.getPdf(this.generatedOrderId).subscribe(res => {
+            var fileURL = URL.createObjectURL(res);
+            window.open(fileURL);
+        })
+
+        this.generatedOrderId = null;
+    }
+
+    showAddOrderConfirmModal() {
+        this.confirmDialogShow = true;
+    }
+
+    hideAddOrderConfirmModal() {
+        this.confirmDialogShow = false;
+    }
+
 
     onShowPopUp(){
         this.setPopUpDarkBackgroudTrue();
         this.customerService.getCustomers().subscribe(data=> this.customers = data);
-
     }
-
 
     setPopUpDarkBackgroudTrue(){
         this.PopUpBackgroundStyle= {

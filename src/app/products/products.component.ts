@@ -41,9 +41,10 @@ export class ProductsComponent implements OnInit {
 
   ShowConfirmModal(product: Product) {
     this.confirmationService.confirm({
-      message: 'Jesteś pewny że chcesz usunąć produkt: ' + product.productName + ' ?',
+      message: 'Jesteś pewny że chcesz przenieś produkt  ' + product.productName + ' do archiwum ?',
       accept: () => {
-          this.productsService.deleteProduct(product.id).subscribe();
+          product.isArchival=1;
+          this.productsService.saveProduct(product).subscribe();
           this.refreshData();
       },
       reject:()=>{

@@ -7,6 +7,8 @@ export class Product{
         public deliver?: string,
         public capacity?: number,
         public price?: number,
-        public stock?: number) {
+        public stock?: number,
+        public isArchival?: number
+    ) {
     }
 }
