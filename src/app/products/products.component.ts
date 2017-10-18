@@ -44,8 +44,11 @@ export class ProductsComponent implements OnInit {
       message: 'Jesteś pewny że chcesz przenieś produkt  ' + product.productName + ' do archiwum ?',
       accept: () => {
           product.isArchival=1;
-          this.productsService.saveProduct(product).subscribe();
-          this.refreshData();
+          this.productsService.saveProduct(product).subscribe(data=>{
+            this.refreshData();
+
+          });
+
       },
       reject:()=>{
 

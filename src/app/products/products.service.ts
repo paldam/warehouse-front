@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
 import {Observable} from 'rxjs/Observable';
 import {Product} from '../model/product.model';
-import {Http,Response} from '@angular/http';
+import {Response} from '@angular/http';
 import 'rxjs/add/operator/map';
 import {ProductType} from '../model/product_type.model';
+import {HttpService} from "../http-service";
 @Injectable()
 export class ProductsService {
 
@@ -11,7 +12,7 @@ export class ProductsService {
   public port: number = 8080;
   public baseUrl: string;
 
-  constructor(private http: Http) {
+  constructor(private http: HttpService) {
     this.baseUrl = `${this.protocol}://${location.hostname}:${this.port}`;
   }
 

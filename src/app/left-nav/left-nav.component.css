@@ -125,6 +125,17 @@
     border-left: 6px solid #92c774;
     padding-left: 44px;
 }
+.login_user_image{
+    color: #5d6468;
+    position: relative;
+    top: -30px;
+    left: 69px;
+}
+.login_user{
+    position: relative;
+    left: 23px;
+    font-size: 15px;
+}
 
 
 @media screen and (max-width: 650px) {

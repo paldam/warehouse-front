@@ -25,6 +25,7 @@ export class OrderDetailsComponent implements OnInit {
   public isReadOnlyProp: boolean = true;
   public formSubmitted: boolean = false;
   public orderStatus: OrderStatus[]= [];
+  public loading: boolean= false;
   public totalAmount: number;
 
   public delTyp : DeliveryType = new DeliveryType();

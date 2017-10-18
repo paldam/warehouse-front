@@ -3,7 +3,7 @@ import { NgModule } from '@angular/core';
 import { AppComponent } from './app.component';
 import { ProductsComponent } from './products/products.component';
 import {ProductsService} from './products/products.service';
-import {HttpModule} from '@angular/http';
+import {HttpModule, RequestOptions, XHRBackend} from '@angular/http';
 import { NavComponent } from './top-nav/top-nav.component';
 import {LeftNavComponent} from './left-nav/left-nav.component';
 import {
@@ -25,6 +25,10 @@ import {OrderComponent} from './order/order.component';
 import { OrderDetailsComponent } from './order-details/order-details.component';
 import { LoginComponent } from './login/login.component';
 import {AuthGuard} from "./auth.guard";
+import {AuthenticationService} from "./authentication.service";
+import { BasketComponent } from './basket/basket.component';
+import {HttpService} from "./http-service";
+import {Router} from "@angular/router";
 
 @NgModule({
   declarations: [
@@ -39,12 +43,19 @@ import {AuthGuard} from "./auth.guard";
       BasketOrderComponent,
       OrderComponent,
       OrderDetailsComponent,
-      LoginComponent
+      LoginComponent,
+      BasketComponent
   ],
   imports: [
     BrowserModule,HttpModule,BrowserAnimationsModule,FormsModule,DialogModule,ConfirmDialogModule,PanelMenuModule,PanelModule,DataTableModule,SharedModule,FieldsetModule,LightboxModule,OverlayPanelModule,routing
   ],
-  providers: [ProductsService,BasketService,CustomerService,OrderService,ConfirmationService,AuthGuard,],
+  providers: [ {
+    provide: HttpService, useFactory: (backend: XHRBackend, options: RequestOptions, router: Router) => {
+            return new HttpService(backend, options, router);
+            },
+    deps: [XHRBackend, RequestOptions,Router]},
+    ProductsService,BasketService,CustomerService,OrderService,ConfirmationService,AuthGuard,AuthenticationService],
+
   bootstrap: [AppComponent]
 })
 export class AppModule { }

@@ -29,7 +29,7 @@
                 <small id="priceDescript" class="text-muted">Cena</small>
                 <input type="text" name="price" class="form-control"  [(ngModel)]="productPrice"   #price="ngModel" aria-describedby="priceDescript" pattern="^(?=.*?\d)\d*[.]?\d{1,2}$">
                 <ul class="text-danger list-unstyled" *ngIf="price.dirty|| formSubmitted">
-                    <li  *ngIf="price.errors?.pattern">To pole musi zawierać format waluty z kropką np : 0.59 , 0.5 , 00,99</li>
+                    <li  *ngIf="price.errors?.pattern">To pole musi zawierać format waluty z kropką np : 0.59 , 2.5 , 0.99 , 19.99</li>
                 </ul>
             </div>
 

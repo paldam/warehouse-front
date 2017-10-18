@@ -9,7 +9,7 @@
           <!--<button class="btn bg-primary text"  (click)="cleanForm(form,formAdidtional)">Wyczyść</button>-->
 
           <div class="form-group">
-            <form id="OrderForm" novalidate #form="ngForm" (submit)="submitOrderForm(form,formAdidtional)">
+            <form id="OrderForm" novalidate #form="ngForm" >
               <div class="form-group">
                 <div class="input-group">
                   <input type="text" name="name"  #name="ngModel" class="form-control"  size="30" aria-describedby="nameDesc" [readonly]="isFormReadOnly()"  [(ngModel)]="customer.customerFirstName" required >
@@ -155,7 +155,7 @@
 
   </p-fieldset>
 </div>
-<p-fieldset legend="Pozycje zamówienia" [toggleable]="true" [styleClass]="dd">
+<p-fieldset legend="Pozycje zamówienia" [toggleable]="true" >
     <p-dataTable [value]="orderItems" [rows]="50"
       [loading]="loading" loadingIcon="fa-circle-o-notch" expandableRows="true">
         <p-column expander="true" header="Zawartość" styleClass="col-icon" [style]="{'width':'70px'}"></p-column>

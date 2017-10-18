@@ -1,6 +1,8 @@
 <div id="black">
 </div>
 <div id="mySidenav" class="sidenav" >
+    <i class="fa fa-user-o fa-4x login_user_image" aria-hidden="true"></i>
+    <span class="login_user">{{currentUser}}</span>
 
     <div id="menu">
         <ul>
@@ -23,6 +25,7 @@
             <li routerLinkActive="active_main">
                 <h3><span class="fa fa-shopping-basket"></span>Kosze</h3>
                 <ul>
+                    <li><a [routerLink]="['/baskets/'] " routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Lista Koszy</a></li>
                     <li><a [routerLink]="['/baskets/add'] " routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Kreator Koszy</a></li>
 
                 </ul>
@@ -39,7 +42,7 @@
 
 
             <li>
-                <h3><span class="fa fa-sign-out"></span>Wyloguj się</h3>
+                <h3 [routerLink]="['/login']"><span class="fa fa-sign-out"></span>Wyloguj się</h3>
             </li>
         </ul>
     </div>
