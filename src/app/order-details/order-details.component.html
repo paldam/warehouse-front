@@ -98,7 +98,7 @@
 
             <div class="form-group">
               <small id="statusDesc" class="text-muted">Status zamówienia</small>
-              <select [compareWith]="compareOrderStatus" class="form-control" #status="ngModel" [(ngModel)]="order.orderStatus" name="status"  required [disabled]="false">
+              <select [compareWith]="compareOrderStatus" class="form-control"  [(ngModel)]="order.orderStatus" name="status"  required >
                 <option *ngFor="let item of orderStatus"  [ngValue]="item"  >{{item.orderStatusName}}</option>
               </select>
             </div>
@@ -112,15 +112,15 @@
               </div>
             </div>
 
-            <div class="form-group">
-              <small id="delivery_typeDesc" class="text-muted">Rodzaj dostawy</small>
-              <select [compareWith]="compareDeliveryType" class="form-control" #delivery_type="ngModel" [(ngModel)]="order.deliveryType" name="delivery_type"  required [disabled]="isFormReadOnly()">
-                <option *ngFor="let item of deliveryTypes"  [ngValue]="item"  >{{item.deliveryTypeName}}</option>
-              </select>
-              <ul class="text-danger list-unstyled" *ngIf="delivery_type.dirty|| formSubmitted">
-                <li  *ngIf="delivery_type.errors?.required">Wybierz typ dostawy</li>
-              </ul>
-            </div>
+            <!--<div class="form-group">-->
+              <!--<small id="delivery_typeDesc" class="text-muted">Rodzaj dostawy</small>-->
+              <!--<select [compareWith]="compareDeliveryType" class="form-control" #delivery_type="ngModel" [(ngModel)]="order.deliveryType" name="delivery_type"  required >-->
+                <!--<option *ngFor="let item of deliveryTypes"  [ngValue]="item"  >{{item.deliveryTypeName}}</option>-->
+              <!--</select>-->
+              <!--<ul class="text-danger list-unstyled" *ngIf="delivery_type.dirty|| formSubmitted">-->
+                <!--<li  *ngIf="delivery_type.errors?.required">Wybierz typ dostawy</li>-->
+              <!--</ul>-->
+            <!--</div>-->
 
 
 

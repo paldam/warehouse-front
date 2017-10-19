@@ -43,6 +43,9 @@ export class HttpService extends Http {
 
                 localStorage.removeItem(TOKEN);
                 localStorage.removeItem(TOKEN_USER);
+            }if (res.status === 500 ) {
+
+               console.log("Problem z dostępem do bazy danych")
             }
             return Observable.throw(res);
         };

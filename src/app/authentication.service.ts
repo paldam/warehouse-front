@@ -23,8 +23,8 @@ export class AuthenticationService {
 
 
         // set token if saved in local storage
-        var currentUser = JSON.parse(localStorage.getItem(TOKEN_USER));
-        this.id_token = currentUser && currentUser.token;
+        var currentUser = localStorage.getItem(TOKEN_USER);
+        this.id_token = localStorage.getItem(TOKEN);
     }
 
     login(username: string, password: string): Observable<boolean> {
@@ -33,7 +33,7 @@ export class AuthenticationService {
             password: password
         };
         return this.http.post(this.baseUrl + `/auth`, data).map((response: Response) =>{
-            let token = response.json() && response.json().id_token;  //id_token - name from response
+            let token = response.json() && response.json().id_token;
             if (token) {
                 this.id_token=token;
                 localStorage.setItem(TOKEN,token);

@@ -3,6 +3,7 @@ import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs/Observable';
 import {Basket} from '../model/basket.model';
 import {BasketType} from '../model/basket_type.model';
+import {HttpService} from "../http-service";
 
 @Injectable()
 export class BasketService {
@@ -11,7 +12,7 @@ export class BasketService {
     public port: number = 8080;
     public baseUrl: string;
 
-    public constructor(private http : Http){
+    public constructor(private http : HttpService){
         this.baseUrl = `${this.protocol}://${location.hostname}:${this.port}`;
     }
 

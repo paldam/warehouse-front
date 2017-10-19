@@ -1,7 +1,8 @@
-import {Http,Response} from '@angular/http';
+import {Response} from '@angular/http';
 import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs/Observable';
 import {Customer} from '../../model/customer.model';
+import {HttpService} from "../../http-service";
 
 
 @Injectable()
@@ -11,7 +12,7 @@ export class CustomerService {
     public port: number = 8080;
     public baseUrl: string;
 
-    public constructor(private http : Http){
+    public constructor(private http : HttpService){
         this.baseUrl = `${this.protocol}://${location.hostname}:${this.port}`;
     }
 

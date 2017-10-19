@@ -29,12 +29,15 @@ export class LoginComponent implements OnInit {
         .subscribe(result => {
           if (result === true) {
               this.router.navigate(['/']);
-
           } else {
-            // login failed
-            this.error = 'Username or password is incorrect';
+            this.error = 'Błąd wewnętrzny';
             this.loading = false;
           }
+
+
+        },(err :Response) => {
+            this.error = 'Login lub hasło jest nie poprawne';
+            this.loading = false;
         });
   }
 }

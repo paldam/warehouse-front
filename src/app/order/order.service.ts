@@ -5,6 +5,7 @@ import {Observable} from 'rxjs/Observable';
 import {Order} from '../model/order.model';
 import {DeliveryType} from '../model/delivery_type.model';
 import {OrderStatus} from "../model/OrderStatus";
+import {HttpService} from "../http-service";
 @Injectable()
 export class OrderService {
 
@@ -12,7 +13,7 @@ export class OrderService {
     public port: number = 8080;
     public baseUrl: string;
 
-    public constructor(private http: Http) {
+    public constructor(private http: HttpService) {
         this.baseUrl = `${this.protocol}://${location.hostname}:${this.port}`;
     }
 

@@ -27,8 +27,8 @@ export class OrderDetailsComponent implements OnInit {
   public orderStatus: OrderStatus[]= [];
   public loading: boolean= false;
   public totalAmount: number;
+  public orderStatusId: number;
 
-  public delTyp : DeliveryType = new DeliveryType();
 
   constructor(private orderService : OrderService,activeRoute: ActivatedRoute, private  router: Router) {
      orderService.getOrder(activeRoute.snapshot.params["id"]).subscribe(res =>{
@@ -38,19 +38,22 @@ export class OrderDetailsComponent implements OnInit {
                   this.totalAmount = res.orderTotalAmount/100;
 
          })
-  }
-
-
-  ngOnInit() {
       this.orderService.getDeliveryTypes().subscribe(data=> this.deliveryTypes = data);
       this.orderService.getOrderStatus().subscribe(data=> this.orderStatus=data);
   }
 
+
+  ngOnInit() {
+
+  }
+
   compareDeliveryType( optionOne : DeliveryType, optionTwo : DeliveryType) : boolean {
-    return optionOne.deliveryTypeId === optionTwo.deliveryTypeId;
+    return optionTwo && optionTwo ? optionOne.deliveryTypeId === optionTwo.deliveryTypeId :optionOne === optionTwo;
 }
     compareOrderStatus( optionOne : OrderStatus, optionTwo : OrderStatus) : boolean {
-        return optionOne.orderStatusId === optionTwo.orderStatusId;
+        console.log(optionOne + '' + optionTwo);
+        return optionTwo && optionTwo ? optionOne.orderStatusId === optionTwo.orderStatusId :optionOne === optionTwo;
+
     }
   isFormReadOnly() : boolean{
     return this.isReadOnlyProp;
