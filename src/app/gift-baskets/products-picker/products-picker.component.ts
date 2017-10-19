@@ -23,7 +23,6 @@ export class ProductPickerComponent  {
     public basketTypes: BasketType[]=[];
     public basket: Basket= new Basket();
     public total: number=0;
-    public markUp: number =10;
     public formSubmitted: boolean = false;
     public loading: boolean;
     @ViewChild(GiftBasketComponent) giftBasketComponent : GiftBasketComponent;
@@ -96,9 +95,7 @@ export class ProductPickerComponent  {
 
         if (form.valid && this.basketItems.length>0) {
             this.basket.basketItems= this.basketItems;
-            console.log(this.basket.basketTotalPrice)
-            this.basket.basketTotalPrice=this.total;
-            console.log(JSON.stringify(this.basket));
+            this.basket.basketTotalPrice*=100;
             this.basketService.saveBasket(this.basket).subscribe(data=>{
                    this.basket=new Basket();
                    this.basketItems=[];
@@ -106,7 +103,6 @@ export class ProductPickerComponent  {
                     this.formSubmitted = false;
                    this.recalculate();
                    this.giftBasketComponent.refreshData();
-                    this.markUp=10;
             },
                 err =>  console.log("error " ));
         }

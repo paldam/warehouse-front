@@ -29,6 +29,7 @@ import {AuthenticationService} from "./authentication.service";
 import { BasketComponent } from './basket/basket.component';
 import {HttpService} from "./http-service";
 import {Router} from "@angular/router";
+import { GiftBasketEditComponent } from './gift-baskets/gift-basket-edit/gift-basket-edit.component';
 
 @NgModule({
   declarations: [
@@ -44,7 +45,8 @@ import {Router} from "@angular/router";
       OrderComponent,
       OrderDetailsComponent,
       LoginComponent,
-      BasketComponent
+      BasketComponent,
+      GiftBasketEditComponent
   ],
   imports: [
     BrowserModule,HttpModule,BrowserAnimationsModule,FormsModule,DialogModule,ConfirmDialogModule,PanelMenuModule,PanelModule,DataTableModule,SharedModule,FieldsetModule,LightboxModule,OverlayPanelModule,routing

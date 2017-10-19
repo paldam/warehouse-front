@@ -14,7 +14,7 @@
             <p-column field="basketId" header="ID" [sortable]="true" [style]="{'width':'70px'}"></p-column>
             <p-column field="basketName" header="Nazwa kosza" [sortable]="true"></p-column>
             <p-column field="basketType.basketTypeName" header="Typ kosza" [sortable]="true" ></p-column>
-            <p-column field="basketTotalPrice"  header="Cena kosza netto"  [sortable]="true" >
+            <p-column field="basketTotalPrice"  header="Cena kosza "  [sortable]="true" >
                 <ng-template let-row="rowData" pTemplate="body">
                     {{row.basketTotalPrice/100| number : '1.2-2'}} zł.
                 </ng-template>
@@ -36,7 +36,7 @@
                         <tr class="product_tab_row" *ngFor="let i of basket.basketItems">
                             <td>{{i.product.productName}}</td>
                             <td>{{i.product.capacity}}</td>
-                            <td>{{i.product.price}} zł</td>
+                            <td>{{i.product.price/100}} zł</td>
                             <td>{{i.quantity}} szt.</td>
                         </tr>
                         </tbody>
@@ -77,34 +77,32 @@
         <p-fieldset legend="Podsumowanie koszyka" [toggleable]="true">
             <div class="row">
                 <div class="col-lg-5">
-                    <p class="tot">Cena Netto: {{total/100| number : '1.2-2'}} zł</p>
-                    <p class="total">Cena z marżą: {{totalPlusMarkUp/100| number : '1.2-2'}} zł</p>
+                    <p class="tot">Kwota zamówienia: {{total/100| number : '1.2-2'}} zł</p>
+                    <!--<p class="total">Cena z marżą: {{totalPlusMarkUp/100| number : '1.2-2'}} zł</p>-->
 
                 </div>
 
-                <div class="col-lg-7">
+                <!--<div class="col-lg-7">-->
+                            <!--<div class="form-check markup_const_percent ">-->
+                                <!--<input type="radio"  class="form-check-input" (change)="updateMarkupOption($event)"  name="markup_options" id="optionsRadios1" value="0" >-->
+                            <!--</div>-->
 
-                            <div class="form-check markup_const_percent ">
-                                <input type="radio"  class="form-check-input" (change)="updateMarkupOption($event)"  name="markup_options" id="optionsRadios1" value="0" >
-                            </div>
-
-                                <div class="form-group tax_input1">
-                                    <small id="additional_tax_percent_Desc" class="text-muted">Marża procentowa + %</small>
-                                    <input [disabled]="IsMarkUpPercentActive" type="number" name="tax" class="form-control"  aria-describedby="taxDesc"  step="0.1"  (change)="recalculateTotalPlusMarkUp()" [(ngModel)]="markupPercent" >
-                                </div>
-
-
-                            <div class="form-check markup_const_check">
-                                    <input type="radio" checked class="form-check-input" (change)="updateMarkupOption($event)"  name="markup_options" id="optionsRadios2" value="1" >
-                            </div>
-
-                            <div class="form-group tax_input2">
-                                <small id="additional_tax_const_Desc" class="text-muted">Marża kwotowa + zł</small>
-                                <input [disabled]="IsMarkUpConstActive" type="number" name="tax" class="form-control"  aria-describedby="taxDesc"  step="0.1" (change)="recalculateTotalPlusMarkUp()" [(ngModel)]="markupConst" >
-                            </div>
+                                <!--<div class="form-group tax_input1">-->
+                                    <!--<small id="additional_tax_percent_Desc" class="text-muted">Marża procentowa + %</small>-->
+                                    <!--<input [disabled]="IsMarkUpPercentActive" type="number" name="tax" class="form-control"  aria-describedby="taxDesc"  step="0.1"  (change)="recalculateTotalPlusMarkUp()" [(ngModel)]="markupPercent" >-->
+                                <!--</div>-->
 
 
-                </div>
+                            <!--<div class="form-check markup_const_check">-->
+                                    <!--<input type="radio" checked class="form-check-input" (change)="updateMarkupOption($event)"  name="markup_options" id="optionsRadios2" value="1" >-->
+                            <!--</div>-->
+
+                            <!--<div class="form-group tax_input2">-->
+                                <!--<small id="additional_tax_const_Desc" class="text-muted">Marża kwotowa + zł</small>-->
+                                <!--<input [disabled]="IsMarkUpConstActive" type="number" name="tax" class="form-control"  aria-describedby="taxDesc"  step="0.1" (change)="recalculateTotalPlusMarkUp()" [(ngModel)]="markupConst" >-->
+                            <!--</div>-->
+                <!--</div>-->
+
             </div>
         </p-fieldset>
     </div>

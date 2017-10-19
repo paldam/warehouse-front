@@ -44,7 +44,7 @@
             </ng-template>
         </p-column>
         <p-column field="orderStatus.orderStatusName" header="Status" ></p-column>
-        <p-column field="deliveryType.deliveryTypeName" header="Status" ></p-column>
+        <p-column field="deliveryType.deliveryTypeName" header="Rodzaj dostawy" ></p-column>
         <p-column  field="orders" header="Akcja" styleClass="action_col">
             <ng-template let-order="rowData" pTemplate="body">
                 <i class="fa fa-pencil-square-o fa-2x" aria-hidden="true"  title="Edytuj zamówienie" [routerLink]="['/order/', order.orderId]"></i>

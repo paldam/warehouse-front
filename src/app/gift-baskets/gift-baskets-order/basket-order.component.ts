@@ -30,7 +30,7 @@ export class BasketOrderComponent implements OnInit {
     public formSubmitted: boolean = false;
     public isReadOnlyProp: boolean = false;
     public loading: boolean;
-    public totalPlusMarkUp: number=0;
+    // public totalPlusMarkUp: number=0;
     public markupPercent: number = 10;
     public markupConst: number=0;
     public markUpOption: number =1;
@@ -54,28 +54,28 @@ export class BasketOrderComponent implements OnInit {
 
     }
 
-    recalculateTotalPlusMarkUp(){
-        if (this.markUpOption ==0 ){
-            this.totalPlusMarkUp = this.total * ((this.markupPercent/100)+1)
-        }else{
-            this.totalPlusMarkUp = this.total + (this.markupConst*100);
-        }
-    }
+    // recalculateTotalPlusMarkUp(){
+    //     if (this.markUpOption ==0 ){
+    //         this.totalPlusMarkUp = this.total * ((this.markupPercent/100)+1)
+    //     }else{
+    //         this.totalPlusMarkUp = this.total + (this.markupConst*100);
+    //     }
+    // }
 
-    updateMarkupOption(event) {
-        if(event.target.value==0){
-            this.totalPlusMarkUp = this.total * ((this.markupPercent/100)+1)
-            this.markUpOption=0;
-            this.IsMarkUpConstActive= true;
-            this.IsMarkUpPercentActive= false;
-        }else{
-            this.totalPlusMarkUp = this.total + this.markupConst;
-            this.markUpOption=1;
-            this.IsMarkUpConstActive= false;
-            this.IsMarkUpPercentActive= true;
-        }
-
-    }
+    // updateMarkupOption(event) {
+    //     if(event.target.value==0){
+    //         this.totalPlusMarkUp = this.total * ((this.markupPercent/100)+1)
+    //         this.markUpOption=0;
+    //         this.IsMarkUpConstActive= true;
+    //         this.IsMarkUpPercentActive= false;
+    //     }else{
+    //         this.totalPlusMarkUp = this.total + this.markupConst;
+    //         this.markUpOption=1;
+    //         this.IsMarkUpConstActive= false;
+    //         this.IsMarkUpPercentActive= true;
+    //     }
+    //
+    // }
 
 
     addBasketToOrder(basket: Basket){
@@ -87,7 +87,7 @@ export class BasketOrderComponent implements OnInit {
             line.quantity= line.quantity + 1;
         }
         this.recalculate();
-        this.recalculateTotalPlusMarkUp();
+        // this.recalculateTotalPlusMarkUp();
     }
     updateQuantity(basketLine: OrderItem, quantity: number) {
         let line = this.orderItems.find(line => line.basket.basketId== basketLine.basket.basketId);
@@ -95,7 +95,7 @@ export class BasketOrderComponent implements OnInit {
             line.quantity = Number(quantity);
         }
         this.recalculate();
-        this.recalculateTotalPlusMarkUp();
+        // this.recalculateTotalPlusMarkUp();
     }
 
     isBasketLinesEmpty() : boolean{
@@ -112,21 +112,28 @@ export class BasketOrderComponent implements OnInit {
             this.orderItems.splice(index,1);
         }
         this.recalculate();
-        this.recalculateTotalPlusMarkUp();
+        // this.recalculateTotalPlusMarkUp();
     }
 
+
+    // recalculate(){
+    //     this.total = 0;
+    //     this.orderItems.forEach(orderItem=> {
+    //         let totalBasketPrice =0;
+    //         orderItem.basket.basketItems.forEach(basketItem=>{
+    //             totalBasketPrice+=(basketItem.product.price * basketItem.quantity)
+    //         })
+    //         this.total += (totalBasketPrice * orderItem.quantity);
+    //     })
+    // }
 
     recalculate(){
         this.total = 0;
         this.orderItems.forEach(orderItem=> {
-            let totalBasketPrice =0;
-            orderItem.basket.basketItems.forEach(basketItem=>{
-                totalBasketPrice+=(basketItem.product.price * basketItem.quantity)
+            this.total += (orderItem.basket.basketTotalPrice * orderItem.quantity);
             })
-            this.total += (totalBasketPrice * orderItem.quantity);
-        })
-    }
 
+    }
 
     isFormReadOnly() : boolean{
         return this.isReadOnlyProp;
@@ -171,7 +178,7 @@ export class BasketOrderComponent implements OnInit {
     }
 
     setUpOrderBeforeSave(){
-        this.order.orderTotalAmount = this.totalPlusMarkUp;
+        this.order.orderTotalAmount = this.total;
         this.order.orderItems = this.orderItems;
         this.order.customer = this.selectedCustomer;
         this.order.orderStatus = new OrderStatus(1);
@@ -182,7 +189,7 @@ export class BasketOrderComponent implements OnInit {
         this.selectedCustomer= new Customer();
         this.orderItems=[];
         this.isReadOnlyProp= false;
-        this.totalPlusMarkUp=0;
+        // this.totalPlusMarkUp=0;
         form.resetForm();
         formAdidtional.resetForm();
     }

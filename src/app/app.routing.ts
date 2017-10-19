@@ -9,6 +9,7 @@ import {OrderDetailsComponent} from "./order-details/order-details.component";
 import {LoginComponent} from "./login/login.component";
 import {AuthGuard} from "./auth.guard";
 import {BasketComponent} from "./basket/basket.component";
+import {GiftBasketEditComponent} from "./gift-baskets/gift-basket-edit/gift-basket-edit.component";
 const routes: Routes = [
     {path: '', component: ProductsComponent, pathMatch: 'full', canActivate: [AuthGuard]},
     { path: 'product', component: ProductsComponent, canActivate: [AuthGuard] },
@@ -17,6 +18,7 @@ const routes: Routes = [
     { path: 'baskets/add', component: ProductPickerComponent, canActivate: [AuthGuard]},
     { path: 'baskets/order', component:BasketOrderComponent, canActivate: [AuthGuard]},
     {path:   'baskets', component: BasketComponent, canActivate: [AuthGuard] },
+    {path:   'basket/:basketId', component: GiftBasketEditComponent, canActivate: [AuthGuard] },
     { path: 'orders', component:OrderComponent, canActivate: [AuthGuard]},
     {path:   'order/:id', component:OrderDetailsComponent, canActivate: [AuthGuard]},
     {path:   'login', component: LoginComponent}

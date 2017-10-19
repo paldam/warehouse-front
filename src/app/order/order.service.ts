@@ -6,6 +6,7 @@ import {Order} from '../model/order.model';
 import {DeliveryType} from '../model/delivery_type.model';
 import {OrderStatus} from "../model/OrderStatus";
 import {HttpService} from "../http-service";
+import {TOKEN_USER} from "../authentication.service";
 @Injectable()
 export class OrderService {
 

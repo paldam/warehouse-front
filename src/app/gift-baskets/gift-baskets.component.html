@@ -14,7 +14,7 @@
             <p-column field="basketId" header="ID" [sortable]="true" [style]="{'width':'70px'}"></p-column>
             <p-column field="basketName" header="Nazwa kosza" [sortable]="true"></p-column>
             <p-column field="basketType.basketTypeName" header="Typ kosza" [sortable]="true" ></p-column>
-            <p-column field="basketTotalPrice"  header="Cena kosza netto"  [sortable]="true" >
+            <p-column field="basketTotalPrice"  header="Cena kosza"  [sortable]="true" >
                 <ng-template let-row="rowData" pTemplate="body">
                     {{row.basketTotalPrice/100| number : '1.2-2'}} zł.
                 </ng-template>

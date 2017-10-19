@@ -112,15 +112,15 @@
               </div>
             </div>
 
-            <!--<div class="form-group">-->
-              <!--<small id="delivery_typeDesc" class="text-muted">Rodzaj dostawy</small>-->
-              <!--<select [compareWith]="compareDeliveryType" class="form-control" #delivery_type="ngModel" [(ngModel)]="order.deliveryType" name="delivery_type"  required >-->
-                <!--<option *ngFor="let item of deliveryTypes"  [ngValue]="item"  >{{item.deliveryTypeName}}</option>-->
-              <!--</select>-->
-              <!--<ul class="text-danger list-unstyled" *ngIf="delivery_type.dirty|| formSubmitted">-->
-                <!--<li  *ngIf="delivery_type.errors?.required">Wybierz typ dostawy</li>-->
-              <!--</ul>-->
-            <!--</div>-->
+            <div class="form-group">
+              <small id="delivery_typeDesc" class="text-muted">Rodzaj dostawy</small>
+              <select [compareWith]="compareDeliveryType" class="form-control" #delivery_type="ngModel" [(ngModel)]="order.deliveryType" name="delivery_type"  required >
+                <option *ngFor="let item of deliveryTypes"  [ngValue]="item"  >{{item.deliveryTypeName}}</option>
+              </select>
+              <ul class="text-danger list-unstyled" *ngIf="delivery_type.dirty|| formSubmitted">
+                <li  *ngIf="delivery_type.errors?.required">Wybierz typ dostawy</li>
+              </ul>
+            </div>
 
 
 
@@ -158,7 +158,6 @@
 <p-fieldset legend="Pozycje zamówienia" [toggleable]="true" >
     <p-dataTable [value]="orderItems" [rows]="50"
       [loading]="loading" loadingIcon="fa-circle-o-notch" expandableRows="true">
-        <p-column expander="true" header="Zawartość" styleClass="col-icon" [style]="{'width':'70px'}"></p-column>
        <p-column field="basket.basketName" header="nazwa kosza" [sortable]="true" ></p-column>
         <p-column field="quantity" header="Liczba" [sortable]="true" ></p-column>
     </p-dataTable>

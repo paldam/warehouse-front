@@ -1,0 +1,45 @@
+.products_box {
+}
+
+
+.search_input{
+    max-width: 50%;
+}
+.refresh_icon {
+    position: absolute;
+    right: 10px;
+    top: 5px;
+}
+.price_col{
+    text-align: right;
+    width: 70px;
+}
+.stock_col{
+    width: 90px;
+    text-align: right;
+}
+.action_col{
+    width: 120px;
+}
+
+
+.picked_products_list{
+    font-size: 12px;
+    padding-top: 10px;
+}
+.col_quantity{
+    width: 85px;
+}
+.col_delete{
+    text-align: center;
+}
+.basket_summary{
+    padding-top: 10px;
+}
+.input-group-addon{
+    min-width: 100px;
+}
+.only_availeble_product_checkbox{
+    margin-left: 40px;
+    margin-top: 5px;
+}

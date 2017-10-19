@@ -1,6 +1,6 @@
 import {Component, OnInit, ViewEncapsulation} from '@angular/core';
 import {MenuItem} from 'primeng/primeng';
-import {AuthenticationService, TOKEN_USER} from "../authentication.service";
+import {AuthenticationService, TOKEN, TOKEN_USER} from "../authentication.service";
 
 declare var jquery:any;
 declare var $ :any;
@@ -13,7 +13,6 @@ declare var $ :any;
 })
 
 export class LeftNavComponent implements OnInit {
-
     public clickNavNumber: number=0;
 
     ngOnInit(
