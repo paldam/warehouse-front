@@ -2,6 +2,8 @@ import {Observable} from "rxjs/Observable";
 import {Injectable} from "@angular/core";
 import {Http, Response} from '@angular/http';
 import {Router} from "@angular/router";
+import { JwtHelper } from 'angular2-jwt';
+import { tokenNotExpired } from 'angular2-jwt';
 
 export const TOKEN: string = 'jwt_token';
 export const TOKEN_USER: string = 'jwt_token_user';
@@ -14,6 +16,7 @@ export class AuthenticationService {
     public protocol: string = "http";
     public port: number = 8080;
     public baseUrl: string;
+    public jwtHelper: JwtHelper = new JwtHelper();
 
     public id_token: string;
 
@@ -49,9 +52,30 @@ export class AuthenticationService {
 
 
     logout(): void {
-        // clear token remove user from local storage to log user out
         this.id_token = null;
         localStorage.removeItem(TOKEN);
         localStorage.removeItem(TOKEN_USER);
+    }
+
+    isLoggedIn() : boolean{
+            return tokenNotExpired('jwt_token');
+    }
+
+    isAdmin() : boolean {
+        if (localStorage.getItem(TOKEN))  {
+            let authority = this.jwtHelper.decodeToken(this.id_token).auth;
+
+            if (authority == "admin"){
+                return true;
+            }else{
+                return false;
+            }
+        }
+    }
+
+    getCurrentUser(){
+        if (localStorage.getItem(TOKEN))  {
+            return this.jwtHelper.decodeToken(this.id_token).sub;
+        }
     }
 }

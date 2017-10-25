@@ -17,6 +17,7 @@ export class ProductsComponent implements OnInit {
   public loading: boolean;
   public products: Product[]=[];
 
+
   constructor(private productsService : ProductsService, private router: Router,private confirmationService: ConfirmationService) {
     productsService.getProducts().subscribe(data=> this.products = data)
 
@@ -33,6 +34,12 @@ export class ProductsComponent implements OnInit {
       this.productsService.getProducts().subscribe(data => this.products = data);
       this.loading = false;
     }, 1000);
+
+
+
+
+
+
   }
 
   selectProduct( id : number){

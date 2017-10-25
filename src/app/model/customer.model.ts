@@ -3,8 +3,7 @@ export class Customer{
     constructor(
         public customerId?: number,
         public organizationName?: string,
-        public customerFirstName?: string,
-        public customerLastName?: string,
+        public name?: string,
         public address?: string,
         public zipCode?: string,
         public cityName?: string,

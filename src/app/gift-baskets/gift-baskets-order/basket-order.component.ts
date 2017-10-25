@@ -10,6 +10,7 @@ import {OrderService} from '../../order/order.service';
 import {DeliveryType} from '../../model/delivery_type.model';
 import {OrderStatus} from "../../model/OrderStatus";
 import {ConfirmationService} from "primeng/primeng";
+import {TOKEN_USER} from "../../authentication.service";
 
 @Component({
     selector: 'basket-order',
@@ -182,6 +183,7 @@ export class BasketOrderComponent implements OnInit {
         this.order.orderItems = this.orderItems;
         this.order.customer = this.selectedCustomer;
         this.order.orderStatus = new OrderStatus(1);
+        this.order.userName = localStorage.getItem(TOKEN_USER);
     }
 
     cleanAfterSave(form: NgForm, formAdidtional: NgForm){

@@ -5,7 +5,8 @@ import {OrderStatus} from "./OrderStatus";
 export class Order{
     constructor(
         public orderId?: number,
-        //public user?: User,
+        public orderFvNumber?: string,
+        public userName?: string,
         public customer?: Customer,
         public orderItems?: OrderItem[],
         public orderDate?: Date,

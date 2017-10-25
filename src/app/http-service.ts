@@ -39,7 +39,7 @@ export class HttpService extends Http {
         return (res: Response) => {
             if (res.status === 401 || res.status === 403) {
                 // if not authenticated
-                this.router.navigateByUrl('login');
+                this.router.navigateByUrl('/login');
 
                 localStorage.removeItem(TOKEN);
                 localStorage.removeItem(TOKEN_USER);

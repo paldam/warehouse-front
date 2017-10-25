@@ -40,6 +40,9 @@
                 </ul>
             </li>
 
+            <li *ngIf="isAdmin()">
+                <h3 [routerLink]="['/admin']"><span class="fa fa-sign-out"></span>Admin</h3>
+            </li>
 
             <li>
                 <h3 [routerLink]="['/login']"><span class="fa fa-sign-out"></span>Wyloguj się</h3>

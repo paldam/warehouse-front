@@ -30,6 +30,14 @@ import { BasketComponent } from './basket/basket.component';
 import {HttpService} from "./http-service";
 import {Router} from "@angular/router";
 import { GiftBasketEditComponent } from './gift-baskets/gift-basket-edit/gift-basket-edit.component';
+import { AdminComponent } from './admin/admin.component';
+import {AdminGuard} from "./admin.guard";
+import { TestComponent } from './test/test.component';
+
+
+export function httpExt(backend: XHRBackend, options: RequestOptions, router: Router) {
+  return new HttpService(backend, options, router);
+}
 
 @NgModule({
   declarations: [
@@ -46,17 +54,16 @@ import { GiftBasketEditComponent } from './gift-baskets/gift-basket-edit/gift-ba
       OrderDetailsComponent,
       LoginComponent,
       BasketComponent,
-      GiftBasketEditComponent
+      GiftBasketEditComponent,
+      AdminComponent,
+      TestComponent
   ],
   imports: [
     BrowserModule,HttpModule,BrowserAnimationsModule,FormsModule,DialogModule,ConfirmDialogModule,PanelMenuModule,PanelModule,DataTableModule,SharedModule,FieldsetModule,LightboxModule,OverlayPanelModule,routing
   ],
   providers: [ {
-    provide: HttpService, useFactory: (backend: XHRBackend, options: RequestOptions, router: Router) => {
-            return new HttpService(backend, options, router);
-            },
-    deps: [XHRBackend, RequestOptions,Router]},
-    ProductsService,BasketService,CustomerService,OrderService,ConfirmationService,AuthGuard,AuthenticationService],
+    provide: HttpService, useFactory: (httpExt) , deps: [XHRBackend, RequestOptions,Router]},
+    ProductsService,BasketService,CustomerService,OrderService,ConfirmationService,AuthGuard,AdminGuard,AuthenticationService],
 
   bootstrap: [AppComponent]
 })

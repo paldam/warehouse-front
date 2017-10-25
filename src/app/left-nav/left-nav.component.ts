@@ -15,9 +15,15 @@ declare var $ :any;
 export class LeftNavComponent implements OnInit {
     public clickNavNumber: number=0;
 
+    constructor(private authenticationService: AuthenticationService){
+    }
+
+
     ngOnInit(
     ) {
     }
+
+
     ngAfterViewInit(): void{
         $(document).ready(function(){
             if($(window).width() < 650) {
@@ -68,6 +74,13 @@ export class LeftNavComponent implements OnInit {
         }
 
      }
+
+    isAdmin() : boolean {
+         return this.authenticationService.isAdmin();
+    }
+    getUser(){
+        return this.authenticationService.getCurrentUser;
+    }
 
 }
 

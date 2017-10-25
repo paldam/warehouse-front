@@ -12,7 +12,13 @@
     <p-dataTable [value]="orders" [rows]="20" [paginator]="true" [globalFilter]="gb" #dt
                  [loading]="loading" loadingIcon="fa-circle-o-notch">
         <p-header>Lista Zamówień</p-header>
-        <p-column field="orderId" header="Numer Zamówienia" [sortable]="true" [style]="{'width':'70px'}"></p-column>
+
+        <p-column  header="lp."   [style]="{'width':'70px'}">
+            <ng-template let-i="rowIndex" pTemplate="rowexpansion">
+                {{i+1}}
+            </ng-template>
+        </p-column>
+        <p-column field="orderFvNumber" header="Numer FV" [sortable]="true" ></p-column>
         <p-column field="orderDate" header="Data zamówienia" [sortable]="true">
             <ng-template let-row="rowData" pTemplate="body"  >
                 {{row.orderDate| date: 'dd/MM/yyyy HH:mm:ss'}}
@@ -20,14 +26,14 @@
         </p-column>
 
 
-        <p-column field="customer.customerFirstName" header="Nabywca" [sortable]="true">
+        <p-column field="customer.customerName" header="Nabywca" [sortable]="true">
             <ng-template let-row="rowData" pTemplate="body"  >
-                {{row.customer.customerFirstName}} {{row.customer.lastName}} {{row.customer.organizationName}}
+                {{row.customer.name}} {{row.customer.organizationName}}
             </ng-template>
         </p-column>
 
         <!--Hide columns, only to global search purpose-->
-        <p-column field="customer.lastName" header=""  hidden="true"></p-column>
+        <p-column field="customer.name" header=""  hidden="true"></p-column>
         <p-column field="customer.organizationName" header=""  hidden="true"></p-column>
 
 

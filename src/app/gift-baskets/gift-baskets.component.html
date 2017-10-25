@@ -11,7 +11,13 @@
         <p-dataTable [value]="baskets" [rows]="10" [paginator]="true" [globalFilter]="gb" #dt
                      [loading]="loading" loadingIcon="fa-circle-o-notch" expandableRows="true">
             <p-column expander="true" header="Zawartość" styleClass="col-icon " [style]="{'width':'70px'}"></p-column>
-            <p-column field="basketId" header="ID" [sortable]="true" [style]="{'width':'70px'}"></p-column>
+
+            <p-column  header="lp."   [style]="{'width':'70px'}">
+                <ng-template let-i="rowIndex" pTemplate="rowexpansion">
+                    {{i+1}}
+                </ng-template>
+            </p-column>
+
             <p-column field="basketName" header="Nazwa kosza" [sortable]="true"></p-column>
             <p-column field="basketType.basketTypeName" header="Typ kosza" [sortable]="true" ></p-column>
             <p-column field="basketTotalPrice"  header="Cena kosza"  [sortable]="true" >

@@ -14,7 +14,12 @@
         </div>
         <p-dataTable [value]="products" [rows]="10" [paginator]="true" [globalFilter]="gb" #dt
                      [loading]="loading" loadingIcon="fa-circle-o-notch" (onRowDblclick)="addProductToGiftBasket($event.data)">
-                <p-column field="id" header="ID" [sortable]="true" [style]="{'width':'70px'}"></p-column>
+
+            <p-column  header="lp."  [style]="{'width':'70px'}">
+                <ng-template let-i="rowIndex" pTemplate="rowexpansion">
+                    {{i+1}}
+                </ng-template>
+            </p-column>
                 <p-column field="productName" header="Nazwa" [sortable]="true"></p-column>
             <p-column field="capacity" header="Pojemność" [sortable]="true" [style]="{'width':'120px'}" ></p-column>
                 <p-column field="deliver" header="Dostawca"  [sortable]="true" ></p-column>

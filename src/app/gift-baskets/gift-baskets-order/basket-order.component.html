@@ -11,7 +11,11 @@
         <p-dataTable [value]="baskets" [rows]="10" [paginator]="true" [globalFilter]="gb" #dt
                      [loading]="loading" loadingIcon="fa-circle-o-notch" expandableRows="true" (onRowDblclick)="addBasketToOrder($event.data)">
             <p-column expander="true" header="Zawartość" styleClass="col-icon" [style]="{'width':'70px'}"></p-column>
-            <p-column field="basketId" header="ID" [sortable]="true" [style]="{'width':'70px'}"></p-column>
+            <p-column  header="lp."  [style]="{'width':'70px'}">
+                <ng-template let-i="rowIndex" pTemplate="rowexpansion">
+                    {{i+1}}
+                </ng-template>
+            </p-column>
             <p-column field="basketName" header="Nazwa kosza" [sortable]="true"></p-column>
             <p-column field="basketType.basketTypeName" header="Typ kosza" [sortable]="true" ></p-column>
             <p-column field="basketTotalPrice"  header="Cena kosza "  [sortable]="true" >
@@ -122,23 +126,14 @@
                         <form id="OrderForm" novalidate #form="ngForm" (submit)="submitOrderForm(form,formAdidtional)">
                            <div class="form-group">
                                 <div class="input-group">
-                                    <input type="text" name="name" #name="ngModel" class="form-control"  size="30" aria-describedby="nameDesc" [readonly]="isFormReadOnly()"  [(ngModel)]="selectedCustomer.customerFirstName" required >
-                                    <span class="input-group-addon" id="nameDesc">Imię </span>
+                                    <input type="text" name="name" #name="ngModel" class="form-control"  size="30" aria-describedby="nameDesc" [readonly]="isFormReadOnly()"  [(ngModel)]="selectedCustomer.name" required >
+                                    <span class="input-group-addon" id="nameDesc">Imię i Nazwisko </span>
                                 </div>
                                <ul class="text-danger list-unstyled" *ngIf="name.dirty|| formSubmitted">
                                    <li  *ngIf="name.errors?.required">To pole nie może być puste</li>
                                </ul>
                            </div>
 
-                            <div class="form-group">
-                                <div class="input-group">
-                                    <input type="text" name="last_name" #last_name="ngModel" class="form-control"  size="30" aria-describedby="last_nameDesc" [readonly]="isFormReadOnly()" [(ngModel)]="selectedCustomer.customerLastName" required >
-                                    <span class="input-group-addon" id="last_nameDesc">Nazwisko</span>
-                                </div>
-                                <ul class="text-danger list-unstyled" *ngIf="last_name.dirty|| formSubmitted">
-                                    <li  *ngIf="last_name.errors?.required">To pole nie może być puste</li>
-                                </ul>
-                            </div>
 
                             <div class="form-group">
                                 <div class="input-group">
@@ -199,6 +194,18 @@
                             <form id="OrderFormAdditional" novalidate #formAdidtional="ngForm">
 
 
+
+                            <div class="form-group">
+                                     <small id="fv_numbereDescript" class="text-muted">Numer FV</small>
+                                    <input type="text" name="fv_number" #fv_number="ngModel"  class="form-control"  aria-describedby="delivery_dateDesc" required [(ngModel)]="order.orderFvNumber">
+                                <ul class="text-danger list-unstyled" *ngIf="fv_number.dirty|| formSubmitted">
+                                    <li  *ngIf="fv_number.errors?.required">Wprowadz numer FV</li>
+                                </ul>
+                             </div>
+
+
+
+
                             <div class="form-group">
                                 <small id="delivery_typeDesc" class="text-muted">Rodzaj dostawy</small>
                                 <select class="form-control" [(ngModel)]="order.deliveryType" name="delivery_type" #delivery_type="ngModel" required >
@@ -255,8 +262,7 @@
             </div>
             <p-dataTable [value]="customers" [rows]="10" [paginator]="true"  #dt (onRowDblclick)="op.hide();pickCustomer($event.data)"
                          [loading]="loading" loadingIcon="fa-circle-o-notch" [globalFilter]="globalfilter">
-                <p-column field="customerFirstName" header="Imię" [sortable]="true" ></p-column>
-                <p-column field="customerLastName" header="Nazwisko" [sortable]="true"></p-column>
+                <p-column field="name" header="Imię i Nazwisko" [sortable]="true" ></p-column>
                 <p-column field="organizationName" header="Firma" [sortable]="false"></p-column>
                 <p-column field="address" header="Adres" [sortable]="false"></p-column>
                 <p-column field="zipCode" header="Kod" [sortable]="false"></p-column>

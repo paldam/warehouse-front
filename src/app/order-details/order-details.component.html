@@ -1,6 +1,6 @@
 
 <div class="order_summary col-12">
-  <p-fieldset [legend]="'Szczegóły zamówienia nr '+ order.orderId"  [toggleable]="true">
+  <p-fieldset [legend]="'Szczegóły zamówienia nr '+ order.orderFvNumber" [toggleable]="true">
     <div class="row">
       <div class="customer_data_form col-md-6">
         <p-panel header="Dane osoby zamawiającej">
@@ -12,23 +12,14 @@
             <form id="OrderForm" novalidate #form="ngForm" >
               <div class="form-group">
                 <div class="input-group">
-                  <input type="text" name="name"  #name="ngModel" class="form-control"  size="30" aria-describedby="nameDesc" [readonly]="isFormReadOnly()"  [(ngModel)]="customer.customerFirstName" required >
-                  <span class="input-group-addon" id="nameDesc">Imię </span>
+                  <input type="text" name="name"  #name="ngModel" class="form-control"  size="30" aria-describedby="nameDesc" [readonly]="isFormReadOnly()"  [(ngModel)]="customer.name" required >
+                  <span class="input-group-addon" id="nameDesc">Imię i Nazwisko</span>
                 </div>
                 <ul class="text-danger list-unstyled" *ngIf="name.dirty|| formSubmitted">
                   <li  *ngIf="name.errors?.required">To pole nie może być puste</li>
                 </ul>
               </div>
 
-              <div class="form-group">
-                <div class="input-group">
-                  <input type="text" name="last_name" #last_name="ngModel" class="form-control"  size="30" aria-describedby="last_nameDesc" [readonly]="isFormReadOnly()" [(ngModel)]="customer.customerLastName" required >
-                  <span class="input-group-addon" id="last_nameDesc">Nazwisko</span>
-                </div>
-                <ul class="text-danger list-unstyled" *ngIf="last_name.dirty|| formSubmitted">
-                  <li  *ngIf="last_name.errors?.required">To pole nie może być puste</li>
-                </ul>
-              </div>
 
               <div class="form-group">
                 <div class="input-group">
@@ -88,6 +79,18 @@
         <p-panel header="Dodatkowe informacje">
           <form id="OrderFormAdditional" novalidate #formAdidtional="ngForm">
 
+
+
+            <div class="form-group">
+              <small id="fv_numbereDescript" class="text-muted">Numer FV</small>
+              <input type="text" name="fv_number" #fv_number="ngModel"  class="form-control"  aria-describedby="delivery_dateDesc" required [(ngModel)]="order.orderFvNumber">
+              <ul class="text-danger list-unstyled" *ngIf="fv_number.dirty|| formSubmitted">
+                <li  *ngIf="fv_number.errors?.required">Wprowadz numer FV</li>
+              </ul>
+            </div>
+
+
+
             <div class="form-group">
               <div class="form-group">
                 <small id="order_date_Desc" class="text-muted">Data złożenia zamówienia</small>
@@ -126,7 +129,7 @@
 
             <div class="form-group">
               <div class="input-group">
-                <input type="date" name="delivery_date"   class="form-control" #delivery_date="ngModel" [(ngModel)]="order.deliveryDate"  aria-describedby="delivery_dateDesc" required [readonly]="isFormReadOnly()">
+                <input type="date" name="delivery_date"   class="form-control" #delivery_date="ngModel" [(ngModel)]="order.deliveryDate"  aria-describedby="delivery_dateDesc" required>
                 <span class="input-group-addon" id="taxDesc">Data dostawy</span>
               </div>
               <ul class="text-danger list-unstyled" *ngIf="delivery_date.dirty|| formSubmitted">
@@ -137,7 +140,7 @@
             <div class="form-group">
               <div class="form-group">
                 <small id="additional_informationDesc" class="text-muted">Dodatkowe informacje</small>
-                <textarea class="form-control" name="additional_information" id="additional_information" rows="3" [(ngModel)]="order.additionalInformation" [readonly]="isFormReadOnly()"></textarea>
+                <textarea class="form-control" name="additional_information" id="additional_information" rows="3" [(ngModel)]="order.additionalInformation" ></textarea>
               </div>
             </div>
 

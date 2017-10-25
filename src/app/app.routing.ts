@@ -10,6 +10,9 @@ import {LoginComponent} from "./login/login.component";
 import {AuthGuard} from "./auth.guard";
 import {BasketComponent} from "./basket/basket.component";
 import {GiftBasketEditComponent} from "./gift-baskets/gift-basket-edit/gift-basket-edit.component";
+import {AdminComponent} from "./admin/admin.component";
+import {AdminGuard} from "./admin.guard";
+import {TestComponent} from "./test/test.component";
 const routes: Routes = [
     {path: '', component: ProductsComponent, pathMatch: 'full', canActivate: [AuthGuard]},
     { path: 'product', component: ProductsComponent, canActivate: [AuthGuard] },
@@ -21,6 +24,8 @@ const routes: Routes = [
     {path:   'basket/:basketId', component: GiftBasketEditComponent, canActivate: [AuthGuard] },
     { path: 'orders', component:OrderComponent, canActivate: [AuthGuard]},
     {path:   'order/:id', component:OrderDetailsComponent, canActivate: [AuthGuard]},
+    {path:   'test', component:TestComponent, canActivate: [AuthGuard]},
+    {path:   'admin', component: AdminComponent,canActivate: [AuthGuard,AdminGuard]},
     {path:   'login', component: LoginComponent}
 ];
 export const routing = RouterModule.forRoot(routes,{ useHash: true });
