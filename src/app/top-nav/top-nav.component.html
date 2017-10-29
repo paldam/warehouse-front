@@ -1,7 +1,43 @@
 <left-nav></left-nav>
 
 <div id="top_nav">
+    <p><i class="fa fa-child" aria-hidden="true" (click)="showChangePasswordDialog()"></i></p>
     <p>MENU</p>
     <i id="menu_slide_icon" class="fa fa-arrow-left fa-2x slide_nav" aria-hidden="true" (click)="slideChildLeftNavbar()"></i>
     <img class="basket_img" src="/assets/images/basket.png" height="45" width="45">
+
+
+
 </div>
+
+
+<p-dialog header="Zmień hasło" [(visible)]="changePasswordModal" modal="modal" width="300" [responsive]="true">
+
+    <!--<form id="passForm" novalidate #form="ngForm" (submit)="submitChangePassForm(form)">-->
+
+        <!--<div class="form-group">-->
+            <!--<small id="pass_1_Descript" class="text-muted">Hasło</small>-->
+            <!--<input type="password" name="pass_1" class="form-control"  [(ngModel)]="user.password" #pass_1="ngModel" aria-describedby="pass_1Descript" required="">-->
+            <!--<ul class="text-danger list-unstyled" *ngIf="pass_1.dirty|| formSubmitted">-->
+                <!--<li  *ngIf="pass_1.errors?.required">Podaj hasło</li>-->
+            <!--</ul>-->
+        <!--</div>-->
+
+        <!--<div class="form-group">-->
+            <!--<small id="pass_2_Descript" class="text-muted">Powtórz hasło</small>-->
+            <!--<input type="password" name="pass_2" class="form-control"  [(ngModel)]="passwordConfirm" #pass_2="ngModel" aria-describedby="pass_2Descript" required="">-->
+            <!--<ul class="text-danger list-unstyled" *ngIf="pass_2.dirty|| formSubmitted">-->
+                <!--<li  *ngIf="pass_2.errors?.required">Powtórz hasło</li>-->
+            <!--</ul>-->
+            <!--<ul class="text-danger list-unstyled" *ngIf="pass_1.dirty && pass_2.dirty && formSubmitted && passwordDontMatch">-->
+                <!--<li>Hasła nie są takie same</li>-->
+            <!--</ul>-->
+        <!--</div>-->
+
+
+        <!--<p-footer>-->
+            <!--<button class="btn bg-primary " type="submit" > Zmień</button>-->
+        <!--</p-footer>-->
+    <!--</form>-->
+
+</p-dialog>

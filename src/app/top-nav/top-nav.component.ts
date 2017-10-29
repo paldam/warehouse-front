@@ -1,5 +1,6 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
 import {LeftNavComponent} from '../left-nav/left-nav.component';
+import {User} from "../model/user.model";
 declare var jquery:any;
 declare var $ :any;
 @Component({
@@ -8,6 +9,9 @@ declare var $ :any;
   styleUrls: ['top-nav.component.css']
 })
 export class NavComponent implements OnInit {
+
+  public changePasswordModal : boolean = false;
+
 
   constructor() { }
 
@@ -21,6 +25,9 @@ export class NavComponent implements OnInit {
     this.leftNavComponent.slidNav();
   }
 
+  showChangePasswordDialog(user: User) {
+    this.changePasswordModal = true;
+  }
 
 }
 

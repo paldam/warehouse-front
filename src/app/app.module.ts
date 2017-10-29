@@ -8,7 +8,7 @@ import { NavComponent } from './top-nav/top-nav.component';
 import {LeftNavComponent} from './left-nav/left-nav.component';
 import {
   PanelMenuModule, DataTableModule, SharedModule, FieldsetModule, OverlayPanelModule, LightboxModule,
-  PanelModule, ConfirmationService, ConfirmDialogModule, DialogModule
+  PanelModule, ConfirmationService, ConfirmDialogModule, DialogModule,CalendarModule
 } from 'primeng/primeng';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {routing} from './app.routing';
@@ -33,6 +33,8 @@ import { GiftBasketEditComponent } from './gift-baskets/gift-basket-edit/gift-ba
 import { AdminComponent } from './admin/admin.component';
 import {AdminGuard} from "./admin.guard";
 import { TestComponent } from './test/test.component';
+import {UserService} from "./user.service";
+
 
 
 export function httpExt(backend: XHRBackend, options: RequestOptions, router: Router) {
@@ -59,11 +61,12 @@ export function httpExt(backend: XHRBackend, options: RequestOptions, router: Ro
       TestComponent
   ],
   imports: [
-    BrowserModule,HttpModule,BrowserAnimationsModule,FormsModule,DialogModule,ConfirmDialogModule,PanelMenuModule,PanelModule,DataTableModule,SharedModule,FieldsetModule,LightboxModule,OverlayPanelModule,routing
+    BrowserModule,HttpModule,BrowserAnimationsModule,FormsModule,DialogModule,ConfirmDialogModule,PanelMenuModule,
+    PanelModule,DataTableModule,SharedModule,FieldsetModule,LightboxModule,OverlayPanelModule,CalendarModule,routing
   ],
   providers: [ {
     provide: HttpService, useFactory: (httpExt) , deps: [XHRBackend, RequestOptions,Router]},
-    ProductsService,BasketService,CustomerService,OrderService,ConfirmationService,AuthGuard,AdminGuard,AuthenticationService],
+    ProductsService,BasketService,CustomerService,OrderService,ConfirmationService,AuthGuard,AdminGuard,AuthenticationService,UserService],
 
   bootstrap: [AppComponent]
 })

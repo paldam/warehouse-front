@@ -10,9 +10,9 @@
     </div>
 
     <p-dataTable [value]="orders" [rows]="20" [paginator]="true" [globalFilter]="gb" #dt
-                 [loading]="loading" loadingIcon="fa-circle-o-notch">
+                 [loading]="loading" loadingIcon="fa-circle-o-notch" expandableRows="true">
         <p-header>Lista Zamówień</p-header>
-
+        <p-column expander="true" header="Zawartość" styleClass="col-icon " [style]="{'width':'70px'}"></p-column>
         <p-column  header="lp."   [style]="{'width':'70px'}">
             <ng-template let-i="rowIndex" pTemplate="rowexpansion">
                 {{i+1}}
@@ -59,6 +59,32 @@
 
             </ng-template>
         </p-column>
+
+
+        <ng-template let-orders pTemplate="rowexpansion">
+            <div class="basket_products_info">
+                <p>Pozycje zamówienia</p>
+                <table class="product_tab" >
+                    <thead>
+                    <tr class="product_tab_row">
+                        <th>Nazwa kosza</th>
+                        <th>illość</th>
+
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr class="product_tab_row" *ngFor="let i of orders.orderItems">
+                        <td>{{i.basket.basketName}}</td>
+                        <td>{{i.quantity}}</td>
+
+                    </tr>
+                    </tbody>
+                </table>
+
+            </div>
+
+        </ng-template>
+
 
     </p-dataTable>
 </div>

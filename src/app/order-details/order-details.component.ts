@@ -36,6 +36,7 @@ export class OrderDetailsComponent implements OnInit {
                   this.customer =  res.customer;
                   this.orderItems = res.orderItems;
                   this.totalAmount = res.orderTotalAmount/100;
+                  this.order.cod /=100;
 
          })
       this.orderService.getDeliveryTypes().subscribe(data=> this.deliveryTypes = data);
@@ -60,6 +61,7 @@ export class OrderDetailsComponent implements OnInit {
   }
 
   editOrderForm() {
+      this.order.cod *=100;
     this.orderService.saveOrder(this.order).subscribe(data=>{
           this.router.navigateByUrl('/orders');
 

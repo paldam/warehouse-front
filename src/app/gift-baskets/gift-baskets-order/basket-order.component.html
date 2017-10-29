@@ -126,7 +126,7 @@
                         <form id="OrderForm" novalidate #form="ngForm" (submit)="submitOrderForm(form,formAdidtional)">
                            <div class="form-group">
                                 <div class="input-group">
-                                    <input type="text" name="name" #name="ngModel" class="form-control"  size="30" aria-describedby="nameDesc" [readonly]="isFormReadOnly()"  [(ngModel)]="selectedCustomer.name" required >
+                                    <input type="text" name="name" #name="ngModel" class="form-control"  size="300" aria-describedby="nameDesc" [readonly]="isFormReadOnly()"  [(ngModel)]="selectedCustomer.name" required >
                                     <span class="input-group-addon" id="nameDesc">Imię i Nazwisko </span>
                                 </div>
                                <ul class="text-danger list-unstyled" *ngIf="name.dirty|| formSubmitted">
@@ -137,14 +137,14 @@
 
                             <div class="form-group">
                                 <div class="input-group">
-                                    <input type="text" name="organization" #organization="ngModel" class="form-control"  size="30" aria-describedby="organizationDesc"  [readonly]="isFormReadOnly()" [(ngModel)]="selectedCustomer.organizationName">
+                                    <input type="text" name="organization" #organization="ngModel" class="form-control"  size="300" aria-describedby="organizationDesc"  [readonly]="isFormReadOnly()" [(ngModel)]="selectedCustomer.organizationName">
                                     <span class="input-group-addon" id="organizationDesc">Nazwa Firmy</span>
                                 </div>
                             </div>
 
                             <div class="form-group">
                                 <div class="input-group">
-                                    <input type="text" name="address" #address="ngModel" class="form-control"  size="30" aria-describedby="streetDesc" [readonly]="isFormReadOnly()" [(ngModel)]="selectedCustomer.address" required>
+                                    <input type="text" name="address" #address="ngModel" class="form-control"  size="300" aria-describedby="streetDesc" [readonly]="isFormReadOnly()" [(ngModel)]="selectedCustomer.address" required>
                                     <span class="input-group-addon" id="streetDesc">Ulica / nr. lokalu</span>
                                 </div>
                                 <ul class="text-danger list-unstyled" *ngIf="address.dirty|| formSubmitted">
@@ -164,7 +164,7 @@
 
                             <div class="form-group">
                                 <div class="input-group">
-                                    <input type="text" name="city_name" #city_name="ngModel" class="form-control"  size="30" aria-describedby="city_nameDesc" [readonly]="isFormReadOnly()" [(ngModel)]="selectedCustomer.cityName" required="">
+                                    <input type="text" name="city_name" #city_name="ngModel" class="form-control"  size="100" aria-describedby="city_nameDesc" [readonly]="isFormReadOnly()" [(ngModel)]="selectedCustomer.cityName" required="">
                                     <span class="input-group-addon" id="city_nameDesc">Miejscowość</span>
                                 </div>
                                 <ul class="text-danger list-unstyled" *ngIf="city_name.dirty|| formSubmitted">
@@ -174,14 +174,14 @@
 
                             <div class="form-group">
                                 <div class="input-group">
-                                    <input type="email" name="email" class="form-control"  size="30" aria-describedby="emailDesc" [readonly]="isFormReadOnly()" [(ngModel)]="selectedCustomer.email">
+                                    <input type="email" name="email" class="form-control"  size="300" aria-describedby="emailDesc" [readonly]="isFormReadOnly()" [(ngModel)]="selectedCustomer.email">
                                     <span class="input-group-addon" id="emailDesc">Email</span>
                                 </div>
                             </div>
 
                             <div class="form-group">
                                 <div class="input-group">
-                                    <input type="tel" name="tel" class="form-control"  size="30" aria-describedby="telDesc" [readonly]="isFormReadOnly()" [(ngModel)]="selectedCustomer.phoneNumber" >
+                                    <input type="text" name="tel" class="form-control"  size="300" aria-describedby="telDesc" [readonly]="isFormReadOnly()" [(ngModel)]="selectedCustomer.phoneNumber" >
                                     <span class="input-group-addon" id="telDesc">Telefon</span>
                                 </div>
                             </div>
@@ -197,11 +197,12 @@
 
                             <div class="form-group">
                                      <small id="fv_numbereDescript" class="text-muted">Numer FV</small>
-                                    <input type="text" name="fv_number" #fv_number="ngModel"  class="form-control"  aria-describedby="delivery_dateDesc" required [(ngModel)]="order.orderFvNumber">
+                                    <input type="text" name="fv_number" #fv_number="ngModel"  class="form-control" size="200"  aria-describedby="delivery_dateDesc" required [(ngModel)]="order.orderFvNumber">
                                 <ul class="text-danger list-unstyled" *ngIf="fv_number.dirty|| formSubmitted">
                                     <li  *ngIf="fv_number.errors?.required">Wprowadz numer FV</li>
                                 </ul>
                              </div>
+
 
 
 
@@ -217,10 +218,23 @@
                             </div>
 
 
+                                <div *ngIf="order.deliveryType?.deliveryTypeName=='pobranie'">
+                                    <div class="form-group" >
+                                        <small id="codDescript" class="text-muted">Kwota pobrania</small>
+                                        <input type="number" name="cod" #cod="ngModel"  class="form-control" size="200"  aria-describedby="codDesc"  [(ngModel)]="order.cod" pattern="^(?=.*?\d)\d*[.]?\d{1,2}$">
+                                    </div>
+                                    <ul class="text-danger list-unstyled" *ngIf="cod?.dirty|| formSubmitted">
+                                        <li  *ngIf="cod.errors?.pattern">To pole musi zawierać format waluty z kropką np : 0.59 , 2.5 , 0.99 , 19.99</li>
+                                    </ul>
+                                </div>
+
+
+
+
 
                             <div class="form-group">
                                 <div class="input-group">
-                                    <input type="date" name="delivery_date" #delivery_date="ngModel"  class="form-control"  aria-describedby="delivery_dateDesc" required [(ngModel)]="order.deliveryDate">
+                                    <p-calendar [utc]="true" [locale]="dateLang" dateFormat="dd.mm.yy" name="delivery_date" #delivery_date="ngModel" aria-describedby="delivery_dateDesc" [(ngModel)]="order.deliveryDate" required=""></p-calendar>
                                     <span class="input-group-addon" id="taxDesc">Data dostawy</span>
                                 </div>
                                 <ul class="text-danger list-unstyled" *ngIf="delivery_date.dirty|| formSubmitted">
@@ -230,7 +244,7 @@
                             <div class="form-group">
                                 <div class="form-group">
                                     <small id="additional_informationDesc" class="text-muted">Dodatkowe informacje</small>
-                                    <textarea class="form-control" name="additional_information" id="additional_information" rows="3" [(ngModel)]="order.additionalInformation"></textarea>
+                                    <textarea class="form-control" name="additional_information" id="additional_information"  size="500" rows="3" [(ngModel)]="order.additionalInformation"></textarea>
                                 </div>
                             </div>
                         </form>

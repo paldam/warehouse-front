@@ -1,4 +1,11 @@
 import { Component, OnInit } from '@angular/core';
+import {User} from "../model/user.model";
+import {Authorities} from "../model/authorities.model";
+import {UserService} from "../user.service";
+import {Router} from "@angular/router";
+import {NgForm} from "@angular/forms";
+import {ConfirmationService} from "primeng/primeng";
+import {TOKEN_USER} from "../authentication.service";
 
 @Component({
   selector: 'app-admin',
@@ -7,9 +14,111 @@ import { Component, OnInit } from '@angular/core';
 })
 export class AdminComponent implements OnInit {
 
-  constructor() { }
+    public user: User = new User();
+    public usersList: User[] = [];
+    public authorities: Authorities[] = [];
+    public formSubmitted: boolean = false;
+    public passwordDontMatch: any = null;
+    public passwordConfirm: string = '';
+    public status: string = '';
+    public body: string = '';
+    public changeModal : boolean = false;
+    public selectedUser: User = new User();
+    public authoritiesToSave: Authorities []=[];
 
-  ngOnInit() {
-  }
+    constructor(private userService: UserService, private router: Router, private confirmationService: ConfirmationService) {
+        userService.getAuthorities().subscribe(data => {
+            this.authorities = data
+        });
+        userService.getUsers().subscribe(data => {
+            this.usersList = data
+        })
+    }
+
+    ngOnInit() {
+    }
+
+    refreshData() {
+        this.userService.getUsers().subscribe(data => this.usersList = data)
+    }
+
+    submitForm(form: NgForm) {
+        this.formSubmitted = true;
+        if (form.valid) {
+
+            if (this.user.password != this.passwordConfirm) {
+                this.passwordDontMatch = "Hasła są różne";
+            } else {
+                this.passwordDontMatch = null;
+                console.log("hasła ok");
+                this.userService.saveUser(this.user).subscribe(data => {
+                        this.user = new User();
+                        form.reset();
+                        this.formSubmitted = false;
+                        this.status = data.text();
+                        this.refreshData();
+                    },
+                    err => {
+                        if (err.status == 500) {
+                            this.status = "Błąd połączenia z bazą danych"
+                        } else {
+                            this.status = err.text();
+                        }
+                    });
+            }
+        }
+    }
+    submitChangeAuthForm(form: NgForm){
+        console.log(JSON.stringify(this.selectedUser));
+        this.selectedUser.authorities = this.authoritiesToSave;
+        this.userService.updateUser(this.selectedUser).subscribe(data=>{
+            this.authoritiesToSave = null;
+            this.changeModal = false;
+        },err=>{
+            console.log("Problem przy modyfikowaniu uprawnień użytkownika")
+        });
+
+    }
+
+    ShowConfirmModal(user: User) {
+        this.confirmationService.confirm({
+            key:"removeDialog",
+            message: 'Jesteś pewny że chcesz usunąć użytkownika  ' + user.login + ' ?',
+            accept: () => {
+                var currentUser = localStorage.getItem(TOKEN_USER);
+                if (user.login != currentUser){
+                    this.userService.deleteUser(user.login).subscribe(data => {
+                        this.refreshData();
+                    });
+                }else{
+                        console.log("Uwaga Nie można usunąć konta na którym jesteś zalogowany")
+                    }
+
+            },
+            reject: () => {
+
+            }
+        });
+    }
+    ShowConfirmResetModal(user: User) {
+        this.confirmationService.confirm({
+            key:"resetDialog",
+            message: 'Jesteś pewny że chcesz zresetować hasło użytkownikowi:  ' + user.login + ' ?',
+            accept: () => {
+                this.userService.resetPassword(user.login).subscribe(data => {
+                });
+
+            },
+            reject: () => {
+
+            }
+        });
+    }
+
+
+    showChangeDialog(user: User) {
+        this.changeModal = true;
+        this.selectedUser = user;
+    }
 
 }

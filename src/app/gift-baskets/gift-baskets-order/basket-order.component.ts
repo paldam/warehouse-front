@@ -12,6 +12,9 @@ import {OrderStatus} from "../../model/OrderStatus";
 import {ConfirmationService} from "primeng/primeng";
 import {TOKEN_USER} from "../../authentication.service";
 
+declare var jquery:any;
+declare var $ :any;
+
 @Component({
     selector: 'basket-order',
     templateUrl: './basket-order.component.html',
@@ -25,6 +28,7 @@ export class BasketOrderComponent implements OnInit {
     public baskets: Basket[]=[];
     public customers: Customer[]=[];
     public deliveryTypes: DeliveryType[]=[];
+    public deliveryType: DeliveryType= new DeliveryType();
     public selectedCustomer: Customer = new Customer();
     public order: Order = new Order();
     public total: number = 0;
@@ -32,27 +36,47 @@ export class BasketOrderComponent implements OnInit {
     public isReadOnlyProp: boolean = false;
     public loading: boolean;
     // public totalPlusMarkUp: number=0;
-    public markupPercent: number = 10;
-    public markupConst: number=0;
-    public markUpOption: number =1;
-    public IsMarkUpConstActive: boolean= false;
-    public IsMarkUpPercentActive: boolean= true;
+    // public markupPercent: number = 10;
+    // public markupConst: number=0;
+    // public markUpOption: number =1;
+    // public IsMarkUpConstActive: boolean= false;
+    // public IsMarkUpPercentActive: boolean= true;
     public confirmDialogShow: boolean = false;
     public generatedOrderId: number = null; //id too print PDF
     public PopUpBackgroundStyle = {
         'dark_background': false,
     }
-
-
+    value: Date;
+    dateLang: any;
 
     constructor(private basketService : BasketService, private  customerService: CustomerService, private orderService: OrderService,private confirmationService: ConfirmationService) {
         basketService.getBaskets().subscribe(data=> this.baskets = data);
         customerService.getCustomers().subscribe(data=> this.customers = data);
         orderService.getDeliveryTypes().subscribe(data=> this.deliveryTypes = data);
+        this.order.deliveryType = new DeliveryType();
     }
 
     ngOnInit() {
+        this.dateLang = {
+            firstDayOfWeek: 0,
+            dayNames: ["Sobota", "Poniedziałek", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
+            dayNamesShort: ["Nie", "Pon", "Wto", "Śro", "Czw", "Pią", "Sob"],
+            dayNamesMin: ["Nd","Po","Wt","Śr","Cz","Pi","So"],
+            monthNames: [ "Styczeń","Luty","Marzec","Kwiecień","Maj","Czerwiec","Lipiec","Sierpień","Wrzesień","Październik","Listopad","Grudzień" ],
+            monthNamesShort: [ "Sty", "Lut", "Mar", "Kwi", "Maj", "Cze","Lip", "Sie", "Wrz", "Paź", "Lis", "Gru" ],
+            today: 'Dzisiaj',
+            clear: 'czyść'
+        };
 
+    }
+    ngAfterViewInit(): void{
+            $(document).ready(function(){
+            $( function() {
+                $( "#datepicker" ).datepicker({
+                    dateFormat: "dd.mm.yy"
+                });
+            } );
+        })
     }
 
     // recalculateTotalPlusMarkUp(){
@@ -182,6 +206,7 @@ export class BasketOrderComponent implements OnInit {
         this.order.orderTotalAmount = this.total;
         this.order.orderItems = this.orderItems;
         this.order.customer = this.selectedCustomer;
+        this.order.cod *=100;
         this.order.orderStatus = new OrderStatus(1);
         this.order.userName = localStorage.getItem(TOKEN_USER);
     }
@@ -189,6 +214,7 @@ export class BasketOrderComponent implements OnInit {
     cleanAfterSave(form: NgForm, formAdidtional: NgForm){
         this.formSubmitted = false;
         this.selectedCustomer= new Customer();
+
         this.orderItems=[];
         this.isReadOnlyProp= false;
         // this.totalPlusMarkUp=0;

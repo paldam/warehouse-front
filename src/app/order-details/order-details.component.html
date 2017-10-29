@@ -125,6 +125,16 @@
               </ul>
             </div>
 
+            <div *ngIf="order.deliveryType?.deliveryTypeName=='pobranie'">
+              <div class="form-group" >
+                <small id="codDescript" class="text-muted">Kwota pobrania</small>
+                <input type="number" name="cod" #cod="ngModel"  class="form-control" size="200"  aria-describedby="codDesc"  [(ngModel)]="order.cod" pattern="^(?=.*?\d)\d*[.]?\d{1,2}$">
+              </div>
+              <ul class="text-danger list-unstyled" *ngIf="cod?.dirty|| formSubmitted">
+                <li  *ngIf="cod.errors?.pattern">To pole musi zawierać format waluty z kropką np : 0.59 , 2.5 , 0.99 , 19.99</li>
+              </ul>
+            </div>
+
 
 
             <div class="form-group">
@@ -163,5 +173,11 @@
       [loading]="loading" loadingIcon="fa-circle-o-notch" expandableRows="true">
        <p-column field="basket.basketName" header="nazwa kosza" [sortable]="true" ></p-column>
         <p-column field="quantity" header="Liczba" [sortable]="true" ></p-column>
+
+
+
+
+
+
     </p-dataTable>
 </p-fieldset>

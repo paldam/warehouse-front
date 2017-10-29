@@ -14,7 +14,8 @@ export class Order{
         public additionalInformation?: string,
         public deliveryDate?: Date,
         public orderStatus? : OrderStatus,
-        public orderTotalAmount? : number
+        public orderTotalAmount? : number,
+        public cod? : number,
     ){
 
     }
