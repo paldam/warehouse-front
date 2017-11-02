@@ -74,7 +74,6 @@ var ProductPickerComponent = (function () {
         if (form.valid && this.basketItems.length > 0) {
             this.basket.basketItems = this.basketItems;
             this.basket.basketTotalPrice = this.total;
-            console.log(JSON.stringify(this.basket));
             this.basketService.saveBasket(this.basket).subscribe(function (data) {
                 _this.basket = new basket_model_1.Basket();
                 _this.basketItems = [];

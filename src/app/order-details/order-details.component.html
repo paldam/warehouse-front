@@ -12,7 +12,7 @@
             <form id="OrderForm" novalidate #form="ngForm" >
               <div class="form-group">
                 <div class="input-group">
-                  <input type="text" name="name"  #name="ngModel" class="form-control"  size="30" aria-describedby="nameDesc" [readonly]="isFormReadOnly()"  [(ngModel)]="customer.name" required >
+                  <input type="text" name="name"  #name="ngModel" class="form-control"  size="300" aria-describedby="nameDesc" [readonly]="authenticationService.isUser() || authenticationService.isSuperUser()"  [(ngModel)]="customer.name" required >
                   <span class="input-group-addon" id="nameDesc">Imię i Nazwisko</span>
                 </div>
                 <ul class="text-danger list-unstyled" *ngIf="name.dirty|| formSubmitted">
@@ -23,14 +23,14 @@
 
               <div class="form-group">
                 <div class="input-group">
-                  <input type="text" name="organization" #organization="ngModel" class="form-control"  size="30" aria-describedby="organizationDesc"  [readonly]="isFormReadOnly()" [(ngModel)]="customer.organizationName">
+                  <input type="text" name="organization" #organization="ngModel" class="form-control"  size="300" aria-describedby="organizationDesc"  [readonly]="authenticationService.isUser() || authenticationService.isSuperUser()" [(ngModel)]="customer.organizationName">
                   <span class="input-group-addon" id="organizationDesc">Nazwa Firmy</span>
                 </div>
               </div>
 
               <div class="form-group">
                 <div class="input-group">
-                  <input type="text" name="address" #address="ngModel" class="form-control"  size="30" aria-describedby="streetDesc" [readonly]="isFormReadOnly()" [(ngModel)]="customer.address" required>
+                  <input type="text" name="address" #address="ngModel" class="form-control"  size="300" aria-describedby="streetDesc" [readonly]="authenticationService.isUser() || authenticationService.isSuperUser()" [(ngModel)]="customer.address" >
                   <span class="input-group-addon" id="streetDesc">Ulica / nr. lokalu</span>
                 </div>
                 <ul class="text-danger list-unstyled" *ngIf="address.dirty|| formSubmitted">
@@ -40,7 +40,7 @@
 
               <div class="form-group">
                 <div class="input-group">
-                  <input type="text" name="zip_code" #zip_code="ngModel" class="form-control"  size="30" aria-describedby="zip_codeDesc" [readonly]="isFormReadOnly()" [(ngModel)]="customer.zipCode" required>
+                  <input type="text" name="zip_code" #zip_code="ngModel" class="form-control"  size="300" aria-describedby="zip_codeDesc" [readonly]="authenticationService.isUser() || authenticationService.isSuperUser()" [(ngModel)]="customer.zipCode" >
                   <span class="input-group-addon" id="zip_codeDesc">Kod pocztowy</span>
                 </div>
                 <ul class="text-danger list-unstyled" *ngIf="zip_code.dirty|| formSubmitted">
@@ -50,7 +50,7 @@
 
               <div class="form-group">
                 <div class="input-group">
-                  <input type="text" name="city_name" #city_name="ngModel" class="form-control"  size="30" aria-describedby="city_nameDesc" [readonly]="isFormReadOnly()" [(ngModel)]="customer.cityName" required="">
+                  <input type="text" name="city_name" #city_name="ngModel" class="form-control"  size="300" aria-describedby="city_nameDesc" [readonly]="authenticationService.isUser() || authenticationService.isSuperUser()" [(ngModel)]="customer.cityName">
                   <span class="input-group-addon" id="city_nameDesc">Miejscowość</span>
                 </div>
                 <ul class="text-danger list-unstyled" *ngIf="city_name.dirty|| formSubmitted">
@@ -60,14 +60,14 @@
 
               <div class="form-group">
                 <div class="input-group">
-                  <input type="email" name="email" class="form-control"  size="30" aria-describedby="emailDesc" [readonly]="isFormReadOnly()" [(ngModel)]="customer.email">
+                  <input type="email" name="email" class="form-control"  size="300" aria-describedby="emailDesc" [readonly]="authenticationService.isUser() || authenticationService.isSuperUser()" [(ngModel)]="customer.email">
                   <span class="input-group-addon" id="emailDesc">Email</span>
                 </div>
               </div>
 
               <div class="form-group">
                 <div class="input-group">
-                  <input type="tel" name="tel" class="form-control"  size="30" aria-describedby="telDesc" [readonly]="isFormReadOnly()" [(ngModel)]="customer.phoneNumber" >
+                  <input type="text" name="tel" class="form-control"  size="300" aria-describedby="telDesc" [readonly]="authenticationService.isUser() || authenticationService.isSuperUser()" [(ngModel)]="customer.phoneNumber" >
                   <span class="input-group-addon" id="telDesc">Telefon</span>
                 </div>
               </div>
@@ -83,7 +83,7 @@
 
             <div class="form-group">
               <small id="fv_numbereDescript" class="text-muted">Numer FV</small>
-              <input type="text" name="fv_number" #fv_number="ngModel"  class="form-control"  aria-describedby="delivery_dateDesc" required [(ngModel)]="order.orderFvNumber">
+              <input type="text" name="fv_number" #fv_number="ngModel"  class="form-control"  [readonly]="authenticationService.isUser() || authenticationService.isSuperUser()" aria-describedby="delivery_dateDesc" required [(ngModel)]="order.orderFvNumber">
               <ul class="text-danger list-unstyled" *ngIf="fv_number.dirty|| formSubmitted">
                 <li  *ngIf="fv_number.errors?.required">Wprowadz numer FV</li>
               </ul>
@@ -94,7 +94,7 @@
             <div class="form-group">
               <div class="form-group">
                 <small id="order_date_Desc" class="text-muted">Data złożenia zamówienia</small>
-                <input type="text" name="order_date" class="form-control"  size="30" aria-describedby="order_date_Desc" [readonly]="isFormReadOnly()" [value]="order.orderDate| date: 'dd/MM/yyyy HH:mm:ss'"  >
+                <input type="text" name="order_date" class="form-control"  size="300" aria-describedby="order_date_Desc" [readonly]="isFormReadOnly()" [value]="order.orderDate| date: 'dd/MM/yyyy HH:mm:ss'"  >
               </div>
             </div>
 
@@ -111,13 +111,13 @@
             <div class="form-group">
               <div class="form-group">
                 <small id="total_Desc" class="text-muted">Wartość zamówienia</small>
-                <input type="text" name="total" class="form-control"  size="30" aria-describedby="total_Desc" [readonly]="isFormReadOnly()" [(ngModel)]="totalAmount"  >
+                <input type="text" name="total" class="form-control"  size="300" aria-describedby="total_Desc" [readonly]="isFormReadOnly()" [(ngModel)]="totalAmount"  >
               </div>
             </div>
 
             <div class="form-group">
               <small id="delivery_typeDesc" class="text-muted">Rodzaj dostawy</small>
-              <select [compareWith]="compareDeliveryType" class="form-control" #delivery_type="ngModel" [(ngModel)]="order.deliveryType" name="delivery_type"  required >
+              <select [compareWith]="compareDeliveryType" class="form-control" [disabled]="authenticationService.isUser() || authenticationService.isSuperUser()" #delivery_type="ngModel" [(ngModel)]="order.deliveryType" name="delivery_type"  required >
                 <option *ngFor="let item of deliveryTypes"  [ngValue]="item"  >{{item.deliveryTypeName}}</option>
               </select>
               <ul class="text-danger list-unstyled" *ngIf="delivery_type.dirty|| formSubmitted">
@@ -128,7 +128,7 @@
             <div *ngIf="order.deliveryType?.deliveryTypeName=='pobranie'">
               <div class="form-group" >
                 <small id="codDescript" class="text-muted">Kwota pobrania</small>
-                <input type="number" name="cod" #cod="ngModel"  class="form-control" size="200"  aria-describedby="codDesc"  [(ngModel)]="order.cod" pattern="^(?=.*?\d)\d*[.]?\d{1,2}$">
+                <input type="number" name="cod" #cod="ngModel"  class="form-control" size="200"  aria-describedby="codDesc" [readonly]="authenticationService.isUser() || authenticationService.isSuperUser()"  [(ngModel)]="order.cod" pattern="^(?=.*?\d)\d*[.]?\d{1,2}$">
               </div>
               <ul class="text-danger list-unstyled" *ngIf="cod?.dirty|| formSubmitted">
                 <li  *ngIf="cod.errors?.pattern">To pole musi zawierać format waluty z kropką np : 0.59 , 2.5 , 0.99 , 19.99</li>
@@ -139,7 +139,7 @@
 
             <div class="form-group">
               <div class="input-group">
-                <input type="date" name="delivery_date"   class="form-control" #delivery_date="ngModel" [(ngModel)]="order.deliveryDate"  aria-describedby="delivery_dateDesc" required>
+                <input type="date" name="delivery_date"   class="form-control" #delivery_date="ngModel" [(ngModel)]="order.deliveryDate" [readonly]="authenticationService.isUser() || authenticationService.isSuperUser()" aria-describedby="delivery_dateDesc" required>
                 <span class="input-group-addon" id="taxDesc">Data dostawy</span>
               </div>
               <ul class="text-danger list-unstyled" *ngIf="delivery_date.dirty|| formSubmitted">
@@ -150,7 +150,7 @@
             <div class="form-group">
               <div class="form-group">
                 <small id="additional_informationDesc" class="text-muted">Dodatkowe informacje</small>
-                <textarea class="form-control" name="additional_information" id="additional_information" rows="3" [(ngModel)]="order.additionalInformation" ></textarea>
+                <textarea class="form-control" name="additional_information" id="additional_information" rows="3" [readonly]="authenticationService.isUser() || authenticationService.isSuperUser()" [(ngModel)]="order.additionalInformation" ></textarea>
               </div>
             </div>
 
@@ -168,16 +168,97 @@
 
   </p-fieldset>
 </div>
-<p-fieldset legend="Pozycje zamówienia" [toggleable]="true" >
-    <p-dataTable [value]="orderItems" [rows]="50"
-      [loading]="loading" loadingIcon="fa-circle-o-notch" expandableRows="true">
-       <p-column field="basket.basketName" header="nazwa kosza" [sortable]="true" ></p-column>
-        <p-column field="quantity" header="Liczba" [sortable]="true" ></p-column>
+
+<div *ngIf="authenticationService.isAdmin()" class="row">
+  <div class="picked_products_list col-md-6 ">
+    <p-fieldset legend="Pozycje zamówienia" [toggleable]="true">
+      <table *ngIf="isBasketLinesEmpty()==false">
+        <thead>
+        <tr>
+          <th>nazwa kosza</th>
+          <th class="col_quantity">ilość</th>
+          <th>usuń</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr *ngFor="let orderItems of orderItems">
+          <td scope="row">{{orderItems.basket.basketName}}</td>
+          <td><input type="number" class="form-control" name="" id="" aria-describedby="helpId" placeholder="" min="0" [value]="orderItems.quantity" (change)="updateQuantity(orderItems,$event.target.value)"  ></td>
+          <td class="col_delete"><i class="fa fa-trash" aria-hidden="true" (click)="deleteProductLine(orderItems.basket.basketId)"></i></td>
+        </tr>
+        </tbody>
+      </table>
+      <p *ngIf="isBasketLinesEmpty()==true">Brak pozycji w zamówieniu</p>
+    </p-fieldset>
+  </div>
 
 
 
+<div #basketsummary class="basket_summary col-md-6">
+  <p-fieldset legend="Podsumowanie koszyka" [toggleable]="true">
+    <div class="row">
+      <div class="col-lg-5">
+        <p class="tot">Kwota zamówienia: {{total/100| number : '1.2-2'}} zł</p>
+     </div>
+    </div>
+  </p-fieldset>
+</div>
+</div>
 
 
+  <div *ngIf="authenticationService.isAdmin()" class="basketList">
+    <p-fieldset legend="Dodaj kosz do zamówienia" [toggleable]="true">
 
-    </p-dataTable>
-</p-fieldset>
+      <div class="input-group search_bar">
+            <span class="input-group-addon" id="basic-addon1">
+                 <i class="fa fa-search" aria-hidden="true"></i>
+            </span>
+        <input #gb type="text" class="form-control search_input" pInputText size="50" placeholder="Szukaj"aria-describedby="basic-addon1">
+      </div>
+
+      <p-dataTable [value]="baskets" [rows]="10" [paginator]="true" [globalFilter]="gb" #dt
+                   [loading]="loading" loadingIcon="fa-circle-o-notch" expandableRows="true" (onRowDblclick)="addBasketToOrder($event.data)">
+        <p-column expander="true" header="Zawartość" styleClass="col-icon" [style]="{'width':'70px'}"></p-column>
+        <p-column  header="lp."  [style]="{'width':'70px'}">
+          <ng-template let-i="rowIndex" pTemplate="rowexpansion">
+            {{i+1}}
+          </ng-template>
+        </p-column>
+        <p-column field="basketName" header="Nazwa kosza" [sortable]="true"></p-column>
+        <p-column field="basketType.basketTypeName" header="Typ kosza" [sortable]="true" ></p-column>
+        <p-column field="basketTotalPrice"  header="Cena kosza "  [sortable]="true" >
+          <ng-template let-row="rowData" pTemplate="body">
+            {{row.basketTotalPrice/100| number : '1.2-2'}} zł.
+          </ng-template>
+
+        </p-column>
+        <ng-template let-basket pTemplate="rowexpansion">
+          <div class="basket_products_info">
+            Zawartość kosza:  {{basket.basketName}}
+            <table class="product_tab" >
+              <thead>
+              <tr class="product_tab_row">
+                <th>Nazwa Produktu</th>
+                <th>Pojemność</th>
+                <th>Cena zakupu</th>
+                <th>Ilość</th>
+              </tr>
+              </thead>
+              <tbody>
+              <tr class="product_tab_row" *ngFor="let i of basket.basketItems">
+                <td>{{i.product.productName}}</td>
+                <td>{{i.product.capacity}}</td>
+                <td>{{i.product.price/100}} zł</td>
+                <td>{{i.quantity}} szt.</td>
+              </tr>
+              </tbody>
+            </table>
+
+          </div>
+
+        </ng-template>
+
+      </p-dataTable>
+    </p-fieldset>
+  </div>
+

@@ -28,7 +28,6 @@ var ProductFormComponent = (function () {
         this.formSubmitted = true;
         if (form.valid) {
             this.productsService.saveProduct(this.product).subscribe(function (order) {
-                console.log(JSON.stringify(_this.product));
                 _this.product = new product_model_1.Product();
                 form.reset();
                 _this.formSubmitted = false;

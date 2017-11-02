@@ -188,7 +188,6 @@ export class BasketOrderComponent implements OnInit {
         if (form.valid && formAdidtional.valid && this.orderItems.length>0) {
             this.setUpOrderBeforeSave();
             this.orderService.saveOrder(this.order).subscribe(data=>{
-                    console.log(JSON.stringify(this.order));
                     this.generatedOrderId  = data.orderId;
                     this.cleanAfterSave(form,formAdidtional);
                     this.recalculate();

@@ -5,6 +5,7 @@ import {HttpService} from "./http-service";
 import {Observable} from "rxjs/Observable";
 import {User} from "./model/user.model";
 import {Authorities} from "./model/authorities.model";
+import {PasswordChange} from "./model/password_change.model";
 @Injectable()
 export class UserService {
 
@@ -42,6 +43,10 @@ export class UserService {
     }
     resetPassword(login : string): Observable<Response> {
         return this.http.put(this.baseUrl+`/users/reset/${login}`,login)
+        //.map((response: Response) => response.json());
+    }
+    changePassword(passwordChange: PasswordChange): Observable<Response> {
+        return this.http.put(this.baseUrl+`/users/reset/`,passwordChange)
         //.map((response: Response) => response.json());
     }
 }

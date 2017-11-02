@@ -105,7 +105,7 @@ var BasketOrderComponent = (function () {
         if (form.valid && formAdidtional.valid) {
             this.order.orderItems = this.orderItems;
             this.order.customer = this.selectedCustomer;
-            console.log(JSON.stringify(this.order));
+
             this.orderService.saveOrder(this.order).subscribe(function (data) {
                 _this.order = new order_model_1.Order();
                 _this.selectedCustomer = new customer_model_1.Customer();

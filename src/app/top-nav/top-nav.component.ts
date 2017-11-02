@@ -1,6 +1,10 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
 import {LeftNavComponent} from '../left-nav/left-nav.component';
 import {User} from "../model/user.model";
+import {NgForm} from "@angular/forms";
+import {PasswordChange} from "../model/password_change.model";
+import {TOKEN, TOKEN_USER} from "../authentication.service";
+import {UserService} from "../user.service";
 declare var jquery:any;
 declare var $ :any;
 @Component({
@@ -10,10 +14,10 @@ declare var $ :any;
 })
 export class NavComponent implements OnInit {
 
-  public changePasswordModal : boolean = false;
 
+  constructor() {
 
-  constructor() { }
+  }
 
   @ViewChild(LeftNavComponent) leftNavComponent : LeftNavComponent;
 
@@ -21,13 +25,11 @@ export class NavComponent implements OnInit {
   }
 
 
+
   slideChildLeftNavbar(){
     this.leftNavComponent.slidNav();
   }
 
-  showChangePasswordDialog(user: User) {
-    this.changePasswordModal = true;
-  }
 
 }
 

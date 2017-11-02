@@ -3,6 +3,7 @@ import {Order} from '../model/order.model';
 import {OrderService} from './order.service';
 import {Router} from "@angular/router";
 import {ConfirmationService} from "primeng/primeng";
+import {AuthenticationService} from "../authentication.service";
 
 @Component({
     selector: 'order',
@@ -15,7 +16,7 @@ export class OrderComponent implements OnInit {
     public loading: boolean= false;
     public orders: Order[]=[];
 
-    constructor(private orderService :OrderService,private router: Router,private confirmationService: ConfirmationService) {
+    constructor(private orderService :OrderService,private router: Router,private confirmationService: ConfirmationService, private authenticationService: AuthenticationService) {
         orderService.getOrders().subscribe(data=> this.orders=data);
 
     }
@@ -26,7 +27,6 @@ export class OrderComponent implements OnInit {
             this.orderService.getOrders().subscribe(data=> this.orders=data);
             this.loading = false;
         }, 1000);
-        console.log(this.orders);
     }
 
     ngOnInit() {

@@ -25,6 +25,7 @@ export class AdminComponent implements OnInit {
     public changeModal : boolean = false;
     public selectedUser: User = new User();
     public authoritiesToSave: Authorities []=[];
+    public loading: boolean;
 
     constructor(private userService: UserService, private router: Router, private confirmationService: ConfirmationService) {
         userService.getAuthorities().subscribe(data => {
@@ -50,13 +51,12 @@ export class AdminComponent implements OnInit {
                 this.passwordDontMatch = "Hasła są różne";
             } else {
                 this.passwordDontMatch = null;
-                console.log("hasła ok");
                 this.userService.saveUser(this.user).subscribe(data => {
                         this.user = new User();
-                        form.reset();
-                        this.formSubmitted = false;
                         this.status = data.text();
                         this.refreshData();
+                        this.formSubmitted = false;
+                        form.reset();
                     },
                     err => {
                         if (err.status == 500) {
@@ -69,7 +69,6 @@ export class AdminComponent implements OnInit {
         }
     }
     submitChangeAuthForm(form: NgForm){
-        console.log(JSON.stringify(this.selectedUser));
         this.selectedUser.authorities = this.authoritiesToSave;
         this.userService.updateUser(this.selectedUser).subscribe(data=>{
             this.authoritiesToSave = null;

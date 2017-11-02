@@ -22,9 +22,13 @@ export class ProductPickerComponent  {
     public basketItems: BasketItems[]=[];
     public basketTypes: BasketType[]=[];
     public basket: Basket= new Basket();
+    public basketsToSchema: Basket[]=[];
     public total: number=0;
     public formSubmitted: boolean = false;
     public loading: boolean;
+    public PopUpBackgroundStyle = {
+        'dark_background': false,
+    }
     @ViewChild(GiftBasketComponent) giftBasketComponent : GiftBasketComponent;
 
     constructor(private productsService : ProductsService, private basketService :BasketService) {
@@ -107,6 +111,27 @@ export class ProductPickerComponent  {
                 err =>  console.log("error " ));
         }
 
+    }
+    pickBasket(basket : Basket) {
+        basket.basketItems.map(data=> data.basketItemsId = null)
+        this.basketItems = basket.basketItems;
+    }
+
+    onShowPopUp(){
+        this.setPopUpDarkBackgroudTrue();
+        this.basketService.getBaskets().subscribe(data=> this.basketsToSchema = data);
+    }
+
+    setPopUpDarkBackgroudTrue(){
+        this.PopUpBackgroundStyle= {
+            'dark_background': true,
+        }
+    }
+
+    setPopUpDarkBackgroudFalse(){
+        this.PopUpBackgroundStyle= {
+            'dark_background': false,
+        }
     }
 
 

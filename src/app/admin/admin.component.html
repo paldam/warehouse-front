@@ -7,39 +7,24 @@
         <div class="form-group">
           <small id="loginDescript" class="text-muted">Login</small>
           <input type="text" name="login" class="form-control" [(ngModel)]="user.login" #login="ngModel" aria-describedby="loginDescript" required >
-          <ul class="text-danger list-unstyled" *ngIf="login.dirty|| formSubmitted">
-            <li  *ngIf="login.errors?.required">To pole nie może być puste</li>
+          <ul class="text-danger list-unstyled" *ngIf="login.dirty || formSubmitted">
+            <li  *ngIf="login.errors?.required && formSubmitted">To pole nie może być puste</li>
           </ul>
         </div>
 
-        <div class="form-group">
-          <small id="nameDescript" class="text-muted">Imię</small>
-          <input type="text" name="name" class="form-control"  [(ngModel)]="user.firstName" #name="ngModel" aria-describedby="nameDescript" required >
-          <ul class="text-danger list-unstyled" *ngIf="name.dirty|| formSubmitted">
-            <li  *ngIf="name.errors?.required">To pole nie może być puste</li>
-          </ul>
-        </div>
-
-        <div class="form-group">
-          <small id="last_nameDescript" class="text-muted">Nazwisko</small>
-          <input type="text" name="last_name" class="form-control"  [(ngModel)]="user.lastName" #last_name="ngModel" aria-describedby="last_nameDescript" required >
-          <ul class="text-danger list-unstyled" *ngIf="last_name.dirty|| formSubmitted">
-            <li  *ngIf="last_name.errors?.required">To pole nie może być puste</li>
-          </ul>
-        </div>
 
         <div class="form-group">
           <small id="pass_1_Descript" class="text-muted">Hasło</small>
           <input type="password" name="pass_1" class="form-control"  [(ngModel)]="user.password" #pass_1="ngModel" aria-describedby="pass_1Descript" required="">
-          <ul class="text-danger list-unstyled" *ngIf="pass_1.dirty|| formSubmitted">
-            <li  *ngIf="pass_1.errors?.required">Podaj hasło</li>
+          <ul class="text-danger list-unstyled" *ngIf="pass_1.dirty || formSubmitted">
+            <li  *ngIf="pass_1.errors?.required && formSubmitted">Podaj hasło</li>
           </ul>
         </div>
 
         <div class="form-group">
           <small id="pass_2_Descript" class="text-muted">Powtórz hasło</small>
           <input type="password" name="pass_2" class="form-control"  [(ngModel)]="passwordConfirm" #pass_2="ngModel" aria-describedby="pass_2Descript" required="">
-          <ul class="text-danger list-unstyled" *ngIf="pass_2.dirty|| formSubmitted">
+          <ul class="text-danger list-unstyled" *ngIf="pass_2.dirty || formSubmitted">
             <li  *ngIf="pass_2.errors?.required">Powtórz hasło</li>
           </ul>
           <ul class="text-danger list-unstyled" *ngIf="pass_1.dirty && pass_2.dirty && formSubmitted && passwordDontMatch">
@@ -64,7 +49,7 @@
   <div class="col-lg-8">
     <p-fieldset legend="Lista użytkowników">
 
-        <p-dataTable [value]="usersList" [rows]="20" [paginator]="true" [globalFilter]="gb" #dt
+        <p-dataTable [value]="usersList" [rows]="20" [paginator]="true"  #dt
                      [loading]="loading" loadingIcon="fa-circle-o-notch" >
           <p-header>Lista użytkowników</p-header>
 
@@ -76,11 +61,6 @@
 
           <p-column field="login" styleClass="name_col" header="Login"  [style]="{'width':'200px'}"></p-column>
 
-          <p-column  styleClass="price_col" header="Imię i Nazwisko"  >
-            <ng-template let-row="rowData" pTemplate="body"  >
-              {{row.firstName}} {{row.lastName}}
-            </ng-template>
-          </p-column>
 
           <p-column  styleClass="price_col" header="Uprawnienia"  >
             <ng-template let-i="rowData" pTemplate="body"  >

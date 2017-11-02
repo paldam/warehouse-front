@@ -34,6 +34,8 @@ import { AdminComponent } from './admin/admin.component';
 import {AdminGuard} from "./admin.guard";
 import { TestComponent } from './test/test.component';
 import {UserService} from "./user.service";
+import {AdminOrSuperUserGuard} from "./adminOrSuperUser.guard";
+import {PageNotFoundComponent} from "./pageNotFound.component";
 
 
 
@@ -58,7 +60,8 @@ export function httpExt(backend: XHRBackend, options: RequestOptions, router: Ro
       BasketComponent,
       GiftBasketEditComponent,
       AdminComponent,
-      TestComponent
+      TestComponent,
+    PageNotFoundComponent
   ],
   imports: [
     BrowserModule,HttpModule,BrowserAnimationsModule,FormsModule,DialogModule,ConfirmDialogModule,PanelMenuModule,
@@ -66,7 +69,7 @@ export function httpExt(backend: XHRBackend, options: RequestOptions, router: Ro
   ],
   providers: [ {
     provide: HttpService, useFactory: (httpExt) , deps: [XHRBackend, RequestOptions,Router]},
-    ProductsService,BasketService,CustomerService,OrderService,ConfirmationService,AuthGuard,AdminGuard,AuthenticationService,UserService],
+    ProductsService,BasketService,CustomerService,OrderService,ConfirmationService,AuthGuard,AdminGuard,AdminOrSuperUserGuard,AuthenticationService,UserService],
 
   bootstrap: [AppComponent]
 })

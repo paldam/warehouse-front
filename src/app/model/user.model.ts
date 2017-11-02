@@ -6,8 +6,6 @@ export class User {
         public password?: string,
         public activated?: boolean,
         public authorities?: any[],
-        public firstName?: string,
-        public lastName?: string,
 
 
     ){

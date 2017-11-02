@@ -8,6 +8,9 @@ import {Customer} from "../model/customer.model";
 import {OrderStatus} from "../model/OrderStatus";
 import {Product} from "../model/product.model";
 import {ConfirmationService} from "primeng/primeng";
+import {AuthenticationService} from "../authentication.service";
+import {Basket} from "../model/basket.model";
+import {BasketService} from "../gift-baskets/gift-basket.service";
 
 
 @Component({
@@ -28,24 +31,28 @@ export class OrderDetailsComponent implements OnInit {
   public loading: boolean= false;
   public totalAmount: number;
   public orderStatusId: number;
+    public baskets: Basket[]=[];
+    public total: number = 0;
 
 
-  constructor(private orderService : OrderService,activeRoute: ActivatedRoute, private  router: Router) {
+  constructor(private basketService : BasketService,private orderService : OrderService,activeRoute: ActivatedRoute, private  router: Router,public authenticationService: AuthenticationService) {
      orderService.getOrder(activeRoute.snapshot.params["id"]).subscribe(res =>{
                   this.order = res;
                   this.customer =  res.customer;
                   this.orderItems = res.orderItems;
                   this.totalAmount = res.orderTotalAmount/100;
                   this.order.cod /=100;
+                  this.recalculate();
 
          })
       this.orderService.getDeliveryTypes().subscribe(data=> this.deliveryTypes = data);
       this.orderService.getOrderStatus().subscribe(data=> this.orderStatus=data);
+      basketService.getBaskets().subscribe(data=> this.baskets = data);
+
   }
 
 
   ngOnInit() {
-
   }
 
   compareDeliveryType( optionOne : DeliveryType, optionTwo : DeliveryType) : boolean {
@@ -60,8 +67,11 @@ export class OrderDetailsComponent implements OnInit {
     return this.isReadOnlyProp;
   }
 
+
   editOrderForm() {
       this.order.cod *=100;
+      this.order.customer = this.customer;
+      this.order.orderTotalAmount = this.total;
     this.orderService.saveOrder(this.order).subscribe(data=>{
           this.router.navigateByUrl('/orders');
 
@@ -69,6 +79,51 @@ export class OrderDetailsComponent implements OnInit {
       console.log("error");
     })
   }
+
+    addBasketToOrder(basket: Basket){
+        let line = this.orderItems.find(data => data.basket.basketId == basket.basketId );
+
+        if (line == undefined) {
+            this.orderItems.push(new OrderItem(basket,1))
+        }else{
+            line.quantity= line.quantity + 1;
+        }
+        this.recalculate();
+        // this.recalculateTotalPlusMarkUp();
+    }
+    updateQuantity(basketLine: OrderItem, quantity: number) {
+        let line = this.orderItems.find(line => line.basket.basketId== basketLine.basket.basketId);
+        if (line != undefined) {
+            line.quantity = Number(quantity);
+        }
+        this.recalculate();
+        // this.recalculateTotalPlusMarkUp();
+    }
+
+    isBasketLinesEmpty() : boolean{
+        if (this.orderItems.length == 0) {
+            return true
+        } else {
+            return false
+        }
+    }
+    deleteProductLine(id : number){
+
+        let index = this.orderItems.findIndex(data=> data.basket.basketId == id);
+        if (index > -1){
+            this.orderItems.splice(index,1);
+        }
+        this.recalculate();
+        // this.recalculateTotalPlusMarkUp();
+    }
+
+    recalculate(){
+        this.total = 0;
+        this.orderItems.forEach(orderItem=> {
+            this.total += (orderItem.basket.basketTotalPrice * orderItem.quantity);
+        })
+
+    }
 
 
 
