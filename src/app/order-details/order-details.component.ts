@@ -72,6 +72,7 @@ export class OrderDetailsComponent implements OnInit {
       this.order.cod *=100;
       this.order.customer = this.customer;
       this.order.orderTotalAmount = this.total;
+      console.log(JSON.stringify(this.order));
     this.orderService.saveOrder(this.order).subscribe(data=>{
           this.router.navigateByUrl('/orders');
 

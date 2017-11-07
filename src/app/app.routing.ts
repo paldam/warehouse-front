@@ -14,6 +14,8 @@ import {AdminComponent} from "./admin/admin.component";
 import {AdminGuard} from "./admin.guard";
 import {TestComponent} from "./test/test.component";
 import {AdminOrSuperUserGuard} from "./adminOrSuperUser.guard";
+import {MapsComponent} from "./maps/maps.component";
+import {StatisticComponent} from "./statistic/statistic.component";
 const routes: Routes = [
     {path: '', component: ProductsComponent, pathMatch: 'full', canActivate: [AuthGuard,AdminOrSuperUserGuard]},
     { path: 'product', component: ProductsComponent, canActivate: [AuthGuard,AdminOrSuperUserGuard] },
@@ -26,6 +28,8 @@ const routes: Routes = [
     { path: 'orders', component:OrderComponent, canActivate: [AuthGuard]},
     {path:   'order/:id', component:OrderDetailsComponent, canActivate: [AuthGuard]},
     {path:   'admin', component: AdminComponent,canActivate: [AuthGuard,AdminGuard]},
+    {path:   'maps', component: MapsComponent,canActivate: [AuthGuard,AdminGuard]},
+    {path:   'statistics', component: StatisticComponent,canActivate: [AuthGuard,AdminGuard]},
     {path:   'login', component: LoginComponent}
 ];
 export const routing = RouterModule.forRoot(routes,{ useHash: true });

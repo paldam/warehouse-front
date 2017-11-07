@@ -184,9 +184,10 @@ export class BasketOrderComponent implements OnInit {
 
     submitOrderForm(form: NgForm, formAdidtional: NgForm) {
         this.formSubmitted = true;
-
+        console.log(JSON.stringify(this.order));
         if (form.valid && formAdidtional.valid && this.orderItems.length>0) {
             this.setUpOrderBeforeSave();
+            console.log(JSON.stringify(this.order));
             this.orderService.saveOrder(this.order).subscribe(data=>{
                     this.generatedOrderId  = data.orderId;
                     this.cleanAfterSave(form,formAdidtional);

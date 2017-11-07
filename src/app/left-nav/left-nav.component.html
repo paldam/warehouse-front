@@ -50,8 +50,16 @@
                 </ul>
             </li>
 
+            <li>
+                <h3 [routerLink]="['/maps']"><span class="fa fa-sign-out"></span>Mapy</h3>
+            </li>
+
             <li *ngIf="isAdmin()">
                 <h3 [routerLink]="['/admin']"><span class="fa fa-user-circle-o"></span>Admin</h3>
+            </li>
+
+            <li *ngIf="isAdmin()">
+                <h3 [routerLink]="['/statistics']"><span class="fa fa-user-circle-o"></span>Statystyki</h3>
             </li>
 
             <li>

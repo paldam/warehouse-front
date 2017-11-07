@@ -36,6 +36,11 @@ import { TestComponent } from './test/test.component';
 import {UserService} from "./user.service";
 import {AdminOrSuperUserGuard} from "./adminOrSuperUser.guard";
 import {PageNotFoundComponent} from "./pageNotFound.component";
+import { MapsComponent } from './maps/maps.component';
+import {MapService} from "./maps/map.service";
+import { StatisticComponent } from './statistic/statistic.component';
+import {CalendarSetingsComponent} from "./primeNgCalendarSetings/calendarStings.component";
+
 
 
 
@@ -61,7 +66,9 @@ export function httpExt(backend: XHRBackend, options: RequestOptions, router: Ro
       GiftBasketEditComponent,
       AdminComponent,
       TestComponent,
-    PageNotFoundComponent
+    PageNotFoundComponent,
+    MapsComponent,
+    StatisticComponent
   ],
   imports: [
     BrowserModule,HttpModule,BrowserAnimationsModule,FormsModule,DialogModule,ConfirmDialogModule,PanelMenuModule,
@@ -69,7 +76,7 @@ export function httpExt(backend: XHRBackend, options: RequestOptions, router: Ro
   ],
   providers: [ {
     provide: HttpService, useFactory: (httpExt) , deps: [XHRBackend, RequestOptions,Router]},
-    ProductsService,BasketService,CustomerService,OrderService,ConfirmationService,AuthGuard,AdminGuard,AdminOrSuperUserGuard,AuthenticationService,UserService],
+    CalendarSetingsComponent,ProductsService,BasketService,CustomerService,OrderService,MapService,ConfirmationService,AuthGuard,AdminGuard,AdminOrSuperUserGuard,AuthenticationService,UserService],
 
   bootstrap: [AppComponent]
 })

@@ -1,0 +1,33 @@
+<div class="map_cont">
+  <div class="row input_form">
+    <form id="MapForm" novalidate #form="ngForm" (submit)="submitOrderForm(form)">
+      <label for="start_date" >Data początkowa</label>
+      <p-calendar id="start_date" [utc]="true" [locale]="dateLang" dateFormat="yy.mm.dd" name="start_date" #start_date="ngModel" aria-describedby="start_dateDesc" [(ngModel)]="startDate" ></p-calendar>
+
+      <label for="end_date" >Data końcowa</label>
+      <p-calendar [utc]="true" [locale]="dateLang" dateFormat="yy.mm.dd" id="end_date" name="end_date" #end_date="ngModel" aria-describedby="end_dateDesc" [(ngModel)]="endDate" ></p-calendar>
+
+
+      <button class="btn bg-primary " type="submit" form="MapForm" >Szukaj</button>
+
+    </form>
+  </div>
+
+</div>
+
+
+<p-dataTable [value]="productsToOrder" [rows]="20" [paginator]="true"
+             [loading]="loading" loadingIcon="fa-circle-o-notch" >
+  <p-header>Lista Produktów potrzebych do zamówień</p-header>
+
+  <p-column  header="lp."   [style]="{'width':'70px'}">
+    <ng-template let-row="rowData" let-i="rowIndex" pTemplate="rowexpansion">
+      {{i+1}}
+    </ng-template>
+  </p-column>
+  <p-column field="product_name"  header="Nazwa" [sortable]="true"></p-column>
+  <p-column field="deliver"  header="Dostawca" [sortable]="true"></p-column>
+  <p-column field="stock"  header="Stan Magazynu" [style]="{'width':'120px'}" ></p-column>
+  <p-column field="suma"  header="Potrzebna ilość" [style]="{'width':'120px'}" ></p-column>
+
+</p-dataTable>

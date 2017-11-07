@@ -5,6 +5,7 @@ import {Response} from '@angular/http';
 import 'rxjs/add/operator/map';
 import {ProductType} from '../model/product_type.model';
 import {HttpService} from "../http-service";
+
 @Injectable()
 export class ProductsService {
 
@@ -22,6 +23,13 @@ export class ProductsService {
         .map((response: Response) =>
             response.json());
   }
+
+  getProductsToOrder(startDate , endDate): Observable<any[]> {
+    return this.http.get(this.baseUrl+`/orders/products_to_order/daterange?startDate=${startDate}&endDate=${endDate}`)
+        .map((response: Response) =>
+            response.json());
+  }
+
   getProduct(id: number): Observable<Product> {
     return this.http.get(this.baseUrl+`/products/${id}`)
         .map((response: Response) =>

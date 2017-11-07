@@ -38,7 +38,7 @@ export class UserService {
         //.map((response: Response) => response.json());
     }
     deleteUser(login : string): Observable<Response> {
-        return this.http.delete(this.baseUrl+`/users/${login}`)
+            return this.http.delete(this.baseUrl+`/users/${login}`)
         //.map((response: Response) => response.json());
     }
     resetPassword(login : string): Observable<Response> {
