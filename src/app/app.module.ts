@@ -8,7 +8,7 @@ import { NavComponent } from './top-nav/top-nav.component';
 import {LeftNavComponent} from './left-nav/left-nav.component';
 import {
   PanelMenuModule, DataTableModule, SharedModule, FieldsetModule, OverlayPanelModule, LightboxModule,
-  PanelModule, ConfirmationService, ConfirmDialogModule, DialogModule,CalendarModule
+  PanelModule, ConfirmationService, ConfirmDialogModule, DialogModule, CalendarModule
 } from 'primeng/primeng';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {routing} from './app.routing';
@@ -43,7 +43,6 @@ import {CalendarSetingsComponent} from "./primeNgCalendarSetings/calendarStings.
 
 
 
-
 export function httpExt(backend: XHRBackend, options: RequestOptions, router: Router) {
   return new HttpService(backend, options, router);
 }
@@ -68,7 +67,7 @@ export function httpExt(backend: XHRBackend, options: RequestOptions, router: Ro
       TestComponent,
     PageNotFoundComponent,
     MapsComponent,
-    StatisticComponent
+    StatisticComponent,
   ],
   imports: [
     BrowserModule,HttpModule,BrowserAnimationsModule,FormsModule,DialogModule,ConfirmDialogModule,PanelMenuModule,

@@ -125,7 +125,7 @@
               </ul>
             </div>
 
-            <div *ngIf="order.deliveryType?.deliveryTypeName=='pobranie'">
+            <div *ngIf="order.deliveryType?.deliveryTypeId==5 || order.deliveryType?.deliveryTypeId==6 || order.deliveryType?.deliveryTypeId==7">
               <div class="form-group" >
                 <small id="codDescript" class="text-muted">Kwota pobrania</small>
                 <input type="number" name="cod" #cod="ngModel"  class="form-control" size="200"  aria-describedby="codDesc" [readonly]="authenticationService.isUser() || authenticationService.isSuperUser()"  [(ngModel)]="order.cod" pattern="^(?=.*?\d)\d*[.]?\d{1,2}$">

@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {Http, XHRBackend, RequestOptions, Request, RequestOptionsArgs, Response, Headers} from '@angular/http';
+import {XHRBackend, RequestOptions, Request, RequestOptionsArgs, Response, Headers, Http} from '@angular/http';
 import {Observable} from 'rxjs/Observable';
 import 'rxjs/add/observable/throw';
 import 'rxjs/add/operator/map';
@@ -8,7 +8,9 @@ import 'rxjs/add/operator/catch';
 import {TOKEN, TOKEN_USER} from './authentication.service';
 import {Router} from "@angular/router";
 
+
 @Injectable()
+
 export class HttpService extends Http {
 
     constructor (backend: XHRBackend, options: RequestOptions,private router: Router) {

@@ -206,7 +206,13 @@ export class BasketOrderComponent implements OnInit {
         this.order.orderTotalAmount = this.total;
         this.order.orderItems = this.orderItems;
         this.order.customer = this.selectedCustomer;
-        this.order.cod *=100;
+
+        if (this.order.deliveryType.deliveryTypeId == 5 || this.order.deliveryType.deliveryTypeId == 6 || this.order.deliveryType.deliveryTypeId == 7 ){
+            this.order.cod *=100;
+        }else{
+            this.order.cod =0;
+        }
+
         this.order.orderStatus = new OrderStatus(1);
         this.order.userName = localStorage.getItem(TOKEN_USER);
     }

@@ -69,7 +69,11 @@ export class OrderDetailsComponent implements OnInit {
 
 
   editOrderForm() {
-      this.order.cod *=100;
+      if (this.order.deliveryType.deliveryTypeId == 5 || this.order.deliveryType.deliveryTypeId == 6 ||this.order.deliveryType.deliveryTypeId == 7 ){
+          this.order.cod *=100;
+      }else{
+          this.order.cod =0;
+      }
       this.order.customer = this.customer;
       this.order.orderTotalAmount = this.total;
       console.log(JSON.stringify(this.order));

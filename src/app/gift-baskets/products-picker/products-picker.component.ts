@@ -8,6 +8,7 @@ import {BasketService} from '../gift-basket.service';
 import {NgForm} from '@angular/forms';
 import {GiftBasketComponent} from '../gift-baskets.component';
 
+
 @Component({
     selector: 'products-picker',
     templateUrl: './products-picker.component.html',
@@ -35,6 +36,7 @@ export class ProductPickerComponent  {
         productsService.getProducts().subscribe(data=> this.products = data);
         basketService.getBasketsTypes().subscribe(data=>this.basketTypes = data);
     }
+
 
 
     addProductToGiftBasket(product: Product){
