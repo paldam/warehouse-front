@@ -92,7 +92,7 @@
 
                             <div class="form-group">
                                 <div class="input-group">
-                                    <input type="text" name="basketName" #basketName="ngModel" class="form-control"  size="30" aria-describedby="nameDesc" [(ngModel)]="basket.basketName" required>
+                                    <input type="text" name="basketName" #basketName="ngModel" class="form-control"  size="200" aria-describedby="nameDesc" [(ngModel)]="basket.basketName" required>
                                     <span class="input-group-addon" id="nameDesc">Nazwa kosza</span>
                                 </div>
                                 <ul class="text-danger list-unstyled" *ngIf="basketName.dirty|| formSubmitted">
