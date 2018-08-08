@@ -11,6 +11,7 @@ import {DeliveryType} from '../../model/delivery_type.model';
 import {OrderStatus} from "../../model/OrderStatus";
 import {ConfirmationService} from "primeng/primeng";
 import {TOKEN_USER} from "../../authentication.service";
+import {ContextMenuModule,MenuItem,ContextMenu} from 'primeng/primeng';
 
 declare var jquery:any;
 declare var $ :any;
@@ -49,6 +50,9 @@ export class BasketOrderComponent implements OnInit {
     value: Date;
     dateLang: any;
 
+    private items: MenuItem[];
+    public selectedBasketOnContextMenu: Basket = new Basket();
+
     constructor(private basketService : BasketService, private  customerService: CustomerService, private orderService: OrderService,private confirmationService: ConfirmationService) {
         basketService.getBaskets().subscribe(data=> this.baskets = data);
         customerService.getCustomers().subscribe(data=> this.customers = data);
@@ -67,6 +71,11 @@ export class BasketOrderComponent implements OnInit {
             today: 'Dzisiaj',
             clear: 'czyść'
         };
+
+        this.items = [
+            {label: 'Dodaj kosz', icon: 'fa fa-plus',command: (event) => this.addBasketToOrder(this.selectedBasketOnContextMenu)},
+        ];
+
 
     }
     ngAfterViewInit(): void{
@@ -102,7 +111,9 @@ export class BasketOrderComponent implements OnInit {
     //
     // }
 
-
+    contextMenuSelected(event){
+        this.selectedBasketOnContextMenu = event.data;
+    }
     addBasketToOrder(basket: Basket){
         let line = this.orderItems.find(data => data.basket.basketId == basket.basketId );
 

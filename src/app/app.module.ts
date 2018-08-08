@@ -8,7 +8,7 @@ import { NavComponent } from './top-nav/top-nav.component';
 import {LeftNavComponent} from './left-nav/left-nav.component';
 import {
   PanelMenuModule, DataTableModule, SharedModule, FieldsetModule, OverlayPanelModule, LightboxModule,
-  PanelModule, ConfirmationService, ConfirmDialogModule, DialogModule, CalendarModule
+  PanelModule, ConfirmationService, ConfirmDialogModule, DialogModule, CalendarModule, ContextMenuModule, MenuModule
 } from 'primeng/primeng';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {routing} from './app.routing';
@@ -71,7 +71,7 @@ export function httpExt(backend: XHRBackend, options: RequestOptions, router: Ro
   ],
   imports: [
     BrowserModule,HttpModule,BrowserAnimationsModule,FormsModule,DialogModule,ConfirmDialogModule,PanelMenuModule,
-    PanelModule,DataTableModule,SharedModule,FieldsetModule,LightboxModule,OverlayPanelModule,CalendarModule,routing
+    PanelModule,DataTableModule,SharedModule,FieldsetModule,LightboxModule,OverlayPanelModule,ContextMenuModule, MenuModule,CalendarModule,routing
   ],
   providers: [ {
     provide: HttpService, useFactory: (httpExt) , deps: [XHRBackend, RequestOptions,Router]},
