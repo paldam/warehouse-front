@@ -2,8 +2,9 @@ import {Component, OnInit, ViewEncapsulation} from '@angular/core';
 import {ProductsService} from './products.service';
 import {Product} from '../model/product.model';
 import 'rxjs/add/operator/map';
-import {Router} from '@angular/router';
+import {ActivatedRoute, NavigationExtras, Router} from '@angular/router';
 import {ConfirmationService} from "primeng/primeng";
+import {isUndefined} from "util";
 
 
 @Component({
@@ -16,17 +17,41 @@ export class ProductsComponent implements OnInit {
 
   public loading: boolean;
   public products: Product[]=[];
+  public lastVisitedPage: number ;
+  public findInputtext: string = "";
+
+  constructor(private productsService : ProductsService,activeRoute: ActivatedRoute,
+              private router: Router,private confirmationService: ConfirmationService) {
+
+    productsService.getProducts().subscribe(data=> this.products = data);
 
 
-  constructor(private productsService : ProductsService, private router: Router,private confirmationService: ConfirmationService) {
-    productsService.getProducts().subscribe(data=> this.products = data)
-
+    if (localStorage.getItem('findInputtext')){
+      this.findInputtext = (localStorage.getItem('findInputtext'));
+    }else{
+      this.findInputtext = "";
     }
 
+    //
+    // if (localStorage.getItem('lastPage')){
+    //   let tmplastVisitedPage =parseInt(localStorage.getItem('lastPage'));
+    //   this.lastVisitedPage = (tmplastVisitedPage -1)*20;
+    // }else{
+    //   this.lastVisitedPage = 0;
+    // }
+
+}
+
+
+
   ngOnInit() {
-
+    if (localStorage.getItem('lastPage')){
+      let tmplastVisitedPage =parseInt(localStorage.getItem('lastPage'));
+      this.lastVisitedPage = (tmplastVisitedPage -1)*20;
+    }else{
+      this.lastVisitedPage = 0;
+    }
   }
-
 
   refreshData() {
     this.loading = true;
@@ -34,16 +59,22 @@ export class ProductsComponent implements OnInit {
       this.productsService.getProducts().subscribe(data => this.products = data);
       this.loading = false;
     }, 1000);
+  }
 
 
+  goToEditPage(index,id) {
 
-
-
-
+      let pageTmp = ((index-1) / 20)+1;
+      localStorage.setItem('lastPage', pageTmp.toString());
+      console.log("teskt to wyswie " + this.findInputtext);
+      let textTmp = this.findInputtext;
+      localStorage.setItem('findInputtext', textTmp);
+      this.router.navigate(["/product/",id]);
   }
 
   selectProduct( id : number){
-      this.router.navigateByUrl('/products/${id}');
+    this.router.navigateByUrl('/products/${id}');
+
   }
 
   ShowConfirmModal(product: Product) {

@@ -1,15 +1,15 @@
 <div class="products_box">
         <div class="input-group search_bar">
-            <span class="input-group-addon" id="basic-addon1">
+    <span class="input-group-addon" id="basic-addon1">
                  <i class="fa fa-search" aria-hidden="true"></i>
             </span>
-            <input #gb type="text" class="form-control search_input" pInputText size="50" placeholder="Szukaj"aria-describedby="basic-addon1">
+    <input #gb type="text" class="form-control search_input" pInputText size="50" placeholder="Szukaj"aria-describedby="basic-addon1" [(ngModel)]="findInputtext" >
 
-              <i class="fa fa-refresh pull-right refresh_icon fa-2x" aria-hidden="true" (click)="refreshData()"></i>
-        </div>
+    <i class="fa fa-refresh pull-right refresh_icon fa-2x" aria-hidden="true" (click)="refreshData()"></i>
+</div>
 
-    <p-dataTable [value]="products" [rows]="20" [paginator]="true" [globalFilter]="gb" #dt
-                 [loading]="loading" loadingIcon="fa-circle-o-notch" >
+<p-dataTable [value]="products" [rows]="20" [paginator]="true" [globalFilter]="gb" #dt
+             [loading]="loading" loadingIcon="fa-circle-o-notch"   [first]="lastVisitedPage">
         <p-header>Lista Produktów</p-header>
 
 
@@ -35,12 +35,15 @@
 
         </p-column>
 
-        <p-column  header="Akcja" styleClass="action_col">
-            <ng-template let-product="rowData" pTemplate="body">
-                    <i class="fa fa-pencil-square-o fa-2x" aria-hidden="true"  title="Edytuj produkt" [routerLink]="['/product/', product.id] "></i>
-                    <i class="fa fa-trash fa-2x edit_icon" aria-hidden="true" title="Usuń produkt"  (click)="ShowConfirmModal(product)"></i>
-            </ng-template>
-        </p-column>
+
+    <p-column  header="Akcja" styleClass="action_col">
+        <ng-template let-product="rowData" pTemplate="body" let-row="rowData" let-i="rowIndex" pTemplate="rowexpansion">
+            <i class="fa fa-pencil-square-o fa-2x" aria-hidden="true"  title="Edytuj produkt" (click)="goToEditPage(i+1,product.id)"></i>
+            <i class="fa fa-trash fa-2x edit_icon" aria-hidden="true" title="Usuń produkt"  (click)="ShowConfirmModal(product)"></i>
+
+        </ng-template>
+    </p-column>
+
 
     </p-dataTable>
 

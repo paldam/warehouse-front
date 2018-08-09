@@ -3,7 +3,7 @@ import {Product} from '../../model/product.model';
 import {NgForm} from '@angular/forms';
 import {ProductsService} from '../products.service';
 import {ProductType} from '../../model/product_type.model';
-import {ActivatedRoute, Router} from '@angular/router';
+import {ActivatedRoute, NavigationExtras, Router} from '@angular/router';
 
 @Component({
     selector: 'product-edit-form',
@@ -39,7 +39,10 @@ export class ProductEditFormComponent implements OnInit {
                     this.product = new Product();
                     form.reset();
                     this.formSubmitted = false;
-                    this.router.navigateByUrl('/product');
+
+
+
+                    this.router.navigate(["/product"]);
                 },
                 err =>  console.log("error" ));
         }
