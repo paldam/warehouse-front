@@ -2,12 +2,11 @@ import {Observable} from "rxjs/Observable";
 import {EventEmitter, Injectable, Output} from "@angular/core";
 import {Http, Response} from '@angular/http';
 import {Router} from "@angular/router";
-import { JwtHelper } from 'angular2-jwt';
-import { tokenNotExpired } from 'angular2-jwt';
+import {JwtHelperService} from "@auth0/angular-jwt";
 
 export const TOKEN: string = 'jwt_token';
 export const TOKEN_USER: string = 'jwt_token_user';
-
+const jwtHelperService = new JwtHelperService();
 
 @Injectable()
 export class AuthenticationService {
@@ -16,7 +15,6 @@ export class AuthenticationService {
     public protocol: string = "http";
     public port: number = 8080;
     public baseUrl: string;
-    public jwtHelper: JwtHelper = new JwtHelper();
     public id_token: string;
 
     constructor(private http: Http,private router: Router) {
@@ -60,13 +58,14 @@ export class AuthenticationService {
     }
 
     isLoggedIn() : boolean{
-            return tokenNotExpired('jwt_token');
+            return !jwtHelperService.isTokenExpired(this.id_token);
+
     }
 
 
     isAdmin() : boolean {
         if (localStorage.getItem(TOKEN))  {
-            let authority = this.jwtHelper.decodeToken(this.id_token).auth;
+            let authority = jwtHelperService.decodeToken(this.id_token).auth;
 
             if (authority == "admin"){
                 return true;
@@ -77,7 +76,7 @@ export class AuthenticationService {
     }
     isUser() : boolean {
         if (localStorage.getItem(TOKEN))  {
-            let authority = this.jwtHelper.decodeToken(this.id_token).auth;
+            let authority = jwtHelperService.decodeToken(this.id_token).auth;
 
             if (authority == "user"){
                 return true;
@@ -88,7 +87,7 @@ export class AuthenticationService {
     }
     isSuperUser() : boolean {
         if (localStorage.getItem(TOKEN))  {
-            let authority = this.jwtHelper.decodeToken(this.id_token).auth;
+            let authority = jwtHelperService.decodeToken(this.id_token).auth;
 
             if (authority == "super-user"){
                 return true;
@@ -100,7 +99,7 @@ export class AuthenticationService {
 
     getCurrentUser(){
         if (localStorage.getItem(TOKEN))  {
-            return this.jwtHelper.decodeToken(this.id_token).sub;
+            return jwtHelperService.decodeToken(this.id_token).sub;
         }
     }
 

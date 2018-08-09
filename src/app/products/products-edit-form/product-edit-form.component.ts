@@ -7,8 +7,8 @@ import {ActivatedRoute, NavigationExtras, Router} from '@angular/router';
 
 @Component({
     selector: 'product-edit-form',
-    templateUrl: './product-edit-form.component.html',
-    styleUrls: ['./product-edit-form.component.css']
+    templateUrl: 'product-edit-form.component.html',
+    styleUrls: ['product-edit-form.component.css']
 })
 
 export class ProductEditFormComponent implements OnInit {

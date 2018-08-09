@@ -2,7 +2,7 @@ import {Component, OnInit, ViewEncapsulation} from '@angular/core';
 import {ProductsService} from './products.service';
 import {Product} from '../model/product.model';
 import 'rxjs/add/operator/map';
-import {ActivatedRoute, NavigationExtras, Router} from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 import {ConfirmationService} from "primeng/primeng";
 import {isUndefined} from "util";
 

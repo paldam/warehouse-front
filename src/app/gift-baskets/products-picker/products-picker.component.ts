@@ -11,8 +11,8 @@ import {GiftBasketComponent} from '../gift-baskets.component';
 
 @Component({
     selector: 'products-picker',
-    templateUrl: './products-picker.component.html',
-    styleUrls: ['./products-picker.component.css'],
+    templateUrl: 'products-picker.component.html',
+    styleUrls: ['products-picker.component.css'],
     encapsulation: ViewEncapsulation.None
 })
 export class ProductPickerComponent  {
