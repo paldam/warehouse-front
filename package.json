@@ -27,11 +27,12 @@
     "core-js": "^2.4.1",
     "font-awesome": "4.7.0",
     "ng2-datepicker": "^2.1.3",
-    "primeng": "4.2.2",
+    "primeicons": "^1.0.0-beta.10",
+    "primeng": "6.1.0",
     "rxjs": "6.2.2",
+    "rxjs-compat": "^6.0.0-rc.0",
     "systemjs": "0.19.40",
-    "zone.js": "^0.8.4",
-    "rxjs-compat": "^6.0.0-rc.0"
+    "zone.js": "^0.8.4"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "~0.7.0",

@@ -27,9 +27,7 @@ export class ProductPickerComponent  {
     public total: number=0;
     public formSubmitted: boolean = false;
     public loading: boolean;
-    public PopUpBackgroundStyle = {
-        'dark_background': false,
-    }
+    public basketPatterPickDialogShow: boolean = false;
     @ViewChild(GiftBasketComponent) giftBasketComponent : GiftBasketComponent;
 
     constructor(private productsService : ProductsService, private basketService :BasketService) {
@@ -117,24 +115,16 @@ export class ProductPickerComponent  {
     pickBasket(basket : Basket) {
         basket.basketItems.map(data=> data.basketItemsId = null)
         this.basketItems = basket.basketItems;
+        this.basketPatterPickDialogShow= false;
     }
 
-    onShowPopUp(){
-        this.setPopUpDarkBackgroudTrue();
+
+    showBasketPatterList() {
+        this.basketPatterPickDialogShow = true;
         this.basketService.getBaskets().subscribe(data=> this.basketsToSchema = data);
     }
 
-    setPopUpDarkBackgroudTrue(){
-        this.PopUpBackgroundStyle= {
-            'dark_background': true,
-        }
-    }
 
-    setPopUpDarkBackgroudFalse(){
-        this.PopUpBackgroundStyle= {
-            'dark_background': false,
-        }
-    }
 
 
 }

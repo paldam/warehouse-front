@@ -52,10 +52,6 @@
 
         </p-dataTable>
 
-
-        <p-contextMenu  #cm [model]="items"> </p-contextMenu>
-
-
     </p-fieldset>
 </div>
 
@@ -91,26 +87,6 @@
 
                 </div>
 
-                <!--<div class="col-lg-7">-->
-                            <!--<div class="form-check markup_const_percent ">-->
-                                <!--<input type="radio"  class="form-check-input" (change)="updateMarkupOption($event)"  name="markup_options" id="optionsRadios1" value="0" >-->
-                            <!--</div>-->
-
-                                <!--<div class="form-group tax_input1">-->
-                                    <!--<small id="additional_tax_percent_Desc" class="text-muted">Marża procentowa + %</small>-->
-                                    <!--<input [disabled]="IsMarkUpPercentActive" type="number" name="tax" class="form-control"  aria-describedby="taxDesc"  step="0.1"  (change)="recalculateTotalPlusMarkUp()" [(ngModel)]="markupPercent" >-->
-                                <!--</div>-->
-
-
-                            <!--<div class="form-check markup_const_check">-->
-                                    <!--<input type="radio" checked class="form-check-input" (change)="updateMarkupOption($event)"  name="markup_options" id="optionsRadios2" value="1" >-->
-                            <!--</div>-->
-
-                            <!--<div class="form-group tax_input2">-->
-                                <!--<small id="additional_tax_const_Desc" class="text-muted">Marża kwotowa + zł</small>-->
-                                <!--<input [disabled]="IsMarkUpConstActive" type="number" name="tax" class="form-control"  aria-describedby="taxDesc"  step="0.1" (change)="recalculateTotalPlusMarkUp()" [(ngModel)]="markupConst" >-->
-                            <!--</div>-->
-                <!--</div>-->
 
             </div>
         </p-fieldset>
@@ -124,7 +100,7 @@
                 <div class="customer_data_form col-md-6">
                 <p-panel header="Dane osoby zamawiającej">
 
-                    <button class="btn bg-primary text" (click)="op.show($event,popup_frame)">Wybierz klienta</button>
+                    <button class="btn bg-primary text" (click)="showCustomerList()">Wybierz klienta</button>
                     <button class="btn bg-primary text"  (click)="cleanForm(form,formAdidtional)">Wyczyść</button>
 
                     <div class="form-group">
@@ -267,33 +243,6 @@
 
 
 
-<div [ngClass]="PopUpBackgroundStyle">
-</div>
-
-<p-overlayPanel #op (onAfterShow)="onShowPopUp()" (onAfterHide)="setPopUpDarkBackgroudFalse()" >
-        <div #popup_frame class="popup_frame">
-            <div class="input-group search_bar">
-                <span class="input-group-addon" id="basic-addon1">
-                    <i class="fa fa-search" aria-hidden="true"></i>
-                </span>
-                    <input #globalfilter type="text" class="form-control search_input" pInputText size="50" placeholder="Szukaj"aria-describedby="basic-addon1">
-
-            </div>
-            <p-dataTable [value]="customers" [rows]="10" [paginator]="true"  #dt (onRowDblclick)="op.hide();pickCustomer($event.data)"
-                         [loading]="loading" loadingIcon="fa-circle-o-notch" [globalFilter]="globalfilter">
-                <p-column field="name" header="Imię i Nazwisko" [sortable]="true" ></p-column>
-                <p-column field="organizationName" header="Firma" [sortable]="false"></p-column>
-                <p-column field="address" header="Adres" [sortable]="false"></p-column>
-                <p-column field="zipCode" header="Kod" [sortable]="false"></p-column>
-                <p-column field="cityName" header="Miasto" [sortable]="false"></p-column>
-                <p-column field="phoneNumber" header="Telefon" [sortable]="false"></p-column>
-                <p-column field="email" header="Email" [sortable]="false"></p-column>
-
-            </p-dataTable>
-        </div>
-</p-overlayPanel>
-
-
 <p-dialog [(visible)]="confirmDialogShow" >
 
     <p-header>
@@ -310,3 +259,28 @@
 
 </p-dialog>
 
+
+<p-dialog header="Wybierz klienta" modal="true" width="1000" [(visible)]="customerPickDialogShow" >
+    <div >
+        <div class="input-group search_bar">
+                <span class="input-group-addon" id="basic-addon1">
+                    <i class="fa fa-search" aria-hidden="true"></i>
+                </span>
+            <input #globalfilter type="text" class="form-control search_input" pInputText size="50" placeholder="Szukaj"aria-describedby="basic-addon1">
+
+        </div>
+        <p-dataTable [value]="customers" [rows]="10" [paginator]="true"  #dt (onRowDblclick)="pickCustomer($event.data)"
+                     [loading]="loading" loadingIcon="fa-circle-o-notch" [globalFilter]="globalfilter">
+            <p-column field="name" header="Imię i Nazwisko" [sortable]="true" ></p-column>
+            <p-column field="organizationName" header="Firma" [sortable]="false"></p-column>
+            <p-column field="address" header="Adres" [sortable]="false"></p-column>
+            <p-column field="zipCode" header="Kod" [sortable]="false"></p-column>
+            <p-column field="cityName" header="Miasto" [sortable]="false"></p-column>
+            <p-column field="phoneNumber" header="Telefon" [sortable]="false"></p-column>
+            <p-column field="email" header="Email" [sortable]="false"></p-column>
+
+        </p-dataTable>
+    </div>
+</p-dialog>
+
+<p-contextMenu  #cm [model]="items"> </p-contextMenu>

@@ -37,9 +37,11 @@
     z-index: 1000;
 }
 .popup_frame{
-    background-color: white;
-    border-radius: 8px;
-    z-index:10;
+    width: 80%;
+    z-index: 99    ;
+    position: fixed;
+    top: 20%;
+    left: 10% ;
 }
 .input-group-addon{
     min-width: 100px;
@@ -140,6 +142,7 @@ select.ng-dirty.ng-valid { border: 1px solid #6bc502 }
     top: 30px;
     left: 20px;
 }
-button i {
-    padding-right: 10px;
+
+.btn {
+    margin-right: 10px;
 }

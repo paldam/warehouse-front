@@ -20,7 +20,7 @@ declare var $ :any;
     selector: 'basket-order',
     templateUrl: './basket-order.component.html',
     styleUrls: ['./basket-order.component.css'],
-    encapsulation: ViewEncapsulation.None
+   encapsulation: ViewEncapsulation.None
 
 })
 
@@ -36,22 +36,15 @@ export class BasketOrderComponent implements OnInit {
     public formSubmitted: boolean = false;
     public isReadOnlyProp: boolean = false;
     public loading: boolean;
-    // public totalPlusMarkUp: number=0;
-    // public markupPercent: number = 10;
-    // public markupConst: number=0;
-    // public markUpOption: number =1;
-    // public IsMarkUpConstActive: boolean= false;
-    // public IsMarkUpPercentActive: boolean= true;
     public confirmDialogShow: boolean = false;
+    public customerPickDialogShow: boolean = false;
     public generatedOrderId: number = null; //id too print PDF
-    public PopUpBackgroundStyle = {
-        'dark_background': false,
-    }
+    private items: MenuItem[];
+    public selectedBasketOnContextMenu: Basket = new Basket();
+
     value: Date;
     dateLang: any;
 
-    private items: MenuItem[];
-    public selectedBasketOnContextMenu: Basket = new Basket();
 
     constructor(private basketService : BasketService, private  customerService: CustomerService, private orderService: OrderService,private confirmationService: ConfirmationService) {
         basketService.getBaskets().subscribe(data=> this.baskets = data);
@@ -88,28 +81,6 @@ export class BasketOrderComponent implements OnInit {
         })
     }
 
-    // recalculateTotalPlusMarkUp(){
-    //     if (this.markUpOption ==0 ){
-    //         this.totalPlusMarkUp = this.total * ((this.markupPercent/100)+1)
-    //     }else{
-    //         this.totalPlusMarkUp = this.total + (this.markupConst*100);
-    //     }
-    // }
-
-    // updateMarkupOption(event) {
-    //     if(event.target.value==0){
-    //         this.totalPlusMarkUp = this.total * ((this.markupPercent/100)+1)
-    //         this.markUpOption=0;
-    //         this.IsMarkUpConstActive= true;
-    //         this.IsMarkUpPercentActive= false;
-    //     }else{
-    //         this.totalPlusMarkUp = this.total + this.markupConst;
-    //         this.markUpOption=1;
-    //         this.IsMarkUpConstActive= false;
-    //         this.IsMarkUpPercentActive= true;
-    //     }
-    //
-    // }
 
     contextMenuSelected(event){
         this.selectedBasketOnContextMenu = event.data;
@@ -148,20 +119,8 @@ export class BasketOrderComponent implements OnInit {
             this.orderItems.splice(index,1);
         }
         this.recalculate();
-        // this.recalculateTotalPlusMarkUp();
     }
 
-
-    // recalculate(){
-    //     this.total = 0;
-    //     this.orderItems.forEach(orderItem=> {
-    //         let totalBasketPrice =0;
-    //         orderItem.basket.basketItems.forEach(basketItem=>{
-    //             totalBasketPrice+=(basketItem.product.price * basketItem.quantity)
-    //         })
-    //         this.total += (totalBasketPrice * orderItem.quantity);
-    //     })
-    // }
 
     recalculate(){
         this.total = 0;
@@ -174,15 +133,16 @@ export class BasketOrderComponent implements OnInit {
     isFormReadOnly() : boolean{
         return this.isReadOnlyProp;
     }
-    getCustomersList(){
-        this.customerService.getCustomers().subscribe(data=> this.customers = data);
-    }
+
 
     pickCustomer(customer : Customer){
         this.selectedCustomer = customer;
         this.isReadOnlyProp= true;
+        this.customerPickDialogShow = false;
+    }
 
-
+    showCustomerList() {
+        this.customerPickDialogShow = true;
     }
     cleanForm(form : NgForm, formAdidtional : NgForm){
         form.resetForm();
@@ -258,19 +218,19 @@ export class BasketOrderComponent implements OnInit {
 
 
     onShowPopUp(){
-        this.setPopUpDarkBackgroudTrue();
+
         this.customerService.getCustomers().subscribe(data=> this.customers = data);
     }
 
-    setPopUpDarkBackgroudTrue(){
-        this.PopUpBackgroundStyle= {
-            'dark_background': true,
-        }
-    }
-
-    setPopUpDarkBackgroudFalse(){
-        this.PopUpBackgroundStyle= {
-            'dark_background': false,
-        }
-    }
+    // setPopUpDarkBackgroudTrue(){
+    //     this.PopUpBackgroundStyle= {
+    //         'dark_background': true,
+    //     }
+    // }
+    //
+    // setPopUpDarkBackgroudFalse(){
+    //     this.PopUpBackgroundStyle= {
+    //         'dark_background': false,
+    //     }
+    // }
 }

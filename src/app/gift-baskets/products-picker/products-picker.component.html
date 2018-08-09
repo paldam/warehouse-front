@@ -46,7 +46,7 @@
 <div class="row">
     <div class="picked_products_list col-sm-6">
         <p-fieldset legend="Zawartość kosza" [toggleable]="true">
-            <button class="btn bg-primary text pull-right" (click)="op.show($event,popup_frame)">kosz na wzór</button>
+            <button class="btn bg-primary text pull-right" (click)="showBasketPatterList()">kosz na wzór</button>
             <table *ngIf="isProductLinesEmpty()==false">
                 <thead>
                 <tr>
@@ -126,11 +126,10 @@
 <gift-baskets></gift-baskets>
 
 
-<div [ngClass]="PopUpBackgroundStyle">
-</div>
 
-<p-overlayPanel #op (onAfterShow)="onShowPopUp()" (onAfterHide)="setPopUpDarkBackgroudFalse()" >
-    <div #popup_frame class="popup_frame">
+
+<p-dialog header="Wybierz kosz na wzór" modal="true" width="1000" [(visible)]="basketPatterPickDialogShow" >
+    <div>
         <div class="input-group search_bar">
                 <span class="input-group-addon" id="basic-addon1">
                     <i class="fa fa-search" aria-hidden="true"></i>
@@ -140,7 +139,7 @@
         </div>
 
 
-        <p-dataTable [value]="basketsToSchema" [rows]="10" [paginator]="true"  #dt (onRowDblclick)="op.hide();pickBasket($event.data)"
+        <p-dataTable [value]="basketsToSchema" [rows]="10" [paginator]="true"  #dt (onRowDblclick)="pickBasket($event.data)"
                      [loading]="loading" loadingIcon="fa-circle-o-notch" [globalFilter]="globalfilter" expandableRows="true">
 
             <p-column expander="true" header="Zawartość" styleClass="col-icon " [style]="{'width':'70px'}"></p-column>
@@ -184,4 +183,4 @@
 
         </p-dataTable>
     </div>
-</p-overlayPanel>
+</p-dialog>

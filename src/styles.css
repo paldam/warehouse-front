@@ -42,9 +42,9 @@ body .ui-datatable .ui-datatable-data tr.ui-datatable-odd {
   margin-top: 50px;
 }
 
-.ui-state-default a{
-  color: white;
-}
+/*.ui-state-default a{*/
+  /*color: white;*/
+/*}*/
 .ui-panelmenu .ui-panelmenu-header.ui-state-active,.ui-panelmenu .ui-panelmenu-header.ui-state-active a{
   background-color:#282b30;
   border-color: #282b30;
