@@ -39,7 +39,7 @@ export class BasketOrderComponent implements OnInit {
     public confirmDialogShow: boolean = false;
     public customerPickDialogShow: boolean = false;
     public generatedOrderId: number = null; //id too print PDF
-    private items: MenuItem[];
+    public items: MenuItem[];
     public selectedBasketOnContextMenu: Basket = new Basket();
 
     value: Date;

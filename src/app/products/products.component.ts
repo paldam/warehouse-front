@@ -66,7 +66,6 @@ export class ProductsComponent implements OnInit {
 
       let pageTmp = ((index-1) / 20)+1;
       localStorage.setItem('lastPage', pageTmp.toString());
-      console.log("teskt to wyswie " + this.findInputtext);
       let textTmp = this.findInputtext;
       localStorage.setItem('findInputtext', textTmp);
       this.router.navigate(["/product/",id]);
