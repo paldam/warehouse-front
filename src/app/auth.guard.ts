@@ -9,6 +9,7 @@ export class AuthGuard implements CanActivate {
 
     canActivate() {
         if (this.authenticationService.isLoggedIn()) {
+            //localStorage.removeItem('findInputtext');
             return true;
         }else{
             this.router.navigateByUrl('/login');

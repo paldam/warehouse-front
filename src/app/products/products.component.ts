@@ -1,10 +1,11 @@
-import {Component, OnInit, ViewEncapsulation} from '@angular/core';
+import {Component, OnInit, ViewChild, ViewEncapsulation} from '@angular/core';
 import {ProductsService} from './products.service';
 import {Product} from '../model/product.model';
-import 'rxjs/add/operator/map';
-import {ActivatedRoute, Router} from '@angular/router';
+import {ActivatedRoute, NavigationEnd, Router, RoutesRecognized} from '@angular/router';
 import {ConfirmationService} from "primeng/primeng";
 import {isUndefined} from "util";
+import { filter } from 'rxjs/operators';
+import {pairwise} from "rxjs/internal/operators";
 
 
 @Component({
@@ -14,7 +15,6 @@ import {isUndefined} from "util";
   encapsulation: ViewEncapsulation.None
 })
 export class ProductsComponent implements OnInit {
-
   public loading: boolean;
   public products: Product[]=[];
   public lastVisitedPage: number ;
@@ -26,31 +26,44 @@ export class ProductsComponent implements OnInit {
     productsService.getProducts().subscribe(data=> this.products = data);
 
 
+    this.router.events
+        .pipe(filter((e: any) => e instanceof RoutesRecognized),
+            pairwise()
+        ).subscribe((e: any) => {
+      let previousUrlTmp = e[0].urlAfterRedirects ;
+
+      if (previousUrlTmp.search('/product')==-1) {
+        console.log("nie")
+        localStorage.removeItem('findInputtext');
+      }else{
+        console.log("tak")
+      }
+
+    });
+
+
     if (localStorage.getItem('findInputtext')){
       this.findInputtext = (localStorage.getItem('findInputtext'));
     }else{
       this.findInputtext = "";
     }
 
-    //
-    // if (localStorage.getItem('lastPage')){
-    //   let tmplastVisitedPage =parseInt(localStorage.getItem('lastPage'));
-    //   this.lastVisitedPage = (tmplastVisitedPage -1)*20;
-    // }else{
-    //   this.lastVisitedPage = 0;
-    // }
-
 }
 
 
 
   ngOnInit() {
+
+
     if (localStorage.getItem('lastPage')){
       let tmplastVisitedPage =parseInt(localStorage.getItem('lastPage'));
       this.lastVisitedPage = (tmplastVisitedPage -1)*20;
     }else{
       this.lastVisitedPage = 0;
     }
+
+
+
   }
 
   refreshData() {

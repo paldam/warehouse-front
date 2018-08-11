@@ -1,9 +1,9 @@
-<div class="products_box">
+<div  class="products_box">
         <div class="input-group search_bar">
     <span class="input-group-addon" id="basic-addon1">
                  <i class="fa fa-search" aria-hidden="true"></i>
             </span>
-    <input #gb type="text" class="form-control search_input" pInputText size="50" placeholder="Szukaj"aria-describedby="basic-addon1" [(ngModel)]="findInputtext" >
+    <input #gb type="text" class="form-control search_input" pInputText size="50" placeholder="Szukaj"aria-describedby="basic-addon1"  [(ngModel)]="findInputtext">
 
     <i class="fa fa-refresh pull-right refresh_icon fa-2x" aria-hidden="true" (click)="refreshData()"></i>
 </div>
@@ -48,5 +48,7 @@
     </p-dataTable>
 
 </div>
+
+
 
 <p-confirmDialog header="Usuwanie produktu" icon="fa fa-question-circle" width="425"></p-confirmDialog>

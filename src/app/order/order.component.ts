@@ -1,9 +1,10 @@
 import {Component, OnInit, ViewEncapsulation} from '@angular/core';
 import {Order} from '../model/order.model';
 import {OrderService} from './order.service';
-import {Router} from "@angular/router";
+import {Router, RoutesRecognized} from "@angular/router";
 import {ConfirmationService} from "primeng/primeng";
 import {AuthenticationService} from "../authentication.service";
+import {filter, pairwise} from "rxjs/internal/operators";
 
 @Component({
     selector: 'order',
@@ -15,10 +16,30 @@ import {AuthenticationService} from "../authentication.service";
 export class OrderComponent implements OnInit {
     public loading: boolean= false;
     public orders: Order[]=[];
+    public lastVisitedPageOrder: number ;
+    public findInputtextOrder: string = "";
 
     constructor(private orderService :OrderService,private router: Router,private confirmationService: ConfirmationService, private authenticationService: AuthenticationService) {
         orderService.getOrders().subscribe(data=> this.orders=data);
+        this.router.events
+            .pipe(filter((e: any) => e instanceof RoutesRecognized),
+                pairwise()
+            ).subscribe((e: any) => {
+            let previousUrlTmp = e[0].urlAfterRedirects ;
 
+            if (previousUrlTmp.search('/order')==-1) {
+                localStorage.removeItem('findInputtextOrder');
+            }else{
+            }
+
+        });
+
+
+        if (localStorage.getItem('findInputtextOrder')){
+            this.findInputtextOrder = (localStorage.getItem('findInputtextOrder'));
+        }else{
+            this.findInputtextOrder = "";
+        }
     }
 
     refreshData() {
@@ -30,6 +51,22 @@ export class OrderComponent implements OnInit {
     }
 
     ngOnInit() {
+
+        if (localStorage.getItem('lastPageOrder')){
+            let tmplastVisitedPage =parseInt(localStorage.getItem('lastPageOrder'));
+            this.lastVisitedPageOrder = (tmplastVisitedPage -1)*20;
+        }else{
+            this.lastVisitedPageOrder = 0;
+        }
+    }
+
+    goToEditPage(index,id) {
+
+        let pageTmp = ((index-1) / 20)+1;
+        localStorage.setItem('lastPageOrder', pageTmp.toString());
+        let textTmp = this.findInputtextOrder;
+        localStorage.setItem('findInputtextOrder', textTmp);
+        this.router.navigate(["/order/",id]);
     }
 
     printPdf(id : number){

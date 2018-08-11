@@ -40,6 +40,7 @@ import { MapsComponent } from './maps/maps.component';
 import {MapService} from "./maps/map.service";
 import { StatisticComponent } from './statistic/statistic.component';
 import {CalendarSetingsComponent} from "./primeNgCalendarSetings/calendarStings.component";
+import {TableModule} from "primeng/table";
 
 
 
@@ -71,7 +72,7 @@ export function httpExt(backend: XHRBackend, options: RequestOptions, router: Ro
   ],
   imports: [
     BrowserModule,HttpModule,BrowserAnimationsModule,FormsModule,DialogModule,ConfirmDialogModule,PanelMenuModule,
-    PanelModule,DataTableModule,SharedModule,FieldsetModule,LightboxModule,OverlayPanelModule,ContextMenuModule, MenuModule,CalendarModule,routing
+    PanelModule,TableModule,DataTableModule,SharedModule,FieldsetModule,LightboxModule,OverlayPanelModule,ContextMenuModule, MenuModule,CalendarModule,routing
   ],
   providers: [ {
     provide: HttpService, useFactory: (httpExt) , deps: [XHRBackend, RequestOptions,Router]},
