@@ -10,7 +10,7 @@
     </div>
 
     <p-dataTable [value]="orders" [rows]="20" [paginator]="true" [globalFilter]="gb" #dt
-                 [loading]="loading" loadingIcon="fa-circle-o-notch" expandableRows="true">
+                 [loading]="loading" loadingIcon="fa-circle-o-notch" expandableRows="true" [first]="lastVisitedPageOrder">
         <p-header>Lista Zamówień</p-header>
         <p-column expander="true" header="Zawartość" styleClass="col-icon " [style]="{'width':'70px'}"></p-column>
         <p-column  header="lp."   [style]="{'width':'70px'}">

@@ -33,10 +33,8 @@ export class ProductsComponent implements OnInit {
       let previousUrlTmp = e[0].urlAfterRedirects ;
 
       if (previousUrlTmp.search('/product')==-1) {
-        console.log("nie")
         localStorage.removeItem('findInputtext');
       }else{
-        console.log("tak")
       }
 
     });
