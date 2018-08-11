@@ -55,6 +55,12 @@
               </ul>
             </div>
 
+            <div class="input-group">
+              <input type="text" name="basketSeason" #basketSeason="ngModel" class="form-control"  size="50" aria-describedby="nameDesc" [(ngModel)]="basket.season">
+              <span class="input-group-addon" id="nameDesc">Sezon</span>
+            </div>
+
+
             <div class="form-group">
               <small id="basket_typeDesc" class="text-muted">Typ kosza</small>
               <select [compareWith]="compareBasketType" class="form-control" #basket_type="ngModel" name="basket_type" [(ngModel)]="basket.basketType" required="">

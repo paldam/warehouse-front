@@ -70,9 +70,18 @@ export class OrderComponent implements OnInit {
     }
 
     printPdf(id : number){
-        this.orderService.getPdf(id).subscribe(res=>{
-           var fileURL = URL.createObjectURL(res);
-           window.open(fileURL);
+    this.orderService.getPdf(id).subscribe(res=>{
+            var fileURL = URL.createObjectURL(res);
+            window.open(fileURL);
+
+        }
+    )
+}
+
+    printConfirmationPdf(id : number){
+        this.orderService.getConfirmationPdf(id).subscribe(res=>{
+                var fileURL = URL.createObjectURL(res);
+                window.open(fileURL);
 
             }
         )

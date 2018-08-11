@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import {BasketService} from "../gift-baskets/gift-basket.service";
 import {Router} from "@angular/router";
 import {Basket} from "../model/basket.model";
@@ -16,6 +16,7 @@ export class BasketComponent implements OnInit {
   public loading: boolean;
   public url: string ='';
   public gb: any;
+  @ViewChild('onlyDeleted') el:ElementRef;
 
 
   constructor(private basketService: BasketService, private router :Router, private confirmationService: ConfirmationService) {
@@ -49,6 +50,18 @@ export class BasketComponent implements OnInit {
 
       }
     });
+  }
+
+  clickOnlyDeletedBasketChceckBox(){
+
+    if (this.el.nativeElement.checked){
+      this.basketService.getDeletedBaskets().subscribe(data => this.baskets = data);
+    }else{
+      this.basketService.getBaskets().subscribe(data => this.baskets = data);
+    }
+
+
+
   }
 
 }

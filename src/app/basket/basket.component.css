@@ -21,3 +21,18 @@
 .product_tab_row {
     text-align: left;
 }
+
+
+.onlyDeleted {
+     margin-left: 10px;
+ }
+.dd{
+    max-width: 500px;
+}
+
+.refresh_icon{
+    position: absolute;
+    right: 5px;
+    top: 1px;
+}
+

@@ -158,6 +158,7 @@
 
           </form>
           <button class="btn bg-primary " (click)="editOrderForm()"  >Edytuj zamówienie</button>
+          <button class="btn bg-primary " (click)="cancelEdit()"  >Anuluj </button>
           <div *ngIf="orderItems.length<1 && formSubmitted" class="alert alert-danger" role="alert">
             <strong>Błąd. Zamówienie nie może być puste</strong>
           </div>

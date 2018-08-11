@@ -56,6 +56,7 @@
                 <i class="fa fa-pencil-square-o fa-2x" aria-hidden="true"  title="Edytuj zamówienie" (click)="goToEditPage(i+1,order.orderId)"></i>
                 <i *ngIf="authenticationService.isAdmin()" class="fa fa-trash fa-2x edit_icon" aria-hidden="true" title="Usuń zamówienie" (click)="ShowConfirmModal(order)"></i>
                 <i class="fa fa-print fa-2x " aria-hidden="true" title="Drukuj zamówienie" (click)="printPdf(order.orderId)" ></i>
+                <i class="fa fa-print fa-2x " aria-hidden="true" title="Drukuj potwierdzenie odbioru" (click)="printConfirmationPdf(order.orderId)" ></i>
 
             </ng-template>
         </p-column>

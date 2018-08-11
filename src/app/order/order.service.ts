@@ -48,7 +48,15 @@ export class OrderService {
     }
 
     getPdf(id: number): any {
-        return this.http.get(this.baseUrl + `/order/pdf/${id}`,{ responseType: ResponseContentType.Blob })
+    return this.http.get(this.baseUrl + `/order/pdf/${id}`,{ responseType: ResponseContentType.Blob })
+        .map(res => {
+            return new Blob([res.blob()], { type: 'application/pdf' })
+        })
+
+}
+
+    getConfirmationPdf(id: number): any {
+        return this.http.get(this.baseUrl + `/order/deliverypdf/${id}`,{ responseType: ResponseContentType.Blob })
             .map(res => {
                 return new Blob([res.blob()], { type: 'application/pdf' })
             })

@@ -112,6 +112,10 @@ export class OrderDetailsComponent implements OnInit {
             return false
         }
     }
+    cancelEdit(){
+        this.router.navigateByUrl('/orders');
+    }
+
     deleteProductLine(id : number){
 
         let index = this.orderItems.findIndex(data=> data.basket.basketId == id);

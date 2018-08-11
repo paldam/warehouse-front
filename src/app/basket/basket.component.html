@@ -1,11 +1,19 @@
-<p-fieldset legend="Lista dostępnych Koszy" [toggleable]="true">
-
+<p-fieldset legend="Lista Koszy" [toggleable]="true">
   <div class="input-group search_bar">
             <span class="input-group-addon" id="basic-addon1">
                  <i class="fa fa-search" aria-hidden="true"></i>
             </span>
-    <input #gb type="text" class="form-control search_input" pInputText size="50" placeholder="Szukaj"aria-describedby="basic-addon1">
+    <input #gb type="text" class="dd form-control search_input" pInputText size="50" placeholder="Szukaj"aria-describedby="basic-addon1">
+
+    <div class="onlyDeleted form-check">
+      <label class="form-check-label">
+        <input #onlyDeleted type="checkbox" class="form-check-input" name=""  (click)="clickOnlyDeletedBasketChceckBox()" >
+        Tylko archiwalne
+      </label>
+    </div>
+
     <i class="fa fa-refresh pull-right refresh_icon fa-2x" aria-hidden="true" (click)="refreshData()"></i>
+
   </div>
 
   <p-dataTable [value]="baskets" [rows]="10" [paginator]="true" [globalFilter]="gb" #dt
@@ -21,6 +29,7 @@
 
     <p-column field="basketName" header="Nazwa kosza" [sortable]="true"></p-column>
     <p-column field="basketType.basketTypeName" header="Typ kosza" [sortable]="true" ></p-column>
+    <p-column field="season" header="Sezon" [sortable]="true" ></p-column>
     <p-column field="basketTotalPrice"  header="Cena kosza "  [sortable]="true" >
       <ng-template let-row="rowData" pTemplate="body">
         {{row.basketTotalPrice/100| number : '1.2-2'}} zł.
