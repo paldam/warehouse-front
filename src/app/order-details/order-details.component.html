@@ -155,6 +155,22 @@
             </div>
 
 
+            <div class="form-group">
+              <small id="add_file" class="text-muted">Wgraj plik</small>
+                <p-fileUpload name="files"  multiple="multiple"  maxFileSize="5000000" (onUpload)="onUP()" (onError)="onError()"
+                              invalidFileSizeMessageSummary="{0} - plik jest za duży" invalidFileSizeMessageDetail="rozmiar pliku może wynosić maksymalnie {0}"
+                              chooseLabel="Wybierz plik" uploadLabel="Wgraj" cancelLabel="Anuluj">
+
+
+                  <ng-template pTemplate="content">
+                    faktura.png <br>
+                    Logo.jpg
+                  </ng-template>
+                </p-fileUpload>
+            </div>
+
+
+
 
           </form>
           <button class="btn bg-primary " (click)="editOrderForm()"  >Edytuj zamówienie</button>

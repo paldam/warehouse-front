@@ -1,4 +1,4 @@
-import {Component, OnInit, ViewEncapsulation} from '@angular/core';
+import {Component, OnInit, ViewChild, ViewEncapsulation} from '@angular/core';
 import {ActivatedRoute, Router} from "@angular/router";
 import {OrderService} from "../order/order.service";
 import {Order} from "../model/order.model";
@@ -7,7 +7,7 @@ import {DeliveryType} from "../model/delivery_type.model";
 import {Customer} from "../model/customer.model";
 import {OrderStatus} from "../model/OrderStatus";
 import {Product} from "../model/product.model";
-import {ConfirmationService} from "primeng/primeng";
+import {ConfirmationService, FileUpload} from "primeng/primeng";
 import {AuthenticationService} from "../authentication.service";
 import {Basket} from "../model/basket.model";
 import {BasketService} from "../gift-baskets/gift-basket.service";
@@ -31,8 +31,9 @@ export class OrderDetailsComponent implements OnInit {
   public loading: boolean= false;
   public totalAmount: number;
   public orderStatusId: number;
-    public baskets: Basket[]=[];
-    public total: number = 0;
+  public baskets: Basket[]=[];
+  public total: number = 0;
+  @ViewChild(FileUpload) fileUploadElement: FileUpload;
 
 
   constructor(private basketService : BasketService,private orderService : OrderService,activeRoute: ActivatedRoute, private  router: Router,public authenticationService: AuthenticationService) {
@@ -43,6 +44,7 @@ export class OrderDetailsComponent implements OnInit {
                   this.totalAmount = res.orderTotalAmount/100;
                   this.order.cod /=100;
                   this.recalculate();
+                  this.fileUploadElement.url = "http://localhost:8080/uploadfiles?orderId="+res.orderId;
 
          })
       this.orderService.getDeliveryTypes().subscribe(data=> this.deliveryTypes = data);
@@ -53,6 +55,7 @@ export class OrderDetailsComponent implements OnInit {
 
 
   ngOnInit() {
+
   }
 
   compareDeliveryType( optionOne : DeliveryType, optionTwo : DeliveryType) : boolean {
@@ -74,10 +77,15 @@ export class OrderDetailsComponent implements OnInit {
       }else{
           this.order.cod =0;
       }
+
       this.order.customer = this.customer;
       this.order.orderTotalAmount = this.total;
-      console.log(JSON.stringify(this.order));
-    this.orderService.saveOrder(this.order).subscribe(data=>{
+
+      this.orderService.saveOrder(this.order).subscribe(data=>{
+
+          let orderId = data.orderId;
+          this.fileUploadElement.url = "http://localhost:8080/uploadfiles?orderId="+orderId;  // PrimeNg fileUpload component
+          this.fileUploadElement.upload();
           this.router.navigateByUrl('/orders');
 
     },error2 => {
@@ -132,6 +140,12 @@ export class OrderDetailsComponent implements OnInit {
             this.total += (orderItem.basket.basketTotalPrice * orderItem.quantity);
         })
 
+    }
+    onUP(){
+        console.log("dddddddddddddddddddddd");
+    }
+    onError(){
+        console.log("pliki nie wgrały się");
     }
 
 

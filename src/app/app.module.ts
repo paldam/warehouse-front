@@ -41,6 +41,9 @@ import {MapService} from "./maps/map.service";
 import { StatisticComponent } from './statistic/statistic.component';
 import {CalendarSetingsComponent} from "./primeNgCalendarSetings/calendarStings.component";
 import {TableModule} from "primeng/table";
+import { FileSendComponent } from './file-send/file-send.component';
+import {FileUploadModule} from 'primeng/fileupload';
+import {FileSendService} from "./file-send/file-send.service";
 
 
 
@@ -69,14 +72,15 @@ export function httpExt(backend: XHRBackend, options: RequestOptions, router: Ro
     PageNotFoundComponent,
     MapsComponent,
     StatisticComponent,
+    FileSendComponent,
   ],
   imports: [
     BrowserModule,HttpModule,BrowserAnimationsModule,FormsModule,DialogModule,ConfirmDialogModule,PanelMenuModule,
-    PanelModule,TableModule,DataTableModule,SharedModule,FieldsetModule,LightboxModule,OverlayPanelModule,ContextMenuModule, MenuModule,CalendarModule,routing
+    PanelModule,TableModule,FileUploadModule,DataTableModule,SharedModule,FieldsetModule,LightboxModule,OverlayPanelModule,ContextMenuModule, MenuModule,CalendarModule,routing
   ],
   providers: [ {
     provide: HttpService, useFactory: (httpExt) , deps: [XHRBackend, RequestOptions,Router]},
-    CalendarSetingsComponent,ProductsService,BasketService,CustomerService,OrderService,MapService,ConfirmationService,AuthGuard,AdminGuard,AdminOrSuperUserGuard,AuthenticationService,UserService],
+    CalendarSetingsComponent,ProductsService,BasketService,FileSendService,CustomerService,OrderService,MapService,ConfirmationService,AuthGuard,AdminGuard,AdminOrSuperUserGuard,AuthenticationService,UserService],
 
   bootstrap: [AppComponent]
 })
