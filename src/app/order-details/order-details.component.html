@@ -157,15 +157,26 @@
 
             <div class="form-group">
               <small id="add_file" class="text-muted">Wgraj plik</small>
-                <p-fileUpload name="files"  multiple="multiple"  maxFileSize="5000000" (onUpload)="onUP()" (onError)="onError()"
+                <p-fileUpload name="files"  multiple="multiple"  maxFileSize="5000000"
                               invalidFileSizeMessageSummary="{0} - plik jest za duży" invalidFileSizeMessageDetail="rozmiar pliku może wynosić maksymalnie {0}"
-                              chooseLabel="Wybierz plik" uploadLabel="Wgraj" cancelLabel="Anuluj">
+                              chooseLabel="Wybierz plik" uploadLabel="Wgraj" cancelLabel="Anuluj"  (onUpload)="refreshFileList()" >
 
 
                   <ng-template pTemplate="content">
-                    faktura.png <br>
-                    Logo.jpg
+
+                      <table>
+                          <thead>
+                          </thead>
+                              <tbody>
+                                  <tr class="fileLink"  *ngFor="let item of fileList" >
+                                    <td (click)="getFile(item.fileId)" >{{item.fileName}}</td>
+                                    <td> <i (click)="ShowConfirmModal(item)" class="fa fa-trash"></i></td>
+                                  </tr>
+                              </tbody>
+                      </table>
+
                   </ng-template>
+
                 </p-fileUpload>
             </div>
 
@@ -279,3 +290,7 @@
     </p-fieldset>
   </div>
 
+
+
+
+<p-confirmDialog header="Usuwanie produktu" icon="fa fa-question-circle" width="425"></p-confirmDialog>

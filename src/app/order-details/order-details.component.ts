@@ -11,6 +11,8 @@ import {ConfirmationService, FileUpload} from "primeng/primeng";
 import {AuthenticationService} from "../authentication.service";
 import {Basket} from "../model/basket.model";
 import {BasketService} from "../gift-baskets/gift-basket.service";
+import {File} from "../model/file";
+import {FileSendService} from "../file-send/file-send.service";
 
 
 @Component({
@@ -33,23 +35,34 @@ export class OrderDetailsComponent implements OnInit {
   public orderStatusId: number;
   public baskets: Basket[]=[];
   public total: number = 0;
+  public fileList: File[]=[];
+  public orderId :number;
+    public confirmDialogShow: boolean = false;
   @ViewChild(FileUpload) fileUploadElement: FileUpload;
 
 
-  constructor(private basketService : BasketService,private orderService : OrderService,activeRoute: ActivatedRoute, private  router: Router,public authenticationService: AuthenticationService) {
-     orderService.getOrder(activeRoute.snapshot.params["id"]).subscribe(res =>{
+  constructor(private confirmationService: ConfirmationService,private fileSendService: FileSendService,private basketService : BasketService,private orderService : OrderService,activeRoute: ActivatedRoute, private  router: Router,public authenticationService: AuthenticationService) {
+
+      this.orderId= activeRoute.snapshot.params["id"];
+
+     orderService.getOrder(this.orderId).subscribe(res =>{
                   this.order = res;
                   this.customer =  res.customer;
                   this.orderItems = res.orderItems;
                   this.totalAmount = res.orderTotalAmount/100;
                   this.order.cod /=100;
                   this.recalculate();
-                  this.fileUploadElement.url = "http://localhost:8080/uploadfiles?orderId="+res.orderId;
+                  this.fileUploadElement.url = "http://localhost:8080/uploadfiles?orderId="+this.orderId;
 
          })
       this.orderService.getDeliveryTypes().subscribe(data=> this.deliveryTypes = data);
       this.orderService.getOrderStatus().subscribe(data=> this.orderStatus=data);
-      basketService.getBaskets().subscribe(data=> this.baskets = data);
+      this.orderService.getFileList(this.orderId).subscribe(data=>{
+          this.fileList= data;
+      });
+      this.basketService.getBaskets().subscribe(data=> this.baskets = data);
+
+
 
   }
 
@@ -83,8 +96,7 @@ export class OrderDetailsComponent implements OnInit {
 
       this.orderService.saveOrder(this.order).subscribe(data=>{
 
-          let orderId = data.orderId;
-          this.fileUploadElement.url = "http://localhost:8080/uploadfiles?orderId="+orderId;  // PrimeNg fileUpload component
+          this.fileUploadElement.url = "http://localhost:8080/uploadfiles?orderId="+ this.orderId;  // PrimeNg fileUpload component
           this.fileUploadElement.upload();
           this.router.navigateByUrl('/orders');
 
@@ -141,13 +153,48 @@ export class OrderDetailsComponent implements OnInit {
         })
 
     }
-    onUP(){
-        console.log("dddddddddddddddddddddd");
+
+
+    getFile(id: number){
+        this.fileSendService.getFile(id).subscribe(res=>{
+            let a = document.createElement("a")
+            console.log("sdsdssdd");
+            let blobURL = URL.createObjectURL(res)
+            a.download = this.fileSendService.fileName;
+            a.href = blobURL
+            document.body.appendChild(a)
+            a.click()
+            document.body.removeChild(a)
+        });
     }
-    onError(){
-        console.log("pliki nie wgrały się");
+
+    deleteFile(id: number){
+        this.fileSendService.deleteFile(id).subscribe(res=>{
+            this.refreshFileList();
+        })
+
     }
 
+    refreshFileList(){
+        setTimeout(() => {
+            this.orderService.getFileList(this.orderId).subscribe(data=>{this.fileList= data;});
+        }, 1000);
 
+    }
 
+    ShowConfirmModal(file: File) {
+        this.confirmationService.confirm({
+            message: 'Jesteś pewny że chcesz usunąć ten plik ?',
+            accept: () => {
+
+                this.fileSendService.deleteFile(file.fileId).subscribe(res=>{
+                    this.refreshFileList();
+                })
+
+            },
+            reject:()=>{
+
+            }
+        });
+    }
 }

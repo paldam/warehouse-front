@@ -2,8 +2,10 @@
  * Created by Damian on 14.08.2018.
  */
 import {Injectable} from '@angular/core';
-import {Http, ResponseContentType} from "@angular/http";
+import {Http, Response, ResponseContentType} from "@angular/http";
 import {HttpService} from "../http-service";
+import {Observable} from "rxjs/Rx";
+import {Basket} from "../model/basket.model";
 
 @Injectable()
 export class FileSendService {
@@ -33,17 +35,12 @@ export class FileSendService {
 
     }
 
-    // dowload2(){
-    //
-    //     this.download().subscribe(res=>{
-    //         let a = document.createElement("a")
-    //         let blobURL = URL.createObjectURL(res)
-    //         a.download = this.fileName;
-    //         a.href = blobURL
-    //         document.body.appendChild(a)
-    //         a.click()
-    //         document.body.removeChild(a)
-    //     });
-    // }
+    deleteFile(id: number): Observable<Response>{
+        return this.http.delete(this.baseUrl + `/file/delete/${id}`)
+            .map((response: Response) => response.json());
+
+    }
+
+
 
 }

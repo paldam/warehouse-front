@@ -1,4 +1,4 @@
-import {Component, OnInit, ViewEncapsulation} from '@angular/core';
+import {Component, OnInit, ViewChild, ViewEncapsulation} from '@angular/core';
 import {Basket} from '../../model/basket.model';
 import {OrderItem} from '../../model/order_item';
 import {BasketService} from '../gift-basket.service';
@@ -9,7 +9,7 @@ import {Order} from '../../model/order.model';
 import {OrderService} from '../../order/order.service';
 import {DeliveryType} from '../../model/delivery_type.model';
 import {OrderStatus} from "../../model/OrderStatus";
-import {ConfirmationService} from "primeng/primeng";
+import {ConfirmationService, FileUpload} from "primeng/primeng";
 import {TOKEN_USER} from "../../authentication.service";
 import {ContextMenuModule,MenuItem,ContextMenu} from 'primeng/primeng';
 import {Router} from "@angular/router";
@@ -42,6 +42,7 @@ export class BasketOrderComponent implements OnInit {
     public generatedOrderId: number = null; //id too print PDF
     public items: MenuItem[];
     public selectedBasketOnContextMenu: Basket = new Basket();
+    @ViewChild(FileUpload) fileUploadElement: FileUpload;
 
     value: Date;
     dateLang: any;
@@ -162,6 +163,11 @@ export class BasketOrderComponent implements OnInit {
                     this.generatedOrderId  = data.orderId;
                     this.cleanAfterSave(form,formAdidtional);
                     this.recalculate();
+
+                    this.fileUploadElement.url = "http://localhost:8080/uploadfiles?orderId="+ data.orderId;
+                    this.fileUploadElement.upload();
+
+
                     this.showAddOrderConfirmModal();
 
                     },

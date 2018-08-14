@@ -7,6 +7,7 @@ import {DeliveryType} from '../model/delivery_type.model';
 import {OrderStatus} from "../model/OrderStatus";
 import {HttpService} from "../http-service";
 import {TOKEN_USER} from "../authentication.service";
+import {File} from "../model/file";
 @Injectable()
 export class OrderService {
 
@@ -61,6 +62,12 @@ export class OrderService {
                 return new Blob([res.blob()], { type: 'application/pdf' })
             })
 
+    }
+
+    getFileList(orderId :number) :Observable<File[]>{
+        return this.http.get(this.baseUrl+`/orderfile/${orderId}`)
+            .map((response: Response) =>
+                response.json());
     }
 
 

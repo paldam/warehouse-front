@@ -55,3 +55,7 @@ button i {
 .btn {
     margin-right: 10px;
 }
+
+.fileLink {
+    cursor: pointer;
+}

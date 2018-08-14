@@ -232,6 +232,24 @@
 
 
 
+                                <div class="form-group">
+                                    <small id="add_file" class="text-muted">Wgraj plik</small>
+                                    <p-fileUpload name="files"  multiple="multiple"  maxFileSize="5000000"
+                                                  invalidFileSizeMessageSummary="{0} - plik jest za duży" invalidFileSizeMessageDetail="rozmiar pliku może wynosić maksymalnie {0}"
+                                                  [showUploadButton]="false" chooseLabel="Wybierz plik" uploadLabel="Wgraj" cancelLabel="Anuluj wgrywanie plików"   >
+
+
+                                        <ng-template pTemplate="content">
+
+
+                                        </ng-template>
+
+                                    </p-fileUpload>
+                                </div>
+
+
+
+
                         </form>
                         <button class="btn bg-primary " type="submit" form="OrderForm" >Zapisz Zamówienie</button>
                         <button class="btn bg-primary " (click)="cancelCreateOrder()"  >Anuluj </button>
