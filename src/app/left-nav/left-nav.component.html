@@ -23,13 +23,21 @@
 
 
             <li routerLinkActive="active_main" >
-                <h3 [class.cursor_dis]="isUser()" class="tak"><span class="fa fa-newspaper-o"></span>Produkty</h3>
+            <h3 [class.cursor_dis]="isUser()" class="tak"><span class="fa fa-newspaper-o"></span>Produkty</h3>
+            <ul>
+                <li *ngIf="isAdmin() || isSuperUser()" ><a  [routerLink]="['/product/'] " routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Przeglądaj</a></li>
+                <li *ngIf="isAdmin() || isSuperUser()" ><a [routerLink]="['/product/add'] " routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Dodaj</a></li>
+            </ul>
+        </li>
+
+
+            <li routerLinkActive="active_main" >
+                <h3 [class.cursor_dis]="isUser()" class="tak"><span class="fa fa-address-card-o"></span>Klienci</h3>
                 <ul>
-                    <li *ngIf="isAdmin() || isSuperUser()" ><a  [routerLink]="['/product/'] " routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Przeglądaj</a></li>
-                    <li *ngIf="isAdmin() || isSuperUser()" ><a [routerLink]="['/product/add'] " routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Dodaj</a></li>
+                    <li *ngIf="isAdmin() || isSuperUser()" ><a  [routerLink]="['/customer/'] " routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Przeglądaj</a></li>
+                    <li *ngIf="isAdmin() || isSuperUser()" ><a [routerLink]="['/customer/add'] " routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Dodaj</a></li>
                 </ul>
             </li>
-
 
 
             <li  routerLinkActive="active_main">

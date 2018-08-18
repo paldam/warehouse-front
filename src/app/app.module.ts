@@ -44,6 +44,7 @@ import {TableModule} from "primeng/table";
 import { FileSendComponent } from './file-send/file-send.component';
 import {FileUploadModule} from 'primeng/fileupload';
 import {FileSendService} from "./file-send/file-send.service";
+import { CustomerComponent } from './customer/customer.component';
 
 
 
@@ -73,6 +74,8 @@ export function httpExt(backend: XHRBackend, options: RequestOptions, router: Ro
     MapsComponent,
     StatisticComponent,
     FileSendComponent,
+    CustomerComponent,
+
   ],
   imports: [
     BrowserModule,HttpModule,BrowserAnimationsModule,FormsModule,DialogModule,ConfirmDialogModule,PanelMenuModule,
@@ -80,7 +83,7 @@ export function httpExt(backend: XHRBackend, options: RequestOptions, router: Ro
   ],
   providers: [ {
     provide: HttpService, useFactory: (httpExt) , deps: [XHRBackend, RequestOptions,Router]},
-    CalendarSetingsComponent,ProductsService,BasketService,FileSendService,CustomerService,OrderService,MapService,ConfirmationService,AuthGuard,AdminGuard,AdminOrSuperUserGuard,AuthenticationService,UserService],
+    CalendarSetingsComponent,ProductsService,BasketService,CustomerService,FileSendService,CustomerService,OrderService,MapService,ConfirmationService,AuthGuard,AdminGuard,AdminOrSuperUserGuard,AuthenticationService,UserService],
 
   bootstrap: [AppComponent]
 })

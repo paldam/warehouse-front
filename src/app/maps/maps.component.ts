@@ -93,8 +93,8 @@ export class MapsComponent implements OnInit {
     this.mapService.getOrdersByDateRange(this.startDate.toISOString().substring(0, 10),this.endDate.toISOString().substring(0, 10)).subscribe(data =>{
       this.orders = data;
       this.orders.map((data,index)=> {
-        let address : string= data.customer.address+' '+data.customer.cityName+ ' '+data.customer.zipCode;
-        this.mapModel.push(new MapModel(address,data.orderFvNumber,index+1,data.deliveryDate));
+        // let address : string= data.customer.address+' '+data.customer.cityName+ ' '+data.customer.zipCode;
+        // this.mapModel.push(new MapModel(address,data.orderFvNumber,index+1,data.deliveryDate));
       })
       this.startMaps();
     })

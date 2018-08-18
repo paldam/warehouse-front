@@ -13,6 +13,7 @@ import {ConfirmationService, FileUpload} from "primeng/primeng";
 import {TOKEN_USER} from "../../authentication.service";
 import {ContextMenuModule,MenuItem,ContextMenu} from 'primeng/primeng';
 import {Router} from "@angular/router";
+import {Address} from "../../model/address.model";
 
 declare var jquery:any;
 declare var $ :any;
@@ -42,6 +43,7 @@ export class BasketOrderComponent implements OnInit {
     public generatedOrderId: number = null; //id too print PDF
     public items: MenuItem[];
     public selectedBasketOnContextMenu: Basket = new Basket();
+    public addrs: Address[]=[];
     @ViewChild(FileUpload) fileUploadElement: FileUpload;
 
     value: Date;
@@ -53,6 +55,7 @@ export class BasketOrderComponent implements OnInit {
         customerService.getCustomers().subscribe(data=> this.customers = data);
         orderService.getDeliveryTypes().subscribe(data=> this.deliveryTypes = data);
         this.order.deliveryType = new DeliveryType();
+
     }
 
     ngOnInit() {
@@ -141,10 +144,15 @@ export class BasketOrderComponent implements OnInit {
         this.selectedCustomer = customer;
         this.isReadOnlyProp= true;
         this.customerPickDialogShow = false;
+        console.log(this.selectedCustomer.addresses);
+
     }
 
     showCustomerList() {
         this.customerPickDialogShow = true;
+        this.customers.forEach(data=>{
+            console.log(data)
+        })
     }
     cleanForm(form : NgForm, formAdidtional : NgForm){
         form.resetForm();
@@ -159,8 +167,11 @@ export class BasketOrderComponent implements OnInit {
         this.formSubmitted = true;
         if (form.valid && formAdidtional.valid && this.orderItems.length>0) {
             this.setUpOrderBeforeSave();
+            console.log(JSON.stringify(this.order.address) );
+            console.log(JSON.stringify(this.order));
             this.orderService.saveOrder(this.order).subscribe(data=>{
                     this.generatedOrderId  = data.orderId;
+                    console.log("dssdsdsd" + this.order );
                     this.cleanAfterSave(form,formAdidtional);
                     this.recalculate();
 
@@ -169,6 +180,8 @@ export class BasketOrderComponent implements OnInit {
 
 
                     this.showAddOrderConfirmModal();
+
+
 
                     },
                     err =>  {

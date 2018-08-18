@@ -17,6 +17,7 @@ import {AdminOrSuperUserGuard} from "./adminOrSuperUser.guard";
 import {MapsComponent} from "./maps/maps.component";
 import {StatisticComponent} from "./statistic/statistic.component";
 import {FileSendComponent} from "./file-send/file-send.component";
+import {CustomerComponent} from "./customer/customer.component";
 const routes: Routes = [
     {path: '', component: ProductsComponent, pathMatch: 'full', canActivate: [AuthGuard,AdminOrSuperUserGuard]},
     { path: 'product', component: ProductsComponent, canActivate: [AuthGuard,AdminOrSuperUserGuard] },
@@ -33,6 +34,7 @@ const routes: Routes = [
     {path:   'statistics', component: StatisticComponent,canActivate: [AuthGuard,AdminGuard]},
     {path:   'login', component: LoginComponent},
     {path:   'file', component: FileSendComponent},
+    {path:   'customer', component: CustomerComponent},
 
 ];
 export const routing = RouterModule.forRoot(routes,{ useHash: true });

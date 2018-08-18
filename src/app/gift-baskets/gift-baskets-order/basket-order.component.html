@@ -103,6 +103,18 @@
                     <button class="btn bg-primary text" (click)="showCustomerList()">Wybierz klienta</button>
                     <button class="btn bg-primary text"  (click)="cleanForm(form,formAdidtional)">Wyczyść</button>
 
+
+
+
+                    <div class="form-group">
+                        <small id="delivery_typeDesc" class="text-muted">Wybierz Adres</small>
+                        <select class="form-control" [(ngModel)]="order.address" name="customer_adress" #delivery_type="ngModel" required >
+                            <option *ngFor="let a of selectedCustomer.addresses" [ngValue]="a">{{a.address +" "+ a.cityName +" "+ a.zipCode}}</option>
+                        </select>
+                    </div>
+
+
+
                     <div class="form-group">
                         <form id="OrderForm" novalidate #form="ngForm" (submit)="submitOrderForm(form,formAdidtional)">
                            <div class="form-group">
@@ -125,7 +137,7 @@
 
                             <div class="form-group">
                                 <div class="input-group">
-                                    <input type="text" name="address" #address="ngModel" class="form-control"  size="300" aria-describedby="streetDesc" [readonly]="isFormReadOnly()" [(ngModel)]="selectedCustomer.address" required>
+                                    <input type="text" name="address" #address="ngModel" class="form-control"  size="300" aria-describedby="streetDesc" [readonly]="isFormReadOnly()" [(ngModel)]="selectedCustomer.address" >
                                     <span class="input-group-addon" id="streetDesc">Ulica / nr. lokalu</span>
                                 </div>
                                 <ul class="text-danger list-unstyled" *ngIf="address.dirty|| formSubmitted">
@@ -135,7 +147,7 @@
 
                             <div class="form-group">
                                 <div class="input-group">
-                                    <input type="text" name="zip_code" #zip_code="ngModel" class="form-control"  size="300" aria-describedby="zip_codeDesc" [readonly]="isFormReadOnly()" [(ngModel)]="selectedCustomer.zipCode" required>
+                                    <input type="text" name="zip_code" #zip_code="ngModel" class="form-control"  size="300" aria-describedby="zip_codeDesc" [readonly]="isFormReadOnly()" [(ngModel)]="selectedCustomer.zipCode" >
                                     <span class="input-group-addon" id="zip_codeDesc">Kod pocztowy</span>
                                 </div>
                                 <ul class="text-danger list-unstyled" *ngIf="zip_code.dirty|| formSubmitted">
@@ -145,7 +157,7 @@
 
                             <div class="form-group">
                                 <div class="input-group">
-                                    <input type="text" name="city_name" #city_name="ngModel" class="form-control"  size="300" aria-describedby="city_nameDesc" [readonly]="isFormReadOnly()" [(ngModel)]="selectedCustomer.cityName" required="">
+                                    <input type="text" name="city_name" #city_name="ngModel" class="form-control"  size="300" aria-describedby="city_nameDesc" [readonly]="isFormReadOnly()" [(ngModel)]="selectedCustomer.cityName" >
                                     <span class="input-group-addon" id="city_nameDesc">Miejscowość</span>
                                 </div>
                                 <ul class="text-danger list-unstyled" *ngIf="city_name.dirty|| formSubmitted">
@@ -296,10 +308,6 @@
                      [loading]="loading" loadingIcon="fa-circle-o-notch" [globalFilter]="globalfilter">
             <p-column field="name" header="Imię i Nazwisko" [sortable]="true" ></p-column>
             <p-column field="organizationName" header="Firma" [sortable]="false"></p-column>
-            <p-column field="address" header="Adres" [sortable]="false"></p-column>
-            <p-column field="zipCode" header="Kod" [sortable]="false"></p-column>
-            <p-column field="cityName" header="Miasto" [sortable]="false"></p-column>
-            <p-column field="phoneNumber" header="Telefon" [sortable]="false"></p-column>
             <p-column field="email" header="Email" [sortable]="false"></p-column>
 
         </p-dataTable>
