@@ -1,13 +1,26 @@
+import {Response} from '@angular/http';
 import {Injectable} from '@angular/core';
-import {Http, Response} from '@angular/http';
 import {Observable} from 'rxjs/Observable';
-import 'rxjs/add/operator/map';
-import 'rxjs/add/operator/catch';
+import {Customer} from '../model/customer.model';
+import {HttpService} from "../http-service";
+
 
 @Injectable()
 export class CustomerService {
-    constructor(private http: Http) {
+
+    public protocol: string = "http";
+    public port: number = 8080;
+    public baseUrl: string;
+
+    public constructor(private http : HttpService){
+        this.baseUrl = `${this.protocol}://${location.hostname}:${this.port}`;
     }
 
-    
+
+    getCustomers(): Observable<Customer[]> {
+        return this.http.get(this.baseUrl+`/customers/`)
+            .map((response: Response) => response.json());
+    }
+
 }
+

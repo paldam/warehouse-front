@@ -1,11 +1,11 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import { AppComponent } from './app.component';
+import { AppComponent } from './main-app-component/app.component';
 import { ProductsComponent } from './products/products.component';
 import {ProductsService} from './products/products.service';
 import {HttpModule, RequestOptions, XHRBackend} from '@angular/http';
-import { NavComponent } from './top-nav/top-nav.component';
-import {LeftNavComponent} from './left-nav/left-nav.component';
+import { NavComponent } from './nav-bars/top-nav/top-nav.component';
+import {LeftNavComponent} from './nav-bars/left-nav/left-nav.component';
 import {
   PanelMenuModule, DataTableModule, SharedModule, FieldsetModule, OverlayPanelModule, LightboxModule,
   PanelModule, ConfirmationService, ConfirmDialogModule, DialogModule, CalendarModule, ContextMenuModule, MenuModule
@@ -15,24 +15,23 @@ import {routing} from './app.routing';
 import {ProductFormComponent} from './products/products-add-form/product-form.component';
 import {FormsModule} from '@angular/forms'
 import {ProductEditFormComponent} from './products/products-edit-form/product-edit-form.component';
-import {ProductPickerComponent} from './gift-baskets/products-picker/products-picker.component';
-import {GiftBasketComponent} from './gift-baskets/gift-baskets.component';
-import {BasketService} from './gift-baskets/gift-basket.service';
-import {BasketOrderComponent} from './gift-baskets/gift-baskets-order/basket-order.component';
-import {CustomerService} from './gift-baskets/gift-baskets-order/customer.service';
+import {ProductPickerComponent} from './basket/basket-creator/products-picker.component';
+import {GiftBasketComponent} from './basket/basket-helper-list/gift-baskets.component';
+import {BasketService} from './basket/gift-basket.service';
+import {BasketOrderComponent} from './order/basket-order/basket-order.component';
+import {CustomerService} from './customer/customer.service';
 import {OrderService} from './order/order.service';
-import {OrderComponent} from './order/order.component';
-import { OrderDetailsComponent } from './order-details/order-details.component';
+import {OrderComponent} from './order/order-view/order.component';
+import { OrderDetailsComponent } from './order/order-details/order-details.component';
 import { LoginComponent } from './login/login.component';
 import {AuthGuard} from "./auth.guard";
 import {AuthenticationService} from "./authentication.service";
-import { BasketComponent } from './basket/basket.component';
+import { BasketComponent } from './basket/basket-view/basket-view.component';
 import {HttpService} from "./http-service";
 import {Router} from "@angular/router";
-import { GiftBasketEditComponent } from './gift-baskets/gift-basket-edit/gift-basket-edit.component';
+import { GiftBasketEditComponent } from './basket/basket-edit/gift-basket-edit.component';
 import { AdminComponent } from './admin/admin.component';
 import {AdminGuard} from "./admin.guard";
-import { TestComponent } from './test/test.component';
 import {UserService} from "./user.service";
 import {AdminOrSuperUserGuard} from "./adminOrSuperUser.guard";
 import {PageNotFoundComponent} from "./pageNotFound.component";
@@ -44,7 +43,9 @@ import {TableModule} from "primeng/table";
 import { FileSendComponent } from './file-send/file-send.component';
 import {FileUploadModule} from 'primeng/fileupload';
 import {FileSendService} from "./file-send/file-send.service";
-import { CustomerComponent } from './customer/customer.component';
+import { CustomerComponent } from './customer/customer-view/customer.component';
+import { CustomerAddComponent } from './customer/customer-add/customer-add.component';
+import { CustomerEditComponent } from './customer/customer-edit/customer-edit.component';
 
 
 
@@ -69,12 +70,13 @@ export function httpExt(backend: XHRBackend, options: RequestOptions, router: Ro
       BasketComponent,
       GiftBasketEditComponent,
       AdminComponent,
-      TestComponent,
     PageNotFoundComponent,
     MapsComponent,
     StatisticComponent,
     FileSendComponent,
     CustomerComponent,
+    CustomerAddComponent,
+    CustomerEditComponent,
 
   ],
   imports: [
