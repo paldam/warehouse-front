@@ -1,11 +1,11 @@
-import {Component, OnInit, ViewChild, ViewEncapsulation} from '@angular/core';
-import {ProductsService} from './products.service';
-import {Product} from '../model/product.model';
-import {ActivatedRoute, NavigationEnd, Router, RoutesRecognized} from '@angular/router';
+import {Component, OnInit, ViewEncapsulation} from '@angular/core';
+import {ActivatedRoute,  Router, RoutesRecognized} from '@angular/router';
 import {ConfirmationService} from "primeng/primeng";
 import {isUndefined} from "util";
 import { filter } from 'rxjs/operators';
 import {pairwise} from "rxjs/internal/operators";
+import {ProductsService} from "../products.service";
+import {Product} from "../../model/product.model";
 
 
 @Component({

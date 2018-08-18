@@ -1,7 +1,7 @@
 import {Component, OnInit, ViewChild, ViewEncapsulation} from '@angular/core';
 import {Basket} from '../../model/basket.model';
 import {OrderItem} from '../../model/order_item';
-import {BasketService} from '../../basket/gift-basket.service';
+import {BasketService} from '../../basket/basket.service';
 import {Customer} from '../../model/customer.model';
 import {CustomerService} from '../../customer/customer.service';
 import {NgForm} from '@angular/forms';

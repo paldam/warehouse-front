@@ -10,7 +10,7 @@ import {Product} from "../../model/product.model";
 import {ConfirmationService, FileUpload} from "primeng/primeng";
 import {AuthenticationService} from "../../authentication.service";
 import {Basket} from "../../model/basket.model";
-import {BasketService} from "../../basket/gift-basket.service";
+import {BasketService} from "../../basket/basket.service";
 import {File} from "../../model/file";
 import {FileSendService} from "../../file-send/file-send.service";
 

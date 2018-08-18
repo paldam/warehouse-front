@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {Basket} from '../../model/basket.model';
-import {BasketService} from '../gift-basket.service';
+import {BasketService} from '../basket.service';
 import {Router} from '@angular/router';
 
 

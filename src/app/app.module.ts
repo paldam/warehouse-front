@@ -1,7 +1,7 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { AppComponent } from './main-app-component/app.component';
-import { ProductsComponent } from './products/products.component';
+import { ProductsComponent } from './products/product-view/products.component';
 import {ProductsService} from './products/products.service';
 import {HttpModule, RequestOptions, XHRBackend} from '@angular/http';
 import { NavComponent } from './nav-bars/top-nav/top-nav.component';
@@ -17,7 +17,7 @@ import {FormsModule} from '@angular/forms'
 import {ProductEditFormComponent} from './products/products-edit-form/product-edit-form.component';
 import {ProductPickerComponent} from './basket/basket-creator/products-picker.component';
 import {GiftBasketComponent} from './basket/basket-helper-list/gift-baskets.component';
-import {BasketService} from './basket/gift-basket.service';
+import {BasketService} from './basket/basket.service';
 import {BasketOrderComponent} from './order/basket-order/basket-order.component';
 import {CustomerService} from './customer/customer.service';
 import {OrderService} from './order/order.service';
@@ -46,11 +46,13 @@ import {FileSendService} from "./file-send/file-send.service";
 import { CustomerComponent } from './customer/customer-view/customer.component';
 import { CustomerAddComponent } from './customer/customer-add/customer-add.component';
 import { CustomerEditComponent } from './customer/customer-edit/customer-edit.component';
+import {ToastModule} from "primeng/toast";
+import {MessageService} from "primeng/api";
 
 
 
-export function httpExt(backend: XHRBackend, options: RequestOptions, router: Router) {
-  return new HttpService(backend, options, router);
+export function httpExt(backend: XHRBackend, options: RequestOptions, router: Router, messageService :MessageService) {
+  return new HttpService(backend, options, router, messageService);
 }
 
 @NgModule({
@@ -81,11 +83,11 @@ export function httpExt(backend: XHRBackend, options: RequestOptions, router: Ro
   ],
   imports: [
     BrowserModule,HttpModule,BrowserAnimationsModule,FormsModule,DialogModule,ConfirmDialogModule,PanelMenuModule,
-    PanelModule,TableModule,FileUploadModule,DataTableModule,SharedModule,FieldsetModule,LightboxModule,OverlayPanelModule,ContextMenuModule, MenuModule,CalendarModule,routing
+    PanelModule,ToastModule,TableModule,FileUploadModule,DataTableModule,SharedModule,FieldsetModule,LightboxModule,OverlayPanelModule,ContextMenuModule, MenuModule,CalendarModule,routing
   ],
   providers: [ {
-    provide: HttpService, useFactory: (httpExt) , deps: [XHRBackend, RequestOptions,Router]},
-    CalendarSetingsComponent,ProductsService,BasketService,CustomerService,FileSendService,CustomerService,OrderService,MapService,ConfirmationService,AuthGuard,AdminGuard,AdminOrSuperUserGuard,AuthenticationService,UserService],
+    provide: HttpService, useFactory: (httpExt) , deps: [XHRBackend, RequestOptions,Router,MessageService]},
+    CalendarSetingsComponent,MessageService,ProductsService,BasketService,CustomerService,FileSendService,CustomerService,OrderService,MapService,ConfirmationService,AuthGuard,AdminGuard,AdminOrSuperUserGuard,AuthenticationService,UserService],
 
   bootstrap: [AppComponent]
 })

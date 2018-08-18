@@ -45,3 +45,20 @@
 </form>
 </p-panel>
 </div>
+
+
+<p-dialog [(visible)]="confirmDialogShow" >
+
+    <p-header>
+        <i class="fa fa-check fa-4x" aria-hidden="true"></i> Pomyślnie dodano klienta do bazy
+    </p-header>
+
+
+    <p-footer>
+        <button class="btn btn-success btn-lg" (click)="hideAddOrderConfirmModal()"><i class="fa fa-reply fa-2x" aria-hidden="true"></i>Wyjdz</button>
+        <button class="btn btn-success btn-lg" [routerLink]="['/orders/']"><i class="fa fa-list-alt fa-2x" aria-hidden="true"></i>Lista zamówień</button>
+        <button class="btn btn-success btn-lg" (click)="printPdf()"><i class="fa fa-print fa-2x" aria-hidden="true"></i> Drukuj PDF</button>
+
+    </p-footer>
+
+</p-dialog>

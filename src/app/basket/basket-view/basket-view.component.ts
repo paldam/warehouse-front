@@ -1,5 +1,5 @@
 import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
-import {BasketService} from "../gift-basket.service";
+import {BasketService} from "../basket.service";
 import {Router} from "@angular/router";
 import {Basket} from "../../model/basket.model";
 import {ConfirmationService} from "primeng/primeng";

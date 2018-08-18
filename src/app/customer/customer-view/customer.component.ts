@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import {CustomerService} from "../customer.service";
+import {Customer} from "../../model/customer.model";
 
 @Component({
   selector: 'app-customer',
@@ -7,9 +9,30 @@ import { Component, OnInit } from '@angular/core';
 })
 export class CustomerComponent implements OnInit {
 
-  constructor() { }
+  public loading: boolean= false;
+  public customersList :Customer[]=[];
+
+  constructor(private customerService :CustomerService) {
+
+    customerService.getCustomers().subscribe(data=>{
+      this.customersList = data;
+    })
+  }
 
   ngOnInit() {
   }
+
+
+  refreshData(){
+    this.loading = true;
+    setTimeout(() => {
+      this.customerService.getCustomers().subscribe(data=>{
+        this.customersList = data;
+        });
+      this.loading = false;
+    }, 1000);
+
+  }
+
 
 }

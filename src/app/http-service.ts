@@ -7,13 +7,14 @@ import 'rxjs/add/operator/catch';
 
 import {TOKEN, TOKEN_USER} from './authentication.service';
 import {Router} from "@angular/router";
+import {MessageService} from "primeng/api";
 
 
 @Injectable()
 
 export class HttpService extends Http {
 
-    constructor (backend: XHRBackend, options: RequestOptions,private router: Router) {
+    constructor (backend: XHRBackend, options: RequestOptions,private router: Router,private messageService: MessageService) {
         super(backend, options);
         let token = localStorage.getItem(TOKEN);
         options.headers.set('Authorization', `Bearer ${token}`);
@@ -47,7 +48,10 @@ export class HttpService extends Http {
                 localStorage.removeItem(TOKEN_USER);
             }if (res.status === 500 ) {
 
-               console.log("Problem z dostępem do bazy danych")
+
+                this.messageService.add({severity: 'error', summary: 'Wystpiął Błąd', detail: "Problem z połączeniem sieciowym lub bazą danych", life: 8000
+                });
+
             }
             return Observable.throw(res);
         };

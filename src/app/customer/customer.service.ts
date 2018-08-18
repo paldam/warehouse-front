@@ -22,5 +22,10 @@ export class CustomerService {
             .map((response: Response) => response.json());
     }
 
+    saveCustomers(customer : Customer): Observable<Response> {
+        return this.http.post(this.baseUrl+`/customers/`,customer)
+
+    }
+
 }
 

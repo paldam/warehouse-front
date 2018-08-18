@@ -1,5 +1,5 @@
 import { Routes, RouterModule } from '@angular/router';
-import {ProductsComponent} from './products/products.component';
+import {ProductsComponent} from './products/product-view/products.component';
 import {ProductFormComponent} from './products/products-add-form/product-form.component';
 import {ProductEditFormComponent} from './products/products-edit-form/product-edit-form.component';
 import {ProductPickerComponent} from './basket/basket-creator/products-picker.component';

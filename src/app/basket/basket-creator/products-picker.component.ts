@@ -4,7 +4,7 @@ import {Product} from '../../model/product.model';
 import {BasketItems} from '../../model/basket_items.model';
 import {Basket} from '../../model/basket.model';
 import {BasketType} from '../../model/basket_type.model';
-import {BasketService} from '../gift-basket.service';
+import {BasketService} from '../basket.service';
 import {NgForm} from '@angular/forms';
 import {GiftBasketComponent} from '../basket-helper-list/gift-baskets.component';
 
