@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import {CustomerService} from "../customer.service";
 import {Customer} from "../../model/customer.model";
+import {OrderService} from "../../order/order.service";
+import {Order} from "../../model/order.model";
 
 @Component({
   selector: 'app-customer',
@@ -10,13 +12,15 @@ import {Customer} from "../../model/customer.model";
 export class CustomerComponent implements OnInit {
 
   public loading: boolean= false;
-  public customersList :Customer[]=[];
+  public customersList :any[]=[];
+  public allOrdersByCustomerList : Order[] = [];
 
-  constructor(private customerService :CustomerService) {
+  constructor(private customerService :CustomerService, private  orderService: OrderService) {
 
-    customerService.getCustomers().subscribe(data=>{
+    customerService.getAllCustomerWithPrimaryAddress().subscribe(data=>{
       this.customersList = data;
     })
+
   }
 
   ngOnInit() {
@@ -32,6 +36,16 @@ export class CustomerComponent implements OnInit {
       this.loading = false;
     }, 1000);
 
+  }
+
+
+  getOrdersByCustomer(id :number){
+
+    this.orderService.getOrderByCustomer(id).subscribe(data=>{
+
+      this.allOrdersByCustomerList = data;
+
+    })
   }
 
 

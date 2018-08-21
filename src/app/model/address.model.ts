@@ -5,7 +5,10 @@ export class Address{
         public zipCode?: string,
         public cityName?: string,
         public phoneNumber?: string,
-       public addressId?: number
+        public isPrimaryAddress?: number,
+       public addressId?: number,
+
+
 ) {
 
     }}

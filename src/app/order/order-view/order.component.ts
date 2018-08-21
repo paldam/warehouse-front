@@ -1,7 +1,7 @@
 import {Component, OnInit, ViewEncapsulation} from '@angular/core';
 import {Order} from '../../model/order.model';
 import {OrderService} from '../order.service';
-import {Router, RoutesRecognized} from "@angular/router";
+import {ActivatedRoute, Router, RoutesRecognized} from "@angular/router";
 import {ConfirmationService} from "primeng/primeng";
 import {AuthenticationService} from "../../authentication.service";
 import {filter, pairwise} from "rxjs/internal/operators";
@@ -18,9 +18,22 @@ export class OrderComponent implements OnInit {
     public orders: Order[]=[];
     public lastVisitedPageOrder: number ;
     public findInputtextOrder: string = "";
+    public isCurrentPageCustomerEdit : boolean = false;
 
-    constructor(private orderService :OrderService,private router: Router,private confirmationService: ConfirmationService, private authenticationService: AuthenticationService) {
-        orderService.getOrders().subscribe(data=> this.orders=data);
+    constructor(private orderService :OrderService,private router: Router,private confirmationService: ConfirmationService,
+                private authenticationService: AuthenticationService, activeRoute: ActivatedRoute) {
+
+        this.isCurrentPageCustomerEdit = router.url.substring(0,9) == "/customer";
+
+
+
+        if ( this.isCurrentPageCustomerEdit){
+            orderService.getOrderByCustomer(activeRoute.snapshot.params["id"]).subscribe(data=> this.orders=data)
+
+        }else{
+            orderService.getOrders().subscribe(data=> this.orders=data);
+        }
+
         this.router.events
             .pipe(filter((e: any) => e instanceof RoutesRecognized),
                 pairwise()
@@ -92,6 +105,9 @@ export class OrderComponent implements OnInit {
             message: 'Jesteś pewny że chcesz usunąć zamówienie nr:  ' + order.orderId + ' do kosza ?',
             accept: () => {
                 order.orderStatus.orderStatusId=99;
+
+                console.log(JSON.stringify(order));
+
                 this.orderService.saveOrder(order).subscribe(data =>{
 
                 this.refreshData();

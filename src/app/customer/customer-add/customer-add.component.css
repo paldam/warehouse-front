@@ -4,3 +4,24 @@
 .input-group-addon{
     min-width: 100px;
 }
+
+.city_tab{
+    width: 100%;
+    border: 1px solid black;
+}
+.city_tab th ,td,tr{
+    border: 1px solid black;
+}
+.city_tab th{
+    background-color: #ebedf0;
+    text-align: center;
+
+}
+.city_tab_row  {
+    text-align: center;
+}
+
+
+.city_tab td:hover{
+    background-color: #d6f2c2;
+}

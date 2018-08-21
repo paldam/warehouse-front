@@ -3,6 +3,7 @@ import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs/Observable';
 import {Customer} from '../model/customer.model';
 import {HttpService} from "../http-service";
+import {Address} from "../model/address.model";
 
 
 @Injectable()
@@ -22,10 +23,30 @@ export class CustomerService {
             .map((response: Response) => response.json());
     }
 
+    getCustomer(id: number): Observable<Customer> {
+        return this.http.get(this.baseUrl+`/customer/${id}`)
+            .map((response: Response) => response.json());
+    }
+
+
     saveCustomers(customer : Customer): Observable<Response> {
         return this.http.post(this.baseUrl+`/customers/`,customer)
 
     }
 
+    getCustomerPrimaryAddress(customerId : number): Observable<Address> {
+        return this.http.get(this.baseUrl+`/customerprimaryaddr/${customerId}`)
+            .map((response: Response) => response.json());
+    }
+
+    getAllCustomerWithPrimaryAddress(): Observable<any> {
+        return this.http.get(this.baseUrl+`/customersaddr/`)
+            .map((response: Response) => response.json());
+    }
+
+    getCityByZipCode(code : string): Observable<any[]> {
+        return this.http.get(this.baseUrl+`/zipcode/${code}`)
+            .map((response: Response) => response.json());
+    }
 }
 

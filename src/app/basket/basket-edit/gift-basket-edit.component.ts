@@ -27,7 +27,7 @@ export class GiftBasketEditComponent implements OnInit {
 
 
   constructor(private productsService: ProductsService,private basketService :BasketService, private router: Router, activeRoute: ActivatedRoute) {
-        basketService.getBasket(activeRoute.snapshot.params["basketId"]).subscribe(data=>{
+        basketService.getBasket(activeRoute.snapshot.params["customerId"]).subscribe(data=>{
           this.basket = data;
           this.basketItems = data.basketItems;
           this.basket.basketTotalPrice/=100;

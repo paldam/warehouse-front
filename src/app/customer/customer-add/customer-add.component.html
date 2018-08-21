@@ -34,12 +34,15 @@
 
                 <div class="form-group">
                     <div class="input-group">
-                        <input type="text" name="zip_code" #zip_code="ngModel" class="form-control"  size="300" aria-describedby="zip_codeDesc"  [(ngModel)]="customerAddress.zipCode" required >
+                        <input type="text" #someVar name="zip_code" #zip_code="ngModel" class="form-control"  size="300" aria-describedby="zip_codeDesc" (keyup)="ZipCodeUtil($event.target.value)"
+                               [(ngModel)]="customerAddress.zipCode" required pattern="\d{2}-\d{3}">
                         <span class="input-group-addon" id="zip_codeDesc">Kod pocztowy</span>
                     </div>
                     <ul class="text-danger list-unstyled" *ngIf="zip_code.dirty|| formSubmitted">
+                        <li  *ngIf="zip_code.errors?.pattern">Kod musi być w formacie xx-xxx </li>
                         <li  *ngIf="zip_code.errors?.required">To pole nie może być puste</li>
                     </ul>
+
                 </div>
 
                 <div class="form-group">
@@ -61,9 +64,12 @@
 
                 <div class="form-group">
                     <div class="input-group">
-                        <input type="text" name="tel" class="form-control"  size="300" aria-describedby="telDesc"  [(ngModel)]="customerAddress.phoneNumber" required>
+                        <input type="text" name="tel" #tel="ngModel" class="form-control"  size="300" aria-describedby="telDesc"  [(ngModel)]="customerAddress.phoneNumber" required>
                         <span class="input-group-addon" id="telDesc">Telefon</span>
                     </div>
+                    <ul class="text-danger list-unstyled" *ngIf="tel.dirty|| formSubmitted">
+                        <li  *ngIf="tel.errors?.required">To pole nie może być puste</li>
+                    </ul>
                 </div>
         </div>
 
@@ -72,4 +78,21 @@
         </form>
     </p-panel>
 </div>
+
+<p-dialog header="Wybierz Miasto:" closeOnEscape="false" modal="true" width="400" [(visible)]="pickCityByZipCode"  (onHide)="clearOnCloseDialog()" >
+    <div >
+
+        <table class="city_tab" >
+            <thead>
+
+            </thead>
+            <tbody>
+            <tr class="city_tab_row" *ngFor="let city of tmpCityList">
+                <td (click)="selectCity(city)" class="citySelect">{{city}}</td>
+
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</p-dialog>
 
