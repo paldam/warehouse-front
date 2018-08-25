@@ -4,6 +4,8 @@ import {Observable} from 'rxjs/Observable';
 import {Customer} from '../model/customer.model';
 import {HttpService} from "../http-service";
 import {Address} from "../model/address.model";
+import {HttpParams} from "@angular/common/http";
+import set = Reflect.set;
 
 
 @Injectable()
@@ -48,5 +50,15 @@ export class CustomerService {
         return this.http.get(this.baseUrl+`/zipcode/${code}`)
             .map((response: Response) => response.json());
     }
-}
 
+
+    deleteAddress(id : number, customerId: number): Observable<Response> {
+        return this.http.delete(this.baseUrl+`/address/`,{
+            params: {
+                id: id,
+                customerId: customerId
+            }} )
+    }
+
+
+}

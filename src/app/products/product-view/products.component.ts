@@ -26,6 +26,7 @@ export class ProductsComponent implements OnInit {
     productsService.getProducts().subscribe(data=> this.products = data);
 
 
+
     this.router.events
         .pipe(filter((e: any) => e instanceof RoutesRecognized),
             pairwise()

@@ -24,6 +24,9 @@ export class ProductsService {
             response.json());
   }
 
+
+
+
   getProductsToOrder(startDate , endDate): Observable<any[]> {
     return this.http.get(this.baseUrl+`/orders/products_to_order/daterange?startDate=${startDate}&endDate=${endDate}`)
         .map((response: Response) =>
@@ -35,6 +38,8 @@ export class ProductsService {
         .map((response: Response) =>
             response.json());
   }
+
+
 
   getProductsTypes(): Observable<ProductType[]> {
     return this.http.get(this.baseUrl+`/products/types`)

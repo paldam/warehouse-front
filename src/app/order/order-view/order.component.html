@@ -26,7 +26,7 @@
         </p-column>
 
 
-        <p-column field="customer.customerName" header="Nabywca" [sortable]="true">
+        <p-column *ngIf="!isCurrentPageCustomerEdit" field="customer.customerName" header="Nabywca" [sortable]="true">
             <ng-template let-row="rowData" pTemplate="body"  >
                 {{row.customer.name}} {{row.customer.organizationName}}
             </ng-template>

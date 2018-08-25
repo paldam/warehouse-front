@@ -14,7 +14,7 @@
   <p-dataTable [value]="customersList" [rows]="10" [paginator]="true" [globalFilter]="gb" #dt
                [loading]="loading" loadingIcon="fa-circle-o-notch" expandableRows="true">
 
-    <p-column  header="lp."   [style]="{'width':'70px'}">
+    <p-column styleClass="lp_col"  header="lp." >
       <ng-template let-i="rowIndex" pTemplate="rowexpansion">
         {{i+1}}
       </ng-template>
@@ -23,16 +23,25 @@
 
     <p-column field="name" header="Imię i nazwisko" [sortable]="true"></p-column>
     <p-column field="organizationName" header="Nazwa Firmy" [sortable]="true" ></p-column>
-    <p-column field="address" header="Adres" [sortable]="true" ></p-column>
-    <p-column field="zipCode" header="Kod Pocztowy" [sortable]="true" ></p-column>
-    <p-column field="cityName" header="Miasto" [sortable]="true" ></p-column>
-    <p-column field="phoneNumber" header="Telefon" [sortable]="true" ></p-column>
-    <p-column field="email" header="Email" [sortable]="true" ></p-column>
 
-    <p-column  header="Akcja" styleClass="action_col">
+    <p-column styleClass="addres_col"  header="Adres (główny)" >
+      <ng-template let-customer="rowData" pTemplate="body">
+        {{customer.address}} {{customer.zipCode}} {{customer.cityName}}
+      </ng-template>
+    </p-column>
+
+
+
+    <p-column field="address" header="Adres" hidden="true"  ></p-column>
+    <p-column field="zipCode" header="Kod Pocztowy" hidden="true"></p-column>
+    <p-column field="cityName" header="Miasto"  hidden="true"></p-column>
+
+    <p-column field="phoneNumber" header="Telefon"  styleClass="tel_col" ></p-column>
+    <p-column field="email" header="Email"  ></p-column>
+
+    <p-column  header="Akcja"  styleClass="action_col">
       <ng-template let-customer="rowData" pTemplate="body">
         <i class="fa fa-pencil-square-o fa-2x" aria-hidden="true"  title="Edytuj klienta" [routerLink]="['/customer/', customer.customerId] "></i>
-        <i class="fa fa-trash fa-2x edit_icon" aria-hidden="true" title="Usuń pracownika"  (click)="ShowConfirmModal(customer)"></i>
       </ng-template>
     </p-column>
 

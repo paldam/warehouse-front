@@ -33,7 +33,7 @@ export class CustomerAddComponent implements OnInit {
     this.formSubmitted = true;
 
     if (form.valid) {
-      this.customerAddress.isPrimaryAddress = 1;
+      this.customerAddress.isPrimaryAddress=1;
       this.customer.addresses.push(this.customerAddress);
       this.customerService.saveCustomers(this.customer).subscribe(data => {
 

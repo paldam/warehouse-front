@@ -8,7 +8,8 @@ import { NavComponent } from './nav-bars/top-nav/top-nav.component';
 import {LeftNavComponent} from './nav-bars/left-nav/left-nav.component';
 import {
   PanelMenuModule, DataTableModule, SharedModule, FieldsetModule, OverlayPanelModule, LightboxModule,
-  PanelModule, ConfirmationService, ConfirmDialogModule, DialogModule, CalendarModule, ContextMenuModule, MenuModule
+  PanelModule, ConfirmationService, ConfirmDialogModule, DialogModule, CalendarModule, ContextMenuModule, MenuModule,
+  RadioButtonModule
 } from 'primeng/primeng';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {routing} from './app.routing';
@@ -48,6 +49,8 @@ import { CustomerAddComponent } from './customer/customer-add/customer-add.compo
 import { CustomerEditComponent } from './customer/customer-edit/customer-edit.component';
 import {ToastModule} from "primeng/toast";
 import {MessageService} from "primeng/api";
+import {MessageServiceExt} from './messages/messageServiceExt';
+import {ListboxModule} from "primeng/listbox";
 
 
 
@@ -83,11 +86,11 @@ export function httpExt(backend: XHRBackend, options: RequestOptions, router: Ro
   ],
   imports: [
     BrowserModule,HttpModule,BrowserAnimationsModule,FormsModule,DialogModule,ConfirmDialogModule,PanelMenuModule,
-    PanelModule,ToastModule,TableModule,FileUploadModule,DataTableModule,SharedModule,FieldsetModule,LightboxModule,OverlayPanelModule,ContextMenuModule, MenuModule,CalendarModule,routing
+    PanelModule,ListboxModule,RadioButtonModule,ToastModule,TableModule,FileUploadModule,DataTableModule,SharedModule,FieldsetModule,LightboxModule,OverlayPanelModule,ContextMenuModule, MenuModule,CalendarModule,routing
   ],
   providers: [ {
     provide: HttpService, useFactory: (httpExt) , deps: [XHRBackend, RequestOptions,Router,MessageService]},
-    CalendarSetingsComponent,MessageService,ProductsService,BasketService,CustomerService,FileSendService,CustomerService,OrderService,MapService,ConfirmationService,AuthGuard,AdminGuard,AdminOrSuperUserGuard,AuthenticationService,UserService],
+    CalendarSetingsComponent,MessageServiceExt,MessageService,ProductsService,BasketService,CustomerService,FileSendService,CustomerService,OrderService,MapService,ConfirmationService,AuthGuard,AdminGuard,AdminOrSuperUserGuard,AuthenticationService,UserService],
 
   bootstrap: [AppComponent]
 })

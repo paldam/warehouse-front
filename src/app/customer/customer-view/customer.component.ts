@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit, ViewEncapsulation} from '@angular/core';
 import {CustomerService} from "../customer.service";
 import {Customer} from "../../model/customer.model";
 import {OrderService} from "../../order/order.service";
@@ -7,13 +7,15 @@ import {Order} from "../../model/order.model";
 @Component({
   selector: 'app-customer',
   templateUrl: './customer.component.html',
-  styleUrls: ['./customer.component.css']
+  styleUrls: ['./customer.component.css'],
+  encapsulation: ViewEncapsulation.None
 })
 export class CustomerComponent implements OnInit {
 
   public loading: boolean= false;
   public customersList :any[]=[];
   public allOrdersByCustomerList : Order[] = [];
+  public selectedValue: any ;
 
   constructor(private customerService :CustomerService, private  orderService: OrderService) {
 

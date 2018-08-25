@@ -6,7 +6,8 @@ export class Customer{
         public organizationName?: string,
         public name?: string,
         public addresses?: Address[],
-        public email?: string
+        public email?: string,
+        public phoneNumber?: string,
     ){
 
     }

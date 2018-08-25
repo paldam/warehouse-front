@@ -64,7 +64,7 @@
 
                 <div class="form-group">
                     <div class="input-group">
-                        <input type="text" name="tel" #tel="ngModel" class="form-control"  size="300" aria-describedby="telDesc"  [(ngModel)]="customerAddress.phoneNumber" required>
+                        <input type="text" name="tel" #tel="ngModel" class="form-control"  size="300" aria-describedby="telDesc"  [(ngModel)]="customer.phoneNumber" required>
                         <span class="input-group-addon" id="telDesc">Telefon</span>
                     </div>
                     <ul class="text-danger list-unstyled" *ngIf="tel.dirty|| formSubmitted">

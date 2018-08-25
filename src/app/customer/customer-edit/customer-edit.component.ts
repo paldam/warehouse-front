@@ -1,7 +1,12 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit, ViewChild} from '@angular/core';
 import {ActivatedRoute,Router} from "@angular/router";
 import {CustomerService} from "../customer.service";
 import {Customer} from "../../model/customer.model";
+import {Address} from "../../model/address.model";
+import {Form, NgForm} from "@angular/forms";
+import {ConfirmationService, MessageService} from "primeng/api";
+import {Product} from "../../model/product.model";
+import {MessageServiceExt} from "../../messages/messageServiceExt";
 
 @Component({
   selector: 'app-customer-edit',
@@ -10,19 +15,142 @@ import {Customer} from "../../model/customer.model";
 })
 export class CustomerEditComponent implements OnInit {
 
-  public customer : Customer = new Customer();
+  public customer: Customer = new Customer();
+  public addAddressDialogShow: boolean = false;
+  public addressToAdd: Address = new Address();
+  public formSubmitted: boolean = false;
+  public pickCityByZipCodeWindow: boolean = false;
+  public tmpCityList: any[] = [];
+  public selectedValue: any;
+  public selectedAddr: any;
+  public list: string[]=["fdf","fdfd","dfdfdf"];
+  @ViewChild('zip_code') el: any;
 
-  constructor(private router: Router,private customerService :CustomerService, activeRoute: ActivatedRoute) {
-    customerService.getCustomer(activeRoute.snapshot.params["id"]).subscribe(data=>{
-           this.customer = data;
 
-      console.log(router.url);
+  constructor(private router: Router, private customerService: CustomerService, activeRoute: ActivatedRoute, private messageService: MessageService,
+              private confirmationService: ConfirmationService, private messageServiceExt: MessageServiceExt) {
+    customerService.getCustomer(activeRoute.snapshot.params["id"]).subscribe(data => {
+
+      data.addresses.sort(this.compareAddress);
+      this.customer = data;
 
     })
 
   }
 
   ngOnInit() {
+
+  }
+
+  compareAddress(a: Address, b: Address) {
+    if (a.isPrimaryAddress > b.isPrimaryAddress)
+      return -1
+    if (a.isPrimaryAddress < b.isPrimaryAddress)
+      return 1
+  }
+
+  showAddAddressWindow() {
+    this.addAddressDialogShow = true;
+
+  }
+
+  submitAddAddresForm(form: NgForm) {
+    this.formSubmitted = true;
+    if (form.valid) {
+        this.customer.addresses.push(this.addressToAdd);
+
+        this.customerService.saveCustomers(this.customer).subscribe(data => {
+
+            this.addAddressDialogShow = false;
+            form.reset();
+            this.formSubmitted = false;
+            this.showSuccessMassage();
+
+            this.customerService.getCustomer(this.customer.customerId).subscribe(data => {
+                data.addresses.sort(this.compareAddress);
+                this.customer = data;
+              })
+
+         }, error => {
+
+              this.messageServiceExt.addMessage('error','Błąd',"Status: " + error.status + ' ' + error.statusText);
+
+        });
+
+    }
+  }
+
+  showSuccessMassage() {
+    this.messageServiceExt.addMessage('success','Status','Poprawnie dodano adres do klienta');
+  }
+
+
+  ZipCodeUtil(zipCode: string) {
+
+    if (this.el.valid) {
+      this.pickCityByZipCodeWindow = true;
+      this.customerService.getCityByZipCode(zipCode).subscribe(data => {
+        data.forEach((value) => {
+          this.tmpCityList.push(value.zipCode.city);
+
+        });
+      })
+    }
+    ;
+
+  }
+
+  clearOnCloseDialog() {
+    this.tmpCityList = [];
+    this.formSubmitted = false;
+  }
+
+  selectCity(city: string) {
+    this.addressToAdd.cityName = city;
+    this.tmpCityList = [];
+    this.pickCityByZipCodeWindow = false;
+  }
+
+  cancelAddAddr() {
+    this.addAddressDialogShow = false;
+    this.addressToAdd = new Address();
+    this.formSubmitted = false;
+  }
+
+  refreshAddressesList(){
+    this.customerService.getCustomer(this.customer.customerId).subscribe(data => {
+        data.addresses.sort(this.compareAddress);
+        this.customer = data;
+
+    })
+  }
+
+
+  showDeleteConfirmWindow(addrId : number, customerId : number) {
+
+    this.confirmationService.confirm({
+
+      message: 'Jesteś pewny że chcesz usunąć ten adres',
+
+      accept: () => {
+
+          this.customerService.deleteAddress(addrId,customerId).subscribe(
+              data => {
+                  this.refreshAddressesList();
+                  this.messageServiceExt.addMessage('success','Status','Usunięto adres');
+              },
+              error =>{
+
+                  this.messageServiceExt.addMessage('error','Błąd',error.text());
+
+              });
+
+      },
+      reject: () => {
+
+      }
+    });
+
   }
 
 }
