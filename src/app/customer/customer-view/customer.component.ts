@@ -3,6 +3,8 @@ import {CustomerService} from "../customer.service";
 import {Customer} from "../../model/customer.model";
 import {OrderService} from "../../order/order.service";
 import {Order} from "../../model/order.model";
+import {MessageServiceExt} from "../../messages/messageServiceExt";
+import {ConfirmationService} from "primeng/api";
 
 @Component({
   selector: 'app-customer',
@@ -17,7 +19,7 @@ export class CustomerComponent implements OnInit {
   public allOrdersByCustomerList : Order[] = [];
   public selectedValue: any ;
 
-  constructor(private customerService :CustomerService, private  orderService: OrderService) {
+  constructor(private customerService :CustomerService, private  orderService: OrderService,private messageServiceExt: MessageServiceExt, private confirmationService : ConfirmationService) {
 
     customerService.getAllCustomerWithPrimaryAddress().subscribe(data=>{
       this.customersList = data;
@@ -50,5 +52,33 @@ export class CustomerComponent implements OnInit {
     })
   }
 
+  showDeleteConfirmWindow(customerId : number) {
 
-}
+    this.confirmationService.confirm({
+
+      message: 'Jesteś pewny że chcesz usunąć tego klienta ?',
+
+      accept: () => {
+        this.customerService.deleteCustomer(customerId).subscribe(
+
+            data => {
+
+              console.log("odpowipedz" +data);
+              this.messageServiceExt.addMessage('success', 'Status', 'Usunięto klienta');
+              this.refreshData();
+            },
+            error => {
+
+              this.messageServiceExt.addMessage('error', 'Błąd', error.text());
+
+            });
+
+      },
+      reject: () => {
+
+      }
+    });
+
+
+  }
+  }

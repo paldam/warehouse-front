@@ -2,7 +2,7 @@
 
 <p-confirmDialog key="delete" header="Usuwanie produktu" icon="fa fa-question-circle" width="425"></p-confirmDialog>
 
-<div class=" col-md-6">
+<div class=" col-md-8">
   <p-panel [header]="'Szczegóły klienta nr:'+ customer.customerId" >
 
 
@@ -13,6 +13,7 @@
               <th>Firma</th>
               <th>Email</th>
               <th>Telefon</th>
+              <th></th>
           </tr>
         </thead>
         <tbody>
@@ -21,6 +22,7 @@
               <td>{{customer.organizationName}}</td>
               <td>{{customer.email}}</td>
               <td>{{customer.phoneNumber}}</td>
+              <td><button class="btn bg-primary"  (click)="showChangeMainAddressWindow()" > Edytuj </button></td>
           </tr>
         </tbody>
     </table>
@@ -32,7 +34,7 @@
             <tr>
                 <th>Adresy</th>
                 <th>Usuń</th>
-                <th>Główny ?</th>
+
             </tr>
           </thead>
           <tbody>
@@ -41,21 +43,19 @@
                 <td>
                     <i class="fa fa fa-trash  fa-2x" aria-hidden="true"  (click)="showDeleteConfirmWindow(addr.addressId, customer.customerId)" title="Usuń adres"  ></i>
                 </td>
-                <td>
-                    <p-radioButton name="groupname" (value)="addr.addressId"  [(ngModel)]="selectedValue"></p-radioButton>
-                </td>
+
             </tr>
         </tbody>
     </table>
 
 
       <button class="btn bg-primary"  (click)="showAddAddressWindow()" > Dodaj adres </button>
-      <button class="btn bg-primary"  (click)="showAddAddressWindow()" > Zmień główny adres </button>
+      <button class="btn bg-primary"  (click)="showChangeMainAddressWindow()" > Zmień główny adres </button>
 
   </p-panel>
 </div>
 
-<p-listbox [options]="list" [(ngModel)]="selectedAddr" optionLabel="deedede" optionLabel="name"></p-listbox>
+
 
 <div class=" col-md-12">
   <order>
@@ -128,6 +128,18 @@
             </tr>
             </tbody>
         </table>
+    </div>
+</p-dialog>
+
+<p-dialog header="Wybierz główny adres:" closeOnEscape="false" modal="true" width="400" [(visible)]="changeMainAddressDialogShow"  (onHide)="clearOnCloseChangeMainAddressDialog()" >
+    <div >
+
+        <small id="addr_Desc" class="text-muted">Adres</small>
+        <select class="form-control" [(ngModel)]="selectedAddr" name="addr_select" #addr="ngModel" required (change)="changePrimaryAddr(customer.customerId,selectedAddr.addressId)">
+            <option *ngFor="let item of customer.addresses"  [ngValue]="item">{{item.address}} {{item.zipCode}} {{item.cityName}}</option>
+        </select>
+
+
     </div>
 </p-dialog>
 

@@ -61,4 +61,24 @@ export class CustomerService {
     }
 
 
+    changeMainAddr(customerId: number,id : number): Observable<Response> {
+
+        return this.http.delete(this.baseUrl+`/primaryaddress/`,{
+            params: {
+                id: id,
+                customerId: customerId
+            }} )
+    }
+
+    deleteCustomer(id: number): Observable<Response> {
+        return this.http.delete(this.baseUrl+`/customer/${id}`)
+
+        console.log("dsdsdssd")
+
+    }
+
+
+
+
+
 }

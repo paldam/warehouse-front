@@ -7,6 +7,7 @@ import {Form, NgForm} from "@angular/forms";
 import {ConfirmationService, MessageService} from "primeng/api";
 import {Product} from "../../model/product.model";
 import {MessageServiceExt} from "../../messages/messageServiceExt";
+import {SelectItem} from 'primeng/api';
 
 @Component({
   selector: 'app-customer-edit',
@@ -17,15 +18,14 @@ export class CustomerEditComponent implements OnInit {
 
   public customer: Customer = new Customer();
   public addAddressDialogShow: boolean = false;
+  public changeMainAddressDialogShow: boolean = false;
   public addressToAdd: Address = new Address();
   public formSubmitted: boolean = false;
   public pickCityByZipCodeWindow: boolean = false;
   public tmpCityList: any[] = [];
   public selectedValue: any;
   public selectedAddr: any;
-  public list: string[]=["fdf","fdfd","dfdfdf"];
   @ViewChild('zip_code') el: any;
-
 
   constructor(private router: Router, private customerService: CustomerService, activeRoute: ActivatedRoute, private messageService: MessageService,
               private confirmationService: ConfirmationService, private messageServiceExt: MessageServiceExt) {
@@ -40,6 +40,8 @@ export class CustomerEditComponent implements OnInit {
 
   ngOnInit() {
 
+
+
   }
 
   compareAddress(a: Address, b: Address) {
@@ -52,6 +54,11 @@ export class CustomerEditComponent implements OnInit {
   showAddAddressWindow() {
     this.addAddressDialogShow = true;
 
+  }
+
+  showChangeMainAddressWindow(){
+
+    this.changeMainAddressDialogShow = true;
   }
 
   submitAddAddresForm(form: NgForm) {
@@ -105,6 +112,10 @@ export class CustomerEditComponent implements OnInit {
     this.formSubmitted = false;
   }
 
+  clearOnCloseChangeMainAddressDialog() {
+    this.selectedAddr= null;
+  }
+
   selectCity(city: string) {
     this.addressToAdd.cityName = city;
     this.tmpCityList = [];
@@ -150,6 +161,24 @@ export class CustomerEditComponent implements OnInit {
 
       }
     });
+
+  }
+
+  changePrimaryAddr(custId : number, addrId : number){
+
+    console.log(custId + " "+ addrId)
+
+      this.customerService.changeMainAddr(custId,addrId).subscribe(data=>{
+             this.messageServiceExt.addMessage('success','Status','Zmieniono główny addres');
+             this.changeMainAddressDialogShow = false;
+             this.selectedAddr = null;
+             this.refreshAddressesList();
+      },
+          error =>{
+
+            this.messageServiceExt.addMessage('error','Błąd','Błąd');
+
+          });
 
   }
 

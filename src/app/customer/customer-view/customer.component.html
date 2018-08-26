@@ -42,6 +42,8 @@
     <p-column  header="Akcja"  styleClass="action_col">
       <ng-template let-customer="rowData" pTemplate="body">
         <i class="fa fa-pencil-square-o fa-2x" aria-hidden="true"  title="Edytuj klienta" [routerLink]="['/customer/', customer.customerId] "></i>
+        <i class="fa fa fa-trash  fa-2x" aria-hidden="true"  (click)="showDeleteConfirmWindow(customer.customerId)" title="Usuń klienta"  ></i>
+
       </ng-template>
     </p-column>
 
@@ -51,3 +53,5 @@
 
   </p-dataTable>
 </p-fieldset>
+
+<p-confirmDialog  header="Usuwanie klienta" icon="fa fa-question-circle" width="425"></p-confirmDialog>
