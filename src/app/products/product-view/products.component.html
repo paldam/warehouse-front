@@ -1,3 +1,6 @@
+
+
+
 <div  class="products_box">
         <div class="input-group search_bar">
     <span class="input-group-addon" id="basic-addon1">
@@ -9,7 +12,7 @@
 </div>
 
 <p-dataTable [value]="products" [rows]="20" [paginator]="true" [globalFilter]="gb" #dt
-             [loading]="loading" loadingIcon="fa-circle-o-notch"   [first]="lastVisitedPage">
+             [loading]="loading" loadingIcon="fa-circle-o-notch"   [(first)]="lastVisitedPage" >
         <p-header>Lista Produktów</p-header>
 
 

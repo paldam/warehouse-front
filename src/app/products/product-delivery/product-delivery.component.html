@@ -1,16 +1,51 @@
-<div class="order_summary col-10">
+<div class="order_summary col-12">
   <p-fieldset legend="Dostawa produktów" [toggleable]="true">
 
 
-        <div  class="form-group">
-          <small id="addressDesc" class="text-muted">Wybierz Dostawcę</small>
-          <select class="form-control" [(ngModel)]="order.address" name="address2" #address2="ngModel" required  >
-            <option  *ngFor="let a of selectedCustomer.addresses" [ngValue]="a">{{a.address +" "+ a.cityName +" "+ a.zipCode}}</option>
-          </select>
-          <ul class="text-danger list-unstyled" *ngIf="address2.dirty|| formSubmitted">
-            <li  *ngIf="address2.errors?.required">Wybierz adres z listy</li>
-          </ul>
-        </div>
+    <div class="form-group">
+      <small id="supplier_typeDesc" class="text-muted">Dostawca</small>
+      <select class="form-control"  #supplier="ngModel" [(ngModel)]="selectedSupplier" (change)="selectSupplier(selectedSupplier.supplierId)" name="supplier"  required >
+        <option *ngFor="let item of productSuppliers"  [ngValue]="item"  >{{item.supplierName}}</option>
+      </select>
+      <ul class="text-danger list-unstyled" *ngIf="supplier.dirty|| formSubmitted">
+        <li  *ngIf="supplier.errors?.required">Wybierz dostawcę z listy</li>
+      </ul>
+    </div>
+
+
+
+    <p-dataTable [value]="productsBySupplier" [rows]="20" [editable]="true" (onEditComplete)="updateStockRow($event)" [paginator]="true" [globalFilter]="gb" #dt
+                 [loading]="loading" loadingIcon="fa-circle-o-notch"  >
+      <p-header>Lista Produktów</p-header>
+
+
+      <p-column  header="lp."   [style]="{'width':'70px'}">
+        <ng-template let-row="rowData" let-i="rowIndex" pTemplate="rowexpansion">
+          {{i+1}}
+        </ng-template>
+      </p-column>
+
+      <p-column field="productName" styleClass="name_col" header="Nazwa" [sortable]="true"></p-column>
+      <p-column field="capacity" styleClass="capacity_col" header="Pojemność" [sortable]="true"></p-column>
+      <p-column field="supplier.supplierName" styleClass="deliver_col" header="Dostawca"  [sortable]="true" ></p-column>
+      <p-column field="price" styleClass="price_col" header="Cena"  [sortable]="true">
+        <ng-template let-row="rowData" pTemplate="body"  >
+          {{row.price /100 |number: '1.2-2'}} zł
+        </ng-template>
+      </p-column>
+
+      <p-column field="stock" [editable]=true  styleClass="stock_col" header="Stan"  [sortable]="true" >
+        <ng-template let-row="rowData" pTemplate="body" type="number">
+          {{row.stock}} szt.
+        </ng-template>
+
+      </p-column>
+
+
+
+
+
+    </p-dataTable>
 
 
   </p-fieldset>

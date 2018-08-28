@@ -25,10 +25,21 @@ export class ProductsService {
           response.json());
 }
 
+  getProductsBySupplier(id: number): Observable<Product[]> {
+    return this.http.get(this.baseUrl+`/productsbysupplier/${id}`)
+        .map((response: Response) =>
+            response.json());
+  }
+
   getSuppliers(): Observable<Supplier[]> {
     return this.http.get(this.baseUrl+`/products/supplier`)
         .map((response: Response) =>
             response.json());
+  }
+
+  saveSupplier(supplier: Supplier): Observable<Response> {
+    return this.http.post(this.baseUrl+`/products/supplier/`, supplier)
+    //.map((response: Response) => response.json());
   }
 
 

@@ -28,6 +28,7 @@
                 <select [compareWith]="compareSupplier" class="form-control"  #supplier="ngModel" [(ngModel)]="product.supplier" name="supplier"  required >
                     <option *ngFor="let item of productSuppliers"  [ngValue]="item"  >{{item.supplierName}}</option>
                 </select>
+
                 <ul class="text-danger list-unstyled" *ngIf="supplier.dirty|| formSubmitted">
                     <li  *ngIf="supplier.errors?.required">Wybierz dostawcę z listy</li>
                 </ul>

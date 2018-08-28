@@ -5,7 +5,7 @@
 
     <div class="form-group">
         <small id="nameDescript" class="text-muted">Nazwa</small>
-        <input type="text" name="name" class="form-control" [(ngModel)]="product.productName" #name="ngModel" aria-describedby="nameDescript" required >
+        <input type="text" name="name" class="form-control" [(ngModel)]="product.productName" #name="ngModel" aria-describedby="nameDescript"  required >
         <ul class="text-danger list-unstyled" *ngIf="name.dirty|| formSubmitted">
             <li  *ngIf="name.errors?.required">To pole nie może być puste</li>
         </ul>
@@ -45,25 +45,28 @@
         </ul>
     </div>
 
-    <button class="btn bg-primary " type="submit" > Zatwierdź</button>
+    <button class="btn bg-primary " form="productForm"  type="submit" > Zatwierdź</button>
+
+    <button class="btn bg-primary" type="button" (click)="addSupplierWindowOn()" > Dodaj dostawcę</button>
 
 </form>
 </p-panel>
 </div>
 
 
-<p-dialog [(visible)]="confirmDialogShow" >
+<p-dialog [(visible)]="addSupplierWindow" modal="true" width="600">
 
-    <p-header>
-        <i class="fa fa-check fa-4x" aria-hidden="true"></i> Pomyślnie dodano klienta do bazy
-    </p-header>
+    <form id="supplierAddForm" novalidate #form2="ngForm" >
 
+        <div class="form-group">
+            <small id="nameDescript" class="text-muted">Nazwa Dostawcy</small>
+            <input type="text" name="nameSupplier" class="form-control" [(ngModel)]="productSupplierToAdd.supplierName" #nameSupplier="ngModel" aria-describedby="nameDescript" required >
+            <ul class="text-danger list-unstyled" *ngIf="nameSupplier.dirty|| formSupplierAddForm">
+                <li  *ngIf="nameSupplier.errors?.required">To pole nie może być puste</li>
+            </ul>
+        </div>
+        <button class="btn bg-primary " (click)="submitSupplierAddForm(form2)" > Zatwierdź</button>
 
-    <p-footer>
-        <button class="btn btn-success btn-lg" (click)="hideAddOrderConfirmModal()"><i class="fa fa-reply fa-2x" aria-hidden="true"></i>Wyjdz</button>
-        <button class="btn btn-success btn-lg" [routerLink]="['/orders/']"><i class="fa fa-list-alt fa-2x" aria-hidden="true"></i>Lista zamówień</button>
-        <button class="btn btn-success btn-lg" (click)="printPdf()"><i class="fa fa-print fa-2x" aria-hidden="true"></i> Drukuj PDF</button>
-
-    </p-footer>
+    </form>
 
 </p-dialog>

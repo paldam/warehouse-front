@@ -47,6 +47,7 @@ export class OrderComponent implements OnInit {
 
             if (previousUrlTmp.search('/order')==-1) {
                 localStorage.removeItem('findInputtextOrder');
+                localStorage.removeItem('lastPageOrder');
             }else{
             }
 
@@ -76,12 +77,16 @@ export class OrderComponent implements OnInit {
 
     ngOnInit() {
 
+
+        setTimeout(() => {
         if (localStorage.getItem('lastPageOrder')){
             let tmplastVisitedPage =parseInt(localStorage.getItem('lastPageOrder'));
             this.lastVisitedPageOrder = (tmplastVisitedPage -1)*20;
         }else{
             this.lastVisitedPageOrder = 0;
         }
+        }, 300);
+
     }
 
     goToEditPage(index,id) {

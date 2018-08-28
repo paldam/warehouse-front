@@ -18,7 +18,10 @@ export class ProductFormComponent implements OnInit {
 
     public product: Product = new Product();
     public productSuppliers: Supplier[]=[];
+    public productSupplierToAdd: Supplier = new Supplier();
     public formSubmitted: boolean = false;
+    public formSupplierAddForm: boolean = false;
+    public addSupplierWindow: boolean = false;
 
     constructor(private productsService: ProductsService, private router: Router,private messageServiceExt: MessageServiceExt) {
         productsService.getSuppliers().subscribe(data=> this.productSuppliers=data)
@@ -31,6 +34,9 @@ export class ProductFormComponent implements OnInit {
 
     submitForm(form: NgForm) {
         this.formSubmitted = true;
+
+        console.log(this.formSubmitted);
+        console.log(form.valid);
 
         if (form.valid) {
             this.product.price *= 100;
@@ -51,7 +57,38 @@ export class ProductFormComponent implements OnInit {
         }
     }
 
+    submitSupplierAddForm(form2: NgForm){
+
+    this.formSupplierAddForm= true;
+
+        if (form2.valid) {
+
+            this.productsService.saveSupplier(this.productSupplierToAdd).subscribe(data=>{
+
+                this.productSupplierToAdd = new Supplier();
+                this.formSupplierAddForm = false;
+                this.messageServiceExt.addMessage('success', 'Status', 'Poprawnie dodano dostawcę');
+                this.addSupplierWindow = false;
+                this.productsService.getSuppliers().subscribe(data=> this.productSuppliers=data)
+
+
+            }, error => {
+
+                this.messageServiceExt.addMessage('error', 'Błąd', "Status: " + error.status + ' ' + error.statusText);
+
+            });
+
+
+
+        }
+
+    }
+
     compareSupplier( optionOne : Supplier, optionTwo : Supplier) : boolean {
         return optionTwo && optionTwo ? optionOne.supplierName === optionTwo.supplierName :optionOne === optionTwo;
+    }
+
+    addSupplierWindowOn(){
+        this.addSupplierWindow= true;
     }
 }

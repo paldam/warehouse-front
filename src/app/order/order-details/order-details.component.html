@@ -12,7 +12,7 @@
             <form id="OrderForm" novalidate #form="ngForm" >
               <div class="form-group">
                 <div class="input-group">
-                  <input type="text" name="name"  #name="ngModel" class="form-control"  size="300" aria-describedby="nameDesc" [readonly]="authenticationService.isUser() || authenticationService.isSuperUser()"  [(ngModel)]="customer.name" required >
+                  <input type="text" name="name"  #name="ngModel" class="form-control"  size="300" aria-describedby="nameDesc" [readonly]="authenticationService.isUser() || authenticationService.isSuperUser()"  [(ngModel)]="customer.name" required disabled>
                   <span class="input-group-addon" id="nameDesc">Imię i Nazwisko</span>
                 </div>
                 <ul class="text-danger list-unstyled" *ngIf="name.dirty|| formSubmitted">
@@ -23,14 +23,14 @@
 
               <div class="form-group">
                 <div class="input-group">
-                  <input type="text" name="organization" #organization="ngModel" class="form-control"  size="300" aria-describedby="organizationDesc"  [readonly]="authenticationService.isUser() || authenticationService.isSuperUser()" [(ngModel)]="customer.organizationName">
+                  <input type="text" name="organization" #organization="ngModel" class="form-control"  size="300" aria-describedby="organizationDesc"  [readonly]="authenticationService.isUser() || authenticationService.isSuperUser()" [(ngModel)]="customer.organizationName" disabled>
                   <span class="input-group-addon" id="organizationDesc">Nazwa Firmy</span>
                 </div>
               </div>
 
               <div class="form-group">
                 <div class="input-group">
-                  <input type="text" name="address" #address="ngModel" class="form-control"  size="300" aria-describedby="streetDesc" [readonly]="authenticationService.isUser() || authenticationService.isSuperUser()" [(ngModel)]="customer.address" >
+                  <input type="text" name="address" #address="ngModel" class="form-control"  size="300" aria-describedby="streetDesc" [readonly]="authenticationService.isUser() || authenticationService.isSuperUser()" [(ngModel)]="order.address.address" disabled >
                   <span class="input-group-addon" id="streetDesc">Ulica / nr. lokalu</span>
                 </div>
                 <ul class="text-danger list-unstyled" *ngIf="address.dirty|| formSubmitted">
@@ -40,7 +40,7 @@
 
               <div class="form-group">
                 <div class="input-group">
-                  <input type="text" name="zip_code" #zip_code="ngModel" class="form-control"  size="300" aria-describedby="zip_codeDesc" [readonly]="authenticationService.isUser() || authenticationService.isSuperUser()" [(ngModel)]="customer.zipCode" >
+                  <input type="text" name="zip_code" #zip_code="ngModel" class="form-control"  size="300" aria-describedby="zip_codeDesc" [readonly]="authenticationService.isUser() || authenticationService.isSuperUser()" [(ngModel)]="order.address.zipCode" disabled >
                   <span class="input-group-addon" id="zip_codeDesc">Kod pocztowy</span>
                 </div>
                 <ul class="text-danger list-unstyled" *ngIf="zip_code.dirty|| formSubmitted">
@@ -50,7 +50,7 @@
 
               <div class="form-group">
                 <div class="input-group">
-                  <input type="text" name="city_name" #city_name="ngModel" class="form-control"  size="300" aria-describedby="city_nameDesc" [readonly]="authenticationService.isUser() || authenticationService.isSuperUser()" [(ngModel)]="customer.cityName">
+                  <input type="text" name="city_name" #city_name="ngModel" class="form-control"  size="300" aria-describedby="city_nameDesc" [readonly]="authenticationService.isUser() || authenticationService.isSuperUser()" [(ngModel)]="order.address.cityName" disabled>
                   <span class="input-group-addon" id="city_nameDesc">Miejscowość</span>
                 </div>
                 <ul class="text-danger list-unstyled" *ngIf="city_name.dirty|| formSubmitted">
@@ -60,14 +60,14 @@
 
               <div class="form-group">
                 <div class="input-group">
-                  <input type="email" name="email" class="form-control"  size="300" aria-describedby="emailDesc" [readonly]="authenticationService.isUser() || authenticationService.isSuperUser()" [(ngModel)]="customer.email">
+                  <input type="email" name="email" class="form-control"  size="300" aria-describedby="emailDesc" [readonly]="authenticationService.isUser() || authenticationService.isSuperUser()" [(ngModel)]="customer.email" disabled>
                   <span class="input-group-addon" id="emailDesc">Email</span>
                 </div>
               </div>
 
               <div class="form-group">
                 <div class="input-group">
-                  <input type="text" name="tel" class="form-control"  size="300" aria-describedby="telDesc" [readonly]="authenticationService.isUser() || authenticationService.isSuperUser()" [(ngModel)]="customer.phoneNumber" >
+                  <input type="text" name="tel" class="form-control"  size="300" aria-describedby="telDesc" [readonly]="authenticationService.isUser() || authenticationService.isSuperUser()" [(ngModel)]="customer.phoneNumber"  disabled>
                   <span class="input-group-addon" id="telDesc">Telefon</span>
                 </div>
               </div>
