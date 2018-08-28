@@ -1,4 +1,3 @@
-{{selectedValue}}
 
 <p-confirmDialog key="delete" header="Usuwanie produktu" icon="fa fa-question-circle" width="425"></p-confirmDialog>
 
@@ -22,7 +21,7 @@
               <td>{{customer.organizationName}}</td>
               <td>{{customer.email}}</td>
               <td>{{customer.phoneNumber}}</td>
-              <td><button class="btn bg-primary"  (click)="showChangeMainAddressWindow()" > Edytuj </button></td>
+              <td><button *ngIf="isAdmin()" class="btn bg-primary"  (click)="showChangeCustomerDataWindow()" > Edytuj </button></td>
           </tr>
         </tbody>
     </table>
@@ -143,3 +142,55 @@
     </div>
 </p-dialog>
 
+
+
+
+
+<p-dialog header="Edytuj dane klienta:" closeOnEscape="false" modal="true" width="800" [(visible)]="changeCustomerDataDialogShow"  (onHide)="clearOnCloseChangeMainAddressDialog()" >
+
+    <p-panel header="Edytuj dane klienta">
+
+
+        <form id="CustomerForm" novalidate #form="ngForm">
+            <div class="form-group">
+                <div class="form-group">
+                    <div class="input-group">
+                        <input type="text" name="name" #name="ngModel" class="form-control"  size="300" aria-describedby="nameDesc"   [(ngModel)]="customer.name"  required >
+                        <span class="input-group-addon" id="nameDesc">Imię i Nazwisko </span>
+                    </div>
+                    <ul class="text-danger list-unstyled" *ngIf="name.dirty|| formSubmitted">
+                        <li  *ngIf="name.errors?.required">To pole nie może być puste</li>
+                    </ul>
+                </div>
+
+                <div class="form-group">
+                    <div class="input-group">
+                        <input type="text" name="organization" #organization="ngModel" class="form-control"  size="300" aria-describedby="organizationDesc"   [(ngModel)]="customer.organizationName">
+                        <span class="input-group-addon" id="organizationDesc">Nazwa Firmy</span>
+                    </div>
+                </div>
+
+
+                <div class="form-group">
+                    <div class="input-group">
+                        <input type="email" name="email" class="form-control"  size="300" aria-describedby="emailDesc"  [(ngModel)]="customer.email">
+                        <span class="input-group-addon" id="emailDesc">Email</span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="input-group">
+                        <input type="text" name="tel" #tel="ngModel" class="form-control"  size="300" aria-describedby="telDesc"  [(ngModel)]="customer.phoneNumber" required>
+                        <span class="input-group-addon" id="telDesc">Telefon</span>
+                    </div>
+                    <ul class="text-danger list-unstyled" *ngIf="tel.dirty|| formSubmitted">
+                        <li  *ngIf="tel.errors?.required">To pole nie może być puste</li>
+                    </ul>
+                </div>
+            </div>
+
+            <button class="btn bg-primary" type="submit" form="CustomerForm" (click)="submitEditCustomerForm(form)" > Zmień Dane</button>
+            <button class="btn bg-primary " (click)="cancelEditCustomer()"  >Anuluj </button>
+        </form>
+    </p-panel>
+</p-dialog>

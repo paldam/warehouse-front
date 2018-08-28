@@ -10,10 +10,11 @@ import {OrderService} from '../order.service';
 import {DeliveryType} from '../../model/delivery_type.model';
 import {OrderStatus} from "../../model/OrderStatus";
 import {ConfirmationService, FileUpload} from "primeng/primeng";
-import {TOKEN_USER} from "../../authentication.service";
+import {AuthenticationService, TOKEN_USER} from "../../authentication.service";
 import {ContextMenuModule,MenuItem,ContextMenu} from 'primeng/primeng';
 import {Router} from "@angular/router";
 import {Address} from "../../model/address.model";
+import {MessageServiceExt} from "../../messages/messageServiceExt";
 
 declare var jquery:any;
 declare var $ :any;
@@ -30,31 +31,45 @@ export class BasketOrderComponent implements OnInit {
     public orderItems: OrderItem[]=[];
     public baskets: Basket[]=[];
     public customers: Customer[]=[];
+    public customerAddress: Address = new Address();
     public deliveryTypes: DeliveryType[]=[];
     public deliveryType: DeliveryType= new DeliveryType();
     public selectedCustomer: Customer = new Customer();
+    public selectedCustomerAddress: Address = new Address();
     public order: Order = new Order();
     public total: number = 0;
     public formSubmitted: boolean = false;
+    public formAddAdrrSubmitted: boolean = false;
+    public isAddressesOptionVisable = false;
     public isReadOnlyProp: boolean = false;
+    public addAddressDialogShow: boolean = false;
+    public addressToAdd: Address = new Address();
+    public storedCustomerMode: boolean = false;
     public loading: boolean;
     public confirmDialogShow: boolean = false;
     public customerPickDialogShow: boolean = false;
     public generatedOrderId: number = null; //id too print PDF
     public items: MenuItem[];
+    public tmpCityList: any[] = [];
+    public pickCityByZipCodeWindow: boolean = false;
+
+
     public selectedBasketOnContextMenu: Basket = new Basket();
     public addrs: Address[]=[];
     @ViewChild(FileUpload) fileUploadElement: FileUpload;
-
+    @ViewChild('zip_code') el: any;
+    @ViewChild('address2') storedCustomerAddressList: any;
     value: Date;
     dateLang: any;
 
 
-    constructor(private router : Router,private basketService : BasketService, private  customerService: CustomerService, private orderService: OrderService,private confirmationService: ConfirmationService) {
+    constructor(private router : Router,private basketService : BasketService, private  customerService: CustomerService,
+                private orderService: OrderService,private messageServiceExt: MessageServiceExt,private confirmationService: ConfirmationService,private authenticationService: AuthenticationService) {
         basketService.getBaskets().subscribe(data=> this.baskets = data);
         customerService.getCustomers().subscribe(data=> this.customers = data);
         orderService.getDeliveryTypes().subscribe(data=> this.deliveryTypes = data);
         this.order.deliveryType = new DeliveryType();
+
 
     }
 
@@ -86,7 +101,10 @@ export class BasketOrderComponent implements OnInit {
         })
     }
 
+    showAddAddressWindow() {
+        this.addAddressDialogShow = true;
 
+    }
     contextMenuSelected(event){
         this.selectedBasketOnContextMenu = event.data;
     }
@@ -148,30 +166,41 @@ export class BasketOrderComponent implements OnInit {
 
     }
 
+    isAdmin() : boolean {
+        return this.authenticationService.isAdmin();
+    }
+
     showCustomerList() {
         this.customerPickDialogShow = true;
+        this.isAddressesOptionVisable = true;
+        this.storedCustomerMode = true;
+
         this.customers.forEach(data=>{
             console.log(data)
         })
     }
     cleanForm(form : NgForm, formAdidtional : NgForm){
         form.resetForm();
+        this.storedCustomerMode=false;
         formAdidtional.resetForm();
         this.order= new Order();
         this.selectedCustomer= new Customer();
         this.isReadOnlyProp= false;
         this.formSubmitted = false;
+        this.isAddressesOptionVisable = false;
+        this.customerService.getCustomers().subscribe(data=> this.customers = data);
     }
 
     submitOrderForm(form: NgForm, formAdidtional: NgForm) {
         this.formSubmitted = true;
-        if (form.valid && formAdidtional.valid && this.orderItems.length>0) {
+       // consthis.storedCustomerAddressList.model
+        if (form.valid && formAdidtional.valid && this.orderItems.length>0 && this.storedCustomerAddressList.model != null) {
             this.setUpOrderBeforeSave();
-            console.log(JSON.stringify(this.order.address) );
-            console.log(JSON.stringify(this.order));
+
             this.orderService.saveOrder(this.order).subscribe(data=>{
+
+                    console.log(JSON.stringify(this.order));
                     this.generatedOrderId  = data.orderId;
-                    console.log("dssdsdsd" + this.order );
                     this.cleanAfterSave(form,formAdidtional);
                     this.recalculate();
 
@@ -181,7 +210,7 @@ export class BasketOrderComponent implements OnInit {
 
                     this.showAddOrderConfirmModal();
 
-
+                    this.customerService.getCustomers().subscribe(data=> this.customers = data);
 
                     },
                     err =>  {
@@ -194,7 +223,13 @@ export class BasketOrderComponent implements OnInit {
     setUpOrderBeforeSave(){
         this.order.orderTotalAmount = this.total;
         this.order.orderItems = this.orderItems;
+
+
         this.order.customer = this.selectedCustomer;
+
+        this.order.customer.addresses = [];
+        this.selectedCustomerAddress.isPrimaryAddress=1;
+        this.order.customer.addresses.push(this.selectedCustomerAddress);
 
         if (this.order.deliveryType.deliveryTypeId == 5 || this.order.deliveryType.deliveryTypeId == 6 || this.order.deliveryType.deliveryTypeId == 7 ){
             this.order.cod *=100;
@@ -212,9 +247,11 @@ export class BasketOrderComponent implements OnInit {
 
         this.orderItems=[];
         this.isReadOnlyProp= false;
-        // this.totalPlusMarkUp=0;
         form.resetForm();
         formAdidtional.resetForm();
+        this.isAddressesOptionVisable = false;
+        this.storedCustomerMode = false;
+        this.selectedCustomer.addresses=[];
     }
 
     printPdf() {
@@ -240,6 +277,62 @@ export class BasketOrderComponent implements OnInit {
     onShowPopUp(){
 
         this.customerService.getCustomers().subscribe(data=> this.customers = data);
+    }
+
+    ZipCodeUtil(zipCode: string) {
+
+        if (this.el.valid) {
+            this.pickCityByZipCodeWindow = true;
+            this.customerService.getCityByZipCode(zipCode).subscribe(data => {
+                data.forEach((value) => {
+                    this.tmpCityList.push(value.zipCode.city);
+
+                });
+            })
+        }
+        ;
+
+    }
+
+    selectCity(city: string) {
+        this.addressToAdd.cityName = city;
+        this.tmpCityList = [];
+        this.pickCityByZipCodeWindow = false;
+    }
+
+
+    submitAddAddresForm(form: NgForm) {
+        this.formAddAdrrSubmitted = true;
+        if (form.valid) {
+            this.selectedCustomer.addresses.push(this.addressToAdd);
+
+            this.customerService.saveCustomers(this.selectedCustomer).subscribe(data => {
+
+                this.addAddressDialogShow = false;
+                form.reset();
+                this.formAddAdrrSubmitted  = false;
+                this.showSuccessMassage();
+
+                this.customerService.getCustomer(this.selectedCustomer.customerId).subscribe(data => {
+                    this.selectedCustomer = data;
+                })
+
+            }, error => {
+
+                this.messageServiceExt.addMessage('error','Błąd',"Status: " + error.status + ' ' + error.statusText);
+
+            });
+
+        }
+    }
+
+    showSuccessMassage() {
+        this.messageServiceExt.addMessage('success','Status','Poprawnie dodano adres do klienta');
+    }
+
+    clearOnCloseDialog() {
+        this.tmpCityList = [];
+        this.formAddAdrrSubmitted = false;
     }
 
     // setPopUpDarkBackgroudTrue(){

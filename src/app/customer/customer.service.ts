@@ -73,7 +73,6 @@ export class CustomerService {
     deleteCustomer(id: number): Observable<Response> {
         return this.http.delete(this.baseUrl+`/customer/${id}`)
 
-        console.log("dsdsdssd")
 
     }
 

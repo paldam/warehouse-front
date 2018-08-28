@@ -4,6 +4,8 @@ import {NgForm} from '@angular/forms';
 import {ProductsService} from '../products.service';
 import {ProductType} from '../../model/product_type.model';
 import {ActivatedRoute, NavigationExtras, Router} from '@angular/router';
+import {Supplier} from "../../model/supplier.model";
+import {MessageServiceExt} from "../../messages/messageServiceExt";
 
 @Component({
     selector: 'product-edit-form',
@@ -16,12 +18,15 @@ export class ProductEditFormComponent implements OnInit {
     public product: Product = new Product();
     public productPrice : number ;
     public formSubmitted: boolean = false;
+    public productSuppliers: Supplier[]=[];
 
-    constructor(private productsService: ProductsService, private router: Router, activeRoute: ActivatedRoute) {
+    constructor(private productsService: ProductsService, private router: Router, activeRoute: ActivatedRoute,private messageServiceExt: MessageServiceExt) {
         productsService.getProduct(activeRoute.snapshot.params["id"]).subscribe(data =>{
             this.product = data;
             this.productPrice = data.price/100;
         });
+
+        productsService.getSuppliers().subscribe(data=> this.productSuppliers=data)
     }
 
     ngOnInit() {
@@ -41,10 +46,17 @@ export class ProductEditFormComponent implements OnInit {
                     this.formSubmitted = false;
 
 
-
+                    this.messageServiceExt.addMessage('success', 'Status', 'Dokonano edycji produktu');
                     this.router.navigate(["/product"]);
-                },
-                err =>  console.log("error" ));
+                }, error => {
+
+                    this.messageServiceExt.addMessage('error', 'Błąd', "Status: " + error.status + ' ' + error.statusText);
+
+                });
         }
+    }
+
+    compareSupplier( optionOne : Supplier, optionTwo : Supplier) : boolean {
+        return optionTwo && optionTwo ? optionOne.supplierName === optionTwo.supplierName :optionOne === optionTwo;
     }
 }

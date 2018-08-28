@@ -27,6 +27,8 @@
             <ul>
                 <li *ngIf="isAdmin() || isSuperUser()" ><a  [routerLink]="['/product/'] " routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Przeglądaj</a></li>
                 <li *ngIf="isAdmin() || isSuperUser()" ><a [routerLink]="['/product/add'] " routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Dodaj</a></li>
+                <li *ngIf="isAdmin() || isSuperUser()" ><a [routerLink]="['/products/delivery'] " routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Dostawa</a></li>
+
             </ul>
         </li>
 

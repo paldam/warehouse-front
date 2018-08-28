@@ -51,6 +51,7 @@ import {ToastModule} from "primeng/toast";
 import {MessageService} from "primeng/api";
 import {MessageServiceExt} from './messages/messageServiceExt';
 import {ListboxModule} from "primeng/listbox";
+import { ProductDeliveryComponent } from './products/product-delivery/product-delivery.component';
 
 
 
@@ -82,6 +83,7 @@ export function httpExt(backend: XHRBackend, options: RequestOptions, router: Ro
     CustomerComponent,
     CustomerAddComponent,
     CustomerEditComponent,
+    ProductDeliveryComponent,
 
   ],
   imports: [

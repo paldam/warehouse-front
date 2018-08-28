@@ -19,6 +19,7 @@ export class OrderComponent implements OnInit {
     public lastVisitedPageOrder: number ;
     public findInputtextOrder: string = "";
     public isCurrentPageCustomerEdit : boolean = false;
+    public currentCustomerOnCustomerEditPage : number;
 
     constructor(private orderService :OrderService,private router: Router,private confirmationService: ConfirmationService,
                 private authenticationService: AuthenticationService, activeRoute: ActivatedRoute) {
@@ -28,7 +29,11 @@ export class OrderComponent implements OnInit {
 
 
         if ( this.isCurrentPageCustomerEdit){
-            orderService.getOrderByCustomer(activeRoute.snapshot.params["id"]).subscribe(data=> this.orders=data)
+            orderService.getOrderByCustomer(activeRoute.snapshot.params["id"]).subscribe(data=>{
+                this.orders=data;
+                this.currentCustomerOnCustomerEditPage=activeRoute.snapshot.params["id"];
+
+             } )
 
         }else{
             orderService.getOrders().subscribe(data=> this.orders=data);
@@ -58,7 +63,13 @@ export class OrderComponent implements OnInit {
     refreshData() {
         this.loading = true;
         setTimeout(() => {
-            this.orderService.getOrders().subscribe(data=> this.orders=data);
+            if(this.isCurrentPageCustomerEdit){
+                this.orderService.getOrderByCustomer(this.currentCustomerOnCustomerEditPage).subscribe(data=> this.orders=data);
+
+            }else{
+                this.orderService.getOrders().subscribe(data=> this.orders=data);
+            }
+
             this.loading = false;
         }, 1000);
     }
@@ -101,23 +112,54 @@ export class OrderComponent implements OnInit {
     }
 
     ShowConfirmModal(order: Order) {
-        this.confirmationService.confirm({
-            message: 'Jesteś pewny że chcesz usunąć zamówienie nr:  ' + order.orderId + ' do kosza ?',
-            accept: () => {
-                order.orderStatus.orderStatusId=99;
 
-                console.log(JSON.stringify(order));
+        console.log(order.orderStatus.orderStatusId);
 
-                this.orderService.saveOrder(order).subscribe(data =>{
 
-                this.refreshData();
-                } )
+        if (order.orderStatus.orderStatusId == 1){
 
-            },
-            reject:()=>{
+            this.confirmationService.confirm({
+                message: 'Jesteś pewny że chcesz usunąć zamówienie nr:  ' + order.orderId + ' do kosza ?',
+                accept: () => {
+                    order.orderStatus.orderStatusId=99;
 
-            }
-        });
+                    this.orderService.saveOrder(order).subscribe(data =>{
+
+                        this.refreshData();
+                    } )
+
+                },
+                reject:()=>{
+
+                }
+            });
+
+        } else{
+            this.confirmationService.confirm({
+                message: 'Uwaga Jesteś pewny że chcesz trwale usunąć zamówienie nr:  ' + order.orderId + ' . Po tej operacji nie będzie możliwości odtworzenia danego zamówienia i jego pozycji',
+                accept: () => {
+
+                    this.orderService.deleteOrder(order.orderId).subscribe(data =>{
+
+                        this.refreshData();
+                    } )
+
+                },
+                reject:()=>{
+
+                }
+            });
+        }
+
+    }
+
+    calculateStyles(a : any){
+        if(a=='usunięte'){
+            return {'color': 'red'};
+        }else{
+            return {'color': 'black'};
+        }
+
     }
 
 }

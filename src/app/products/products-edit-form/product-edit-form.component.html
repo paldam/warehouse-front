@@ -20,10 +20,19 @@
             </ul>
         </div>
 
-        <div class="form-group">
-            <small id="typeDescript" class="text-muted">Dostawca</small>
-            <input type="text" name="deliver" class="form-control"  [(ngModel)]="product.deliver" aria-describedby="priceDescript">
-        </div>
+
+
+
+            <div class="form-group">
+                <small id="supplier_typeDesc" class="text-muted">Dostawca</small>
+                <select [compareWith]="compareSupplier" class="form-control"  #supplier="ngModel" [(ngModel)]="product.supplier" name="supplier"  required >
+                    <option *ngFor="let item of productSuppliers"  [ngValue]="item"  >{{item.supplierName}}</option>
+                </select>
+                <ul class="text-danger list-unstyled" *ngIf="supplier.dirty|| formSubmitted">
+                    <li  *ngIf="supplier.errors?.required">Wybierz dostawcę z listy</li>
+                </ul>
+            </div>
+
 
             <div class="form-group">
                 <small id="priceDescript" class="text-muted">Cena</small>

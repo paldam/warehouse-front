@@ -76,6 +76,11 @@ export class OrderService {
                 response.json());
     }
 
+    deleteOrder(id : number): Observable<Response> {
+        return this.http.delete(this.baseUrl+`/order/${id}`)
+
+    }
+
 
 
 }

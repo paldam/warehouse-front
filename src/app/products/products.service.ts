@@ -5,6 +5,7 @@ import {Response} from '@angular/http';
 import 'rxjs/add/operator/map';
 import {ProductType} from '../model/product_type.model';
 import {HttpService} from "../http-service";
+import {Supplier} from "../model/supplier.model";
 
 @Injectable()
 export class ProductsService {
@@ -19,7 +20,13 @@ export class ProductsService {
 
 
   getProducts(): Observable<Product[]> {
-    return this.http.get(this.baseUrl+`/products`)
+  return this.http.get(this.baseUrl+`/products`)
+      .map((response: Response) =>
+          response.json());
+}
+
+  getSuppliers(): Observable<Supplier[]> {
+    return this.http.get(this.baseUrl+`/products/supplier`)
         .map((response: Response) =>
             response.json());
   }

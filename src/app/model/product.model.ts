@@ -1,4 +1,5 @@
 import {ProductType} from './product_type.model';
+import {Supplier} from "./supplier.model";
 
 export class Product{
     constructor(
@@ -8,7 +9,8 @@ export class Product{
         public capacity?: number,
         public price?: number,
         public stock?: number,
-        public isArchival?: number
+        public isArchival?: number,
+        public supplier?: Supplier
     ) {
     }
 }

@@ -1,0 +1,17 @@
+<div class="order_summary col-10">
+  <p-fieldset legend="Dostawa produktów" [toggleable]="true">
+
+
+        <div  class="form-group">
+          <small id="addressDesc" class="text-muted">Wybierz Dostawcę</small>
+          <select class="form-control" [(ngModel)]="order.address" name="address2" #address2="ngModel" required  >
+            <option  *ngFor="let a of selectedCustomer.addresses" [ngValue]="a">{{a.address +" "+ a.cityName +" "+ a.zipCode}}</option>
+          </select>
+          <ul class="text-danger list-unstyled" *ngIf="address2.dirty|| formSubmitted">
+            <li  *ngIf="address2.errors?.required">Wybierz adres z listy</li>
+          </ul>
+        </div>
+
+
+  </p-fieldset>
+</div>

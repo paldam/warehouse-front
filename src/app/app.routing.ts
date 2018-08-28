@@ -19,6 +19,7 @@ import {FileSendComponent} from "./file-send/file-send.component";
 import {CustomerComponent} from "./customer/customer-view/customer.component";
 import {CustomerAddComponent} from "./customer/customer-add/customer-add.component";
 import {CustomerEditComponent} from "./customer/customer-edit/customer-edit.component";
+import {ProductDeliveryComponent} from "./products/product-delivery/product-delivery.component";
 const routes: Routes = [
     {path: '', component: ProductsComponent, pathMatch: 'full', canActivate: [AuthGuard,AdminOrSuperUserGuard]},
     { path: 'product', component: ProductsComponent, canActivate: [AuthGuard,AdminOrSuperUserGuard] },
@@ -38,6 +39,7 @@ const routes: Routes = [
     {path:   'customer', component: CustomerComponent},
     {path:   'customer/add', component: CustomerAddComponent},
     {path:   'customer/:id', component: CustomerEditComponent},
+    {path:   'products/delivery', component: ProductDeliveryComponent},
 ];
 export const routing = RouterModule.forRoot(routes,{ useHash: true });
 

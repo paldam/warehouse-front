@@ -21,3 +21,10 @@
 .product_tab_row {
     text-align: left;
 }
+.action_col{
+    width: 150px;
+    max-height: 40px;
+}
+.status_col{
+    color: red;
+}

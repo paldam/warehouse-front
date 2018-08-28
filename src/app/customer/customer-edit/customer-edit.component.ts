@@ -8,6 +8,7 @@ import {ConfirmationService, MessageService} from "primeng/api";
 import {Product} from "../../model/product.model";
 import {MessageServiceExt} from "../../messages/messageServiceExt";
 import {SelectItem} from 'primeng/api';
+import {AuthenticationService} from "../../authentication.service";
 
 @Component({
   selector: 'app-customer-edit',
@@ -19,6 +20,7 @@ export class CustomerEditComponent implements OnInit {
   public customer: Customer = new Customer();
   public addAddressDialogShow: boolean = false;
   public changeMainAddressDialogShow: boolean = false;
+  public changeCustomerDataDialogShow: boolean = false;
   public addressToAdd: Address = new Address();
   public formSubmitted: boolean = false;
   public pickCityByZipCodeWindow: boolean = false;
@@ -28,7 +30,7 @@ export class CustomerEditComponent implements OnInit {
   @ViewChild('zip_code') el: any;
 
   constructor(private router: Router, private customerService: CustomerService, activeRoute: ActivatedRoute, private messageService: MessageService,
-              private confirmationService: ConfirmationService, private messageServiceExt: MessageServiceExt) {
+              private confirmationService: ConfirmationService, private messageServiceExt: MessageServiceExt,private authenticationService: AuthenticationService) {
     customerService.getCustomer(activeRoute.snapshot.params["id"]).subscribe(data => {
 
       data.addresses.sort(this.compareAddress);
@@ -59,6 +61,11 @@ export class CustomerEditComponent implements OnInit {
   showChangeMainAddressWindow(){
 
     this.changeMainAddressDialogShow = true;
+  }
+
+  showChangeCustomerDataWindow(){
+
+    this.changeCustomerDataDialogShow= true;
   }
 
   submitAddAddresForm(form: NgForm) {
@@ -128,7 +135,7 @@ export class CustomerEditComponent implements OnInit {
     this.formSubmitted = false;
   }
 
-  refreshAddressesList(){
+  refreshCustomerAndAddressList(){
     this.customerService.getCustomer(this.customer.customerId).subscribe(data => {
         data.addresses.sort(this.compareAddress);
         this.customer = data;
@@ -147,7 +154,7 @@ export class CustomerEditComponent implements OnInit {
 
           this.customerService.deleteAddress(addrId,customerId).subscribe(
               data => {
-                  this.refreshAddressesList();
+                  this.refreshCustomerAndAddressList();
                   this.messageServiceExt.addMessage('success','Status','Usunięto adres');
               },
               error =>{
@@ -172,7 +179,7 @@ export class CustomerEditComponent implements OnInit {
              this.messageServiceExt.addMessage('success','Status','Zmieniono główny addres');
              this.changeMainAddressDialogShow = false;
              this.selectedAddr = null;
-             this.refreshAddressesList();
+             this.refreshCustomerAndAddressList();
       },
           error =>{
 
@@ -181,5 +188,38 @@ export class CustomerEditComponent implements OnInit {
           });
 
   }
+
+    cancelEditCustomer(){
+      this.changeCustomerDataDialogShow = false;
+    }
+    isAdmin() : boolean {
+        return this.authenticationService.isAdmin();
+    }
+
+
+    submitEditCustomerForm(form: NgForm) {
+
+        this.formSubmitted = true;
+
+        if (form.valid) {
+
+            this.customerService.saveCustomers(this.customer).subscribe(data => {
+
+                form.reset();
+                this.formSubmitted = false;
+                this.changeCustomerDataDialogShow = false;
+                this.messageServiceExt.addMessage("success","Status","Poprawnie dokonano edycji danych");
+                this.refreshCustomerAndAddressList();
+
+
+            }, error => {
+
+                this.messageServiceExt.addMessage("error","Wystąpił błąd przy edycji klienta",error.status + ' '+ error.statusText) ;
+
+            });
+
+        }
+
+    }
 
 }

@@ -5,6 +5,8 @@ import {ProductsService} from '../products.service';
 
 import {ProductType} from '../../model/product_type.model';
 import {Router} from '@angular/router';
+import {Supplier} from "../../model/supplier.model";
+import {MessageServiceExt} from "../../messages/messageServiceExt";
 
 @Component({
     selector: 'product-form',
@@ -15,11 +17,11 @@ import {Router} from '@angular/router';
 export class ProductFormComponent implements OnInit {
 
     public product: Product = new Product();
-    public productsTypes: ProductType[];
+    public productSuppliers: Supplier[]=[];
     public formSubmitted: boolean = false;
 
-    constructor(private productsService: ProductsService, private router: Router) {
-
+    constructor(private productsService: ProductsService, private router: Router,private messageServiceExt: MessageServiceExt) {
+        productsService.getSuppliers().subscribe(data=> this.productSuppliers=data)
     }
 
     ngOnInit() {
@@ -31,16 +33,25 @@ export class ProductFormComponent implements OnInit {
         this.formSubmitted = true;
 
         if (form.valid) {
-            this.product.price*=100;
-            this.product.isArchival=0;
+            this.product.price *= 100;
+            this.product.isArchival = 0;
             this.productsService.saveProduct(this.product).subscribe(
                 order => {
                     this.product = new Product();
                     form.reset();
                     this.formSubmitted = false;
+                    this.messageServiceExt.addMessage('success', 'Status', 'Poprawnie dodano produkt do bazy');
                     this.router.navigateByUrl('/product');
-                    },
-                err =>  console.log("error" ));
+                }
+                , error => {
+
+                    this.messageServiceExt.addMessage('error', 'Błąd', "Status: " + error.status + ' ' + error.statusText);
+
+                });
         }
+    }
+
+    compareSupplier( optionOne : Supplier, optionTwo : Supplier) : boolean {
+        return optionTwo && optionTwo ? optionOne.supplierName === optionTwo.supplierName :optionOne === optionTwo;
     }
 }
