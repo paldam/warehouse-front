@@ -159,7 +159,7 @@
               <small id="add_file" class="text-muted">Wgraj plik</small>
                 <p-fileUpload name="files"  multiple="multiple"  maxFileSize="5000000"
                               invalidFileSizeMessageSummary="{0} - plik jest za duży" invalidFileSizeMessageDetail="rozmiar pliku może wynosić maksymalnie {0}"
-                              chooseLabel="Wybierz plik" uploadLabel="Wgraj" cancelLabel="Anuluj"  (onUpload)="refreshFileList()" >
+                              chooseLabel="Wybierz plik" uploadLabel="Wgraj" cancelLabel="Anuluj" (onBeforeSend)="onBeforeUpload($event)" (onUpload)="refreshFileList()" >
 
 
                   <ng-template pTemplate="content">
@@ -245,7 +245,7 @@
       </div>
 
       <p-dataTable [value]="baskets" [rows]="10" [paginator]="true" [globalFilter]="gb" #dt
-                   [loading]="loading" loadingIcon="fa-circle-o-notch" expandableRows="true" (onRowDblclick)="addBasketToOrder($event.data)">
+                   [loading]="loading" loadingIcon="fa-circle-o-notch" expandableRows="true" (onRowDblclick)="addBasketToOrder($event.data)" (onContextMenuSelect)="contextMenuSelected($event)"   [contextMenu]="cm">
         <p-column expander="true" header="Zawartość" styleClass="col-icon" [style]="{'width':'70px'}"></p-column>
         <p-column  header="lp."  [style]="{'width':'70px'}">
           <ng-template let-i="rowIndex" pTemplate="rowexpansion">
@@ -294,3 +294,5 @@
 
 
 <p-confirmDialog header="Usuwanie pliku" icon="fa fa-question-circle" width="425"></p-confirmDialog>
+
+<p-contextMenu  #cm [model]="items"> </p-contextMenu>

@@ -13,7 +13,8 @@ import {Basket} from "../../model/basket.model";
 import {BasketService} from "../../basket/basket.service";
 import {File} from "../../model/file";
 import {FileSendService} from "../../file-send/file-send.service";
-
+import {TOKEN, TOKEN_USER} from '../../authentication.service';
+import {MenuItem} from "primeng/api";
 
 @Component({
   selector: 'order-details',
@@ -37,6 +38,8 @@ export class OrderDetailsComponent implements OnInit {
   public total: number = 0;
   public fileList: File[]=[];
   public orderId :number;
+    public items: MenuItem[];
+    public selectedBasketOnContextMenu: Basket = new Basket();
     public confirmDialogShow: boolean = false;
   @ViewChild(FileUpload) fileUploadElement: FileUpload;
 
@@ -52,7 +55,7 @@ export class OrderDetailsComponent implements OnInit {
                   this.totalAmount = res.orderTotalAmount/100;
                   this.order.cod /=100;
                   this.recalculate();
-                  this.fileUploadElement.url = "http://localhost:8080/uploadfiles?orderId="+this.orderId;
+                  this.fileUploadElement.url = "http://145.239.92.96:8080/uploadfiles?orderId="+this.orderId;
 
          })
       this.orderService.getDeliveryTypes().subscribe(data=> this.deliveryTypes = data);
@@ -68,8 +71,14 @@ export class OrderDetailsComponent implements OnInit {
 
 
   ngOnInit() {
-
+      this.items = [
+          {label: 'Dodaj kosz', icon: 'fa fa-plus',command: (event) => this.addBasketToOrder(this.selectedBasketOnContextMenu)},
+      ];
   }
+
+    contextMenuSelected(event){
+        this.selectedBasketOnContextMenu = event.data;
+    }
 
   compareDeliveryType( optionOne : DeliveryType, optionTwo : DeliveryType) : boolean {
     return optionTwo && optionTwo ? optionOne.deliveryTypeId === optionTwo.deliveryTypeId :optionOne === optionTwo;
@@ -96,7 +105,7 @@ export class OrderDetailsComponent implements OnInit {
 
       this.orderService.saveOrder(this.order).subscribe(data=>{
 
-          this.fileUploadElement.url = "http://localhost:8080/uploadfiles?orderId="+ this.orderId;  // PrimeNg fileUpload component
+          this.fileUploadElement.url = "http://145.239.92.96:8080/uploadfiles?orderId="+ this.orderId;  // PrimeNg fileUpload component
           this.fileUploadElement.upload();
           this.router.navigateByUrl('/orders');
 
@@ -181,6 +190,14 @@ export class OrderDetailsComponent implements OnInit {
         }, 1000);
 
     }
+
+
+    onBeforeUpload(event){
+        let token = localStorage.getItem(TOKEN);
+        event.xhr.setRequestHeader('Authorization', `Bearer ${token}`);
+
+    }
+
 
     ShowConfirmModal(file: File) {
         this.confirmationService.confirm({

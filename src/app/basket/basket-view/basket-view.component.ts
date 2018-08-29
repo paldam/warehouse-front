@@ -14,8 +14,8 @@ export class BasketComponent implements OnInit {
 
   public baskets: Basket[] = [];
   public loading: boolean;
-  public url: string ='';
   public gb: any;
+  public url: string ='';
   @ViewChild('onlyDeleted') el:ElementRef;
 
 

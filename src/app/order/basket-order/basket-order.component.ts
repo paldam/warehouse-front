@@ -10,7 +10,7 @@ import {OrderService} from '../order.service';
 import {DeliveryType} from '../../model/delivery_type.model';
 import {OrderStatus} from "../../model/OrderStatus";
 import {ConfirmationService, FileUpload} from "primeng/primeng";
-import {AuthenticationService, TOKEN_USER} from "../../authentication.service";
+import {AuthenticationService, TOKEN, TOKEN_USER} from "../../authentication.service";
 import {ContextMenuModule,MenuItem,ContextMenu} from 'primeng/primeng';
 import {Router} from "@angular/router";
 import {Address} from "../../model/address.model";
@@ -204,7 +204,7 @@ export class BasketOrderComponent implements OnInit {
                     this.cleanAfterSave(form,formAdidtional);
                     this.recalculate();
 
-                    this.fileUploadElement.url = "http://localhost:8080/uploadfiles?orderId="+ data.orderId;
+                    this.fileUploadElement.url = "http://http://145.239.92.96:8080/uploadfiles?orderId="+ data.orderId;
                     this.fileUploadElement.upload();
 
 
@@ -334,7 +334,15 @@ export class BasketOrderComponent implements OnInit {
         this.tmpCityList = [];
         this.formAddAdrrSubmitted = false;
     }
+    cancelAddAddr(){
+        this.addAddressDialogShow=false;
+    }
 
+    onBeforeUpload(event){
+        let token = localStorage.getItem(TOKEN);
+        event.xhr.setRequestHeader('Authorization', `Bearer ${token}`);
+
+    }
     // setPopUpDarkBackgroudTrue(){
     //     this.PopUpBackgroundStyle= {
     //         'dark_background': true,

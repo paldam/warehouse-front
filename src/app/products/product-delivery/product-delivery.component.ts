@@ -15,6 +15,8 @@ export class ProductDeliveryComponent implements OnInit {
   public selectedSupplier : Supplier = new Supplier();
   public productSuppliers: Supplier[]=[];
   public productsBySupplier: Product[]=[] ;
+  public loading: boolean;
+  public gb: any;
 
 
   constructor(private productsService: ProductsService, private  messageServiceExt: MessageServiceExt) {
