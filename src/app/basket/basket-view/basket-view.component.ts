@@ -36,20 +36,41 @@ export class BasketComponent implements OnInit {
   }
 
   ShowConfirmModal(basket : Basket) {
-    this.confirmationService.confirm({
-      message: 'Jesteś pewny że chcesz przenieś kosz  ' + basket.basketName + ' do archiwum ?',
-      accept: () => {
-        let tmpBaskettype : BasketType= new BasketType(99);
-        basket.basketType=tmpBaskettype;
-        this.basketService.saveBasket(basket).subscribe(data=>{
-          this.refreshData();
-        });
 
-      },
-      reject:()=>{
+    if(basket.basketType.basketTypeId == 99) {
+      this.confirmationService.confirm({
+        message: 'Jesteś pewny że chcesz trwale usuńcą kosz ? ',
+        accept: () => {
+          let tmpBaskettype : BasketType= new BasketType(100);
+          basket.basketType=tmpBaskettype;
+          this.basketService.saveBasket(basket).subscribe(data=>{
+            this.refreshData();
+          });
 
-      }
-    });
+        },
+        reject:()=>{
+
+        }
+      });
+
+    }else{
+      this.confirmationService.confirm({
+        message: 'Jesteś pewny że chcesz przenieś kosz  ' + basket.basketName + ' do archiwum ?',
+        accept: () => {
+          let tmpBaskettype : BasketType= new BasketType(99);
+          basket.basketType=tmpBaskettype;
+          this.basketService.saveBasket(basket).subscribe(data=>{
+            this.refreshData();
+          });
+
+        },
+        reject:()=>{
+
+        }
+      });
+
+    }
+
   }
 
   clickOnlyDeletedBasketChceckBox(){

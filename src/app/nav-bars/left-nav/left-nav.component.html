@@ -69,7 +69,11 @@
             </li>
 
             <li *ngIf="isAdmin()">
-                <h3 [routerLink]="['/statistics']"><span class="fa fa-user-circle-o"></span>Statystyki</h3>
+                <h3><span class="fa fa-user-circle-o"></span>Statystyki</h3>
+                <ul>
+                    <li><a [routerLink]="['/statistics/products']" routerLinkActive="active"[routerLinkActiveOptions]="{ exact: true }" >Statystka produktów</a></li>
+                    <li><a [routerLink]="['/statistics/basket']" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" >Statystyka koszy</a></li>
+                </ul>
             </li>
 
             <li>

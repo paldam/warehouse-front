@@ -28,3 +28,11 @@
 .status_col{
     color: red;
 }
+
+.attach_col{
+    width: 38px;
+}
+
+.onlyWithAttach {
+    margin-left: 10px;
+}

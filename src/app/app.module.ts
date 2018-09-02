@@ -8,9 +8,11 @@ import { NavComponent } from './nav-bars/top-nav/top-nav.component';
 import {LeftNavComponent} from './nav-bars/left-nav/left-nav.component';
 import {
   PanelMenuModule, DataTableModule, SharedModule, FieldsetModule, OverlayPanelModule, LightboxModule,
-  PanelModule, ConfirmationService, ConfirmDialogModule, DialogModule, CalendarModule, ContextMenuModule, MenuModule,
-  RadioButtonModule
+  PanelModule, ConfirmationService, ConfirmDialogModule, DialogModule, ContextMenuModule, MenuModule,
+  RadioButtonModule, DropdownModule, SpinnerModule,
 } from 'primeng/primeng';
+
+import {CalendarModule} from 'primeng/calendar';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {routing} from './app.routing';
 import {ProductFormComponent} from './products/products-add-form/product-form.component';
@@ -38,7 +40,7 @@ import {AdminOrSuperUserGuard} from "./adminOrSuperUser.guard";
 import {PageNotFoundComponent} from "./pageNotFound.component";
 import { MapsComponent } from './maps/maps.component';
 import {MapService} from "./maps/map.service";
-import { StatisticComponent } from './statistic/statistic.component';
+import { StatisticComponent } from './statistic/products-statistic/statistic.component';
 import {CalendarSetingsComponent} from "./primeNgCalendarSetings/calendarStings.component";
 import {TableModule} from "primeng/table";
 import { FileSendComponent } from './file-send/file-send.component';
@@ -52,6 +54,7 @@ import {MessageService} from "primeng/api";
 import {MessageServiceExt} from './messages/messageServiceExt';
 import {ListboxModule} from "primeng/listbox";
 import { ProductDeliveryComponent } from './products/product-delivery/product-delivery.component';
+import { BasketStatisticComponent } from './statistic/basket-statistic/basket-statistic.component';
 
 
 
@@ -84,11 +87,13 @@ export function httpExt(backend: XHRBackend, options: RequestOptions, router: Ro
     CustomerAddComponent,
     CustomerEditComponent,
     ProductDeliveryComponent,
+    BasketStatisticComponent,
 
   ],
   imports: [
     BrowserModule,HttpModule,BrowserAnimationsModule,FormsModule,DialogModule,ConfirmDialogModule,PanelMenuModule,
-    PanelModule,ListboxModule,RadioButtonModule,ToastModule,TableModule,FileUploadModule,DataTableModule,SharedModule,FieldsetModule,LightboxModule,OverlayPanelModule,ContextMenuModule, MenuModule,CalendarModule,routing
+    PanelModule,DropdownModule,ListboxModule,RadioButtonModule,ToastModule,TableModule,FileUploadModule,DataTableModule,
+    SharedModule,SpinnerModule,FieldsetModule,LightboxModule,OverlayPanelModule,ContextMenuModule, MenuModule,CalendarModule, routing
   ],
   providers: [ {
     provide: HttpService, useFactory: (httpExt) , deps: [XHRBackend, RequestOptions,Router,MessageService]},

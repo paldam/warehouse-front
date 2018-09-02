@@ -43,7 +43,16 @@ export class ProductsService {
   }
 
 
+  changeStock(id: number , value: number): Observable<Response> {
 
+    console.log("22 FAZA "+id + value)
+
+    return this.http.post(this.baseUrl+`/product/stock/`,null,{
+      params: {
+        productId: id,
+        addValue: value
+      }} )
+  }
 
   getProductsToOrder(startDate , endDate): Observable<any[]> {
     return this.http.get(this.baseUrl+`/orders/products_to_order/daterange?startDate=${startDate}&endDate=${endDate}`)

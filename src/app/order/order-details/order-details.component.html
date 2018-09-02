@@ -5,8 +5,23 @@
       <div class="customer_data_form col-md-6">
         <p-panel header="Dane osoby zamawiającej">
 
-          <!--<button class="btn bg-primary text" (click)="op.show($event,popup_frame)">Wybierz klienta</button>-->
-          <!--<button class="btn bg-primary text"  (click)="cleanForm(form,formAdidtional)">Wyczyść</button>-->
+
+
+
+
+
+          <div  class="form-group">
+            <small id="addressDesc" class="text-muted">Wybierz Adres</small>
+            <select class="form-control" [compareWith]="compareAddress" [(ngModel)]="order.address" name="address2" #address2="ngModel" required  >
+              <option  *ngFor="let a of order.customer.addresses" [ngValue]="a">{{a.address +" "+ a.cityName +" "+ a.zipCode}}</option>
+            </select>
+            <ul class="text-danger list-unstyled" *ngIf="address2.dirty|| formSubmitted">
+              <li  *ngIf="address2.errors?.required">Wybierz adres z listy</li>
+            </ul>
+          </div>
+
+
+
 
           <div class="form-group">
             <form id="OrderForm" novalidate #form="ngForm" >
@@ -28,35 +43,6 @@
                 </div>
               </div>
 
-              <div class="form-group">
-                <div class="input-group">
-                  <input type="text" name="address" #address="ngModel" class="form-control"  size="300" aria-describedby="streetDesc" [readonly]="authenticationService.isUser() || authenticationService.isSuperUser()" [(ngModel)]="order.address.address" disabled >
-                  <span class="input-group-addon" id="streetDesc">Ulica / nr. lokalu</span>
-                </div>
-                <ul class="text-danger list-unstyled" *ngIf="address.dirty|| formSubmitted">
-                  <li  *ngIf="address.errors?.required">To pole nie może być puste</li>
-                </ul>
-              </div>
-
-              <div class="form-group">
-                <div class="input-group">
-                  <input type="text" name="zip_code" #zip_code="ngModel" class="form-control"  size="300" aria-describedby="zip_codeDesc" [readonly]="authenticationService.isUser() || authenticationService.isSuperUser()" [(ngModel)]="order.address.zipCode" disabled >
-                  <span class="input-group-addon" id="zip_codeDesc">Kod pocztowy</span>
-                </div>
-                <ul class="text-danger list-unstyled" *ngIf="zip_code.dirty|| formSubmitted">
-                  <li  *ngIf="zip_code.errors?.required">To pole nie może być puste</li>
-                </ul>
-              </div>
-
-              <div class="form-group">
-                <div class="input-group">
-                  <input type="text" name="city_name" #city_name="ngModel" class="form-control"  size="300" aria-describedby="city_nameDesc" [readonly]="authenticationService.isUser() || authenticationService.isSuperUser()" [(ngModel)]="order.address.cityName" disabled>
-                  <span class="input-group-addon" id="city_nameDesc">Miejscowość</span>
-                </div>
-                <ul class="text-danger list-unstyled" *ngIf="city_name.dirty|| formSubmitted">
-                  <li  *ngIf="city_name.errors?.required">To pole nie może być puste</li>
-                </ul>
-              </div>
 
               <div class="form-group">
                 <div class="input-group">
@@ -140,10 +126,10 @@
             <div class="form-group">
               <div class="input-group">
                 <input type="date" name="delivery_date"   class="form-control" #delivery_date="ngModel" [(ngModel)]="order.deliveryDate" [readonly]="authenticationService.isUser() || authenticationService.isSuperUser()" aria-describedby="delivery_dateDesc" required>
-                <span class="input-group-addon" id="taxDesc">Data dostawy</span>
+                <span class="input-group-addon" id="taxDesc">Data wysyłki</span>
               </div>
               <ul class="text-danger list-unstyled" *ngIf="delivery_date.dirty|| formSubmitted">
-                <li  *ngIf="delivery_date.errors?.required">Wprowadz planowaną datę dostawy</li>
+                <li  *ngIf="delivery_date.errors?.required">Wprowadz planowaną datę wysyłki</li>
               </ul>
             </div>
 
@@ -260,6 +246,7 @@
           </ng-template>
 
         </p-column>
+        <p-column field="season" header="Sezon" [sortable]="true" ></p-column>
         <ng-template let-basket pTemplate="rowexpansion">
           <div class="basket_products_info">
             Zawartość kosza:  {{basket.basketName}}

@@ -1,10 +1,12 @@
-import {Component, OnInit, ViewEncapsulation} from '@angular/core';
+import {Component, ElementRef, OnInit, ViewChild, ViewEncapsulation} from '@angular/core';
 import {Order} from '../../model/order.model';
 import {OrderService} from '../order.service';
 import {ActivatedRoute, Router, RoutesRecognized} from "@angular/router";
 import {ConfirmationService} from "primeng/primeng";
 import {AuthenticationService} from "../../authentication.service";
 import {filter, pairwise} from "rxjs/internal/operators";
+import {FileSendService} from "../../file-send/file-send.service";
+import {OrderItem} from "../../model/order_item";
 
 @Component({
     selector: 'order',
@@ -15,60 +17,69 @@ import {filter, pairwise} from "rxjs/internal/operators";
 
 export class OrderComponent implements OnInit {
     public loading: boolean= false;
-    public orders: Order[]=[];
+    public orders: any[]=[];
     public lastVisitedPageOrder: number ;
     public findInputtextOrder: string = "";
     public isCurrentPageCustomerEdit : boolean = false;
     public currentCustomerOnCustomerEditPage : number;
+    public SelectedRowOrderItems: OrderItem[]=[];
+    @ViewChild('onlyWithAttach') el:ElementRef;
 
     constructor(private orderService :OrderService,private router: Router,private confirmationService: ConfirmationService,
-                private authenticationService: AuthenticationService, activeRoute: ActivatedRoute) {
+                private authenticationService: AuthenticationService, activeRoute: ActivatedRoute, fileSendService :FileSendService) {
 
-        this.isCurrentPageCustomerEdit = router.url.substring(0,9) == "/customer";
+        this.isCurrentPageCustomerEdit = router.url.substring(0, 9) == "/customer";
+
+
+        if (this.isCurrentPageCustomerEdit) {
+            orderService.getOrderByCustomer(activeRoute.snapshot.params["id"]).subscribe(data => {
+                this.orders = data;
+                this.currentCustomerOnCustomerEditPage = activeRoute.snapshot.params["id"];
+            })
 
 
 
-        if ( this.isCurrentPageCustomerEdit){
-            orderService.getOrderByCustomer(activeRoute.snapshot.params["id"]).subscribe(data=>{
-                this.orders=data;
-                this.currentCustomerOnCustomerEditPage=activeRoute.snapshot.params["id"];
-
-             } )
-
-        }else{
-            orderService.getOrders().subscribe(data=> this.orders=data);
+        } else {
+            orderService.getOrdersDto().subscribe(data => this.orders = data);
         }
 
         this.router.events
             .pipe(filter((e: any) => e instanceof RoutesRecognized),
                 pairwise()
             ).subscribe((e: any) => {
-            let previousUrlTmp = e[0].urlAfterRedirects ;
+            let previousUrlTmp = e[0].urlAfterRedirects;
 
-            if (previousUrlTmp.search('/order')==-1) {
+            if (previousUrlTmp.search('/order') == -1) {
                 localStorage.removeItem('findInputtextOrder');
                 localStorage.removeItem('lastPageOrder');
-            }else{
+            } else {
             }
 
         });
 
 
-        if (localStorage.getItem('findInputtextOrder')){
+        if (localStorage.getItem('findInputtextOrder')) {
             this.findInputtextOrder = (localStorage.getItem('findInputtextOrder'));
-        }else{
+        } else {
             this.findInputtextOrder = "";
         }
+
+
+
     }
 
     refreshData() {
+
+        console.log(JSON.stringify(this.orders));
+
+
         this.loading = true;
         setTimeout(() => {
             if(this.isCurrentPageCustomerEdit){
                 this.orderService.getOrderByCustomer(this.currentCustomerOnCustomerEditPage).subscribe(data=> this.orders=data);
 
             }else{
-                this.orderService.getOrders().subscribe(data=> this.orders=data);
+                this.orderService.getOrdersDto().subscribe(data=> this.orders=data);
             }
 
             this.loading = false;
@@ -164,6 +175,31 @@ export class OrderComponent implements OnInit {
         }else{
             return {'color': 'black'};
         }
+
+    }
+
+    clickOnlyWithAtttach(){
+
+        if (this.el.nativeElement.checked){
+
+             let fillteredOrderList =   this.orders.filter(function(data){
+                    return data.dbFileId > 0;
+                });
+                this.orders = fillteredOrderList;
+
+
+        }else{
+            this.orderService.getOrdersDto().subscribe(data => this.orders = data);
+        }
+
+    }
+
+    rowExpand(event){
+
+
+        this.orderService.getOrder(event.data.orderId).subscribe(data=>{
+            this.SelectedRowOrderItems = data.orderItems;
+        })
 
     }
 

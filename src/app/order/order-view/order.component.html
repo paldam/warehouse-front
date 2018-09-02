@@ -6,18 +6,27 @@
             </span>
         <input #gb type="text" class="form-control search_input" pInputText size="50" placeholder="Szukaj"aria-describedby="basic-addon1" [(ngModel)]="findInputtextOrder">
 
+        <div class="onlyWithAttach form-check">
+            <label class="form-check-label">
+                <input #onlyWithAttach type="checkbox" class="form-check-input" name=""  (click)="clickOnlyWithAtttach()" >
+                Tylko z załącznikami
+            </label>
+        </div>
+
+
         <i class="fa fa-refresh pull-right refresh_icon fa-2x" aria-hidden="true" (click)="refreshData()"></i>
     </div>
 
     <p-dataTable [value]="orders" [rows]="20" [paginator]="true" [globalFilter]="gb" #dt
-                 [loading]="loading" loadingIcon="fa-circle-o-notch" expandableRows="true" [(first)]="lastVisitedPageOrder">
+                 [loading]="loading" loadingIcon="fa-circle-o-notch" expandableRows="true" [(first)]="lastVisitedPageOrder"
+                 (onRowExpand)="rowExpand($event)">
         <p-header>Lista Zamówień</p-header>
-        <p-column expander="true" header="Zawartość" styleClass="col-icon " [style]="{'width':'70px'}"></p-column>
-        <p-column  header="lp."   [style]="{'width':'70px'}">
-            <ng-template let-i="rowIndex" pTemplate="rowexpansion">
-                {{i+1}}
-            </ng-template>
-        </p-column>
+        <p-column expander="true" header="" styleClass="col-icon " [style]="{'width':'40px'}"></p-column>
+        <!--<p-column  header="lp."   [style]="{'width':'70px'}">-->
+            <!--<ng-template let-i="rowIndex" pTemplate="rowexpansion">-->
+                <!--{{i+1}}-->
+            <!--</ng-template>-->
+        <!--</p-column>-->
         <p-column field="orderFvNumber" header="Numer FV" [sortable]="true" ></p-column>
         <p-column field="orderDate" header="Data zamówienia" [sortable]="true">
             <ng-template let-row="rowData" pTemplate="body"  >
@@ -58,18 +67,26 @@
 
         <p-column field="deliveryType.deliveryTypeName" header="Rodzaj dostawy" ></p-column>
 
-        <p-column class="action_col"  field="orders" header="Akcja" styleClass="action_col">
-            <ng-template let-order="rowData" let-i="rowIndex" pTemplate="body">
-                <i class="fa fa-pencil-square-o fa-2x" aria-hidden="true"  title="Edytuj zamówienie" (click)="goToEditPage(i+1,order.orderId)"></i>
-                <i *ngIf="authenticationService.isAdmin()" class="fa fa-trash fa-2x edit_icon" aria-hidden="true" title="Usuń zamówienie" (click)="ShowConfirmModal(order)"></i>
-                <i class="fa fa-print fa-2x " aria-hidden="true" title="Drukuj zamówienie" (click)="printPdf(order.orderId)" ></i>
-                <i class="fa fa-print fa-2x " aria-hidden="true" title="Drukuj potwierdzenie odbioru" (click)="printConfirmationPdf(order.orderId)" ></i>
 
+        <p-column class="attach_col" field="dbFileId"   [sortable]="true" header="Z" styleClass="attach_col">
+            <ng-template let-row="rowData"  pTemplate="body">
+
+                <span *ngIf="row.dbFileId!=0"> <i class="fa fa-2x fa-paperclip" aria-hidden="true"></i></span>
             </ng-template>
         </p-column>
 
+        <p-column class="action_col"  field="orders" header="Akcja" styleClass="action_col">
+        <ng-template let-order="rowData" let-i="rowIndex" pTemplate="body">
+            <i class="fa fa-pencil-square-o fa-2x" aria-hidden="true"  title="Edytuj zamówienie" (click)="goToEditPage(i+1,order.orderId)"></i>
+            <i *ngIf="authenticationService.isAdmin()" class="fa fa-trash fa-2x edit_icon" aria-hidden="true" title="Usuń zamówienie" (click)="ShowConfirmModal(order)"></i>
+            <i class="fa fa-print fa-2x " aria-hidden="true" title="Drukuj zamówienie" (click)="printPdf(order.orderId)" ></i>
+            <i class="fa fa-print fa-2x " aria-hidden="true" title="Drukuj potwierdzenie odbioru" (click)="printConfirmationPdf(order.orderId)" ></i>
 
-        <ng-template let-orders pTemplate="rowexpansion">
+        </ng-template>
+    </p-column>
+
+
+        <ng-template let-orders pTemplate="rowexpansion" >
             <div class="basket_products_info">
                 <p>Pozycje zamówienia</p>
                 <table class="product_tab" >
@@ -81,7 +98,7 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <tr class="product_tab_row" *ngFor="let i of orders.orderItems">
+                    <tr class="product_tab_row" *ngFor="let i of SelectedRowOrderItems">
                         <td>{{i.basket.basketName}}</td>
                         <td>{{i.quantity}}</td>
 

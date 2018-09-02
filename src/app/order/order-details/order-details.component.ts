@@ -15,6 +15,8 @@ import {File} from "../../model/file";
 import {FileSendService} from "../../file-send/file-send.service";
 import {TOKEN, TOKEN_USER} from '../../authentication.service';
 import {MenuItem} from "primeng/api";
+import {Address} from "../../model/address.model";
+import {MessageServiceExt} from "../../messages/messageServiceExt";
 
 @Component({
   selector: 'order-details',
@@ -44,7 +46,9 @@ export class OrderDetailsComponent implements OnInit {
   @ViewChild(FileUpload) fileUploadElement: FileUpload;
 
 
-  constructor(private confirmationService: ConfirmationService,private fileSendService: FileSendService,private basketService : BasketService,private orderService : OrderService,activeRoute: ActivatedRoute, private  router: Router,public authenticationService: AuthenticationService) {
+  constructor(private confirmationService: ConfirmationService,private fileSendService: FileSendService,
+              private basketService : BasketService,private orderService : OrderService,activeRoute: ActivatedRoute,
+              private  router: Router,public authenticationService: AuthenticationService, private messageServiceExt : MessageServiceExt) {
 
       this.orderId= activeRoute.snapshot.params["id"];
 
@@ -83,6 +87,10 @@ export class OrderDetailsComponent implements OnInit {
   compareDeliveryType( optionOne : DeliveryType, optionTwo : DeliveryType) : boolean {
     return optionTwo && optionTwo ? optionOne.deliveryTypeId === optionTwo.deliveryTypeId :optionOne === optionTwo;
 }
+
+    compareAddress( optionOne : Address, optionTwo : Address) : boolean {
+        return optionTwo && optionTwo ? optionOne.addressId=== optionTwo.addressId :optionOne === optionTwo;
+    }
     compareOrderStatus( optionOne : OrderStatus, optionTwo : OrderStatus) : boolean {
         console.log(optionOne + '' + optionTwo);
         return optionTwo && optionTwo ? optionOne.orderStatusId === optionTwo.orderStatusId :optionOne === optionTwo;
@@ -107,11 +115,21 @@ export class OrderDetailsComponent implements OnInit {
 
           this.fileUploadElement.url = "http://145.239.92.96:8080/uploadfiles?orderId="+ this.orderId;  // PrimeNg fileUpload component
           this.fileUploadElement.upload();
-          this.router.navigateByUrl('/orders');
 
-    },error2 => {
-      console.log("error");
-    })
+
+
+
+          setTimeout(() => {
+              this.router.navigateByUrl('/orders');
+              this.messageServiceExt.addMessageWithTime('success', 'Status', 'Dokonano edycji zamówienia',5000);
+          }, 400);
+
+
+
+      },error => {
+          this.messageServiceExt.addMessage('error', 'Błąd', "Status: " + error.status + ' ' + error.statusText);
+
+      })
   }
 
     addBasketToOrder(basket: Basket){

@@ -1,0 +1,28 @@
+.capacity_col{
+    width: 100px;
+}
+.price_col{
+    width: 90px;
+}
+.add_col{
+    width: 130px;
+}
+.stock_col{
+    width: 50px;
+    text-align: center;
+}
+.date_col{
+    width: 140px;
+}
+.deliver_col{
+    width: 170px;
+}
+.plusic{
+    position: relative;
+    left: 11px;
+    top: 5px;
+}
+
+.ddd{
+    background-color:palegreen !important;
+}

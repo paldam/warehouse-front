@@ -41,6 +41,13 @@ export class FileSendService {
 
     }
 
+    getFileDto() : Observable<Response>{
+
+        return this.http.get(this.baseUrl + `/orderfiledto`)
+            .map((response: Response) => response.json());
+
+    }
+
 
 
 }

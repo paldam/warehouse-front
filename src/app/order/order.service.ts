@@ -8,6 +8,7 @@ import {OrderStatus} from "../model/OrderStatus";
 import {HttpService} from "../http-service";
 import {TOKEN_USER} from "../authentication.service";
 import {File} from "../model/file";
+import {OrderItem} from "../model/order_item";
 @Injectable()
 export class OrderService {
 
@@ -42,6 +43,13 @@ export class OrderService {
                 response.json());
     }
 
+
+    getOrderItems(id: number): Observable<OrderItem>{
+        return this.http.get(this.baseUrl+`/order/${id}`)
+            .map((response: Response) =>
+                response.json());
+    }
+
     getOrderByCustomer(id: number): Observable<Order[]>{
     return this.http.get(this.baseUrl+`/order/customer/${id}`)
         .map((response: Response) =>
@@ -49,7 +57,19 @@ export class OrderService {
     }
 
     getOrders(): Observable<Order[]>{
-        return this.http.get(this.baseUrl+`/orders/`)
+    return this.http.get(this.baseUrl+`/orders/`)
+        .map((response: Response) =>
+            response.json());
+}
+
+    getOrdersDto(): Observable<any[]>{
+        return this.http.get(this.baseUrl+`/orderdao/`)
+            .map((response: Response) =>
+                response.json());
+    }
+
+    getOrdersWithAttach(): Observable<Order[]>{
+        return this.http.get(this.baseUrl+`/orderswithattch/`)
             .map((response: Response) =>
                 response.json());
     }

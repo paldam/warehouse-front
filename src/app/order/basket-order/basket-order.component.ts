@@ -199,12 +199,11 @@ export class BasketOrderComponent implements OnInit {
 
             this.orderService.saveOrder(this.order).subscribe(data=>{
 
-                    console.log(JSON.stringify(this.order));
                     this.generatedOrderId  = data.orderId;
                     this.cleanAfterSave(form,formAdidtional);
                     this.recalculate();
 
-                    this.fileUploadElement.url = "http://http://145.239.92.96:8080/uploadfiles?orderId="+ data.orderId;
+                    this.fileUploadElement.url = "http://145.239.92.96:8080/uploadfiles?orderId="+ data.orderId;
                     this.fileUploadElement.upload();
 
 
@@ -213,8 +212,9 @@ export class BasketOrderComponent implements OnInit {
                     this.customerService.getCustomers().subscribe(data=> this.customers = data);
 
                     },
-                    err =>  {
-                     console.log("Wystąpił błąd " );
+                error =>  {
+                        this.messageServiceExt.addMessage('error', 'Błąd', "Status: " + error.status + ' ' + error.statusText);
+
                     }
             );
         }
@@ -223,6 +223,9 @@ export class BasketOrderComponent implements OnInit {
     setUpOrderBeforeSave(){
         this.order.orderTotalAmount = this.total;
         this.order.orderItems = this.orderItems;
+
+
+
 
 
         this.order.customer = this.selectedCustomer;

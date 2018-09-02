@@ -38,6 +38,12 @@ export class BasketService {
             .map((response: Response) => response.json());
     }
 
+    getNumberOfBasketOrdered(startDate , endDate): Observable<any[]> {
+        return this.http.get(this.baseUrl+`/baskets/statistic/daterange?startDate=${startDate}&endDate=${endDate}`)
+            .map((response: Response) =>
+                response.json());
+    }
+
     getBasketsTypes(): Observable<BasketType[]> {
         return this.http.get(this.baseUrl+`/baskets/types`)
             .map((response: Response) => response.json());

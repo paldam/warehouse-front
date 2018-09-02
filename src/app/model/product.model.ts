@@ -10,7 +10,8 @@ export class Product{
         public price?: number,
         public stock?: number,
         public isArchival?: number,
-        public supplier?: Supplier
+        public supplier?: Supplier,
+        public lastStockEditDate? :Date
     ) {
     }
 }

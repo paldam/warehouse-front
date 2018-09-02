@@ -1,3 +1,4 @@
+
 <div class="order_summary col-12">
   <p-fieldset legend="Dostawa produktów" [toggleable]="true">
 
@@ -12,11 +13,11 @@
 
 
     <p-dataTable [value]="productsBySupplier" [rows]="20" [editable]="true" (onEditComplete)="updateStockRow($event)" [paginator]="true" [globalFilter]="gb" #dt
-                 [loading]="loading" loadingIcon="fa-circle-o-notch"  >
+                 [loading]="loading" loadingIcon="fa-circle-o-notch" [rowStyleClass]="getRowStyle" sortField="lastStockEditDate" sortOrder="-1" >
       <p-header>Lista Produktów</p-header>
 
 
-      <p-column  header="lp."   [style]="{'width':'70px'}">
+      <p-column  header="lp."   [style]="{'width':'30px'}">
         <ng-template let-row="rowData" let-i="rowIndex" pTemplate="rowexpansion">
           {{i+1}}
         </ng-template>
@@ -31,9 +32,19 @@
         </ng-template>
       </p-column>
 
-      <p-column field="stock" [editable]=true  styleClass="stock_col" header="Stan"  [sortable]="true" >
+      <p-column field="add"   styleClass="add_col" header="Dodaj"  [sortable]="true" >
         <ng-template let-row="rowData" pTemplate="body" type="number">
-          {{row.stock}} szt.
+                       <p-spinner size="4" [(ngModel)]="row.add" [min]="0"></p-spinner><i class="plusic fa fa-2x fa-plus-circle" aria-hidden="true" (click)="addToStock(row.id, row.add)"> </i>
+        </ng-template>
+
+      </p-column>
+      <p-column field="stock" styleClass="stock_col" header="Stan" [editable]=true [sortable]="true" ></p-column>
+
+
+      <p-column field="lastStockEditDate" styleClass="date_col" header="Modyfikacja"  [sortable]="true" >
+
+        <ng-template let-row="rowData" pTemplate="body"  >
+          {{row.lastStockEditDate| date: 'dd/MM/yyyy HH:MM:ss'}}
         </ng-template>
 
       </p-column>

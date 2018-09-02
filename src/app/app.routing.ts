@@ -14,12 +14,13 @@ import {AdminComponent} from "./admin/admin.component";
 import {AdminGuard} from "./admin.guard";
 import {AdminOrSuperUserGuard} from "./adminOrSuperUser.guard";
 import {MapsComponent} from "./maps/maps.component";
-import {StatisticComponent} from "./statistic/statistic.component";
+import {StatisticComponent} from "./statistic/products-statistic/statistic.component";
 import {FileSendComponent} from "./file-send/file-send.component";
 import {CustomerComponent} from "./customer/customer-view/customer.component";
 import {CustomerAddComponent} from "./customer/customer-add/customer-add.component";
 import {CustomerEditComponent} from "./customer/customer-edit/customer-edit.component";
 import {ProductDeliveryComponent} from "./products/product-delivery/product-delivery.component";
+import {BasketStatisticComponent} from "./statistic/basket-statistic/basket-statistic.component";
 const routes: Routes = [
     {path: '', component: ProductsComponent, pathMatch: 'full', canActivate: [AuthGuard,AdminOrSuperUserGuard]},
     { path: 'product', component: ProductsComponent, canActivate: [AuthGuard,AdminOrSuperUserGuard] },
@@ -33,7 +34,8 @@ const routes: Routes = [
     {path:   'order/:id', component:OrderDetailsComponent, canActivate: [AuthGuard]},
     {path:   'admin', component: AdminComponent,canActivate: [AuthGuard,AdminGuard]},
     {path:   'maps', component: MapsComponent,canActivate: [AuthGuard,AdminGuard]},
-    {path:   'statistics', component: StatisticComponent,canActivate: [AuthGuard,AdminGuard]},
+    {path:   'statistics/products', component: StatisticComponent,canActivate: [AuthGuard,AdminGuard]},
+    {path:   'statistics/basket', component: BasketStatisticComponent,canActivate: [AuthGuard,AdminGuard]},
     {path:   'login', component: LoginComponent},
     {path:   'file', component: FileSendComponent},
     {path:   'customer', component: CustomerComponent},
