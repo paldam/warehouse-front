@@ -7,6 +7,7 @@ import {AuthenticationService} from "../../authentication.service";
 import {filter, pairwise} from "rxjs/internal/operators";
 import {FileSendService} from "../../file-send/file-send.service";
 import {OrderItem} from "../../model/order_item";
+import {MessageServiceExt} from "../../messages/messageServiceExt";
 
 @Component({
     selector: 'order',
@@ -23,10 +24,14 @@ export class OrderComponent implements OnInit {
     public isCurrentPageCustomerEdit : boolean = false;
     public currentCustomerOnCustomerEditPage : number;
     public SelectedRowOrderItems: OrderItem[]=[];
-    @ViewChild('onlyWithAttach') el:ElementRef;
+    public printDeliveryConfirmationPdFSettings: boolean = false;
+    public selectedToPrintOrder : Order = new Order();
+    public selectedToPrintOrderItems : OrderItem[]=[];
+    @ViewChild('onlyWithAttach') el:ElementRef
 
     constructor(private orderService :OrderService,private router: Router,private confirmationService: ConfirmationService,
-                private authenticationService: AuthenticationService, activeRoute: ActivatedRoute, fileSendService :FileSendService) {
+                private authenticationService: AuthenticationService, activeRoute: ActivatedRoute, fileSendService :FileSendService,
+    private  messageServiceExt: MessageServiceExt ) {
 
         this.isCurrentPageCustomerEdit = router.url.substring(0, 9) == "/customer";
 
@@ -118,14 +123,6 @@ export class OrderComponent implements OnInit {
     )
 }
 
-    printConfirmationPdf(id : number){
-        this.orderService.getConfirmationPdf(id).subscribe(res=>{
-                var fileURL = URL.createObjectURL(res);
-                window.open(fileURL);
-
-            }
-        )
-    }
 
     ShowConfirmModal(order: Order) {
 
@@ -201,6 +198,32 @@ export class OrderComponent implements OnInit {
             this.SelectedRowOrderItems = data.orderItems;
         })
 
+    }
+
+
+    showPrintOrderDeliveryConfirmationWindows(orderId : number){
+
+        this.printDeliveryConfirmationPdFSettings = true;
+
+        this.orderService.getOrder(orderId).subscribe(data=>{
+            this.selectedToPrintOrder = data;
+        })
+
+    }
+
+    printConfirmationPdf(){
+
+
+        this.orderService.getConfirmationPdf(this.selectedToPrintOrder.orderId, this.selectedToPrintOrder.orderItems).subscribe(res=>{
+                var fileURL = URL.createObjectURL(res);
+                window.open(fileURL);
+                this.printDeliveryConfirmationPdFSettings = false;
+
+            },error =>{
+                this.messageServiceExt.addMessage('error', 'Błąd przy generowaniu wydruku', "Status: " + error.status + ' ' + error.statusText);
+
+            }
+        )
     }
 
 }

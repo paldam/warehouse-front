@@ -80,7 +80,7 @@
             <i class="fa fa-pencil-square-o fa-2x" aria-hidden="true"  title="Edytuj zamówienie" (click)="goToEditPage(i+1,order.orderId)"></i>
             <i *ngIf="authenticationService.isAdmin()" class="fa fa-trash fa-2x edit_icon" aria-hidden="true" title="Usuń zamówienie" (click)="ShowConfirmModal(order)"></i>
             <i class="fa fa-print fa-2x " aria-hidden="true" title="Drukuj zamówienie" (click)="printPdf(order.orderId)" ></i>
-            <i class="fa fa-print fa-2x " aria-hidden="true" title="Drukuj potwierdzenie odbioru" (click)="printConfirmationPdf(order.orderId)" ></i>
+            <i class="fa fa-file-pdf-o fa-2x " aria-hidden="true" title="Drukuj potwierdzenie odbioru" (click)="showPrintOrderDeliveryConfirmationWindows(order.orderId)" ></i>
 
         </ng-template>
     </p-column>
@@ -114,3 +114,24 @@
     </p-dataTable>
 </div>
 <p-confirmDialog header="Usuwanie produktu" icon="fa fa-question-circle" width="425"></p-confirmDialog>
+
+<p-dialog header="Wybierz pozycje do wydruku:" closeOnEscape="false" modal="true" width="600" [(visible)]="printDeliveryConfirmationPdFSettings"  >
+
+
+
+    <p-dataTable [value]="selectedToPrintOrder.orderItems" [rows]="20"   [paginator]="true"  #dt [loading]="loading" loadingIcon="fa-circle-o-notch"  >
+
+        <p-column field="basket.basketName" styleClass="nazwa" header="Nazwa kosza"></p-column>
+
+        <p-column field="quantity"   styleClass="quantity_col" header="Ilość"   >
+            <ng-template let-row="rowData" pTemplate="body" type="number">
+                <p-spinner size="4" [(ngModel)]="row.quantity" [min]="0"></p-spinner>
+            </ng-template>
+
+        </p-column>
+    </p-dataTable>
+
+
+    <button type="button" (click)="printConfirmationPdf()" class="btn btn-primary"> Drukuj potwierzenie</button>
+
+</p-dialog>

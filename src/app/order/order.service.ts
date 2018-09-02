@@ -82,11 +82,23 @@ export class OrderService {
 
 }
 
-    getConfirmationPdf(id: number): any {
-        return this.http.get(this.baseUrl + `/order/deliverypdf/${id}`,{ responseType: ResponseContentType.Blob })
-            .map(res => {
-                return new Blob([res.blob()], { type: 'application/pdf' })
-            })
+    getConfirmationPdf(id: number, orderItems?: OrderItem[]): any {
+
+        if(orderItems){
+            return this.http.post(this.baseUrl + `/order/deliverypdfwithmodyfication/${id}`,orderItems,{ responseType: ResponseContentType.Blob })
+                .map(res => {
+                    return new Blob([res.blob()], { type: 'application/pdf' })
+                })
+
+        }else {
+
+            return this.http.get(this.baseUrl + `/order/deliverypdf/${id}`,{ responseType: ResponseContentType.Blob })
+                .map(res => {
+                    return new Blob([res.blob()], { type: 'application/pdf' })
+                })
+        }
+
+
 
     }
 
