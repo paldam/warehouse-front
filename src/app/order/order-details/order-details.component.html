@@ -277,6 +277,34 @@
     </p-fieldset>
   </div>
 
+<div *ngIf="authenticationService.isAdmin()" >
+
+  <p-fieldset legend="Lista Edycji zamówienia" [toggleable]="true"  [collapsed]="true">
+
+
+    <p-dataTable [value]="auditList" [rows]="20" [paginator]="true"
+                 [loading]="loading" loadingIcon="fa-circle-o-notch">
+      <p-column  header="lp."  [style]="{'width':'70px'}">
+        <ng-template let-i="rowIndex" pTemplate="rowexpansion">
+          {{i+1}}
+        </ng-template>
+      </p-column>
+      <p-column field="changeDate" header="Data zmiany" [sortable]="true">
+        <ng-template let-row="rowData" pTemplate="body"  >
+          {{row.changeDate| date: 'dd/MM/yyyy HH:mm:ss'}}
+        </ng-template>
+      </p-column>
+      <p-column field="userName" header="Użytkownik"  ></p-column>
+
+
+    </p-dataTable>
+
+
+
+  </p-fieldset>
+
+
+</div>
 
 
 

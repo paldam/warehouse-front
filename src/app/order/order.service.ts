@@ -50,6 +50,13 @@ export class OrderService {
                 response.json());
     }
 
+
+    getOrderAudit(id: number): Observable<any>{
+        return this.http.get(this.baseUrl+`/order/audit/${id}`)
+            .map((response: Response) =>
+                response.json());
+    }
+
     getOrderByCustomer(id: number): Observable<Order[]>{
     return this.http.get(this.baseUrl+`/order/customer/${id}`)
         .map((response: Response) =>

@@ -171,6 +171,7 @@ export class BasketOrderComponent implements OnInit {
     }
 
     showCustomerList() {
+        this.addressToAdd.cityName = null;
         this.customerPickDialogShow = true;
         this.isAddressesOptionVisable = true;
         this.storedCustomerMode = true;
@@ -185,6 +186,8 @@ export class BasketOrderComponent implements OnInit {
         formAdidtional.resetForm();
         this.order= new Order();
         this.selectedCustomer= new Customer();
+        this.addressToAdd.cityName = null;
+        this.addressToAdd.zipCode = null;
         this.isReadOnlyProp= false;
         this.formSubmitted = false;
         this.isAddressesOptionVisable = false;
@@ -284,6 +287,8 @@ export class BasketOrderComponent implements OnInit {
 
     ZipCodeUtil(zipCode: string) {
 
+
+
         if (this.el.valid) {
             this.pickCityByZipCodeWindow = true;
             this.customerService.getCityByZipCode(zipCode).subscribe(data => {
@@ -299,6 +304,7 @@ export class BasketOrderComponent implements OnInit {
 
     selectCity(city: string) {
         this.addressToAdd.cityName = city;
+        this.selectedCustomerAddress.cityName = city;
         this.tmpCityList = [];
         this.pickCityByZipCodeWindow = false;
     }
@@ -339,6 +345,10 @@ export class BasketOrderComponent implements OnInit {
     }
     cancelAddAddr(){
         this.addAddressDialogShow=false;
+        this.addressToAdd.cityName = null;
+        this.addressToAdd.zipCode =null;
+        this.selectedCustomerAddress.zipCode = null;
+        this.selectedCustomerAddress.cityName = null;
     }
 
     onBeforeUpload(event){

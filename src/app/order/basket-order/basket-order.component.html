@@ -152,13 +152,18 @@
 
                             <div *ngIf="!storedCustomerMode" class="form-group">
                                 <div class="input-group">
-                                    <input type="text" name="zip_code" #zip_code="ngModel" class="form-control"  size="300" aria-describedby="zip_codeDesc" [readonly]="isFormReadOnly()" [(ngModel)]="selectedCustomerAddress.zipCode" >
+                                    <input type="text" name="zip_code" #zip_code="ngModel" class="form-control"  size="300" aria-describedby="zip_codeDesc"
+                                           [readonly]="isFormReadOnly()" [(ngModel)]="selectedCustomerAddress.zipCode" required pattern="\d{2}-\d{3}" (keyup)="ZipCodeUtil($event.target.value)"  >
                                     <span class="input-group-addon" id="zip_codeDesc">Kod pocztowy</span>
                                 </div>
                                 <ul class="text-danger list-unstyled" *ngIf="zip_code.dirty|| formSubmitted">
+                                    <li  *ngIf="zip_code.errors?.pattern">Kod musi być w formacie xx-xxx </li>
                                     <li  *ngIf="zip_code.errors?.required">To pole nie może być puste</li>
                                 </ul>
                             </div>
+
+
+
 
                             <div *ngIf="!storedCustomerMode" class="form-group">
                                 <div class="input-group">
@@ -236,7 +241,8 @@
 
                             <div class="form-group">
                                 <div class="input-group">
-                                    <p-calendar [utc]="true"  [locale]="dateLang" dateFormat="dd.mm.yy" name="delivery_date" #delivery_date="ngModel" aria-describedby="delivery_dateDesc" [(ngModel)]="order.deliveryDate" required=""></p-calendar>
+                                    <input type="date" name="delivery_date"   class="form-control" #delivery_date="ngModel" [(ngModel)]="order.deliveryDate"  aria-describedby="delivery_dateDesc" required>
+
                                     <span class="input-group-addon" id="taxDesc">Data wysyłki</span>
                                 </div>
                                 <ul class="text-danger list-unstyled" *ngIf="delivery_date.dirty|| formSubmitted">
@@ -326,7 +332,7 @@
 <p-contextMenu  #cm [model]="items"> </p-contextMenu>
 
 
-<p-dialog modal="true" width="600" [(visible)]="addAddressDialogShow" >
+<p-dialog modal="true" width="600" [(visible)]="addAddressDialogShow"  >
 
 
     <p-panel [header]="'Dodaj adres'"   >

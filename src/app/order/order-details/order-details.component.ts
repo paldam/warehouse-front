@@ -39,6 +39,7 @@ export class OrderDetailsComponent implements OnInit {
   public baskets: Basket[]=[];
   public total: number = 0;
   public fileList: File[]=[];
+    public auditList: any[]=[];
   public orderId :number;
     public items: MenuItem[];
     public selectedBasketOnContextMenu: Basket = new Basket();
@@ -69,7 +70,7 @@ export class OrderDetailsComponent implements OnInit {
       });
       this.basketService.getBaskets().subscribe(data=> this.baskets = data);
 
-
+      this.orderService.getOrderAudit(this.orderId).subscribe(data=> this.auditList = data)
 
   }
 
