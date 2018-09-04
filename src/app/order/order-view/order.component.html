@@ -1,3 +1,5 @@
+<span *ngFor="let i of selectedOrdersId">{{i}}</span>
+
 <div class="products_box">
 
     <div class="input-group search_bar">
@@ -19,7 +21,7 @@
 
     <p-dataTable [value]="orders" [rows]="20" [paginator]="true" [globalFilter]="gb" #dt
                  [loading]="loading" loadingIcon="fa-circle-o-notch" expandableRows="true" [(first)]="lastVisitedPageOrder"
-                 (onRowExpand)="rowExpand($event)">
+                 (onRowExpand)="rowExpand($event)" selectionMode="multiple" [(selection)]="selectedOrdersMultiselction"  dataKey="orderId" [contextMenu]="cm">
         <p-header>Lista Zamówień</p-header>
         <p-column expander="true" header="" styleClass="col-icon " [style]="{'width':'40px'}"></p-column>
         <!--<p-column  header="lp."   [style]="{'width':'70px'}">-->
@@ -135,3 +137,6 @@
     <button type="button" (click)="printConfirmationPdf()" class="btn btn-primary"> Drukuj potwierzenie</button>
 
 </p-dialog>
+
+<p-contextMenu #cm [model]="items"> </p-contextMenu>
+

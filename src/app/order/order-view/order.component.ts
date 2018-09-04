@@ -8,6 +8,7 @@ import {filter, pairwise} from "rxjs/internal/operators";
 import {FileSendService} from "../../file-send/file-send.service";
 import {OrderItem} from "../../model/order_item";
 import {MessageServiceExt} from "../../messages/messageServiceExt";
+import {MenuItem} from "primeng/api";
 
 @Component({
     selector: 'order',
@@ -27,6 +28,8 @@ export class OrderComponent implements OnInit {
     public printDeliveryConfirmationPdFSettings: boolean = false;
     public selectedToPrintOrder : Order = new Order();
     public selectedToPrintOrderItems : OrderItem[]=[];
+    public selectedOrdersMultiselction: Order[]=[];
+    public items: MenuItem[];
     @ViewChild('onlyWithAttach') el:ElementRef
 
     constructor(private orderService :OrderService,private router: Router,private confirmationService: ConfirmationService,
@@ -72,7 +75,30 @@ export class OrderComponent implements OnInit {
 
 
     }
+    ngOnInit() {
 
+
+        setTimeout(() => {
+            if (localStorage.getItem('lastPageOrder')){
+                let tmplastVisitedPage =parseInt(localStorage.getItem('lastPageOrder'));
+                this.lastVisitedPageOrder = (tmplastVisitedPage -1)*20;
+            }else{
+                this.lastVisitedPageOrder = 0;
+            }
+        }, 300);
+
+
+        this.items = [
+            {label: ' Wydrukuj', icon: 'fa fa-print',command: (event) => this.printMultiplePdf()},
+            {label: ' Wydrukuj potwierdzenie', icon: 'fa fa-print',command: (event) => this.printMultipleDeliveryPdf()},
+            {label: ' Wydrukuj komplet ', icon: 'fa fa-window-restore',command: (event) =>{
+                this.printMultipleDeliveryPdf();
+                this.printMultiplePdf();
+            }
+            }
+        ];
+
+    }
     refreshData() {
 
         console.log(JSON.stringify(this.orders));
@@ -91,19 +117,6 @@ export class OrderComponent implements OnInit {
         }, 1000);
     }
 
-    ngOnInit() {
-
-
-        setTimeout(() => {
-        if (localStorage.getItem('lastPageOrder')){
-            let tmplastVisitedPage =parseInt(localStorage.getItem('lastPageOrder'));
-            this.lastVisitedPageOrder = (tmplastVisitedPage -1)*20;
-        }else{
-            this.lastVisitedPageOrder = 0;
-        }
-        }, 300);
-
-    }
 
     goToEditPage(index,id) {
 
@@ -113,6 +126,39 @@ export class OrderComponent implements OnInit {
         localStorage.setItem('findInputtextOrder', textTmp);
         this.router.navigate(["/order/",id]);
     }
+
+    printMultiplePdf(){
+
+
+        let selectedOrdersIds : number[]= [] ;
+        this.selectedOrdersMultiselction.forEach(order=>{
+            selectedOrdersIds.push(order.orderId);
+        })
+
+        this.orderService.getMultiplePdf(selectedOrdersIds).subscribe(res=>{
+
+            var fileURL = URL.createObjectURL(res);
+            window.open(fileURL);
+        })
+    }
+
+
+    printMultipleDeliveryPdf(){
+
+
+        let selectedOrdersIds : number[]= [] ;
+        this.selectedOrdersMultiselction.forEach(order=>{
+            selectedOrdersIds.push(order.orderId);
+        })
+
+        this.orderService.getMultipleConfirmationPdf(selectedOrdersIds).subscribe(res=>{
+
+            var fileURL = URL.createObjectURL(res);
+            window.open(fileURL);
+        })
+    }
+
+
 
     printPdf(id : number){
     this.orderService.getPdf(id).subscribe(res=>{

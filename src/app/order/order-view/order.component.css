@@ -46,3 +46,18 @@
 .fa {
     margin-right: 4px;
 }
+
+.ui-datatable tbody > tr.ui-widget-content.ui-state-highlight {
+    background-color: #d6f2c2 !important;
+    color: black;
+}
+
+body .ui-datatable .ui-datatable-data tr.ui-datatable-even:hover {
+    background-color: #d6f2c2;
+    cursor: pointer;
+}
+
+body .ui-datatable .ui-datatable-data tr.ui-datatable-odd:hover {
+    cursor: pointer;
+    background-color:#d6f2c2;
+}

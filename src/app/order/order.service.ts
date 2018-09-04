@@ -89,6 +89,41 @@ export class OrderService {
 
 }
 
+
+    getMultiplePdf(ids: number[]): any {
+        return this.http.post( this.baseUrl + `/order/multipdf`,null,{
+                params: {
+                    ordersIdList: ids
+                },
+
+                responseType: ResponseContentType.Blob
+                })
+
+            .map(res => {
+                    return new Blob([res.blob()], { type: 'application/pdf' })
+                })
+
+    }
+
+
+    getMultipleConfirmationPdf(ids: number[]): any {
+        return this.http.post( this.baseUrl + `/order/multideliverypdf/`,null,{
+            params: {
+                ordersIdList: ids
+            },
+
+            responseType: ResponseContentType.Blob
+        })
+
+            .map(res => {
+                return new Blob([res.blob()], { type: 'application/pdf' })
+            })
+
+    }
+
+
+
+
     getConfirmationPdf(id: number, orderItems?: OrderItem[]): any {
 
         if(orderItems){
