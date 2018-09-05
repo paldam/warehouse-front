@@ -90,7 +90,7 @@ export class OrderComponent implements OnInit {
 
         this.items = [
             {label: ' Wydrukuj', icon: 'fa fa-print',command: (event) => this.printMultiplePdf()},
-            {label: ' Wydrukuj potwierdzenie', icon: 'fa fa-print',command: (event) => this.printMultipleDeliveryPdf()},
+            {label: ' Wydrukuj potwierdzenie', icon: 'fa fa-file-pdf-o',command: (event) => this.printMultipleDeliveryPdf()},
             {label: ' Wydrukuj komplet ', icon: 'fa fa-window-restore',command: (event) =>{
                 this.printMultipleDeliveryPdf();
                 this.printMultiplePdf();

@@ -41,6 +41,12 @@ export class ProductFormComponent implements OnInit {
         if (form.valid) {
             this.product.price *= 100;
             this.product.isArchival = 0;
+            this.product.tmpStock = 0;
+
+            if (this.product.stock == null) {
+                this.product.stock = 0;
+            }
+
             this.productsService.saveProduct(this.product).subscribe(
                 order => {
                     this.product = new Product();

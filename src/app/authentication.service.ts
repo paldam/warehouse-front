@@ -89,6 +89,55 @@ export class AuthenticationService {
             }
         }
     }
+    isBiuroUser() : boolean {
+        if (localStorage.getItem(TOKEN))  {
+            let authority = jwtHelperService.decodeToken(this.id_token).auth;
+
+            if (authority == "biuro"){
+                return true;
+            }else{
+                return false;
+            }
+        }
+    }
+    isMagazynUser() : boolean {
+        if (localStorage.getItem(TOKEN))  {
+            let authority = jwtHelperService.decodeToken(this.id_token).auth;
+
+            if (authority == "magazyn"){
+                return true;
+            }else{
+                return false;
+            }
+        }
+    }
+
+    isProdukcjaUser() : boolean {
+        if (localStorage.getItem(TOKEN))  {
+            let authority = jwtHelperService.decodeToken(this.id_token).auth;
+
+            if (authority == "produkcja"){
+                return true;
+            }else{
+                return false;
+            }
+        }
+    }
+
+    isWysylkaUser() : boolean {
+        if (localStorage.getItem(TOKEN))  {
+            let authority = jwtHelperService.decodeToken(this.id_token).auth;
+
+            if (authority == "wysylka"){
+                return true;
+            }else{
+                return false;
+            }
+        }
+    }
+
+
+
     isSuperUser() : boolean {
         if (localStorage.getItem(TOKEN))  {
             let authority = jwtHelperService.decodeToken(this.id_token).auth;

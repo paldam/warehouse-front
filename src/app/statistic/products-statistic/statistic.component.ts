@@ -23,6 +23,7 @@ export class StatisticComponent implements OnInit {
   public dateError: boolean = false;
 
 
+
   constructor(private productSerive: ProductsService,private calendarSetingsComponent: CalendarSetingsComponent) {
     productSerive.getSuppliers().subscribe(data=> {
 

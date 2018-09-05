@@ -28,7 +28,7 @@ export class LoginComponent implements OnInit {
     this.authenticationService.login(this.model.username, this.model.password)
         .subscribe(result => {
           if (result === true) {
-              if(this.authenticationService.isUser()){
+              if(this.authenticationService.isAdmin()){
                   this.router.navigate(['/baskets/order']);
               }else{
                   this.router.navigate(['/']);

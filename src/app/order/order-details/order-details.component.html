@@ -12,8 +12,8 @@
 
           <div  class="form-group">
             <small id="addressDesc" class="text-muted">Wybierz Adres</small>
-            <select class="form-control" [compareWith]="compareAddress" [(ngModel)]="order.address" name="address2" #address2="ngModel" required  >
-              <option  *ngFor="let a of order.customer.addresses" [ngValue]="a">{{a.address +" "+ a.cityName +" "+ a.zipCode}}</option>
+            <select class="form-control" [compareWith]="compareAddress" [(ngModel)]="order.address" name="address2" #address2="ngModel" required [disabled]="!authenticationService.isAdmin() && !authenticationService.isBiuroUser()"  >
+              <option   *ngFor="let a of order.customer.addresses" [ngValue]="a" >{{a.address +" "+ a.cityName +" "+ a.zipCode}}</option>
             </select>
             <ul class="text-danger list-unstyled" *ngIf="address2.dirty|| formSubmitted">
               <li  *ngIf="address2.errors?.required">Wybierz adres z listy</li>
@@ -69,7 +69,7 @@
 
             <div class="form-group">
               <small id="fv_numbereDescript" class="text-muted">Numer FV</small>
-              <input type="text" name="fv_number" #fv_number="ngModel"  class="form-control"  [readonly]="authenticationService.isUser() || authenticationService.isSuperUser()" aria-describedby="delivery_dateDesc" required [(ngModel)]="order.orderFvNumber">
+              <input type="text" name="fv_number" #fv_number="ngModel"  class="form-control"  [readonly]="!authenticationService.isAdmin() && !authenticationService.isBiuroUser()" aria-describedby="delivery_dateDesc" required [(ngModel)]="order.orderFvNumber">
               <ul class="text-danger list-unstyled" *ngIf="fv_number.dirty|| formSubmitted">
                 <li  *ngIf="fv_number.errors?.required">Wprowadz numer FV</li>
               </ul>
@@ -80,7 +80,7 @@
             <div class="form-group">
               <div class="form-group">
                 <small id="order_date_Desc" class="text-muted">Data złożenia zamówienia</small>
-                <input type="text" name="order_date" class="form-control"  size="300" aria-describedby="order_date_Desc" [readonly]="isFormReadOnly()" [value]="order.orderDate| date: 'dd/MM/yyyy HH:mm:ss'"  >
+                <input type="text" name="order_date" class="form-control"  size="300" aria-describedby="order_date_Desc" [readonly]="isFormReadOnly() && !authenticationService.isAdmin() && !authenticationService.isBiuroUser()" [value]="order.orderDate| date: 'dd/MM/yyyy HH:mm:ss'"  >
               </div>
             </div>
 
@@ -103,7 +103,7 @@
 
             <div class="form-group">
               <small id="delivery_typeDesc" class="text-muted">Rodzaj dostawy</small>
-              <select [compareWith]="compareDeliveryType" class="form-control" [disabled]="authenticationService.isUser() || authenticationService.isSuperUser()" #delivery_type="ngModel" [(ngModel)]="order.deliveryType" name="delivery_type"  required >
+              <select [compareWith]="compareDeliveryType" class="form-control" [disabled]="!authenticationService.isAdmin() && !authenticationService.isBiuroUser()" #delivery_type="ngModel" [(ngModel)]="order.deliveryType" name="delivery_type"  required >
                 <option *ngFor="let item of deliveryTypes"  [ngValue]="item"  >{{item.deliveryTypeName}}</option>
               </select>
               <ul class="text-danger list-unstyled" *ngIf="delivery_type.dirty|| formSubmitted">
@@ -114,7 +114,7 @@
             <div *ngIf="order.deliveryType?.deliveryTypeId==5 || order.deliveryType?.deliveryTypeId==6 || order.deliveryType?.deliveryTypeId==7">
               <div class="form-group" >
                 <small id="codDescript" class="text-muted">Kwota pobrania</small>
-                <input type="number" name="cod" #cod="ngModel"  class="form-control" size="200"  aria-describedby="codDesc" [readonly]="authenticationService.isUser() || authenticationService.isSuperUser()"  [(ngModel)]="order.cod" pattern="^(?=.*?\d)\d*[.]?\d{1,2}$">
+                <input type="number" name="cod" #cod="ngModel"  class="form-control" size="200"  aria-describedby="codDesc" [readonly]="!authenticationService.isAdmin() && !authenticationService.isBiuroUser()"  [(ngModel)]="order.cod" pattern="^(?=.*?\d)\d*[.]?\d{1,2}$">
               </div>
               <ul class="text-danger list-unstyled" *ngIf="cod?.dirty|| formSubmitted">
                 <li  *ngIf="cod.errors?.pattern">To pole musi zawierać format waluty z kropką np : 0.59 , 2.5 , 0.99 , 19.99</li>
@@ -125,7 +125,7 @@
 
             <div class="form-group">
               <div class="input-group">
-                <input type="date" name="delivery_date"   class="form-control" #delivery_date="ngModel" [(ngModel)]="order.deliveryDate" [readonly]="authenticationService.isUser() || authenticationService.isSuperUser()" aria-describedby="delivery_dateDesc" required>
+                <input type="date" name="delivery_date"   class="form-control" #delivery_date="ngModel" [(ngModel)]="order.deliveryDate" [readonly]="!authenticationService.isAdmin() && !authenticationService.isBiuroUser()" aria-describedby="delivery_dateDesc" required>
                 <span class="input-group-addon" id="taxDesc">Data wysyłki</span>
               </div>
               <ul class="text-danger list-unstyled" *ngIf="delivery_date.dirty|| formSubmitted">
@@ -136,14 +136,14 @@
             <div class="form-group">
               <div class="form-group">
                 <small id="additional_informationDesc" class="text-muted">Dodatkowe informacje</small>
-                <textarea class="form-control" name="additional_information" id="additional_information" rows="3" [readonly]="authenticationService.isUser() || authenticationService.isSuperUser()" [(ngModel)]="order.additionalInformation" ></textarea>
+                <textarea class="form-control" name="additional_information" id="additional_information" rows="3" [readonly]="!authenticationService.isAdmin() && !authenticationService.isBiuroUser()" [(ngModel)]="order.additionalInformation" ></textarea>
               </div>
             </div>
 
 
             <div class="form-group">
               <small id="add_file" class="text-muted">Wgraj plik</small>
-                <p-fileUpload name="files"  multiple="multiple"  maxFileSize="5000000"
+                <p-fileUpload [disabled]="!authenticationService.isAdmin() && !authenticationService.isBiuroUser()" name="files"  multiple="multiple"  maxFileSize="5000000"
                               invalidFileSizeMessageSummary="{0} - plik jest za duży" invalidFileSizeMessageDetail="rozmiar pliku może wynosić maksymalnie {0}"
                               chooseLabel="Wybierz plik" uploadLabel="Wgraj" cancelLabel="Anuluj" (onBeforeSend)="onBeforeUpload($event)" (onUpload)="refreshFileList()" >
 
@@ -156,7 +156,7 @@
                               <tbody>
                                   <tr class="fileLink"  *ngFor="let item of fileList" >
                                     <td (click)="getFile(item.fileId)" >{{item.fileName}}</td>
-                                    <td> <i (click)="ShowConfirmModal(item)" class="fa fa-trash"></i></td>
+                                    <td *ngIf="authenticationService.isAdmin() || authenticationService.isBiuroUser()"> <i (click)="ShowConfirmModal(item)" class="fa fa-trash"></i></td>
                                   </tr>
                               </tbody>
                       </table>
@@ -183,7 +183,7 @@
   </p-fieldset>
 </div>
 
-<div *ngIf="authenticationService.isAdmin()" class="row">
+<div *ngIf="authenticationService.isAdmin() || authenticationService.isBiuroUser()" class="row">
   <div class="picked_products_list col-md-6 ">
     <p-fieldset legend="Pozycje zamówienia" [toggleable]="true">
       <table *ngIf="isBasketLinesEmpty()==false">
@@ -197,7 +197,7 @@
         <tbody>
         <tr *ngFor="let orderItems of orderItems">
           <td scope="row">{{orderItems.basket.basketName}}</td>
-          <td><input type="number" class="form-control" name="" id="" aria-describedby="helpId" placeholder="" min="0" [value]="orderItems.quantity" (change)="updateQuantity(orderItems,$event.target.value)"  ></td>
+          <td><input type="number" class="form-control" name="" id="" aria-describedby="helpId" placeholder="" min="0" [value]="orderItems.quantity" (change)="updateQuantity(orderItems,$event.target.value)"  [readonly]="!authenticationService.isAdmin() && !authenticationService.isBiuroUser()" ></td>
           <td class="col_delete"><i class="fa fa-trash" aria-hidden="true" (click)="deleteProductLine(orderItems.basket.basketId)"></i></td>
         </tr>
         </tbody>
@@ -220,7 +220,7 @@
 </div>
 
 
-  <div *ngIf="authenticationService.isAdmin()" class="basketList">
+  <div *ngIf="authenticationService.isAdmin() || authenticationService.isBiuroUser()" class="basketList">
     <p-fieldset legend="Dodaj kosz do zamówienia" [toggleable]="true">
 
       <div class="input-group search_bar">
@@ -277,7 +277,7 @@
     </p-fieldset>
   </div>
 
-<div *ngIf="authenticationService.isAdmin()" >
+<div *ngIf="authenticationService.isAdmin() || authenticationService.isBiuroUser()" >
 
   <p-fieldset legend="Lista Edycji zamówienia" [toggleable]="true"  [collapsed]="true">
 

@@ -5,6 +5,7 @@ import {OrderService} from "../../order/order.service";
 import {Order} from "../../model/order.model";
 import {MessageServiceExt} from "../../messages/messageServiceExt";
 import {ConfirmationService} from "primeng/api";
+import {AuthenticationService} from "../../authentication.service";
 
 @Component({
   selector: 'app-customer',
@@ -19,7 +20,7 @@ export class CustomerComponent implements OnInit {
   public allOrdersByCustomerList : Order[] = [];
   public selectedValue: any ;
 
-  constructor(private customerService :CustomerService, private  orderService: OrderService,private messageServiceExt: MessageServiceExt, private confirmationService : ConfirmationService) {
+  constructor(private customerService :CustomerService, private  orderService: OrderService,private messageServiceExt: MessageServiceExt, private confirmationService : ConfirmationService, private authenticationService :AuthenticationService) {
 
     customerService.getAllCustomerWithPrimaryAddress().subscribe(data=>{
       this.customersList = data;

@@ -37,12 +37,18 @@
             </ng-template>
 
         </p-column>
+    <p-column field="tmpStock" styleClass="capacity_col" header="Buffor" [sortable]="true">
+
+        <ng-template let-row="rowData" pTemplate="body">
+            {{row.tmpStock}} szt.
+        </ng-template>
+    </p-column>
 
 
     <p-column  header="Akcja" styleClass="action_col">
         <ng-template let-product="rowData" pTemplate="body" let-row="rowData" let-i="rowIndex" pTemplate="rowexpansion">
-            <i class="fa fa-pencil-square-o fa-2x" aria-hidden="true"  title="Edytuj produkt" (click)="goToEditPage(i+1,product.id)"></i>
-            <i class="fa fa-trash fa-2x edit_icon" aria-hidden="true" title="Usuń produkt"  (click)="ShowConfirmModal(product)"></i>
+            <i *ngIf="authenticationService.isAdmin() ||  authenticationService.isMagazynUser() " class="fa fa-pencil-square-o fa-2x" aria-hidden="true"  title="Edytuj produkt" (click)="goToEditPage(i+1,product.id)"></i>
+            <i *ngIf="authenticationService.isAdmin() ||  authenticationService.isMagazynUser() " class="fa fa-trash fa-2x edit_icon" aria-hidden="true" title="Usuń produkt"  (click)="ShowConfirmModal(product)"></i>
 
         </ng-template>
     </p-column>

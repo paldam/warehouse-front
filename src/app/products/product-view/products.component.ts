@@ -7,6 +7,7 @@ import {pairwise} from "rxjs/internal/operators";
 import {ProductsService} from "../products.service";
 import {Product} from "../../model/product.model";
 import {consoleTestResultsHandler} from "tslint/lib/test";
+import {AuthenticationService} from "../../authentication.service";
 
 
 @Component({
@@ -24,7 +25,7 @@ export class ProductsComponent implements OnInit {
   @ViewChild('dt') dataTable: DataTable;
 
   constructor(private productsService: ProductsService, activeRoute: ActivatedRoute,
-              private router: Router, private confirmationService: ConfirmationService) {
+              private router: Router, private confirmationService: ConfirmationService, private authenticationService: AuthenticationService) {
 
     productsService.getProducts().subscribe(data => this.products = data);
 

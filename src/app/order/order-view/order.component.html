@@ -1,4 +1,3 @@
-<span *ngFor="let i of selectedOrdersId">{{i}}</span>
 
 <div class="products_box">
 
@@ -60,7 +59,7 @@
                 {{row.orderTotalAmount/100 | number : '1.2-2'}} zł
             </ng-template>
         </p-column>
-        <p-column field="orderStatus.orderStatusName" header="Status" >
+        <p-column field="orderStatus.orderStatusName" header="Status" [sortable]="true" >
 
             <ng-template let-row="rowData" pTemplate="body"  >
                 <span [ngStyle]="calculateStyles(row.orderStatus.orderStatusName)">{{row.orderStatus.orderStatusName }}</span>
@@ -80,7 +79,7 @@
         <p-column class="action_col"  field="orders" header="Akcja" styleClass="action_col">
         <ng-template let-order="rowData" let-i="rowIndex" pTemplate="body">
             <i class="fa fa-pencil-square-o fa-2x" aria-hidden="true"  title="Edytuj zamówienie" (click)="goToEditPage(i+1,order.orderId)"></i>
-            <i *ngIf="authenticationService.isAdmin()" class="fa fa-trash fa-2x edit_icon" aria-hidden="true" title="Usuń zamówienie" (click)="ShowConfirmModal(order)"></i>
+            <i  *ngIf="authenticationService.isAdmin()" class="fa fa-trash fa-2x edit_icon" aria-hidden="true" title="Usuń zamówienie" (click)="ShowConfirmModal(order)"></i>
             <i class="fa fa-print fa-2x " aria-hidden="true" title="Drukuj zamówienie" (click)="printPdf(order.orderId)" ></i>
             <i class="fa fa-file-pdf-o fa-2x " aria-hidden="true" title="Drukuj potwierdzenie odbioru" (click)="showPrintOrderDeliveryConfirmationWindows(order.orderId)" ></i>
 

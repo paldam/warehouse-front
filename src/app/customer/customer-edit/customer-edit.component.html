@@ -40,7 +40,7 @@
             <tr *ngFor="let addr of customer.addresses; let i=index">
                 <td scope="row">{{i+1}}.   {{addr.address}}  {{addr.zipCode}} {{addr.cityName}} <i *ngIf="addr.isPrimaryAddress==1">(Główny)</i></td>
                 <td>
-                    <i class="fa fa fa-trash  fa-2x" aria-hidden="true"  (click)="showDeleteConfirmWindow(addr.addressId, customer.customerId)" title="Usuń adres"  ></i>
+                    <i *ngIf="authenticationService.isAdmin()" class="fa fa fa-trash  fa-2x" aria-hidden="true"  (click)="showDeleteConfirmWindow(addr.addressId, customer.customerId)" title="Usuń adres"  ></i>
                 </td>
 
             </tr>

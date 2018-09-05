@@ -4,9 +4,9 @@
       <div class="map_cont">
         <div class="row input_form">
           <label for="start_date" >Data początkowa</label>
-          <p-calendar [dataType]="'string'" [utc]="false" [maxDate]="maxDate" [locale]="dateLang"  dateFormat="yy-mm-dd" name="start_date" [(ngModel)]="startDate" required></p-calendar>
+          <p-calendar [dataType]="'string'" [utc]="false"  [locale]="dateLang"  dateFormat="yy-mm-dd" name="start_date" [(ngModel)]="startDate" required></p-calendar>
           <label for="end_date" >Data końcowa</label>
-          <p-calendar [dataType]="'string'" [utc]="false" [maxDate]="maxDate" [locale]="dateLang" dateFormat="yy-mm-dd" id="end_date" name="end_date" #end_date="ngModel" aria-describedby="end_dateDesc" [(ngModel)]="endDate" ></p-calendar>
+          <p-calendar [dataType]="'string'" [utc]="false"  [locale]="dateLang" dateFormat="yy-mm-dd" id="end_date" name="end_date" #end_date="ngModel" aria-describedby="end_dateDesc" [(ngModel)]="endDate" ></p-calendar>
 
 
           <button class="btn bg-primary " type="submit" form="MapForm" >Szukaj</button>

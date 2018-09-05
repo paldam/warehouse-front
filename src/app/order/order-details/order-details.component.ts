@@ -128,8 +128,8 @@ export class OrderDetailsComponent implements OnInit {
 
 
       },error => {
-          this.messageServiceExt.addMessage('error', 'Błąd', "Status: " + error.status + ' ' + error.statusText);
-
+          this.messageServiceExt.addMessage('error', 'Błąd', "Status: " + error._body + ' ' + error.statusText );
+          console.log(error);
       })
   }
 

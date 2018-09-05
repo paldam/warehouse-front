@@ -9,6 +9,7 @@ export class Product{
         public capacity?: number,
         public price?: number,
         public stock?: number,
+        public tmpStock?: number,
         public isArchival?: number,
         public supplier?: Supplier,
         public lastStockEditDate? :Date

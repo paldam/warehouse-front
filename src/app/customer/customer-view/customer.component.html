@@ -11,7 +11,7 @@
 
   </div>
 
-  <p-dataTable [value]="customersList" [rows]="10" [paginator]="true" [globalFilter]="gb" #dt
+  <p-dataTable [value]="customersList" [rows]="30" [paginator]="true" [globalFilter]="gb" #dt
                [loading]="loading" loadingIcon="fa-circle-o-notch" expandableRows="true">
 
     <p-column styleClass="lp_col"  header="lp." >
@@ -41,8 +41,8 @@
 
     <p-column  header="Akcja"  styleClass="action_col">
       <ng-template let-customer="rowData" pTemplate="body">
-        <i class="fa fa-pencil-square-o fa-2x" aria-hidden="true"  title="Edytuj klienta" [routerLink]="['/customer/', customer.customerId] "></i>
-        <i class="fa fa fa-trash  fa-2x" aria-hidden="true"  (click)="showDeleteConfirmWindow(customer.customerId)" title="Usuń klienta"  ></i>
+        <i *ngIf="authenticationService.isAdmin() || authenticationService.isBiuroUser()" class="fa fa-pencil-square-o fa-2x" aria-hidden="true"  title="Edytuj klienta" [routerLink]="['/customer/', customer.customerId] "></i>
+        <i *ngIf="authenticationService.isAdmin() || authenticationService.isBiuroUser()" class="fa fa fa-trash  fa-2x" aria-hidden="true"  (click)="showDeleteConfirmWindow(customer.customerId)" title="Usuń klienta"  ></i>
 
       </ng-template>
     </p-column>

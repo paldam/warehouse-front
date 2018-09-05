@@ -25,7 +25,7 @@ export class LeftNavComponent implements OnInit {
     public passwordChange: PasswordChange = new PasswordChange();
     public status :any;
 
-    constructor(private authenticationService: AuthenticationService,private userService: UserService ){
+    constructor(public authenticationService: AuthenticationService,private userService: UserService ){
         this.userName = localStorage.getItem(TOKEN_USER);
         this.passwordChange.login = localStorage.getItem(TOKEN_USER);
         authenticationService.getLoggedInName.subscribe(name => {
@@ -40,7 +40,10 @@ export class LeftNavComponent implements OnInit {
 
 
     ngOnInit(
+
     ) {
+
+
     }
 
 
@@ -104,8 +107,32 @@ export class LeftNavComponent implements OnInit {
     isSuperUser() : boolean {
         return this.authenticationService.isSuperUser();
     }
+    isBiuroUser() : boolean {
+        return this.authenticationService.isBiuroUser();
+    }
+    isMagazynUser() : boolean {
+        return this.authenticationService.isMagazynUser();
+    }
+    isProdukcjaUser() : boolean {
+        return this.authenticationService.isProdukcjaUser();
+    }
+    isWysylkaUser() : boolean {
+        return this.authenticationService.isWysylkaUser();
+    }
     getUser(){
         return this.authenticationService.getCurrentUser;
+    }
+
+    isMagazynOrProdukcjaOrAdmin(): boolean{
+
+
+
+        if (this.authenticationService.isMagazynUser() || this.authenticationService.isProdukcjaUser()||this.authenticationService.isAdmin()){
+            return true;
+        }else{
+            false
+        }
+
     }
 
     submitChangePassForm(form: NgForm) {
