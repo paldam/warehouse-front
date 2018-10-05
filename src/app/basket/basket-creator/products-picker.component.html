@@ -25,7 +25,7 @@
             </p-column>
                 <p-column field="productName" header="Nazwa" [sortable]="true"></p-column>
             <p-column field="capacity" header="Pojemność" [sortable]="true" [style]="{'width':'120px'}" ></p-column>
-                <p-column field="deliver" header="Dostawca"  [sortable]="true" ></p-column>
+                <p-column field="supplier.supplierName" header="Dostawca"  [sortable]="true" ></p-column>
                 <p-column field="price" styleClass="price_col" header="Cena"  [sortable]="true">
                     <ng-template let-row="rowData" pTemplate="body"  >
                         {{row.price/100| number : '1.2-2'}} zł

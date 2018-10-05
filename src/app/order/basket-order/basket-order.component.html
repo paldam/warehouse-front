@@ -105,23 +105,30 @@
                     <button *ngIf="storedCustomerMode" class="btn bg-primary text" (click)="showAddAddressWindow()">Dodaj adres</button>
                     <button class="btn bg-primary text"  (click)="cleanForm(form,formAdidtional)">Wyczyść</button>
 
-
-
-
-                    <div *ngIf="isAddressesOptionVisable" class="form-group">
-                        <small id="addressDesc" class="text-muted">Wybierz Adres</small>
-                        <select class="form-control" [(ngModel)]="order.address" name="address2" #address2="ngModel" required  >
-                            <option  *ngFor="let a of selectedCustomer.addresses" [ngValue]="a">{{a.address +" "+ a.cityName +" "+ a.zipCode}}</option>
-                        </select>
-                        <ul class="text-danger list-unstyled" *ngIf="address2.dirty|| formSubmitted">
-                            <li  *ngIf="address2.errors?.required">Wybierz adres z listy</li>
-                        </ul>
-                    </div>
-
+                    
 
 
                     <div class="form-group">
                         <form id="OrderForm" novalidate #form="ngForm" (submit)="submitOrderForm(form,formAdidtional)">
+
+
+
+                            <div *ngIf="isAddressesOptionVisable" class="form-group">
+                                <small id="addressDesc" class="text-muted">Wybierz Adres</small>
+                                <select class="form-control" [(ngModel)]="order.address" name="address2" #address2="ngModel" required  >
+                                    <option  *ngFor="let a of selectedCustomer.addresses" [ngValue]="a">{{a.address +" "+ a.cityName +" "+ a.zipCode}}</option>
+                                </select>
+                                <ul class="text-danger list-unstyled" *ngIf="address2.dirty|| formSubmitted">
+                                    <li  *ngIf="address2.errors?.required">Wybierz adres z listy</li>
+                                </ul>
+                            </div>
+
+
+
+
+
+
+
                            <div class="form-group">
                                 <div class="input-group">
                                     <input type="text" name="name" #name="ngModel" class="form-control"  size="300" aria-describedby="nameDesc" [readonly]="isFormReadOnly()"  [(ngModel)]="selectedCustomer.name" required >

@@ -60,7 +60,7 @@ export class OrderDetailsComponent implements OnInit {
                   this.totalAmount = res.orderTotalAmount/100;
                   this.order.cod /=100;
                   this.recalculate();
-                  this.fileUploadElement.url = "http://145.239.92.96:8080/uploadfiles?orderId="+this.orderId;
+                  this.fileUploadElement.url = "http://www.kosze.ovh:8080/uploadfiles?orderId="+this.orderId;
 
          })
       this.orderService.getDeliveryTypes().subscribe(data=> this.deliveryTypes = data);
@@ -114,7 +114,7 @@ export class OrderDetailsComponent implements OnInit {
 
       this.orderService.saveOrder(this.order).subscribe(data=>{
 
-          this.fileUploadElement.url = "http://145.239.92.96:8080/uploadfiles?orderId="+ this.orderId;  // PrimeNg fileUpload component
+          this.fileUploadElement.url = "http://www.kosze.ovh:8080/uploadfiles?orderId="+ this.orderId;  // PrimeNg fileUpload component
           this.fileUploadElement.upload();
 
 

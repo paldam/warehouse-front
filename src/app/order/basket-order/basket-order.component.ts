@@ -197,7 +197,7 @@ export class BasketOrderComponent implements OnInit {
     submitOrderForm(form: NgForm, formAdidtional: NgForm) {
         this.formSubmitted = true;
        // consthis.storedCustomerAddressList.model
-        if (form.valid && formAdidtional.valid && this.orderItems.length>0 && this.storedCustomerAddressList.model != null) {
+        if (form.valid && formAdidtional.valid && this.orderItems.length>0) {
             this.setUpOrderBeforeSave();
 
             this.orderService.saveOrder(this.order).subscribe(data=>{
@@ -206,7 +206,7 @@ export class BasketOrderComponent implements OnInit {
                     this.cleanAfterSave(form,formAdidtional);
                     this.recalculate();
 
-                    this.fileUploadElement.url = "http://145.239.92.96:8080/uploadfiles?orderId="+ data.orderId;
+                    this.fileUploadElement.url = "http://www.kosze.ovh:8080/uploadfiles?orderId="+ data.orderId;
                     this.fileUploadElement.upload();
 
 
