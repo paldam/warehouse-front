@@ -10,8 +10,12 @@ export class BasketExt{
         public basketItems?: BasketItems[],
         public basketTotalPrice?:number,
         public season?: string,
+        public isAlcoholic?: number,
+        public isAvailable?: number,
         public basketImgContentType?: string,
-        public basketImg?: any,
+        public basketImg?: any
+
+
     ) {
     }
 }

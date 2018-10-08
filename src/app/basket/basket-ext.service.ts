@@ -4,6 +4,7 @@ import {Observable} from 'rxjs/Observable';
 import {Basket} from '../model/basket.model';
 import {BasketType} from '../model/basket_type.model';
 import {HttpService} from "../http-service";
+import {BasketExt} from '../model/BasketExt';
 
 @Injectable()
 export class BasketExtService {
@@ -17,11 +18,20 @@ export class BasketExtService {
     }
 
 
-    saveBasket(basket: Basket): Observable<Response> {
+    saveBasket(basket: BasketExt): Observable<Response> {
         return this.http.post(this.baseUrl+`/basketext/`, basket)
             .map((response: Response) => response.json());
 
     }
+
+    changeStatus(basket: BasketExt): Observable<Response> {
+        return this.http.post(this.baseUrl+`/basketextstatus/`, basket)
+            .map((response: Response) => response.json());
+
+    }
+
+
+
 
     getBaskets(): Observable<Basket[]> {
         return this.http.get(this.baseUrl+`/basketsextlist/`)

@@ -17,7 +17,7 @@
   </div>
 
   <p-dataTable [value]="baskets" [rows]="10" [paginator]="true" [globalFilter]="gb" #dt
-               [loading]="loading" loadingIcon="fa-circle-o-notch" expandableRows="true">
+               [loading]="loading" loadingIcon="fa-circle-o-notch" expandableRows="true" [contextMenu]="cm" (onContextMenuSelect)="contextMenuSelected($event)">
     <p-column expander="true" header="Zawartość" styleClass="col-icon " [style]="{'width':'70px'}"></p-column>
 
     <p-column  header="lp."   [style]="{'width':'70px'}">
@@ -33,6 +33,14 @@
     <p-column field="basketTotalPrice"  header="Cena kosza "  [sortable]="true" >
       <ng-template let-row="rowData" pTemplate="body">
         {{row.basketTotalPrice/100| number : '1.2-2'}} zł.
+      </ng-template>
+    </p-column>
+
+    <p-column field="isAvailable"  header="Dostępność"  [sortable]="true" [style]="{'width':'70px'}">
+      <ng-template let-row="rowData" pTemplate="body">
+        <img *ngIf="row.isAvailable == 1" class="state_img" src="/assets/images/yes.png" height="30" width="30">
+        <img *ngIf="row.isAvailable == 0" class="state_img" src="/assets/images/no.png" height="30" width="30">
+
       </ng-template>
     </p-column>
 
@@ -72,5 +80,5 @@
   </p-dataTable>
 </p-fieldset>
 
-
+<p-contextMenu  #cm [model]="items"> </p-contextMenu>
 <p-confirmDialog header="Usuwanie kosza" icon="fa fa-question-circle" width="425"></p-confirmDialog>

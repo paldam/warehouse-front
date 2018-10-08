@@ -10,6 +10,8 @@ export class Basket{
         public basketItems?: BasketItems[],
         public basketTotalPrice?:number,
         public season?: string,
+        public isAlcoholic?: number,
+        public isAvailable?: number,
         ) {
     }
 }

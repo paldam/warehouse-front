@@ -109,10 +109,10 @@
 
 
 
-                                <div class="form-group">
+                                <div *ngIf="filtersLoaded | async" class="form-group">
                                     <small id="basket_typeDesc" class="text-muted">Typ kosza</small>
-                                    <select class="form-control" #basket_type="ngModel" name="basket_type" [(ngModel)]="basket.basketType" required="">
-                                        <option *ngFor="let item of basketTypes" [ngValue]="item" aria-describedby="basketTypeDesc">{{item.basketTypeName}}</option>
+                                    <select  class="form-control" #basket_type="ngModel" name="basket_type" [(ngModel)]="basket.basketType" required="">
+                                        <option  *ngFor="let item of basketTypes" [ngValue]="item" aria-describedby="basketTypeDesc">{{item.basketTypeName}}</option>
                                     </select>
                                     <ul class="text-danger list-unstyled" *ngIf="basket_type.dirty|| formSubmitted">
                                         <li  *ngIf="basket_type.errors?.required">Wybierz typ koszyka</li>

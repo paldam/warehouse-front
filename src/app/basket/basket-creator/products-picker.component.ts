@@ -15,7 +15,7 @@ import {GiftBasketComponent} from '../basket-helper-list/gift-baskets.component'
     styleUrls: ['./products-picker.component.css'],
     encapsulation: ViewEncapsulation.None
 })
-export class ProductPickerComponent  {
+export class ProductPickerComponent implements OnInit{
 
 
     public products: Product[]=[];
@@ -28,12 +28,24 @@ export class ProductPickerComponent  {
     public formSubmitted: boolean = false;
     public loading: boolean;
     public basketPatterPickDialogShow: boolean = false;
+    public filtersLoaded: Promise<boolean>;
     @ViewChild(GiftBasketComponent) giftBasketComponent : GiftBasketComponent;
 
     constructor(private productsService : ProductsService, private basketService :BasketService) {
         productsService.getProducts().subscribe(data=> this.products = data);
-        basketService.getBasketsTypes().subscribe(data=>this.basketTypes = data);
+        basketService.getBasketsTypes().subscribe(data=>{
+            this.basketTypes = data;
+            this.basketTypes = this.basketTypes.filter(basketTypes => basketTypes.basketTypeId != 99);
+            this.filtersLoaded = Promise.resolve(true);
+        });
+
     }
+
+    ngOnInit(){
+
+    }
+
+
 
 
 
@@ -100,6 +112,8 @@ export class ProductPickerComponent  {
         if (form.valid && this.basketItems.length>0) {
             this.basket.basketItems= this.basketItems;
             this.basket.basketTotalPrice*=100;
+            this.basket.isAlcoholic = 0;
+            this.basket.isAvailable = 0;
             this.basketService.saveBasket(this.basket).subscribe(data=>{
                    this.basket=new Basket();
                    this.basketItems=[];

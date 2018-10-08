@@ -120,7 +120,7 @@
             <!--</div>-->
 
             <div class="form-group">
-              <label class="form-control-label" for="field_logo">Wgraj zdjęcie kosza</label>
+              <label class="form-control-label" for="field_logo">Wgraj zdjęcie kosza (plik .jpg rozdzielczość kwadratow)</label>
               <div>
                 <div *ngIf="basket.basketImg" class="form-text text-danger clearfix">
                   <a class="pull-left" (click)="openFile(basket.basketImgContentType, basket.basketImg)">open</a><br>
@@ -140,6 +140,9 @@
                 <li  *ngIf="logo.errors?.required">To pole nie może być puste</li>
               </ul>
             </div>
+
+            <span>Kosz zawiera alkohol ?   </span>
+            <p-checkbox [(ngModel)]="checkedAlcoholic" #isAlcoholic="ngModel" name="isAlcoholic" binary="true"></p-checkbox>
 
 
 

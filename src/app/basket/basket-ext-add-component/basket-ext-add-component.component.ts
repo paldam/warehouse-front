@@ -9,6 +9,7 @@ import {NgForm} from '@angular/forms';
 import {GiftBasketComponent} from '../basket-helper-list/gift-baskets.component';
 import {JhiDataUtils } from 'ng-jhipster';
 import {BasketExt} from '../../model/BasketExt';
+import {MenuItem} from 'primeng/api';
 
 
 @Component({
@@ -16,7 +17,7 @@ import {BasketExt} from '../../model/BasketExt';
   templateUrl: 'basket-ext-add-component.component.html',
   styleUrls: ['basket-ext-add-component.component.css']
 })
-export class BasketExtAddComponentComponent  {
+export class BasketExtAddComponentComponent implements OnInit {
 
 
   public products: Product[]=[];
@@ -29,7 +30,8 @@ export class BasketExtAddComponentComponent  {
   public formSubmitted: boolean = false;
   public loading: boolean;
   public basketPatterPickDialogShow: boolean = false;
-
+  public checkedAlcoholic: boolean = false;
+  public items: MenuItem[];
 
   @ViewChild(GiftBasketComponent) giftBasketComponent : GiftBasketComponent;
 
@@ -37,8 +39,9 @@ export class BasketExtAddComponentComponent  {
     productsService.getProducts().subscribe(data=> this.products = data);
     basketExtService.getBasketsTypes().subscribe(data=>this.basketTypes = data);
   }
+  ngOnInit() {
 
-
+  }
 
 
 
@@ -106,13 +109,23 @@ export class BasketExtAddComponentComponent  {
       this.basket.basketItems= this.basketItems;
       this.basket.basketTotalPrice*=100;
 
+      if(this.checkedAlcoholic == true) {
+        this.basket.isAlcoholic =1;
+      }else{
+        this.basket.isAlcoholic=0;
+      }
+
+      this.basket.isAvailable = 1;
+
       this.basketExtService.saveBasket(this.basket).subscribe(data=>{
+
+            console.log("Zapisane kosz " +JSON.stringify(this.basket));
             this.basket=new BasketExt();
             this.basketItems=[];
             form.resetForm();
             this.formSubmitted = false;
             this.recalculate();
-            this.giftBasketComponent.refreshData();
+            //this.giftBasketComponent.refreshData();
           },
           err =>  console.log("error " ));
     }

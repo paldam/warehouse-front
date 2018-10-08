@@ -5,6 +5,8 @@ import {Basket} from "../../model/basket.model";
 import {ConfirmationService} from "primeng/primeng";
 import {BasketType} from "../../model/basket_type.model";
 import {AuthenticationService} from "../../authentication.service";
+import {MenuItem} from 'primeng/api';
+import {BasketExt} from '../../model/BasketExt';
 
 @Component({
   selector: 'app-basket-ext-component',
@@ -17,7 +19,8 @@ export class BasketExtComponentComponent implements OnInit {
   public loading: boolean;
   public gb: any;
   public url: string ='';
-
+  public items: MenuItem[];
+  public selectedBasketOnContextMenu: BasketExt = new BasketExt();
   @ViewChild('onlyDeleted') el:ElementRef;
 
 
@@ -27,6 +30,25 @@ export class BasketExtComponentComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.items = [
+      {label: 'Zmień dostępność', icon: 'fa fa-plus',command: (event) => this.changeStatus(this.selectedBasketOnContextMenu)}
+    ]
+  }
+
+  changeStatus(basket : BasketExt){
+    let tmpStatus;
+    if (basket.isAvailable == 1){
+        tmpStatus = 0;
+    }else{
+        tmpStatus = 1;
+    }
+        basket.isAvailable= tmpStatus;
+    this.basketService.changeStatus(basket).subscribe();
+    this.refreshData();
+
+    }
+  contextMenuSelected(event){
+    this.selectedBasketOnContextMenu = event.data;
   }
 
   refreshData() {

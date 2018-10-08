@@ -9,7 +9,7 @@ import {LeftNavComponent} from './nav-bars/left-nav/left-nav.component';
 import {
   PanelMenuModule, DataTableModule, SharedModule, FieldsetModule, OverlayPanelModule, LightboxModule,
   PanelModule, ConfirmationService, ConfirmDialogModule, DialogModule, ContextMenuModule, MenuModule,
-  RadioButtonModule, DropdownModule, SpinnerModule,
+  RadioButtonModule, DropdownModule, SpinnerModule, CheckboxModule,
 } from 'primeng/primeng';
 
 import {CalendarModule} from 'primeng/calendar';
@@ -50,7 +50,7 @@ import { CustomerComponent } from './customer/customer-view/customer.component';
 import { CustomerAddComponent } from './customer/customer-add/customer-add.component';
 import { CustomerEditComponent } from './customer/customer-edit/customer-edit.component';
 import {ToastModule} from "primeng/toast";
-import {MessageService} from "primeng/api";
+import {MenuItem, MessageService} from "primeng/api";
 import {MessageServiceExt} from './messages/messageServiceExt';
 import {ListboxModule} from "primeng/listbox";
 import { ProductDeliveryComponent } from './products/product-delivery/product-delivery.component';
@@ -96,7 +96,7 @@ export function httpExt(backend: XHRBackend, options: RequestOptions, router: Ro
 
   ],
   imports: [
-    BrowserModule,HttpModule,BrowserAnimationsModule,FormsModule,DialogModule,ConfirmDialogModule,PanelMenuModule,
+    BrowserModule,HttpModule,BrowserAnimationsModule,FormsModule,DialogModule,CheckboxModule,ConfirmDialogModule,PanelMenuModule,
     PanelModule,DropdownModule,ListboxModule,RadioButtonModule,ToastModule,TableModule,FileUploadModule,DataTableModule,
     SharedModule,SpinnerModule,FieldsetModule,LightboxModule,OverlayPanelModule,ContextMenuModule, MenuModule,CalendarModule, routing
   ],
