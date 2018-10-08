@@ -55,6 +55,9 @@ import {MessageServiceExt} from './messages/messageServiceExt';
 import {ListboxModule} from "primeng/listbox";
 import { ProductDeliveryComponent } from './products/product-delivery/product-delivery.component';
 import { BasketStatisticComponent } from './statistic/basket-statistic/basket-statistic.component';
+import { BasketExtComponentComponent } from './basket/basket-ext-component/basket-ext-component.component';
+import { BasketExtAddComponentComponent } from './basket/basket-ext-add-component/basket-ext-add-component.component';
+import {BasketExtService} from './basket/basket-ext.service';
 
 
 
@@ -88,6 +91,8 @@ export function httpExt(backend: XHRBackend, options: RequestOptions, router: Ro
     CustomerEditComponent,
     ProductDeliveryComponent,
     BasketStatisticComponent,
+    BasketExtComponentComponent,
+    BasketExtAddComponentComponent,
 
   ],
   imports: [
@@ -97,7 +102,7 @@ export function httpExt(backend: XHRBackend, options: RequestOptions, router: Ro
   ],
   providers: [ {
     provide: HttpService, useFactory: (httpExt) , deps: [XHRBackend, RequestOptions,Router,MessageService]},
-    CalendarSetingsComponent,MessageServiceExt,MessageService,ProductsService,BasketService,CustomerService,FileSendService,CustomerService,OrderService,MapService,ConfirmationService,AuthGuard,AdminGuard,AdminOrSuperUserGuard,AuthenticationService,UserService],
+    CalendarSetingsComponent,MessageServiceExt,MessageService,ProductsService,BasketService,BasketExtService,CustomerService,FileSendService,CustomerService,OrderService,MapService,ConfirmationService,AuthGuard,AdminGuard,AdminOrSuperUserGuard,AuthenticationService,UserService],
 
   bootstrap: [AppComponent]
 })

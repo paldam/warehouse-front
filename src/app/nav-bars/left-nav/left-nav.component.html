@@ -52,6 +52,16 @@
             </li>
 
 
+            <li  routerLinkActive="active_main">
+                <h3 [class.cursor_dis]="isAdmin()" ><span class="fa fa-shopping-basket"></span>Kosze EX</h3>
+                <ul>
+                    <li *ngIf="isAdmin()"><a [routerLink]="['/basketsext'] " routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Lista Koszy EX</a></li>
+                    <li *ngIf="isAdmin()" ><a [routerLink]="['/basketsext/add'] " routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Kreator Koszy EX</a></li>
+
+                </ul>
+            </li>
+
+
             <li routerLinkActive="active_main">
                 <h3 [class.cursor_dis]="isMagazynUser()" ><span class="fa fa-bar-chart"></span>Zamówienia</h3>
                 <ul>

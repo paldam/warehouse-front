@@ -9,7 +9,7 @@
         </div>
 
         <p-dataTable [value]="baskets" [rows]="10" [paginator]="true" [globalFilter]="gb" #dt
-                     [loading]="loading" loadingIcon="fa-circle-o-notch" expandableRows="true" (onRowDblclick)="addBasketToOrder($event.data)" (onContextMenuSelect)="contextMenuSelected($event)"   [contextMenu]="cm">
+                     [loading]="loading" loadingIcon="fa-circle-o-notch" expandableRows="true" (onRowDblclick)="addBasketToOrder($event.data)" (onContextMenuSelect)="contextMenuSelected($event)"   [contextMenu]="cm"(onContextMenuSelect)="contextMenuSelected($event)"   [contextMenu]="cm">
             <p-column expander="true" header="Zawartość" styleClass="col-icon" [style]="{'width':'70px'}"></p-column>
             <p-column  header="lp."  [style]="{'width':'70px'}">
                 <ng-template let-i="rowIndex" pTemplate="rowexpansion">
@@ -105,7 +105,7 @@
                     <button *ngIf="storedCustomerMode" class="btn bg-primary text" (click)="showAddAddressWindow()">Dodaj adres</button>
                     <button class="btn bg-primary text"  (click)="cleanForm(form,formAdidtional)">Wyczyść</button>
 
-                    
+
 
 
                     <div class="form-group">

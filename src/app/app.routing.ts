@@ -21,13 +21,18 @@ import {CustomerAddComponent} from "./customer/customer-add/customer-add.compone
 import {CustomerEditComponent} from "./customer/customer-edit/customer-edit.component";
 import {ProductDeliveryComponent} from "./products/product-delivery/product-delivery.component";
 import {BasketStatisticComponent} from "./statistic/basket-statistic/basket-statistic.component";
+import {BasketExtComponentComponent} from './basket/basket-ext-component/basket-ext-component.component';
+import {BasketExtAddComponentComponent} from './basket/basket-ext-add-component/basket-ext-add-component.component';
 const routes: Routes = [
     {path: '', component: ProductsComponent, pathMatch: 'full', canActivate: [AuthGuard]},
     { path: 'product', component: ProductsComponent, canActivate: [AuthGuard] },
     { path: 'product/add', component: ProductFormComponent , canActivate: [AuthGuard]},
     { path: 'product/:id', component: ProductEditFormComponent, canActivate: [AuthGuard] },
     { path: 'baskets/add', component: ProductPickerComponent, canActivate: [AuthGuard]},
+    { path: 'basketsext/add', component: BasketExtAddComponentComponent, canActivate: [AuthGuard]},
+    { path: 'basketsext', component: BasketExtComponentComponent, canActivate: [AuthGuard]},
     { path: 'baskets/order', component:BasketOrderComponent, canActivate: [AuthGuard]},
+
     {path:   'baskets', component: BasketComponent, canActivate: [AuthGuard] },
     {path:   'basket/:basketId', component: GiftBasketEditComponent, canActivate: [AuthGuard] },
     { path: 'orders', component:OrderComponent, canActivate: [AuthGuard]},

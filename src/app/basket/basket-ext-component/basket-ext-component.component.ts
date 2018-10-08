@@ -1,5 +1,5 @@
 import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
-import {BasketService} from "../basket.service";
+import {BasketExtService} from "../basket-ext.service";
 import {Router} from "@angular/router";
 import {Basket} from "../../model/basket.model";
 import {ConfirmationService} from "primeng/primeng";
@@ -7,20 +7,21 @@ import {BasketType} from "../../model/basket_type.model";
 import {AuthenticationService} from "../../authentication.service";
 
 @Component({
-  selector: 'app-basket',
-  templateUrl: './basket-view.component.html',
-  styleUrls: ['./basket-view.component.css']
+  selector: 'app-basket-ext-component',
+  templateUrl: 'basket-ext-component.component.html',
+  styleUrls: ['basket-ext-component.component.css']
 })
-export class BasketComponent implements OnInit {
+export class BasketExtComponentComponent implements OnInit {
 
   public baskets: Basket[] = [];
   public loading: boolean;
   public gb: any;
   public url: string ='';
+
   @ViewChild('onlyDeleted') el:ElementRef;
 
 
-  constructor(private basketService: BasketService, private router :Router, private confirmationService: ConfirmationService, private authenticationService :AuthenticationService) {
+  constructor(private basketService: BasketExtService, private router :Router, private confirmationService: ConfirmationService, private authenticationService :AuthenticationService) {
     basketService.getBaskets().subscribe(data => this.baskets = data);
     this.url = router.url;
   }
@@ -42,7 +43,7 @@ export class BasketComponent implements OnInit {
       this.confirmationService.confirm({
         message: 'Jesteś pewny że chcesz trwale usuńcą kosz ? ',
         accept: () => {
-          let tmpBaskettype : BasketType= new BasketType(99);
+          let tmpBaskettype : BasketType= new BasketType(100);
           basket.basketType=tmpBaskettype;
           this.basketService.saveBasket(basket).subscribe(data=>{
             this.refreshData();
