@@ -12,6 +12,7 @@ export class Order{
         public orderItems?: OrderItem[],
         public orderDate?: Date,
         public deliveryType?: DeliveryType,
+        public weekOfYear? : number,
         public additionalInformation?: string,
         public deliveryDate?: Date,
         public orderStatus? : OrderStatus,

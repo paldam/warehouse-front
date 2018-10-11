@@ -54,6 +54,9 @@
             {{row.deliveryDate| date: 'dd/MM/yyyy'}}
             </ng-template>
         </p-column>
+
+        <p-column field="weekOfYear" header="T" [sortable]="true"[style]="{'width':'35px'}" ></p-column>
+
         <p-column field="orderTotalAmount" header="total" [sortable]="true">
             <ng-template let-row="rowData" pTemplate="body"  >
                 {{row.orderTotalAmount/100 | number : '1.2-2'}} zł

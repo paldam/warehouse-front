@@ -146,3 +146,10 @@ select.ng-dirty.ng-valid { border: 1px solid #6bc502 }
 .btn {
     margin-right: 10px;
 }
+
+.weekofyear_date {
+    margin-right: 45px;
+    position: relative;
+    top: 5px;
+    left: 10px;
+}

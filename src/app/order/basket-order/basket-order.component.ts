@@ -52,6 +52,8 @@ export class BasketOrderComponent implements OnInit {
     public items: MenuItem[];
     public tmpCityList: any[] = [];
     public pickCityByZipCodeWindow: boolean = false;
+    public weekOfYearTmp: Date;
+    public weekOfYear: number;
 
 
     public selectedBasketOnContextMenu: Basket = new Basket();
@@ -199,7 +201,7 @@ export class BasketOrderComponent implements OnInit {
        // consthis.storedCustomerAddressList.model
         if (form.valid && formAdidtional.valid && this.orderItems.length>0) {
             this.setUpOrderBeforeSave();
-
+            console.log(this.order);
             this.orderService.saveOrder(this.order).subscribe(data=>{
 
                     this.generatedOrderId  = data.orderId;
@@ -245,6 +247,8 @@ export class BasketOrderComponent implements OnInit {
 
         this.order.orderStatus = new OrderStatus(1);
         this.order.userName = localStorage.getItem(TOKEN_USER);
+
+        this.order.weekOfYear = this.getWeekNumber(this.weekOfYearTmp);
     }
 
     cleanAfterSave(form: NgForm, formAdidtional: NgForm){
@@ -356,6 +360,28 @@ export class BasketOrderComponent implements OnInit {
         event.xhr.setRequestHeader('Authorization', `Bearer ${token}`);
 
     }
+
+
+
+    getWeekNumber(d: Date): number {
+        d = new Date(d);
+        d.setHours(0, 0, 0);
+        d.setDate(d.getDate() + 4 - (d.getDay() || 7));
+        var yearStart = new Date(d.getFullYear(), 0, 1);
+        var weekNo = Math.ceil((((d.valueOf() - yearStart.valueOf()) / 86400000) + 1) / 7);
+        return weekNo
+    }
+
+    OnWeekOfYearDateChange(){
+
+        this.weekOfYear = this.getWeekNumber(this.weekOfYearTmp)
+
+    }
+
+
+
+
+
     // setPopUpDarkBackgroudTrue(){
     //     this.PopUpBackgroundStyle= {
     //         'dark_background': true,

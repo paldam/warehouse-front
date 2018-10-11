@@ -10,10 +10,10 @@
 
 
 
-          <div  class="form-group">
+          <div *ngIf="filtersLoaded | async" class="form-group">
             <small id="addressDesc" class="text-muted">Wybierz Adres</small>
-            <select class="form-control" [compareWith]="compareAddress" [(ngModel)]="order.address" name="address2" #address2="ngModel" required [disabled]="!authenticationService.isAdmin() && !authenticationService.isBiuroUser()"  >
-              <option   *ngFor="let a of order.customer.addresses" [ngValue]="a" >{{a.address +" "+ a.cityName +" "+ a.zipCode}}</option>
+            <select  class="form-control" [compareWith]="compareAddress" [(ngModel)]="order.address" name="address2" #address2="ngModel" required [disabled]="!authenticationService.isAdmin() && !authenticationService.isBiuroUser()"  >
+              <option *ngFor="let a of order.customer.addresses" [ngValue]="a" >{{a.address +" "+ a.cityName +" "+ a.zipCode}}</option>
             </select>
             <ul class="text-danger list-unstyled" *ngIf="address2.dirty|| formSubmitted">
               <li  *ngIf="address2.errors?.required">Wybierz adres z listy</li>
@@ -126,12 +126,26 @@
             <div class="form-group">
               <div class="input-group">
                 <input type="date" name="delivery_date"   class="form-control" #delivery_date="ngModel" [(ngModel)]="order.deliveryDate" [readonly]="!authenticationService.isAdmin() && !authenticationService.isBiuroUser()" aria-describedby="delivery_dateDesc" required>
-                <span class="input-group-addon" id="taxDesc">Data wysyłki</span>
+                <span class="input-group-addon" id="taxDesc">Planowana data wysyłki</span>
               </div>
               <ul class="text-danger list-unstyled" *ngIf="delivery_date.dirty|| formSubmitted">
                 <li  *ngIf="delivery_date.errors?.required">Wprowadz planowaną datę wysyłki</li>
               </ul>
             </div>
+
+
+            <div class="form-groupS">
+
+              <div class="input-group ">
+                <div class="weekofyear_date">Tydzień  {{weekOfYear}}   </div> <input type="date" name="weekofyear_date" (input)="OnWeekOfYearDateChange()"  class="form-control" #weekofyear_date="ngModel" [(ngModel)]="weekOfYearTmp"  aria-describedby="weekofyear_dateDesc" required>
+
+                <span class="input-group-addon" id="taxDesc">Tydzień dostawy </span>
+              </div>
+              <ul class="text-danger list-unstyled" *ngIf="weekofyear_date.dirty|| formSubmitted">
+                <li  *ngIf="weekofyear_date.errors?.required">Wybierz tydzień z kalenarza</li>
+              </ul>
+            </div>
+
 
             <div class="form-group">
               <div class="form-group">

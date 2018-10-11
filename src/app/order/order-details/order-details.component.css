@@ -59,3 +59,9 @@ button i {
 .fileLink {
     cursor: pointer;
 }
+.weekofyear_date {
+    margin-right: 45px;
+    position: relative;
+    top: 5px;
+    left: 10px;
+}

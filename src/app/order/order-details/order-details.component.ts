@@ -45,7 +45,9 @@ export class OrderDetailsComponent implements OnInit {
     public selectedBasketOnContextMenu: Basket = new Basket();
     public confirmDialogShow: boolean = false;
   @ViewChild(FileUpload) fileUploadElement: FileUpload;
-
+    filtersLoaded: Promise<boolean>;
+    public weekOfYearTmp: Date;
+    public weekOfYear: number;
 
   constructor(private confirmationService: ConfirmationService,private fileSendService: FileSendService,
               private basketService : BasketService,private orderService : OrderService,activeRoute: ActivatedRoute,
@@ -61,6 +63,8 @@ export class OrderDetailsComponent implements OnInit {
                   this.order.cod /=100;
                   this.recalculate();
                   this.fileUploadElement.url = "http://www.kosze.ovh:8080/uploadfiles?orderId="+this.orderId;
+                  this.filtersLoaded = Promise.resolve(true);
+                  this.weekOfYear = res.weekOfYear;
 
          })
       this.orderService.getDeliveryTypes().subscribe(data=> this.deliveryTypes = data);
@@ -111,6 +115,7 @@ export class OrderDetailsComponent implements OnInit {
 
       this.order.customer = this.customer;
       this.order.orderTotalAmount = this.total;
+      this.order.weekOfYear =this.weekOfYear;
 
       this.orderService.saveOrder(this.order).subscribe(data=>{
 
@@ -232,5 +237,20 @@ export class OrderDetailsComponent implements OnInit {
 
             }
         });
+    }
+
+    getWeekNumber(d: Date): number {
+        d = new Date(d);
+        d.setHours(0, 0, 0);
+        d.setDate(d.getDate() + 4 - (d.getDay() || 7));
+        var yearStart = new Date(d.getFullYear(), 0, 1);
+        var weekNo = Math.ceil((((d.valueOf() - yearStart.valueOf()) / 86400000) + 1) / 7);
+        return weekNo
+    }
+
+    OnWeekOfYearDateChange(){
+
+        this.weekOfYear = this.getWeekNumber(this.weekOfYearTmp)
+
     }
 }
