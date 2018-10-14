@@ -248,7 +248,7 @@ export class OrderComponent implements OnInit {
 
             this.orders[index].orderItems= data.orderItems;
         });
-        
+
     }
 
 
