@@ -31,10 +31,10 @@ export class BasketComponent implements OnInit {
   refreshData() {
     this.loading = true;
     setTimeout(() => {
-      this.basketService.getBaskets().subscribe(data => this.baskets = data);
-      this.loading = false;
-    }, 1000);
-  }
+    this.basketService.getBaskets().subscribe(data => this.baskets = data);
+    this.loading = false;
+}, 1000);
+}
 
   ShowConfirmModal(basket : Basket) {
 

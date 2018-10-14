@@ -192,7 +192,7 @@ export class OrderDetailsComponent implements OnInit {
         this.fileSendService.getFile(id).subscribe(res=>{
             let a = document.createElement("a")
             console.log("sdsdssdd");
-            let blobURL = URL.createObjectURL(res)
+            let blobURL = URL.createObjectURL(res);
             a.download = this.fileSendService.fileName;
             a.href = blobURL
             document.body.appendChild(a)

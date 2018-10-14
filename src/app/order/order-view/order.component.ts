@@ -239,11 +239,16 @@ export class OrderComponent implements OnInit {
 
     rowExpand(event){
 
-
+        let index;
         this.orderService.getOrder(event.data.orderId).subscribe(data=>{
-            this.SelectedRowOrderItems = data.orderItems;
-        })
 
+          index =   this.orders.findIndex((value : Order) => {
+                return value.orderId == event.data.orderId;
+            });
+
+            this.orders[index].orderItems= data.orderItems;
+        });
+        
     }
 
 
