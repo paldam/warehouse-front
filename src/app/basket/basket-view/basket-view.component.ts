@@ -28,24 +28,24 @@ export class BasketComponent implements OnInit {
   ngOnInit() {
   }
 
-  refreshData() {
-    this.loading = true;
-    setTimeout(() => {
-    this.basketService.getBaskets().subscribe(data => this.baskets = data);
-    this.loading = false;
-}, 1000);
+    refreshData() {
+      this.loading = true;
+      setTimeout(() => {
+          this.clickOnlyDeletedBasketChceckBox();
+      this.loading = false;
+  }, 1000);
 }
 
   ShowConfirmModal(basket : Basket) {
 
     if(basket.basketType.basketTypeId == 99) {
       this.confirmationService.confirm({
-        message: 'Jesteś pewny że chcesz trwale usuńcą kosz ? ',
+        message: 'Jesteś pewny że chcesz trwale usunąć kosz ? ',
         accept: () => {
-          let tmpBaskettype : BasketType= new BasketType(99);
+          let tmpBaskettype : BasketType= new BasketType(999);
           basket.basketType=tmpBaskettype;
           this.basketService.saveBasket(basket).subscribe(data=>{
-            this.refreshData();
+              this.refreshData();
           });
 
         },

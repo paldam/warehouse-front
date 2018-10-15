@@ -28,27 +28,34 @@ export class GiftBasketEditComponent implements OnInit {
 
   constructor(private productsService: ProductsService,private basketService :BasketService, private router: Router, activeRoute: ActivatedRoute) {
 
-    console.log("dsdsd" + activeRoute.snapshot.params["basketId"]);
-        basketService.getBasket(activeRoute.snapshot.params["basketId"]).subscribe(data=>{
+      console.log("dsdsd" + activeRoute.snapshot.params["basketId"]);
+      basketService.getBasket(activeRoute.snapshot.params["basketId"]).subscribe(data => {
 
           console.log("dsdsd" + activeRoute.snapshot.params["basketId"]);
 
           this.basket = data;
           this.basketItems = data.basketItems;
-          this.basket.basketTotalPrice/=100;
-        })
-        basketService.getBasketsTypes().subscribe(data=>{this.basketTypes= data;
-        })
-        productsService.getProducts().subscribe(data=> this.products = data);
-
+          this.basket.basketTotalPrice /= 100;
+      });
+      basketService.getBasketsTypes().subscribe(data => {
+          this.basketTypes = data;
+          this.basketTypes = this.basketTypes
+              .filter(value => {return value.basketTypeId != 999 ;})
+              .filter(value => {return value.basketTypeId != 99 ;})
+              .filter(value => {return value.basketTypeId != 100 ;})
+      });
+      productsService.getProducts().subscribe(data => this.products = data);
 
   }
 
   ngOnInit() {
+
+     setTimeout(() => {
+      this.recalculate() ;
+     }, 700);
+
 }
-  ngAfterViewChecked(){
-    this.recalculate();
-  }
+
   compareBasketType( optionOne : BasketType, optionTwo : BasketType) : boolean {
     console.log(optionOne + '' + optionTwo);
     return optionTwo && optionTwo ? optionOne.basketTypeId === optionTwo.basketTypeId :optionOne === optionTwo;

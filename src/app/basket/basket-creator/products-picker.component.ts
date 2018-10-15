@@ -35,7 +35,10 @@ export class ProductPickerComponent implements OnInit{
         productsService.getProducts().subscribe(data=> this.products = data);
         basketService.getBasketsTypes().subscribe(data=>{
             this.basketTypes = data;
-            this.basketTypes = this.basketTypes.filter(basketTypes => basketTypes.basketTypeId != 99);
+            this.basketTypes = this.basketTypes
+                .filter(value => {return value.basketTypeId != 999 ;})
+                .filter(value => {return value.basketTypeId != 99 ;})
+                .filter(value => {return value.basketTypeId != 100 ;});
             this.filtersLoaded = Promise.resolve(true);
         });
 
