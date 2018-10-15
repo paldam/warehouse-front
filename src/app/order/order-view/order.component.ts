@@ -28,6 +28,7 @@ export class OrderComponent implements OnInit {
     public SelectedRowOrderItems: OrderItem[]=[];
     public printDeliveryConfirmationPdFSettings: boolean = false;
     public selectedToPrintOrder : Order = new Order();
+    public selectedToMenuOrder : number;
     public selectedToPrintOrderItems : OrderItem[]=[];
     public selectedOrdersMultiselction: Order[]=[];
     public orderStatusList: SelectItem[];
@@ -113,12 +114,22 @@ export class OrderComponent implements OnInit {
         }, 300);
 
 
-        setTimeout(() => {
-            console.log(this.orders);
-        }, 3000);
-
 
         this.items = [
+            {label: 'Zmień status ', icon: 'fa fa-share',
+                items: [
+                    // {label: 'nowe', icon: 'pi pi-fw pi-plus',command: (event) => this.changeOrderStatus(event.data.orderId,1)},
+                    // {label: 'przyjęte', icon: 'pi pi-fw pi-plus',command: (event) => this.changeOrderStatus(event.data.orderId,4)},
+                    // {label: 'skompletowane', icon: 'pi pi-fw pi-plus',command: (event) => this.changeOrderStatus(event.data.orderId,3)},
+                    // {label: 'wysłane', icon: 'pi pi-fw pi-plus',command: (event) => this.changeOrderStatus(event.data.orderId,2)},
+                    // {label: 'zrealizowane', icon: 'pi pi-fw pi-plus',command: (event) => this.changeOrderStatus(event.data.orderId,5)},
+                    {label: 'nowe', icon: 'pi pi-fw pi-plus',command: (event) => this.changeOrderStatus(1)},
+                    {label: 'przyjęte', icon: 'pi pi-fw pi-plus',command: (event) => this.changeOrderStatus(4)},
+                    {label: 'skompletowane', icon: 'pi pi-fw pi-plus',command: (event) => this.changeOrderStatus(3)},
+                    {label: 'wysłane', icon: 'pi pi-fw pi-plus',command: (event) => this.changeOrderStatus(2)},
+                    {label: 'zrealizowane', icon: 'pi pi-fw pi-plus',command: (event) => this.changeOrderStatus(5)},
+                 ]
+            },
             {label: ' Wydrukuj', icon: 'fa fa-print',command: (event) => this.printMultiplePdf()},
             {label: ' Wydrukuj potwierdzenie', icon: 'fa fa-file-pdf-o',command: (event) => this.printMultipleDeliveryPdf()},
             {label: ' Wydrukuj komplet ', icon: 'fa fa-window-restore',command: (event) =>{
@@ -157,6 +168,12 @@ export class OrderComponent implements OnInit {
         this.router.navigate(["/order/",id]);
     }
 
+    OnSelectRow(event){
+        console.log(event.data.orderId);
+        this.selectedToMenuOrder = event.data.orderId;
+
+    }
+
     printMultiplePdf(){
 
 
@@ -188,6 +205,21 @@ export class OrderComponent implements OnInit {
         })
     }
 
+
+    changeOrderStatus(orderStatus: number){
+        this.orderService.changeOrderStatus(this.selectedToMenuOrder,orderStatus).subscribe(data =>{
+            this.messageServiceExt.addMessage('success','Status','Zmieniono status zamówienia');
+        },error =>{
+            console.log(error);
+            this.messageServiceExt.addMessage('error', 'Błąd ',error._body);
+
+        } );
+
+        this.refreshData();
+        setTimeout(() => {
+            this.refreshData();
+        }, 1000);
+    }
 
 
     printPdf(id : number){

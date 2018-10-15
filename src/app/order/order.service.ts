@@ -155,6 +155,11 @@ export class OrderService {
 
     }
 
+    changeOrderStatus(orderId: number, statusId: number): Observable<Response>{
+        return this.http.post(this.baseUrl+`/order/status/${orderId}/${statusId}`,null)
+
+    }
+
 
 
 }
