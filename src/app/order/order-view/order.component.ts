@@ -9,6 +9,7 @@ import {FileSendService} from "../../file-send/file-send.service";
 import {OrderItem} from "../../model/order_item";
 import {MessageServiceExt} from "../../messages/messageServiceExt";
 import {MenuItem} from "primeng/api";
+import {File} from "../../model/file";
 
 @Component({
     selector: 'order',
@@ -24,6 +25,7 @@ export class OrderComponent implements OnInit {
     public lastVisitedPageOrder: number ;
     public findInputtextOrder: string = "";
     public isCurrentPageCustomerEdit : boolean = false;
+    public showAttachmentModal: boolean = false;
     public currentCustomerOnCustomerEditPage : number;
     public SelectedRowOrderItems: OrderItem[]=[];
     public printDeliveryConfirmationPdFSettings: boolean = false;
@@ -33,13 +35,17 @@ export class OrderComponent implements OnInit {
     public selectedOrdersMultiselction: Order[]=[];
     public orderStatusList: SelectItem[];
     public items: MenuItem[];
+    fileFilterLoaded: Promise<boolean>;
+
+    public selectedOrderFileList: File[]=[];
+
     @ViewChild('onlyWithAttach') el :ElementRef;
     @ViewChild('statusFilter') statusFilterEl :Dropdown;
     @ViewChild('yearFilter') yearFilterEl :Dropdown;
     public ordersYears: any[];
 
     constructor(private orderService :OrderService,private router: Router,private confirmationService: ConfirmationService,
-                private authenticationService: AuthenticationService,private  activeRoute: ActivatedRoute, fileSendService :FileSendService,
+                private authenticationService: AuthenticationService,private  activeRoute: ActivatedRoute, private fileSendService :FileSendService,
                 private  messageServiceExt: MessageServiceExt ) {
 
         this.isCurrentPageCustomerEdit = router.url.substring(0, 9) == "/customer";
@@ -130,9 +136,10 @@ export class OrderComponent implements OnInit {
                     {label: 'zrealizowane', icon: 'pi pi-fw pi-plus',command: (event) => this.changeOrderStatus(5)},
                  ]
             },
-            {label: ' Wydrukuj', icon: 'fa fa-print',command: (event) => this.printMultiplePdf()},
-            {label: ' Wydrukuj potwierdzenie', icon: 'fa fa-file-pdf-o',command: (event) => this.printMultipleDeliveryPdf()},
-            {label: ' Wydrukuj komplet ', icon: 'fa fa-window-restore',command: (event) =>{
+            {label: 'Pokaż załącznik(i)', icon: 'fa fa-paperclip',command: (event) => this.showAttachment()},
+            {label: 'Wydrukuj', icon: 'fa fa-print',command: (event) => this.printMultiplePdf()},
+            {label: 'Wydrukuj potwierdzenie', icon: 'fa fa-file-pdf-o',command: (event) => this.printMultipleDeliveryPdf()},
+            {label: 'Wydrukuj komplet ', icon: 'fa fa-window-restore',command: (event) =>{
                     this.printMultipleDeliveryPdf();
                     this.printMultiplePdf();
                 }
@@ -158,6 +165,28 @@ export class OrderComponent implements OnInit {
         }, 1000);
     }
 
+    showAttachment(){
+
+        this.orderService.getFileList(this.selectedToMenuOrder).subscribe(data=>{
+            this.selectedOrderFileList= data;
+            this.fileFilterLoaded = Promise.resolve(true);
+        });
+        this.showAttachmentModal = true;
+
+
+    }
+
+    getFile(id: number){
+        this.fileSendService.getFile(id).subscribe(res=>{
+            let a = document.createElement("a")
+            let blobURL = URL.createObjectURL(res);
+            a.download = this.fileSendService.fileName;
+            a.href = blobURL;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+        });
+    }
 
     goToEditPage(index,id) {
 
