@@ -66,9 +66,18 @@ export class OrderDetailsComponent implements OnInit {
                   this.filtersLoaded = Promise.resolve(true);
                   this.weekOfYear = res.weekOfYear;
 
-         })
+         });
       this.orderService.getDeliveryTypes().subscribe(data=> this.deliveryTypes = data);
-      this.orderService.getOrderStatus().subscribe(data=> this.orderStatus=data);
+
+      this.orderService.getOrderStatus().subscribe(data=>{
+          this.orderStatus=data
+
+          let tmp = this.orderStatus[1];
+          this.orderStatus[1] = this.orderStatus[3]
+          this.orderStatus[3] = tmp;
+
+      });
+
       this.orderService.getFileList(this.orderId).subscribe(data=>{
           this.fileList= data;
       });
