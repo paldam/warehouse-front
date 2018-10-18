@@ -21,6 +21,10 @@ export class ProductsComponent implements OnInit {
   public products: Product[] = [];
   public lastVisitedPage: number;
   public findInputtext: string = "";
+  public showBasketsContainsSpecyficProductModal : boolean = false;
+  public basketsListByProduct: any[];
+  public dataFilterLoaded: Promise<boolean>;
+
 
   @ViewChild('dt') dataTable: DataTable;
 
@@ -113,6 +117,21 @@ export class ProductsComponent implements OnInit {
 
       }
     });
+  }
+
+
+  getBasketsContainsSpecyficProduct(productId: number){
+
+
+    this.showBasketsContainsSpecyficProductModal = true;
+
+
+    this.productsService.getBasketsContainSpecyficProduct(productId).subscribe(data=>{
+
+      this.basketsListByProduct = data;
+        this.dataFilterLoaded = Promise.resolve(true);
+    })
+
   }
 
 

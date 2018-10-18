@@ -47,9 +47,9 @@
 
     <p-column  header="Akcja" styleClass="action_col">
         <ng-template let-product="rowData" pTemplate="body" let-row="rowData" let-i="rowIndex" pTemplate="rowexpansion">
+            <img class="basket_icon" src="/assets/images/basket.png" height="30" width="30" (click)="getBasketsContainsSpecyficProduct(product.id)">
             <i *ngIf="authenticationService.isAdmin() ||  authenticationService.isMagazynUser() " class="fa fa-pencil-square-o fa-2x" aria-hidden="true"  title="Edytuj produkt" (click)="goToEditPage(i+1,product.id)"></i>
             <i *ngIf="authenticationService.isAdmin() ||  authenticationService.isMagazynUser() " class="fa fa-trash fa-2x edit_icon" aria-hidden="true" title="Usuń produkt"  (click)="ShowConfirmModal(product)"></i>
-
         </ng-template>
     </p-column>
 
@@ -61,3 +61,21 @@
 
 
 <p-confirmDialog header="Usuwanie produktu" icon="fa fa-question-circle" width="425"></p-confirmDialog>
+
+
+
+<p-dialog  header="Produkt występuje w koszach" [contentStyle]="{'height': '450px'}" closeOnEscape="false" modal="true" width="600" height="520" [(visible)]="showBasketsContainsSpecyficProductModal"  >
+
+
+    <table >
+        <thead>
+        </thead>
+        <tbody>
+        <tr class="fileLink"  *ngFor="let item of basketsListByProduct" >
+            <td > {{item.basketName}}</td>
+            <!--<td *ngIf="authenticationService.isAdmin() || authenticationService.isBiuroUser()"> <i (click)="ShowConfirmModal(item)" class="fa fa-trash"></i></td>-->
+        </tr>
+        </tbody>
+    </table>
+
+</p-dialog>

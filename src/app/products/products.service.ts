@@ -65,6 +65,12 @@ export class ProductsService {
             response.json());
   }
 
+  getBasketsContainSpecyficProduct(id: number){
+      return this.http.get(this.baseUrl+`/baskets_by_product/${id}`)
+          .map((response: Response) =>
+              response.json());
+  }
+
 
 
   getProductsTypes(): Observable<ProductType[]> {
