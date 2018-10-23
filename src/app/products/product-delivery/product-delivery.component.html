@@ -1,6 +1,6 @@
 
 <div class="order_summary col-12">
-  <p-fieldset legend="Dostawa produktów" [toggleable]="true">
+  <p-fieldset   [legend]="legend" [toggleable]="true">
 
 
     <div class="form-group">
@@ -13,7 +13,8 @@
 
 
     <p-dataTable [value]="productsBySupplier" [rows]="20" [editable]="true" (onEditComplete)="updateStockRow($event)" [paginator]="true" [globalFilter]="gb" #dt
-                 [loading]="loading" loadingIcon="fa-circle-o-notch" [rowStyleClass]="getRowStyle" sortField="lastStockEditDate" sortOrder="-1" >
+                 [loading]="loading" loadingIcon="fa-circle-o-notch" [rowStyleClass]="getRowStyle"  >
+      <!--sortField="lastStockEditDate" sortOrder="-1"-->
       <p-header>Lista Produktów</p-header>
 
 
@@ -34,14 +35,18 @@
 
       <p-column field="add"   styleClass="add_col" header="Dodaj"  [sortable]="true" >
         <ng-template let-row="rowData" pTemplate="body" type="number">
-                       <p-spinner size="4" [(ngModel)]="row.add" [min]="0"></p-spinner><i class="plusic fa fa-2x fa-plus-circle" aria-hidden="true" (click)="addToStock(row.id, row.add)"> </i>
+                       <p-spinner size="4" [(ngModel)]="row.add" [min]="0"></p-spinner><i class="plusic fa fa-2x fa-plus-circle" aria-hidden="true" (click)="addToStockOrToOrder(row.id, row.add)"> </i>
         </ng-template>
 
       </p-column>
-      <p-column field="stock" styleClass="stock_col" header="Stan" [editable]=true [sortable]="true" ></p-column>
+      <p-column field="stock" styleClass="stock_col" header="Stan" [editable]=true [sortable]="true" >
+        <ng-template let-row="rowData" pTemplate="body">
+          {{row.stock}} szt.
+        </ng-template>
+      </p-column>
 
 
-      <p-column field="lastStockEditDate" styleClass="date_col" header="Modyfikacja"  [sortable]="true" >
+      <p-column *ngIf="currentPageMode==1" field="lastStockEditDate" styleClass="date_col" header="Modyfikacja"  [sortable]="true" >
 
         <ng-template let-row="rowData" pTemplate="body"  >
           {{row.lastStockEditDate| date: 'dd/MM/yyyy HH:MM:ss'}}
@@ -50,6 +55,19 @@
       </p-column>
 
 
+      <p-column *ngIf="currentPageMode==2" field="tmpStock" styleClass="capacity_col" header="Buffor" [sortable]="true">
+
+        <ng-template let-row="rowData" pTemplate="body">
+          {{row.tmpStock}} szt.
+        </ng-template>
+      </p-column>
+
+      <p-column *ngIf="currentPageMode==2" field="tmpOrdered" styleClass="capacity_col" header="Liczba zamówionych" [sortable]="true">
+
+        <ng-template let-row="rowData" pTemplate="body">
+          {{row.tmpOrdered}} szt.
+        </ng-template>
+      </p-column>
 
 
 

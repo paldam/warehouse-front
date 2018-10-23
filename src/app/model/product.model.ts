@@ -10,6 +10,7 @@ export class Product{
         public price?: number,
         public stock?: number,
         public tmpStock?: number,
+        public tmpOrdered?: number,
         public isArchival?: number,
         public supplier?: Supplier,
         public lastStockEditDate? :Date

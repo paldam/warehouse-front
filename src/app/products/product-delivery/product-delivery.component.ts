@@ -3,6 +3,7 @@ import {ProductsService} from "../products.service";
 import {Supplier} from "../../model/supplier.model";
 import {Product} from "../../model/product.model";
 import {MessageServiceExt} from "../../messages/messageServiceExt";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-product-delivery',
@@ -21,9 +22,23 @@ export class ProductDeliveryComponent implements OnInit {
   public stock: number;
   public selectedSupplierId: number;
   public gb: any;
+  public legend: string;
+  public currentPageMode: number;
 
 
-  constructor(private productsService: ProductsService, private  messageServiceExt: MessageServiceExt) {
+  constructor(private productsService: ProductsService, private  messageServiceExt: MessageServiceExt, public router :Router) {
+
+    if (router.url == '/products/delivery') {
+      this.legend = "Dostawa produktów";
+      this.currentPageMode=1;  //
+      console.log("dostawa ");
+    }if (router.url == '/products/setdelivery'){
+      this.legend = "Zamówienie produktów";
+          console.log("zamówienie ");
+          this.currentPageMode=2;
+
+      }
+      console.log(this.router.url);
     productsService.getSuppliers().subscribe(data=> this.productSuppliers = data);
   }
 
@@ -73,14 +88,31 @@ export class ProductDeliveryComponent implements OnInit {
     } )
   }
 
-  addToStock(id: number, add: number){
+
+  addToStockOrToOrder(id: number, add: number){
 
 
-    this.productsService.changeStock(id,add).subscribe(data=>{
+      if (this.currentPageMode==1) {
 
-       this.refreshData();
+          this.productsService.changeStockEndResetOfProductsToDelivery(id,add).subscribe(data=>{
 
-    })
+              this.refreshData();
+
+          });
+
+
+
+      }if (this.currentPageMode==2){
+
+          this.productsService.addNumberOfProductsDelivery(id,add).subscribe(data=>{
+
+              this.refreshData();
+
+          })
+
+      }
+
+
 
   }
 

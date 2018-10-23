@@ -58,6 +58,7 @@ import { BasketStatisticComponent } from './statistic/basket-statistic/basket-st
 import { BasketExtComponentComponent } from './basket/basket-ext-component/basket-ext-component.component';
 import { BasketExtAddComponentComponent } from './basket/basket-ext-add-component/basket-ext-add-component.component';
 import {BasketExtService} from './basket/basket-ext.service';
+import { NotesComponent } from './notes/notes.component';
 
 
 
@@ -93,6 +94,7 @@ export function httpExt(backend: XHRBackend, options: RequestOptions, router: Ro
     BasketStatisticComponent,
     BasketExtComponentComponent,
     BasketExtAddComponentComponent,
+    NotesComponent,
 
   ],
   imports: [

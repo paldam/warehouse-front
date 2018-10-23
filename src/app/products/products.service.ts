@@ -43,7 +43,7 @@ export class ProductsService {
   }
 
 
-  changeStock(id: number , value: number): Observable<Response> {
+  changeStockEndResetOfProductsToDelivery(id: number , value: number): Observable<Response> {
 
 
     return this.http.post(this.baseUrl+`/product/stock/`,null,{
@@ -52,6 +52,27 @@ export class ProductsService {
         addValue: value
       }} )
   }
+
+
+    // resetNumberOfProductsToDelivery(id: number ): Observable<Response> {
+    //
+    //
+    //     return this.http.post(this.baseUrl+`/product/order/reset/`,null,{
+    //         params: {
+    //             productId: id,
+    //         }} )
+    // }
+
+    addNumberOfProductsDelivery(id: number , value: number): Observable<Response> {
+
+
+        return this.http.post(this.baseUrl+`/product/order/`,null,{
+            params: {
+                productId: id,
+                addValue: value
+            }} )
+    }
+
 
   getProductsToOrder(startDate , endDate): Observable<any[]> {
     return this.http.get(this.baseUrl+`/orders/products_to_order/daterange?startDate=${startDate}&endDate=${endDate}`)

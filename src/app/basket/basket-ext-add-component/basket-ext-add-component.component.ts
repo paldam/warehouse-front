@@ -10,6 +10,7 @@ import {GiftBasketComponent} from '../basket-helper-list/gift-baskets.component'
 import {JhiDataUtils } from 'ng-jhipster';
 import {BasketExt} from '../../model/BasketExt';
 import {MenuItem} from 'primeng/api';
+import {BasketService} from "../basket.service";
 
 
 @Component({
@@ -35,7 +36,7 @@ export class BasketExtAddComponentComponent implements OnInit {
 
   @ViewChild(GiftBasketComponent) giftBasketComponent : GiftBasketComponent;
 
-  constructor(private productsService : ProductsService, private basketExtService :BasketExtService,private dataUtils: JhiDataUtils) {
+  constructor(private productsService : ProductsService, private basketExtService :BasketExtService, private basketService :BasketService, private dataUtils: JhiDataUtils) {
     productsService.getProducts().subscribe(data=> this.products = data);
     basketExtService.getBasketsTypes().subscribe(data=>this.basketTypes = data);
   }
@@ -140,7 +141,7 @@ export class BasketExtAddComponentComponent implements OnInit {
 
   showBasketPatterList() {
     this.basketPatterPickDialogShow = true;
-    this.basketExtService.getBaskets().subscribe(data=> this.basketsToSchema = data);
+    this.basketService.getBaskets().subscribe(data=> this.basketsToSchema = data);
   }
 
 

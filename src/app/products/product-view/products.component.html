@@ -44,6 +44,13 @@
         </ng-template>
     </p-column>
 
+    <p-column  field="tmpOrdered" styleClass="capacity_col" header="Liczba zamówionych" [sortable]="true">
+
+        <ng-template let-row="rowData" pTemplate="body">
+            {{row.tmpOrdered}} szt.
+        </ng-template>
+    </p-column>
+
 
     <p-column  header="Akcja" styleClass="action_col">
         <ng-template let-product="rowData" pTemplate="body" let-row="rowData" let-i="rowIndex" pTemplate="rowexpansion">
