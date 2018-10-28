@@ -1,9 +1,10 @@
-import {Component, OnInit, ViewEncapsulation} from '@angular/core';
+import {Component, ElementRef, Input, OnInit, ViewChild, ViewEncapsulation} from '@angular/core';
 import {ProductsService} from "../products.service";
 import {Supplier} from "../../model/supplier.model";
 import {Product} from "../../model/product.model";
 import {MessageServiceExt} from "../../messages/messageServiceExt";
 import {Router} from "@angular/router";
+import {DataTable} from "primeng/primeng";
 
 @Component({
   selector: 'app-product-delivery',
@@ -24,9 +25,12 @@ export class ProductDeliveryComponent implements OnInit {
   public gb: any;
   public legend: string;
   public currentPageMode: number;
+    public findInputtextOrder : any ;
+    @ViewChild('globalfilter') el: ElementRef;
 
 
-  constructor(private productsService: ProductsService, private  messageServiceExt: MessageServiceExt, public router :Router) {
+
+    constructor(private productsService: ProductsService, private  messageServiceExt: MessageServiceExt, public router :Router) {
 
     if (router.url == '/products/delivery') {
       this.legend = "Dostawa produktów";
@@ -95,8 +99,8 @@ export class ProductDeliveryComponent implements OnInit {
       if (this.currentPageMode==1) {
 
           this.productsService.changeStockEndResetOfProductsToDelivery(id,add).subscribe(data=>{
-
               this.refreshData();
+              //this.findInputtextOrder ='';
 
           });
 
@@ -107,6 +111,7 @@ export class ProductDeliveryComponent implements OnInit {
           this.productsService.addNumberOfProductsDelivery(id,add).subscribe(data=>{
 
               this.refreshData();
+              //this.findInputtextOrder ='';
 
           })
 
@@ -127,5 +132,18 @@ export class ProductDeliveryComponent implements OnInit {
       return ''
     }
   }
+
+
+    getRowStyle2(rowData: any, rowIndex: number): string{
+
+
+        let timeNow = new Date().getTime();
+
+        if( (timeNow - rowData.lastNumberOfOrderedEditDate) /1000/60 < 60){    // 1h
+            return 'ddd'
+        }else{
+            return ''
+        }
+    }
 
 }

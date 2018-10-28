@@ -12,8 +12,19 @@
 
 
 
-    <p-dataTable [value]="productsBySupplier" [rows]="20" [editable]="true" (onEditComplete)="updateStockRow($event)" [paginator]="true" [globalFilter]="gb" #dt
-                 [loading]="loading" loadingIcon="fa-circle-o-notch" [rowStyleClass]="getRowStyle"  >
+    <div class="input-group search_bar">
+    <span class="input-group-addon" id="basic-addon1">
+                 <i class="fa fa-search" aria-hidden="true"></i>
+            </span>
+      <input #globalfilter type="text" (change)="dt.filter($event.target.value, 'contains')" class="form-control search_input" pInputText size="50" placeholder="Szukaj"aria-describedby="basic-addon1" [(ngModel)]="findInputtextOrder">
+
+    </div>
+
+
+
+
+    <p-dataTable [value]="productsBySupplier" [rows]="500" [editable]="true" (onEditComplete)="updateStockRow($event)" [paginator]="true" [globalFilter]="globalfilter" #dt
+                 [loading]="loading" loadingIcon="fa-circle-o-notch" [rowStyleClass]="currentPageMode == 1 ? getRowStyle : getRowStyle2"  >
       <!--sortField="lastStockEditDate" sortOrder="-1"-->
       <p-header>Lista Produktów</p-header>
 
@@ -49,10 +60,11 @@
       <p-column *ngIf="currentPageMode==1" field="lastStockEditDate" styleClass="date_col" header="Modyfikacja"  [sortable]="true" >
 
         <ng-template let-row="rowData" pTemplate="body"  >
-          {{row.lastStockEditDate| date: 'dd/MM/yyyy HH:MM:ss'}}
+          {{row.lastStockEditDate| date: 'dd/MM/yyyy HH:mm:ss'}}
         </ng-template>
 
       </p-column>
+
 
 
       <p-column *ngIf="currentPageMode==2" field="tmpStock" styleClass="capacity_col" header="Buffor" [sortable]="true">
@@ -69,7 +81,13 @@
         </ng-template>
       </p-column>
 
+      <p-column *ngIf="currentPageMode==2" field="lastNumberOfOrderedEditDate" styleClass="date_col" header="Modyfikacja2"  [sortable]="true" >
 
+        <ng-template let-row="rowData" pTemplate="body"  >
+          {{row.lastNumberOfOrderedEditDate| date: 'dd/MM/yyyy HH:mm:ss'}}
+        </ng-template>
+
+      </p-column>
 
     </p-dataTable>
 
