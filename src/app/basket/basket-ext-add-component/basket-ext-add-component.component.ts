@@ -34,7 +34,7 @@ export class BasketExtAddComponentComponent implements OnInit {
   public checkedAlcoholic: boolean = false;
   public items: MenuItem[];
 
-  @ViewChild(GiftBasketComponent) giftBasketComponent : GiftBasketComponent;
+    @ViewChild(GiftBasketComponent) giftBasketComponent : GiftBasketComponent;
 
   constructor(private productsService : ProductsService, private basketExtService :BasketExtService, private basketService :BasketService, private dataUtils: JhiDataUtils) {
     productsService.getProducts().subscribe(data=> this.products = data);

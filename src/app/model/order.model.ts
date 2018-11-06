@@ -19,6 +19,7 @@ export class Order{
         public orderTotalAmount? : number,
         public cod? : number,
         public address?: Address,
+        public additionalSale?: number
     ){
 
     }

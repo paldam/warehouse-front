@@ -1,4 +1,4 @@
-import {Component, OnInit, ViewChild, ViewEncapsulation} from '@angular/core';
+import {Component, ElementRef, OnInit, ViewChild, ViewEncapsulation} from '@angular/core';
 import {ActivatedRoute, Router} from "@angular/router";
 import {OrderService} from "../order.service";
 import {Order} from "../../model/order.model";
@@ -7,7 +7,7 @@ import {DeliveryType} from "../../model/delivery_type.model";
 import {Customer} from "../../model/customer.model";
 import {OrderStatus} from "../../model/OrderStatus";
 import {Product} from "../../model/product.model";
-import {ConfirmationService, FileUpload} from "primeng/primeng";
+import {Checkbox, ConfirmationService, FileUpload} from "primeng/primeng";
 import {AuthenticationService} from "../../authentication.service";
 import {Basket} from "../../model/basket.model";
 import {BasketService} from "../../basket/basket.service";
@@ -45,11 +45,15 @@ export class OrderDetailsComponent implements OnInit {
     public selectedBasketOnContextMenu: Basket = new Basket();
     public confirmDialogShow: boolean = false;
   @ViewChild(FileUpload) fileUploadElement: FileUpload;
+
+  @ViewChild(Checkbox) el:Checkbox;
     filtersLoaded: Promise<boolean>;
     public weekOfYearTmp: Date;
     public weekOfYear: number;
+    public checkedAdditionalSale: boolean = false;
 
-  constructor(private confirmationService: ConfirmationService,private fileSendService: FileSendService,
+
+    constructor(private confirmationService: ConfirmationService,private fileSendService: FileSendService,
               private basketService : BasketService,private orderService : OrderService,activeRoute: ActivatedRoute,
               private  router: Router,public authenticationService: AuthenticationService, private messageServiceExt : MessageServiceExt) {
 
@@ -65,6 +69,12 @@ export class OrderDetailsComponent implements OnInit {
                   this.fileUploadElement.url = "http://www.kosze.ovh:8080/uploadfiles?orderId="+this.orderId;
                   this.filtersLoaded = Promise.resolve(true);
                   this.weekOfYear = res.weekOfYear;
+
+                  if(res.additionalSale ==1){
+                      this.el.checked = true;
+                  }else{
+                      this.el.checked = false;
+                  }
 
          });
       this.orderService.getDeliveryTypes().subscribe(data=> this.deliveryTypes = data);
@@ -92,6 +102,7 @@ export class OrderDetailsComponent implements OnInit {
       this.items = [
           {label: 'Dodaj kosz', icon: 'fa fa-plus',command: (event) => this.addBasketToOrder(this.selectedBasketOnContextMenu)},
       ];
+
   }
 
     contextMenuSelected(event){
@@ -120,6 +131,12 @@ export class OrderDetailsComponent implements OnInit {
           this.order.cod *=100;
       }else{
           this.order.cod =0;
+      }
+
+      if(this.checkedAdditionalSale == true) {
+          this.order.additionalSale=1;
+      }else{
+          this.order.additionalSale=0;
       }
 
       this.order.customer = this.customer;

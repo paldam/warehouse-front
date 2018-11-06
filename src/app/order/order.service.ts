@@ -89,6 +89,14 @@ export class OrderService {
 
 }
 
+    getProductListPdf(id: number): any {
+        return this.http.get(this.baseUrl + `/order/pdf/product_to_collect/${id}`,{ responseType: ResponseContentType.Blob })
+            .map(res => {
+                return new Blob([res.blob()], { type: 'application/pdf' })
+            })
+
+    }
+
 
     getMultiplePdf(ids: number[]): any {
         return this.http.post( this.baseUrl + `/order/multipdf`,null,{

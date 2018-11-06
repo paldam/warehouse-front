@@ -260,6 +260,15 @@ export class OrderComponent implements OnInit {
         )
     }
 
+    printProductListPdf(id : number){
+        this.orderService.getProductListPdf(id).subscribe(res=>{
+                var fileURL = URL.createObjectURL(res);
+                window.open(fileURL);
+
+            }
+        )
+    }
+
 
     ShowConfirmModal(order: Order) {
 

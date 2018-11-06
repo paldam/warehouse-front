@@ -74,7 +74,7 @@
         </ng-template>
       </p-column>
 
-      <p-column *ngIf="currentPageMode==2" field="tmpOrdered" styleClass="capacity_col" header="Liczba zamówionych" [sortable]="true">
+      <p-column  field="tmpOrdered" styleClass="capacity_col" header="Liczba zamówionych" [sortable]="true">
 
         <ng-template let-row="rowData" pTemplate="body">
           {{row.tmpOrdered}} szt.

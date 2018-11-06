@@ -228,6 +228,7 @@ export class BasketOrderComponent implements OnInit {
     setUpOrderBeforeSave(){
         this.order.orderTotalAmount = this.total;
         this.order.orderItems = this.orderItems;
+        this.order.additionalSale = 0;
 
 
 
