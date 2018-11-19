@@ -1,0 +1,45 @@
+
+
+
+<button class=" add_note_icon btn bg-primary " form="productForm"  type="submit" > Dodaj Notatkę </button>
+
+<div class="card_container">
+    <div  *ngFor="let note of notes"  class="card" >
+        <div class="container">
+            <i class="prior_icon fa fa-exclamation fa-2x" [ngStyle]="setMyStyles(note.priority)" aria-hidden="true" title="Priorytet"></i>
+            <i class="edit_icon fa fa-pencil fa-2x"  aria-hidden="true" title="Edytuj notatkę" (click)="editNote()"></i>
+            <i class="del_icon fa fa-trash fa-2x" aria-hidden="true" title="Usuń notatkę"></i>
+            <h4><b>John Doe</b></h4>
+                <p class="note_content">scsdcs ccsdc sdcsdcscs cscs csdcs c sdcsdcfggsdc sdcsdcscs cscs csdcs c sdcsdcfggsdc sdcsdcscs cscs csdcs c sdcsdcfggsdc sdcsdcscs cscs csdcs c sdcsdcfggsdc frfrfrededededededed ededede rffffffffffffffffffffffffffffffffffffffffffffffffffffssssssssssssssssssssssssssscrececcsdcs sccs csdcs c sdcsdcsdc rfffffffffffffffffffffffffffffffffffffffffffsdcs c sdcsdcsdc 2222 3232232 32 32 32 </p>
+
+
+
+
+            <div class="add_inf">
+                <hr class="line2">
+                <p class="add_line">Data dodania: <span class="add2">{{note.creationDate| date: 'dd/MM/yyyy HH:mm:ss'}}</span></p>
+                <p class="add_line">Data ważności: <span class="add2">{{note.expirationDate| date: 'dd/MM/yyyy '}}</span></p>
+                <p class="add_line">Dodane przez: <span class="add2">{{note.addedBy}}</span></p>
+
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<p-dialog header="Edytuj notatkę" modal="true" width="1300" [(visible)]="noteEditDialogShow" >
+
+
+    <div class="order_detail_form col-md-6">
+            <form id="NoteForm" novalidate #formAdidtional="ngForm">
+
+            </form>
+            <button class="btn bg-primary " type="submit" form="NoteForm" >Zapisz Notatkę</button>
+            <button class="btn bg-primary " (click)="cancelEditNote()"  >Anuluj </button>
+
+
+
+    </div>
+
+
+</p-dialog>
