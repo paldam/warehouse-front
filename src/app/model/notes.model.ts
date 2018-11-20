@@ -5,7 +5,7 @@ export class Notes {
         public expirationDate?: Date,
         public priority?: number,
         public noteContent?: string,
-        public noteStatus?: string,
+        public noteStatus?: number,
         public addedBy?: string,
 
     ){

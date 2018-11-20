@@ -17,6 +17,8 @@
     width: 280px;
     height: 240px;
     background-color: lightgoldenrodyellow;
+    margin-left: 20px;
+    margin-bottom: 20px;
 }
 .edit_icon
 {
@@ -40,7 +42,7 @@
 }
 .prior_icon{
     position: absolute;
-    right: 72px;
+    left: 7px;
     top: 7px;
 }
 
@@ -62,11 +64,13 @@
 .note_content{
     height: 130px;
     overflow: auto;
+    margin-top: 35px;
 }
 
 ::-webkit-scrollbar {
     width: 5px;
     background-color: #F5F5F5;
+
 }
 
 ::-webkit-scrollbar-track {
@@ -92,3 +96,37 @@
     margin-top: 55px;
 }
 
+button {
+    margin-right: 20px;
+}
+
+.fadeIn {
+    -webkit-animation-name: fadeIn;
+    animation-name: fadeIn;
+    -webkit-animation-duration: 2s;
+    animation-duration: 2s;
+    -webkit-animation-fill-mode: both;
+    animation-fill-mode: both;
+}
+@-webkit-keyframes fadeIn {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+@keyframes fadeIn {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+.sort_box {
+    margin-left: 28px;
+
+}
+.ser_icon{
+    margin-left: 10px;}

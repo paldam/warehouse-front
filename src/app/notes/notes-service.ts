@@ -18,11 +18,7 @@ export class NotesService {
     }
 
 
-    saveBasket(basket: Basket): Observable<Response> {
-        return this.http.post(this.baseUrl+`/baskets/`, basket)
-            .map((response: Response) => response.json());
 
-    }
 
     getNotes(): Observable<Notes[]> {
         return this.http.get(this.baseUrl+`/notes`)
@@ -30,12 +26,16 @@ export class NotesService {
     }
 
 
-    getBasket(id: number): Observable<Basket> {
-        return this.http.get(this.baseUrl+`/basket/${id}`)
+    getNote(id: number): Observable<Notes> {
+        return this.http.get(this.baseUrl+`/notes/${id}`)
             .map((response: Response) => response.json());
     }
 
+    saveOrUpdateNote(note: Notes): Observable<Response> {
+        return this.http.post(this.baseUrl+`/notes/`, note)
+            .map((response: Response) => response.json());
 
+    }
 }
 
 
