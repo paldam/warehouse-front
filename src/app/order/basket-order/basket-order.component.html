@@ -1,3 +1,4 @@
+
 <div class="basketList">
     <p-fieldset legend="Lista dostępnych koszy" [toggleable]="true">
 
@@ -339,7 +340,7 @@
 </p-dialog>
 
 
-<p-dialog header="Wybierz klienta" modal="true" width="1300" [(visible)]="customerPickDialogShow" >
+<p-dialog header="Wybierz klienta" modal="true" width="1300" [(visible)]="customerPickDialogShow" (onHide)="closeCustomerPicker()" >
     <div >
         <div class="input-group search_bar">
                 <span class="input-group-addon" id="basic-addon1">

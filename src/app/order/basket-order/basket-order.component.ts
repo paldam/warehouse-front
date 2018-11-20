@@ -379,6 +379,15 @@ export class BasketOrderComponent implements OnInit {
 
     }
 
+    closeCustomerPicker(){
+
+        if(this.selectedCustomer.name == null){
+            this.storedCustomerMode=false;
+            this.isAddressesOptionVisable = false;
+        }
+
+    }
+
 
 
 
