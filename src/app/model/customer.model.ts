@@ -8,6 +8,7 @@ export class Customer{
         public addresses?: Address[],
         public email?: string,
         public phoneNumber?: string,
+        public additionalInformation?: string
     ){
 
     }

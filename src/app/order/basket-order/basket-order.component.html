@@ -196,6 +196,13 @@
                                     <span class="input-group-addon" id="telDesc">Telefon</span>
                                 </div>
                             </div>
+
+                            <div class="form-group">
+                                <div class="input-group">
+                                    <input type="text" name="cust_inf" class="form-control"  size="300" aria-describedby="custDesc"  [(ngModel)]="selectedCustomer.additionalInformation" >
+                                    <span class="input-group-addon" id="custDesc">Uwagi</span>
+                                </div>
+                            </div>
                         </form>
 
 
@@ -231,6 +238,13 @@
                                     <li  *ngIf="delivery_type.errors?.required">Wybierz typ dostawy</li>
                                 </ul>
                             </div>
+
+                                <div class="form-group">
+                                    <div class="form-group">
+                                        <small id="contact_personDesc" class="text-muted">Osoba do kontaktu</small>
+                                        <textarea class="form-control" name="contact_person" id="contact_person"  size="500" rows="2" [(ngModel)]="order.contactPerson"></textarea>
+                                    </div>
+                                </div>
 
 
                                 <div *ngIf="order.deliveryType?.deliveryTypeId==5 || order.deliveryType?.deliveryTypeId==6 || order.deliveryType?.deliveryTypeId==7">

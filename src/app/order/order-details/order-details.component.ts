@@ -103,6 +103,10 @@ export class OrderDetailsComponent implements OnInit {
           {label: 'Dodaj kosz', icon: 'fa fa-plus',command: (event) => this.addBasketToOrder(this.selectedBasketOnContextMenu)},
       ];
 
+      setTimeout(() => {
+          console.log(this.customer); ;
+      },3000 );
+
   }
 
     contextMenuSelected(event){
