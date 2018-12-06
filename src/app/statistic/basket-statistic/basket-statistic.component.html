@@ -1,3 +1,19 @@
+<div class="filterOptionRadioGroup">
+  <div class="form-check">
+    <input class="form-check-input" #sortByDeliveryDate type="radio" name="exampleRadios" id="exampleRadios1" value="option1" checked>
+    <label class="form-check-label" for="exampleRadios1">
+      Sortuj po dacie dostawy
+    </label>
+  </div>
+  <div class="form-check">
+    <input class="form-check-input"  #sortByOrderDate type="radio" name="exampleRadios" id="exampleRadios2" value="option2">
+    <label class="form-check-label" for="exampleRadios2">
+      Sortuj po dacie zamówienia
+    </label>
+  </div>
+</div>
+
+
 <div class="map_cont">
   <div class="row input_form">
     <form id="MapForm" novalidate #form="ngForm" (submit)="submitOrderForm(form)">
@@ -8,6 +24,7 @@
 
 
       <button class="btn bg-primary " type="submit" form="MapForm" >Szukaj</button>
+      <button type="button" class="btn btn-primary" (click)="generateXls()"><i class="fa fa-file-excel-o fa-x" aria-hidden="true"></i> Export do Excela</button>
 
       <ul class="text-danger list-unstyled" *ngIf="dateError">
         <li >Data początkowa nie może być większa od końcowej</li>
@@ -29,5 +46,5 @@
   </p-column>
   <p-column field="basketName"  header="Nazwa"></p-column>
   <p-column field="quantity" [sortable]="true" header="Ilość"></p-column>
-
+  <p-column field="numberOfOrdersWhereBasketOccur" [sortable]="true" header="Ilość zamówień z tym koszem"></p-column>
 </p-dataTable>

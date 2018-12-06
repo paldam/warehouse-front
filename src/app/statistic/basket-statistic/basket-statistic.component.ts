@@ -1,7 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import {NgForm} from "@angular/forms";
 import {BasketService} from "../../basket/basket.service";
 import {CalendarSetingsComponent} from "../../primeNgCalendarSetings/calendarStings.component";
+import * as XLSX from "xlsx";
+import {DataTable} from "primeng/primeng";
 
 declare var $ :any;
 @Component({
@@ -20,6 +22,8 @@ export class BasketStatisticComponent implements OnInit {
   public loading: boolean= false;
   public formSubbmitted: boolean = false;
   public dateError: boolean = false;
+  @ViewChild('sortByOrderDate') sortByOrderDateCheckBox :ElementRef;
+  @ViewChild('dt') el:DataTable;
 
 
   constructor(private basketService :BasketService,private calendarSetingsComponent: CalendarSetingsComponent) { }
@@ -44,16 +48,59 @@ export class BasketStatisticComponent implements OnInit {
        this.basketStatistic = [];
    }else{
      this.dateError = false;
-     this.basketService.getNumberOfBasketOrdered(this.startDate,this.endDate)
-         .subscribe(data => {
-           this.basketStatistic= data;
-           console.log(this.startDate,this.endDate)
 
-         })
+       if (this.sortByOrderDateCheckBox.nativeElement.checked) {
+           this.basketService.getNumberOfBasketOrderedFilteredByOrderDate(this.startDate,this.endDate)
+               .subscribe(data => {
+                   this.basketStatistic= data;
+                   console.log(this.startDate,this.endDate)
+
+               })
+
+       }else{
+           this.basketService.getNumberOfBasketOrdered(this.startDate,this.endDate)
+               .subscribe(data => {
+                   this.basketStatistic= data;
+                   console.log(this.startDate,this.endDate)
+
+               })
+       }
+
+
    }
 
 
    }
+
+
+    generateXls(){
+        let filt: any[] =[];
+        if (!this.el.filteredValue ){
+            filt = this.el.value;
+        }else{
+            filt = this.el.filteredValue;
+        }
+
+
+        let dataToGenerateFile: any[]=[];
+
+
+        for (let i = 0; i < filt.length;i++) {
+            dataToGenerateFile[i] = {"Nazwa Kosza":filt[i].basketName, "Ilość":filt[i].quantity,"Ilość zamówień z tym koszem":filt[i].numberOfOrdersWhereBasketOccur}
+        }
+
+
+
+        const worksheet: XLSX.WorkSheet = XLSX.utils.json_to_sheet(dataToGenerateFile);
+        const workbook: XLSX.WorkBook = { Sheets: { 'data': worksheet }, SheetNames: ['data'] };
+
+        let today = new Date();
+        let date = today.getFullYear() + '' + (today.getMonth() + 1) + '' + today.getDate() + '_';
+        //let time = today.getHours() + "-" + today.getMinutes() + "-" + today.getSeconds();
+        let fileName = "Zestawienie_" + date + ".xls" ;
+
+        XLSX.writeFile(workbook, fileName, { bookType: 'xls', type: 'buffer' });
+    }
 
 
 }

@@ -1,8 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit, ViewChild} from '@angular/core';
 import {ProductsService} from "../../products/products.service";
 import {CalendarSetingsComponent} from "../../primeNgCalendarSetings/calendarStings.component";
 import {NgForm} from "@angular/forms";
 import {SelectItem} from "primeng/api";
+import * as XLSX from "xlsx";
+import {DataTable} from "primeng/primeng";
 declare var $ :any;
 
 @Component({
@@ -21,7 +23,7 @@ export class StatisticComponent implements OnInit {
   public loading: boolean= false;
   public suppliers: SelectItem[] = [];
   public dateError: boolean = false;
-
+  @ViewChild('dt') el:DataTable;
 
 
   constructor(private productSerive: ProductsService,private calendarSetingsComponent: CalendarSetingsComponent) {
@@ -36,7 +38,6 @@ export class StatisticComponent implements OnInit {
 
 
   ngOnInit() {
-
     this.dateLang = this.calendarSetingsComponent.dateLang;
 
     let today = new Date();
@@ -58,6 +59,40 @@ export class StatisticComponent implements OnInit {
             })
       }
 
+
+
+
+
+    }
+
+
+    generateXls(){
+          let filt: any[] =[];
+      if (!this.el.filteredValue ){
+        filt = this.el.value;
+      }else{
+        filt = this.el.filteredValue;
+      }
+
+
+        let dataToGenerateFile: any[]=[];
+
+
+        for (let i = 0; i < filt.length;i++) {
+            dataToGenerateFile[i] = {"Nazwa Produktu":filt[i].product_name, "Nazwa Dostawcy":filt[i].supplier.supplierName,"Ilość":filt[i].suma}
+        }
+
+
+
+        const worksheet: XLSX.WorkSheet = XLSX.utils.json_to_sheet(dataToGenerateFile);
+        const workbook: XLSX.WorkBook = { Sheets: { 'data': worksheet }, SheetNames: ['data'] };
+
+        let today = new Date();
+        let date = today.getFullYear() + '' + (today.getMonth() + 1) + '' + today.getDate() + '_';
+        //let time = today.getHours() + "-" + today.getMinutes() + "-" + today.getSeconds();
+        let fileName = "Zestawienie_" + date + ".xls" ;
+
+        XLSX.writeFile(workbook, fileName, { bookType: 'xls', type: 'buffer' });
     }
 
 

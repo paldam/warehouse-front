@@ -11,6 +11,8 @@
 
           <button class="btn bg-primary " type="submit" form="MapForm" >Szukaj</button>
 
+          <button type="button" class="btn btn-primary" (click)="generateXls()"><i class="fa fa-file-excel-o fa-x" aria-hidden="true"></i> Export do Excela</button>
+
           <ul class="text-danger list-unstyled" *ngIf="dateError">
             <li >Data początkowa nie może być większa od końcowej</li>
           </ul>
@@ -21,9 +23,11 @@
 </div>
 
 
+
 <p-dataTable [value]="productsToOrder" [rows]="20" [paginator]="true"
-             [loading]="loading" loadingIcon="fa-circle-o-notch" #dt >
+             [loading]="loading" loadingIcon="fa-circle-o-notch" #dt  >
   <p-header>Lista Produktów potrzebych do zamówień</p-header>
+
 
   <p-column  header="lp."   [style]="{'width':'70px'}">
     <ng-template let-row="rowData" let-i="rowIndex" pTemplate="rowexpansion">

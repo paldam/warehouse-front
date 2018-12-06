@@ -31,7 +31,17 @@ export class ProductsStatComponent implements OnInit {
 
 
     gen(){
-        const worksheet: XLSX.WorkSheet = XLSX.utils.json_to_sheet(this.orders);
+
+
+        let cos: any[]=[];
+
+        for (let i = 0; i < this.orders.length; i++) {
+            cos[i] = {"ID":this.orders[i].orderId}
+        }
+
+
+
+        const worksheet: XLSX.WorkSheet = XLSX.utils.json_to_sheet(cos);
         const workbook: XLSX.WorkBook = { Sheets: { 'data': worksheet }, SheetNames: ['data'] };
 
         let today = new Date();

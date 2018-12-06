@@ -16,3 +16,10 @@ label{
     margin-left: 20px;
     margin-right: 10px;
 }
+
+.excel_icon {
+    position: absolute;
+    top: 100px;
+    right: 100px;
+
+}
