@@ -1,0 +1,194 @@
+<button type="button" class="btn btn-primary" (click)="generateXls()"><i class="fa fa-file-excel-o fa-x" aria-hidden="true"></i> Export Zamówienia</button>
+<button type="button" class="btn btn-primary" (click)="generateCustomerXls()"><i class="fa fa-file-excel-o fa-x" aria-hidden="true"></i> Export Klienci</button>
+
+<div class="products_box">
+
+    <div  class="input-group search_bar" >
+            <span class="input-group-addon" id="basic-addon1">
+                 <i class="fa fa-search" aria-hidden="true"></i>
+            </span>
+        <input #globalfilter type="text"  class="form-control search_input" pInputText size="50" placeholder="Szukaj"aria-describedby="basic-addon1" [(ngModel)]="findInputtextOrder">
+
+        <div class="onlyWithAttach form-check">
+            <label class="form-check-label">
+                <input  #onlyWithAttach type="checkbox" class="form-check-input" name=""  (click)="clickOnlyWithAtttach()" >
+                Tylko z załącznikami
+            </label>
+        </div>
+
+
+        <i class="fa fa-refresh pull-right refresh_icon fa-2x" aria-hidden="true" (click)="refreshData()"></i>
+
+    </div>
+    <p-dataTable [value]="orders" [rows]="20" [paginator]="true" [globalFilter]="globalfilter" #dt
+                 [loading]="loading" loadingIcon="fa-circle-o-notch" expandableRows="true" [(first)]="lastVisitedPageOrder"
+                 (onRowExpand)="rowExpand($event)" selectionMode="multiple" [(selection)]="selectedOrdersMultiselction"  dataKey="orderId" [contextMenu]="cm" (onContextMenuSelect)="OnSelectRow($event)">
+        <p-header>Lista Zamówień</p-header>
+        <p-column expander="true" header="" styleClass="col-icon " [style]="{'width':'40px'}"></p-column>
+        <!--<p-column  header="lp."   [style]="{'width':'70px'}">-->
+        <!--<ng-template let-i="rowIndex" pTemplate="rowexpansion">-->
+        <!--{{i+1}}-->
+        <!--</ng-template>-->
+        <!--</p-column>-->
+        <p-column field="orderFvNumber" header="Numer FV" [sortable]="true" ></p-column>
+
+
+
+
+        <p-column field="orderDate" header="Data zamówienia" [sortable]="true" [filter]="!this.isCurrentPageCustomerEdit" filterMatchMode="equals">
+
+            <ng-template *ngIf="!this.isCurrentPageCustomerEdit" let-col pTemplate="filter"  >
+                <p-dropdown #yearFilter [options]="ordersYears" [style]="{'width':'100%'}" (onChange)="filterOrderYear($event.value)" styleClass="ui-column-filter"></p-dropdown>
+            </ng-template>
+
+            <ng-template let-row="rowData" pTemplate="body"  >
+                {{row.orderDate| date: 'dd/MM/yyyy HH:mm:ss'}}
+            </ng-template>
+        </p-column>
+
+
+
+
+
+        <p-column field="customer.customerName" header="Nabywca" [sortable]="true">
+            <ng-template let-row="rowData" pTemplate="body"  >
+                {{row.customer.name}} {{row.customer.organizationName}}
+            </ng-template>
+        </p-column>
+
+        <!--Hide columns, only to global search purpose-->
+        <p-column field="customer.name" header=""  hidden="true"></p-column>
+        <p-column field="customer.organizationName" header=""  hidden="true"></p-column>
+
+
+
+        <p-column field="additionalInformation" header="Dodatkowe informacje" ></p-column>
+
+        <p-column field="deliveryDate" header="Data dostawy"  [sortable]="true">
+            <ng-template let-row="rowData" pTemplate="body"  >
+                {{row.deliveryDate| date: 'dd/MM/yyyy'}}
+            </ng-template>
+        </p-column>
+
+
+
+
+
+
+        <p-column field="weekOfYear" header="T" [sortable]="true"[style]="{'width':'35px'}" ></p-column>
+
+        <p-column field="orderTotalAmount" header="total" [sortable]="true">
+            <ng-template let-row="rowData" pTemplate="body"  >
+                {{row.orderTotalAmount/100 | number : '1.2-2'}} zł
+            </ng-template>
+        </p-column>
+
+
+        <p-column field="orderStatus.orderStatusName" header="Status" [filter]="!this.isCurrentPageCustomerEdit" filterMatchMode="equals" [sortable]="true" >
+
+            <ng-template *ngIf="!this.isCurrentPageCustomerEdit" let-col pTemplate="filter"  >
+                <p-dropdown #statusFilter [options]="orderStatusList" [style]="{'width':'100%'}" (onChange)="filterStatus($event.value)" styleClass="ui-column-filter"></p-dropdown>
+            </ng-template>
+
+            <ng-template let-row="rowData" pTemplate="body"  >
+                <span [ngStyle]="calculateStyles(row.orderStatus.orderStatusName)">{{row.orderStatus.orderStatusName }}</span>
+            </ng-template>
+
+        </p-column>
+
+
+
+        <p-column field="deliveryType.deliveryTypeName" header="Rodzaj dostawy" ></p-column>
+
+
+        <p-column class="attach_col" field="dbFileId"   [sortable]="true" header="Z" styleClass="attach_col">
+            <ng-template let-row="rowData"  pTemplate="body">
+
+                <span *ngIf="row.dbFileId!=0"> <i class="fa fa-2x fa-paperclip" aria-hidden="true"></i></span>
+            </ng-template>
+        </p-column>
+
+        <p-column class="attach_col" field="additionalSale"   [sortable]="true" header="Z" styleClass="attach_col">
+            <ng-template let-row="rowData"  pTemplate="body">
+
+                <span *ngIf="row.additionalSale==1"> <i class="fa fa-2x fa-check" aria-hidden="true"></i></span>
+            </ng-template>!=
+        </p-column>
+
+        <p-column class="action_col"  field="orders" header="Akcja" styleClass="action_col">
+            <ng-template let-order="rowData" let-i="rowIndex" pTemplate="body">
+                <i class="fa fa-pencil-square-o fa-2x" aria-hidden="true"  title="Edytuj zamówienie" (click)="goToEditPage(i+1,order.orderId)"></i>
+                <i  *ngIf="authenticationService.isAdmin()" class="fa fa-trash fa-2x edit_icon" aria-hidden="true" title="Usuń zamówienie" (click)="ShowConfirmModal(order)"></i>
+                <i class="fa fa-print fa-2x " aria-hidden="true" title="Drukuj zamówienie" (click)="printPdf(order.orderId)" ></i>
+                <i class="fa fa-file-pdf-o fa-2x " aria-hidden="true" title="Drukuj potwierdzenie odbioru" (click)="showPrintOrderDeliveryConfirmationWindows(order.orderId)" ></i>
+                <i class="fa fa-book fa-2x " aria-hidden="true" title="Drukuj Liste produktów zamówienia" (click)=" printProductListPdf(order.orderId)" ></i>
+            </ng-template>
+        </p-column>
+
+
+        <ng-template let-orders pTemplate="rowexpansion" >
+            <div class="basket_products_info">
+                <p>Pozycje zamówienia</p>
+                <table class="product_tab" >
+                    <thead>
+                    <tr class="product_tab_row">
+                        <th>Nazwa kosza</th>
+                        <th>illość</th>
+
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr class="product_tab_row" *ngFor="let i of orders.orderItems">
+                        <td>{{i.basket.basketName}}</td>
+                        <td>{{i.quantity}}</td>
+
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </ng-template>
+    </p-dataTable>
+</div>
+
+
+<p-confirmDialog header="Usuwanie produktu" icon="fa fa-question-circle" width="425"></p-confirmDialog>
+
+
+
+
+<p-dialog header="Wybierz pozycje do wydruku:" closeOnEscape="false" modal="true" width="600" [(visible)]="printDeliveryConfirmationPdFSettings"  >
+    <p-dataTable [value]="selectedToPrintOrder.orderItems" [rows]="20"   [paginator]="true"  #dt [loading]="loading" loadingIcon="fa-circle-o-notch"  >
+        <p-column field="basket.basketName" styleClass="nazwa" header="Nazwa kosza"></p-column>
+        <p-column field="quantity"   styleClass="quantity_col" header="Ilość"   >
+            <ng-template let-row="rowData" pTemplate="body" type="number">
+                <p-spinner size="4" [(ngModel)]="row.quantity" [min]="0"></p-spinner>
+            </ng-template>
+        </p-column>
+    </p-dataTable>
+
+    <button type="button" (click)="printConfirmationPdf()" class="btn btn-primary"> Drukuj potwierzenie</button>
+</p-dialog>
+
+
+<p-dialog *ngIf="fileFilterLoaded | async" header="Podgląd załączników do zamówienia" closeOnEscape="false" modal="true" width="600" [(visible)]="showAttachmentModal"  >
+
+
+    <p *ngIf="selectedOrderFileList.length ==0"> Brak załączników dla tego zamówienia</p>
+
+    <table >
+        <thead>
+        </thead>
+        <tbody>
+        <tr class="fileLink"  *ngFor="let item of selectedOrderFileList" >
+            <td class="fileprev" (click)="getFile(item.fileId)" ><i class="fa fa-file-text-o" aria-hidden="true"></i>  {{item.fileName}}</td>
+            <!--<td *ngIf="authenticationService.isAdmin() || authenticationService.isBiuroUser()"> <i (click)="ShowConfirmModal(item)" class="fa fa-trash"></i></td>-->
+        </tr>
+        </tbody>
+    </table>
+
+</p-dialog>
+
+
+
+<p-contextMenu #cm [model]="items"> </p-contextMenu>
+

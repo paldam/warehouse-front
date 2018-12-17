@@ -1,6 +1,5 @@
 import {Component, ElementRef, OnInit, ViewChild, ViewEncapsulation} from '@angular/core';
 import {Order} from '../../model/order.model';
-import {OrderService} from '../order.service';
 import {ActivatedRoute, Router, RoutesRecognized} from "@angular/router";
 import {ConfirmationService, DataTable, Dropdown, SelectItem} from "primeng/primeng";
 import {AuthenticationService} from "../../authentication.service";
@@ -11,15 +10,16 @@ import {MessageServiceExt} from "../../messages/messageServiceExt";
 import {MenuItem} from "primeng/api";
 import {File} from "../../model/file";
 import * as XLSX from "xlsx";
+import {OrderService} from "../../order/order.service";
 
 @Component({
-    selector: 'order',
-    templateUrl: './order.component.html',
-    styleUrls: ['./order.component.css'],
+    selector: 'order-stats',
+    templateUrl: './order-stats.component.html',
+    styleUrls: ['./order-stats.component.css'],
     encapsulation: ViewEncapsulation.None
 })
 
-export class OrderComponent implements OnInit {
+export class OrderStatsComponent implements OnInit {
     public loading: boolean= false;
     public orders: any[]=[];
     public ordersNotFiltered: any[]=[];
@@ -63,7 +63,7 @@ export class OrderComponent implements OnInit {
 
 
         } else {
-            orderService.getOrdersDto().subscribe(data => {
+            orderService.getOrderStats().subscribe(data => {
                 this.orders = data;
                 this.ordersNotFiltered = data;
             });
@@ -136,7 +136,7 @@ export class OrderComponent implements OnInit {
                     {label: 'skompletowane', icon: 'pi pi-fw pi-plus',command: (event) => this.changeOrderStatus(3)},
                     {label: 'wysłane', icon: 'pi pi-fw pi-plus',command: (event) => this.changeOrderStatus(2)},
                     {label: 'zrealizowane', icon: 'pi pi-fw pi-plus',command: (event) => this.changeOrderStatus(5)},
-                 ]
+                ]
             },
             {label: 'Pokaż załącznik(i)', icon: 'fa fa-paperclip',command: (event) => this.showAttachment()},
             {label: 'Wydrukuj', icon: 'fa fa-print',command: (event) => this.printMultiplePdf()},
@@ -160,7 +160,7 @@ export class OrderComponent implements OnInit {
                 this.orderService.getOrderByCustomer(this.currentCustomerOnCustomerEditPage).subscribe(data=> this.orders=data);
 
             }else{
-                this.orderService.getOrdersDto().subscribe(data=> this.orders=data);
+                this.orderService.getOrderStats().subscribe(data=> this.orders=data);
             }
 
             this.loading = false;
@@ -424,5 +424,102 @@ export class OrderComponent implements OnInit {
         )
     }
 
+    generateXls(){
+        let filt: any[] =[];
+        if (!this.datatable.filteredValue ){
+            filt = this.datatable.value;
+        }else{
+            filt = this.datatable.filteredValue;
+        }
+
+
+        let dataToGenerateFile: any[]=[];
+
+
+        for (let i = 0; i < filt.length;i++) {
+            let zestawy = "";
+            let orderDateTmp = new Date(filt[i].orderDate);
+
+
+
+            for (let n = 0; n < filt[i].orderItems.length;n++){
+                zestawy += filt[i].orderItems[n].basket.basketName;
+                zestawy += " szt. " + filt[i].orderItems[n].quantity + " | ";
+            }
+
+
+            dataToGenerateFile[i] = {"Data Zamówienia":orderDateTmp.toLocaleString(), "Numer Zamówienia":filt[i].orderId,"Klient":filt[i].customer.organizationName,"Data dostawy":filt[i].deliveryDate,"Typ Dostawy":filt[i].deliveryType.deliveryTypeName,"Wybrane zestawy":zestawy}
+        }
+
+
+
+        const worksheet: XLSX.WorkSheet = XLSX.utils.json_to_sheet(dataToGenerateFile);
+        const workbook: XLSX.WorkBook = { Sheets: { 'data': worksheet }, SheetNames: ['data'] };
+
+        let today = new Date();
+        let date = today.getFullYear() + '' + (today.getMonth() + 1) + '' + today.getDate() + '_';
+        //let time = today.getHours() + "-" + today.getMinutes() + "-" + today.getSeconds();
+        let fileName = "Zestawienie_" + date + ".xls" ;
+
+        XLSX.writeFile(workbook, fileName, { bookType: 'xls', type: 'buffer' });
+    }
+
+    generateCustomerXls(){
+        let filt: any[] =[];
+        if (!this.datatable.filteredValue ){
+            filt = this.datatable.value;
+        }else{
+            filt = this.datatable.filteredValue;
+        }
+
+
+        let dataToGenerateFile: any[]=[];
+
+
+        for (let i = 0; i < filt.length;i++) {
+            let zestawy = "";
+            let orderDateTmp = new Date(filt[i].orderDate);
+            let address = "";
+
+
+
+                for (let n = 0; n < filt[i].orderItems.length;n++){
+                    zestawy += filt[i].orderItems[n].basket.basketName;
+                    zestawy += " szt. " + filt[i].orderItems[n].quantity + " | ";
+                }
+
+                for (let z = 0; z < filt[i].customer.addresses.length;z++){
+
+                    if(filt[i].customer.addresses[z].isPrimaryAddress == 1){
+
+                         address += filt[i].customer.addresses[z].address + " " + filt[i].customer.addresses[z].cityName + " " + filt[i].customer.addresses[z].zipCode;
+                    }
+                }
+
+
+            dataToGenerateFile[i] = {
+                "Firma":filt[i].customer.organizationName,
+                "Nazwa Klienta":filt[i].customer.name,
+                "Adres": address,
+                "Telefon":filt[i].customer.phoneNumber,
+                "Email":filt[i].customer.email,
+                "Wartość zamówienia":filt[i].orderTotalAmount/100,
+                "Data Zamówienia":orderDateTmp.toLocaleString(),
+                "Uwagi":filt[i].additionalInformation,
+                "Wybrane zestawy":zestawy}
+        }
+
+
+
+        const worksheet: XLSX.WorkSheet = XLSX.utils.json_to_sheet(dataToGenerateFile);
+        const workbook: XLSX.WorkBook = { Sheets: { 'data': worksheet }, SheetNames: ['data'] };
+
+        let today = new Date();
+        let date = today.getFullYear() + '' + (today.getMonth() + 1) + '' + today.getDate() + '_';
+        //let time = today.getHours() + "-" + today.getMinutes() + "-" + today.getSeconds();
+        let fileName = "Zestawienie_" + date + ".xls" ;
+
+        XLSX.writeFile(workbook, fileName, { bookType: 'xls', type: 'buffer' });
+    }
 
 }

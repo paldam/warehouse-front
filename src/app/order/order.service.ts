@@ -75,6 +75,12 @@ export class OrderService {
                 response.json());
     }
 
+    getOrderStats(): Observable<any[]>{
+        return this.http.get(this.baseUrl+`/orderstats/`)
+            .map((response: Response) =>
+                response.json());
+    }
+
     getOrdersWithAttach(): Observable<Order[]>{
         return this.http.get(this.baseUrl+`/orderswithattch/`)
             .map((response: Response) =>
