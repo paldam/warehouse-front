@@ -1,0 +1,66 @@
+<div class="filterOptionRadioGroup">
+  <div class="form-check">
+    <input class="form-check-input" #sortByDeliveryDate type="radio" name="exampleRadios" id="exampleRadios1" value="option1" checked>
+    <label class="form-check-label" for="exampleRadios1">
+      Sortuj po dacie dostawy
+    </label>
+  </div>
+  <div class="form-check">
+    <input class="form-check-input"  #sortByOrderDate type="radio" name="exampleRadios" id="exampleRadios2" value="option2">
+    <label class="form-check-label" for="exampleRadios2">
+      Sortuj po dacie zamówienia
+    </label>
+  </div>
+</div>
+
+<div class="map_cont">
+  <div class="row input_form">
+    <form id="MapForm" novalidate #form="ngForm" (submit)="submitOrderForm(form)">
+      <div class="map_cont">
+        <div class="row input_form">
+          <label for="start_date" >Data początkowa</label>
+          <p-calendar [dataType]="'string'" [utc]="false"  [locale]="dateLang"  dateFormat="yy-mm-dd" name="start_date" [(ngModel)]="startDate" required></p-calendar>
+          <label for="end_date" >Data końcowa</label>
+          <p-calendar [dataType]="'string'" [utc]="false"  [locale]="dateLang" dateFormat="yy-mm-dd" id="end_date" name="end_date" #end_date="ngModel" aria-describedby="end_dateDesc" [(ngModel)]="endDate" ></p-calendar>
+
+
+          <button class="btn bg-primary " type="submit" form="MapForm" >Szukaj</button>
+
+          <button type="button" class="btn btn-primary" (click)="generateXls()"><i class="fa fa-file-excel-o fa-x" aria-hidden="true"></i> Export do Excela</button>
+
+          <ul class="text-danger list-unstyled" *ngIf="dateError">
+            <li >Data początkowa nie może być większa od końcowej</li>
+          </ul>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+
+
+
+<p-dataTable [value]="productsToOrder" [rows]="20" [paginator]="true"
+             [loading]="loading" loadingIcon="fa-circle-o-notch" #dt  >
+  <p-header>Lista Produktów potrzebych do zamówień</p-header>
+
+
+  <p-column  header="lp."   [style]="{'width':'70px'}">
+    <ng-template let-row="rowData" let-i="rowIndex" pTemplate="rowexpansion">
+      {{i+1}}
+    </ng-template>
+  </p-column>
+  <p-column field="product_name"  header="Nazwa"></p-column>
+  <p-column field="supplier.supplierName"  header="Dostawca" [sortable]="true"></p-column>
+
+  <p-column field="supplier.supplierName" header="Dostawca" [filter]="true" filterMatchMode="equals">
+    <ng-template pTemplate="filter" let-col>
+      <p-dropdown [options]="suppliers" [style]="{'width':'100%'}" (onChange)="dt.filter($event.value,col.field,col.filterMatchMode)" styleClass="ui-column-filter"></p-dropdown>
+    </ng-template>
+  </p-column>
+  <p-column field="capacity"  header="Pojemność " [style]="{'width':'120px'}" ></p-column>
+
+  <p-column field="stock"  header="Stan Magazynu" [style]="{'width':'120px'}" ></p-column>
+  <p-column field="suma"  header="Potrzebna ilość" [sortable]="true" [style]="{'width':'120px'}" ></p-column>
+  <p-column  field="tmpOrdered" styleClass="capacity_col" header="Liczba zamówionych" [sortable]="true"></p-column>
+
+</p-dataTable>

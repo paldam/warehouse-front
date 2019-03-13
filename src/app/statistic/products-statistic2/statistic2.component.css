@@ -1,0 +1,30 @@
+.map_cont{
+    padding: 40px;
+    padding-top: 0px;
+}
+.input_form{
+    margin-bottom: 10px;
+}
+
+.table{
+    margin-left: 20px;
+}
+.btn{
+    margin-left: 30px;
+}
+label{
+    margin-left: 20px;
+    margin-right: 10px;
+}
+
+.excel_icon {
+    position: absolute;
+    top: 100px;
+    right: 100px;
+
+}
+
+.filterOptionRadioGroup{
+    margin-left: 63px;
+    padding-bottom: 10px;
+}
