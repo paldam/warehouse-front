@@ -28,6 +28,13 @@ export class BasketService {
             .map((response: Response) => response.json());
     }
 
+    getBasketsWithDeleted(): Observable<Basket[]> {
+        return this.http.get(this.baseUrl+`/basketswithdeleted/`)
+            .map((response: Response) => response.json());
+    }
+
+
+
     getDeletedBaskets(): Observable<Basket[]> {
         return this.http.get(this.baseUrl+`/deletedbaskets/`)
             .map((response: Response) => response.json());

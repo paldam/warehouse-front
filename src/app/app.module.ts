@@ -61,6 +61,7 @@ import {BasketExtService} from './basket/basket-ext.service';
 import { NotesComponent } from './notes/notes.component';
 import {NotesService} from "./notes/notes-service";
 import {OrderStatsComponent} from "./statistic/order-stat/order-stats.component";
+import {Statistic2Component} from "./statistic/products-statistic2/statistic2.component";
 
 
 
@@ -89,6 +90,7 @@ export function httpExt(backend: XHRBackend, options: RequestOptions, router: Ro
     PageNotFoundComponent,
     MapsComponent,
     StatisticComponent,
+      Statistic2Component,
     FileSendComponent,
     CustomerComponent,
     CustomerAddComponent,

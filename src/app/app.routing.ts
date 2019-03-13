@@ -25,6 +25,7 @@ import {BasketExtComponentComponent} from './basket/basket-ext-component/basket-
 import {BasketExtAddComponentComponent} from './basket/basket-ext-add-component/basket-ext-add-component.component';
 import {NotesComponent} from "./notes/notes.component";
 import {OrderStatsComponent} from "./statistic/order-stat/order-stats.component";
+import {Statistic2Component} from "./statistic/products-statistic2/statistic2.component";
 const routes: Routes = [
     {path: '', component: ProductsComponent, pathMatch: 'full', canActivate: [AuthGuard]},
     { path: 'product', component: ProductsComponent, canActivate: [AuthGuard] },
@@ -42,6 +43,7 @@ const routes: Routes = [
     {path:   'admin', component: AdminComponent,canActivate: [AuthGuard,AdminGuard]},
     {path:   'maps', component: MapsComponent,canActivate: [AuthGuard]},
     {path:   'statistics/products', component: StatisticComponent,canActivate: [AuthGuard]},
+    {path:   'statistics/products2', component: Statistic2Component,canActivate: [AuthGuard]},
     {path:   'statistics/basket', component: BasketStatisticComponent,canActivate: [AuthGuard]},
     {path:   'statistics/orderstats', component: OrderStatsComponent,canActivate: [AuthGuard]},
     {path:   'notes', component: NotesComponent,canActivate: [AuthGuard]},

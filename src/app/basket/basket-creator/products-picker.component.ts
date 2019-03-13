@@ -135,13 +135,9 @@ export class ProductPickerComponent implements OnInit{
         this.basketPatterPickDialogShow= false;
     }
 
-
     showBasketPatterList() {
         this.basketPatterPickDialogShow = true;
-        this.basketService.getBaskets().subscribe(data=> this.basketsToSchema = data);
+        this.basketService.getBasketsWithDeleted().subscribe(data => this.basketsToSchema = data);
+
     }
-
-
-
-
 }

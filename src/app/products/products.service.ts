@@ -80,6 +80,21 @@ export class ProductsService {
             response.json());
   }
 
+
+
+
+    getProductsToOrderWithoutDeletedByDeliveryDate(startDate , endDate): Observable<any[]> {
+        return this.http.get(this.baseUrl+`/orders/products_to_order_without_deleted_by_delivery_date/daterange?startDate=${startDate}&endDate=${endDate}`)
+            .map((response: Response) =>
+                response.json());
+    }
+
+    getProductsToOrderWithoutDeletedByOrderDate(startDate , endDate): Observable<any[]> {
+        return this.http.get(this.baseUrl+`/orders/products_to_order_without_deleted_by_order_date/daterange?startDate=${startDate}&endDate=${endDate}`)
+            .map((response: Response) =>
+                response.json());
+    }
+
   getProduct(id: number): Observable<Product> {
     return this.http.get(this.baseUrl+`/products/${id}`)
         .map((response: Response) =>
