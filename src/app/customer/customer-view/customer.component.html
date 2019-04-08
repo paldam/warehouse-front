@@ -11,7 +11,7 @@
 
   </div>
 
-  <p-dataTable [value]="customersList" [rows]="50" [paginator]="true" [globalFilter]="gb" #dt
+  <p-dataTable [value]="customersList" [rows]="50" [paginator]="true" [globalFilter]="gb" #dt (onRowDblclick)="router.navigateByUrl('/customer/' + $event.data.customerId)"
                [loading]="loading" loadingIcon="fa-circle-o-notch" expandableRows="true" [paginator]="true" [pageLinks]="5" [rowsPerPageOptions]= paginatorValues>
 
     <p-column styleClass="lp_col"  header="lp." >

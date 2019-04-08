@@ -11,7 +11,7 @@
     <i class="fa fa-refresh pull-right refresh_icon fa-2x" aria-hidden="true" (click)="refreshData()"></i>
 </div>
 
-<p-dataTable [value]="products" [rows]="50" [paginator]="true" [globalFilter]="gb" #dt
+<p-dataTable [value]="products" [rows]="50" [paginator]="true" [globalFilter]="gb" #dt (onRowDblclick)="goToEditPage(1,$event.data.id)"
              [loading]="loading" loadingIcon="fa-circle-o-notch"   [(first)]="lastVisitedPage"  [paginator]="true" [pageLinks]="5" [rowsPerPageOptions]= paginatorValues  >
         <p-header>Lista Produktów</p-header>
 

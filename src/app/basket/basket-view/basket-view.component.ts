@@ -21,7 +21,7 @@ export class BasketComponent implements OnInit {
   @ViewChild('onlyDeleted') el:ElementRef;
     public paginatorValues = AppConstans.PAGINATOR_VALUES;
 
-  constructor(private basketService: BasketService, private router :Router, private confirmationService: ConfirmationService, private authenticationService :AuthenticationService) {
+  constructor(private basketService: BasketService, public router :Router, private confirmationService: ConfirmationService, private authenticationService :AuthenticationService) {
     basketService.getBaskets().subscribe(data => this.baskets = data);
     this.url = router.url;
   }

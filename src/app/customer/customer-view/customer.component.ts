@@ -7,6 +7,7 @@ import {MessageServiceExt} from "../../messages/messageServiceExt";
 import {ConfirmationService} from "primeng/api";
 import {AuthenticationService} from "../../authentication.service";
 import {AppConstans} from "../../constans";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-customer',
@@ -22,7 +23,8 @@ export class CustomerComponent implements OnInit {
   public selectedValue: any ;
     public paginatorValues = AppConstans.PAGINATOR_VALUES;
 
-  constructor(private customerService :CustomerService, private  orderService: OrderService,private messageServiceExt: MessageServiceExt, private confirmationService : ConfirmationService, private authenticationService :AuthenticationService) {
+  constructor(private customerService :CustomerService, private  orderService: OrderService,private messageServiceExt: MessageServiceExt,
+              private confirmationService : ConfirmationService, private authenticationService :AuthenticationService, public router :Router) {
 
     customerService.getAllCustomerWithPrimaryAddress().subscribe(data=>{
       this.customersList = data;
@@ -44,6 +46,11 @@ export class CustomerComponent implements OnInit {
     }, 1000);
 
   }
+
+test(event){
+    console.log("dasdas");
+    console.log(event);
+}
 
 
   getOrdersByCustomer(id :number){
