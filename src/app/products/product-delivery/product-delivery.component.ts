@@ -44,10 +44,16 @@ export class ProductDeliveryComponent implements OnInit {
       }
       console.log(this.router.url);
     productsService.getSuppliers().subscribe(data=> this.productSuppliers = data);
+
+       setTimeout(() => {
+           console.log(this.productsBySupplier); ;
+       }, 5000 );
+
   }
 
   ngOnInit() {
   }
+
 
   selectSupplier(id: number){
 
@@ -55,7 +61,7 @@ export class ProductDeliveryComponent implements OnInit {
 
       this.productsService.getProductsBySupplier(id).subscribe((data : any)=>{
 
-          data.forEach(function(obj) { obj.add = 0; });
+          data.forEach(function(obj) { obj.add = obj.tmpOrdered; });
 
         this.productsBySupplier = data;
 
@@ -86,7 +92,7 @@ export class ProductDeliveryComponent implements OnInit {
 
     this.productsService.getProductsBySupplier( this.selectedSupplierId).subscribe((data : any)=>{
 
-      data.forEach(function(obj) { obj.add = 0; });
+      data.forEach(function(obj) { obj.add = obj.tmpOrdered; });
 
       this.productsBySupplier = data;
     } )
