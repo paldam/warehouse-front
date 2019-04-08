@@ -84,9 +84,19 @@
   </div>
 </div>
 
+<!--TODO-->
+<div *ngIf="authenticationService.isAdmin()" class="row" >
+  <div class="col-lg-4">
+<p-fieldset legend="Zerowanie stanów magazynowych">
+    <button class="btn bg-primary " (click)="resetDbAllStockState()" > Wyzeruj stan</button>
+</p-fieldset>
+
+  </div>
+</div>
+
 <p-confirmDialog header="Usuwanie użytkownika" key="removeDialog" icon="fa fa-question-circle" width="425"></p-confirmDialog>
 <p-confirmDialog header="Resetowanie hasła" key="resetDialog" icon="fa fa-question-circle" width="425"></p-confirmDialog>
-
+<p-confirmDialog header="Resetowanie stanu magazynowego" key="resetState" icon="fa fa-question-circle" width="425"></p-confirmDialog>
 
 <p-dialog header="Zmień uprawnienia" [(visible)]="changeModal" modal="modal" width="300" [responsive]="true">
   <p>Wybierz uprawnienia dla użytkownia {{selectedUser.login}}</p>

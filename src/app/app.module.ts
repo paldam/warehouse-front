@@ -62,6 +62,7 @@ import { NotesComponent } from './notes/notes.component';
 import {NotesService} from "./notes/notes-service";
 import {OrderStatsComponent} from "./statistic/order-stat/order-stats.component";
 import {Statistic2Component} from "./statistic/products-statistic2/statistic2.component";
+import {AdminService} from "./admin/admin.service";
 
 
 
@@ -109,7 +110,7 @@ export function httpExt(backend: XHRBackend, options: RequestOptions, router: Ro
   ],
   providers: [ {
     provide: HttpService, useFactory: (httpExt) , deps: [XHRBackend, RequestOptions,Router,MessageService]},
-    CalendarSetingsComponent,MessageServiceExt,NotesService,MessageService,ProductsService,BasketService,BasketExtService,CustomerService,FileSendService,CustomerService,OrderService,MapService,ConfirmationService,AuthGuard,AdminGuard,AdminOrSuperUserGuard,AuthenticationService,UserService],
+    CalendarSetingsComponent,MessageServiceExt,AdminService, NotesService,MessageService,ProductsService,BasketService,BasketExtService,CustomerService,FileSendService,CustomerService,OrderService,MapService,ConfirmationService,AuthGuard,AdminGuard,AdminOrSuperUserGuard,AuthenticationService,UserService],
 
   bootstrap: [AppComponent]
 })

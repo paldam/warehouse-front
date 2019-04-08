@@ -5,7 +5,9 @@ import {UserService} from "../user.service";
 import {Router} from "@angular/router";
 import {NgForm} from "@angular/forms";
 import {ConfirmationService} from "primeng/primeng";
-import {TOKEN_USER} from "../authentication.service";
+import {AuthenticationService, TOKEN_USER} from "../authentication.service";
+import {AdminService} from "./admin.service";
+import {MessageServiceExt} from "../messages/messageServiceExt";
 
 @Component({
   selector: 'app-admin',
@@ -27,7 +29,8 @@ export class AdminComponent implements OnInit {
     public authoritiesToSave: Authorities []=[];
     public loading: boolean;
 
-    constructor(private userService: UserService, private router: Router, private confirmationService: ConfirmationService) {
+    constructor(private userService: UserService, private router: Router, private confirmationService: ConfirmationService,public authenticationService: AuthenticationService,
+                public adminService: AdminService, private messageServiceExt : MessageServiceExt) {
         userService.getAuthorities().subscribe(data => {
             this.authorities = data
         });
@@ -118,6 +121,34 @@ export class AdminComponent implements OnInit {
     showChangeDialog(user: User) {
         this.changeModal = true;
         this.selectedUser = user;
+    }
+
+    resetDbAllStockState(){
+        this.confirmationService.confirm({
+            key:"resetState",
+            message: 'Jesteś pewny że chcesz zresetować stan magazynowy ?',
+            accept: () => {
+
+            this.adminService.resetProductsStates().subscribe(
+
+                data => {
+                    setTimeout(() => {
+                        this.messageServiceExt.addMessageWithTime('success', 'Status', 'Wyzerowano stany magazynowe',5000);
+                    }, 400);
+                },
+                error => {
+                    setTimeout(() => {
+                        console.log(error);
+                        this.messageServiceExt.addMessage('error', 'Błąd', "Status: " + error._body + ' '  );
+                    }, 400);
+                } )
+
+
+            },
+            reject: () => {
+
+            }
+        });
     }
 
 }
