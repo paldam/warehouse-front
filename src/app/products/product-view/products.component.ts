@@ -8,6 +8,7 @@ import {ProductsService} from "../products.service";
 import {Product} from "../../model/product.model";
 import {consoleTestResultsHandler} from "tslint/lib/test";
 import {AuthenticationService} from "../../authentication.service";
+import {AppConstans} from "../../constans";
 
 
 @Component({
@@ -24,6 +25,7 @@ export class ProductsComponent implements OnInit {
   public showBasketsContainsSpecyficProductModal : boolean = false;
   public basketsListByProduct: any[];
   public dataFilterLoaded: Promise<boolean>;
+  public paginatorValues = AppConstans.PAGINATOR_VALUES;
 
 
   @ViewChild('dt') dataTable: DataTable;

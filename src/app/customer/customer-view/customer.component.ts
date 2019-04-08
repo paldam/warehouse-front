@@ -6,6 +6,7 @@ import {Order} from "../../model/order.model";
 import {MessageServiceExt} from "../../messages/messageServiceExt";
 import {ConfirmationService} from "primeng/api";
 import {AuthenticationService} from "../../authentication.service";
+import {AppConstans} from "../../constans";
 
 @Component({
   selector: 'app-customer',
@@ -19,6 +20,7 @@ export class CustomerComponent implements OnInit {
   public customersList :any[]=[];
   public allOrdersByCustomerList : Order[] = [];
   public selectedValue: any ;
+    public paginatorValues = AppConstans.PAGINATOR_VALUES;
 
   constructor(private customerService :CustomerService, private  orderService: OrderService,private messageServiceExt: MessageServiceExt, private confirmationService : ConfirmationService, private authenticationService :AuthenticationService) {
 

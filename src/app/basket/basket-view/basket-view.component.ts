@@ -5,6 +5,7 @@ import {Basket} from "../../model/basket.model";
 import {ConfirmationService} from "primeng/primeng";
 import {BasketType} from "../../model/basket_type.model";
 import {AuthenticationService} from "../../authentication.service";
+import {AppConstans} from "../../constans";
 
 @Component({
   selector: 'app-basket',
@@ -18,7 +19,7 @@ export class BasketComponent implements OnInit {
   public gb: any;
   public url: string ='';
   @ViewChild('onlyDeleted') el:ElementRef;
-
+    public paginatorValues = AppConstans.PAGINATOR_VALUES;
 
   constructor(private basketService: BasketService, private router :Router, private confirmationService: ConfirmationService, private authenticationService :AuthenticationService) {
     basketService.getBaskets().subscribe(data => this.baskets = data);

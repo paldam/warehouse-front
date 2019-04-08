@@ -11,6 +11,7 @@ import {MessageServiceExt} from "../../messages/messageServiceExt";
 import {MenuItem} from "primeng/api";
 import {File} from "../../model/file";
 import * as XLSX from "xlsx";
+import {AppConstans} from "../../constans";
 
 @Component({
     selector: 'order',
@@ -36,6 +37,7 @@ export class OrderComponent implements OnInit {
     public selectedOrdersMultiselction: Order[]=[];
     public orderStatusList: SelectItem[];
     public items: MenuItem[];
+    public paginatorValues = AppConstans.PAGINATOR_VALUES;
     fileFilterLoaded: Promise<boolean>;
 
     public selectedOrderFileList: File[]=[];

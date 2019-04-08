@@ -11,8 +11,8 @@
 
   </div>
 
-  <p-dataTable [value]="customersList" [rows]="30" [paginator]="true" [globalFilter]="gb" #dt
-               [loading]="loading" loadingIcon="fa-circle-o-notch" expandableRows="true">
+  <p-dataTable [value]="customersList" [rows]="50" [paginator]="true" [globalFilter]="gb" #dt
+               [loading]="loading" loadingIcon="fa-circle-o-notch" expandableRows="true" [paginator]="true" [pageLinks]="5" [rowsPerPageOptions]= paginatorValues>
 
     <p-column styleClass="lp_col"  header="lp." >
       <ng-template let-i="rowIndex" pTemplate="rowexpansion">
