@@ -26,6 +26,7 @@ import {BasketExtAddComponentComponent} from './basket/basket-ext-add-component/
 import {NotesComponent} from "./notes/notes.component";
 import {OrderStatsComponent} from "./statistic/order-stat/order-stats.component";
 import {Statistic2Component} from "./statistic/products-statistic2/statistic2.component";
+import {SuppliersComponent} from "./suppliers/suppliers.component";
 const routes: Routes = [
     {path: '', component: ProductsComponent, pathMatch: 'full', canActivate: [AuthGuard]},
     { path: 'product', component: ProductsComponent, canActivate: [AuthGuard] },
@@ -53,7 +54,8 @@ const routes: Routes = [
     {path:   'customer/add', component: CustomerAddComponent},
     {path:   'customer/:id', component: CustomerEditComponent},
     {path:   'products/delivery', component: ProductDeliveryComponent},
-    {path:   'products/setdelivery', component: ProductDeliveryComponent}
+    {path:   'products/setdelivery', component: ProductDeliveryComponent},
+    {path:   'products/suppliers', component: SuppliersComponent}
 ];
 export const routing = RouterModule.forRoot(routes,{ useHash: true });
 

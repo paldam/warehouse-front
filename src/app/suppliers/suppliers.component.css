@@ -1,0 +1,26 @@
+.products_box {
+    float: none;
+    margin: 0 auto;
+}
+
+.search_bar {
+    padding-bottom: 20px;
+}
+
+.search_input{
+    max-width: 50%;
+}
+.refresh_icon {
+    position: absolute;
+    right: 10px;
+    top: 5px;
+}
+
+
+.name_col{
+    width: 30%;
+}
+.action_col{
+    width: 50px;
+}
+

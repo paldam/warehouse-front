@@ -42,6 +42,12 @@ export class ProductsService {
     //.map((response: Response) => response.json());
   }
 
+    deleteSupplier(id: number): Observable<Response>{
+        return this.http.delete(this.baseUrl+`/products/supplier/${id}`)
+    }
+
+
+
 
   changeStockEndResetOfProductsToDelivery(id: number , value: number): Observable<Response> {
 

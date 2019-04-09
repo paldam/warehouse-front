@@ -47,10 +47,6 @@ export class CustomerComponent implements OnInit {
 
   }
 
-test(event){
-    console.log("dasdas");
-    console.log(event);
-}
 
 
   getOrdersByCustomer(id :number){
