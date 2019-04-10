@@ -13,6 +13,7 @@ export class Product{
         public tmpOrdered?: number,
         public isArchival?: number,
         public supplier?: Supplier,
+        public productType?: ProductType,
         public lastStockEditDate? :Date
     ) {
     }

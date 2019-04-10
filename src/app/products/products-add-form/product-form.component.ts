@@ -18,13 +18,15 @@ export class ProductFormComponent implements OnInit {
 
     public product: Product = new Product();
     public productSuppliers: Supplier[]=[];
+    public productTypes: ProductType[]=[];
     public productSupplierToAdd: Supplier = new Supplier();
     public formSubmitted: boolean = false;
     public formSupplierAddForm: boolean = false;
     public addSupplierWindow: boolean = false;
 
     constructor(private productsService: ProductsService, private router: Router,private messageServiceExt: MessageServiceExt) {
-        productsService.getSuppliers().subscribe(data=> this.productSuppliers=data)
+        productsService.getSuppliers().subscribe(data=> this.productSuppliers=data);
+        productsService.getProductsTypes().subscribe(data=> this.productTypes=data)
     }
 
     ngOnInit() {
@@ -92,6 +94,10 @@ export class ProductFormComponent implements OnInit {
 
     compareSupplier( optionOne : Supplier, optionTwo : Supplier) : boolean {
         return optionTwo && optionTwo ? optionOne.supplierName === optionTwo.supplierName :optionOne === optionTwo;
+    }
+
+    compareProductType( optionOne : ProductType, optionTwo : ProductType) : boolean {
+        return optionTwo && optionTwo ? optionOne.typeName === optionTwo.typeName :optionOne === optionTwo;
     }
 
     addSupplierWindowOn(){

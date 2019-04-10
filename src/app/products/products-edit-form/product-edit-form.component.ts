@@ -19,6 +19,7 @@ export class ProductEditFormComponent implements OnInit {
     public productPrice : number ;
     public formSubmitted: boolean = false;
     public productSuppliers: Supplier[]=[];
+    public productTypes: ProductType[]=[];
 
     constructor(private productsService: ProductsService, private router: Router, activeRoute: ActivatedRoute,private messageServiceExt: MessageServiceExt) {
         productsService.getProduct(activeRoute.snapshot.params["id"]).subscribe(data =>{
@@ -26,7 +27,8 @@ export class ProductEditFormComponent implements OnInit {
             this.productPrice = data.price/100;
         });
 
-        productsService.getSuppliers().subscribe(data=> this.productSuppliers=data)
+        productsService.getSuppliers().subscribe(data=> this.productSuppliers=data);
+        productsService.getProductsTypes().subscribe(data=> this.productTypes=data)
     }
 
     ngOnInit() {
@@ -58,5 +60,8 @@ export class ProductEditFormComponent implements OnInit {
 
     compareSupplier( optionOne : Supplier, optionTwo : Supplier) : boolean {
         return optionTwo && optionTwo ? optionOne.supplierName === optionTwo.supplierName :optionOne === optionTwo;
+    }
+    compareProductType( optionOne : ProductType, optionTwo : ProductType) : boolean {
+        return optionTwo && optionTwo ? optionOne.typeName === optionTwo.typeName :optionOne === optionTwo;
     }
 }
