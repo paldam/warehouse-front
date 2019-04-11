@@ -17,6 +17,7 @@ import {TOKEN, TOKEN_USER} from '../../authentication.service';
 import {MenuItem} from "primeng/api";
 import {Address} from "../../model/address.model";
 import {MessageServiceExt} from "../../messages/messageServiceExt";
+import {NgForm} from "@angular/forms";
 
 @Component({
   selector: 'order-details',
@@ -26,32 +27,34 @@ import {MessageServiceExt} from "../../messages/messageServiceExt";
 })
 export class OrderDetailsComponent implements OnInit {
 
-  public order : Order = new Order();
-  public orderItems : OrderItem[]=[];
-  public deliveryTypes: DeliveryType[]=[];
-  public customer : Customer = new Customer() ;
-  public isReadOnlyProp: boolean = true;
-  public formSubmitted: boolean = false;
-  public orderStatus: OrderStatus[]= [];
-  public loading: boolean= false;
-  public totalAmount: number;
-  public orderStatusId: number;
-  public baskets: Basket[]=[];
-  public total: number = 0;
-  public fileList: File[]=[];
-    public auditList: any[]=[];
-  public orderId :number;
-    public items: MenuItem[];
-    public selectedBasketOnContextMenu: Basket = new Basket();
-    public confirmDialogShow: boolean = false;
-  @ViewChild(FileUpload) fileUploadElement: FileUpload;
-
-  @ViewChild(Checkbox) el:Checkbox;
-    filtersLoaded: Promise<boolean>;
-    public weekOfYearTmp: Date;
-    public weekOfYear: number;
-    public checkedAdditionalSale: boolean = false;
-
+      public order : Order = new Order();
+      public orderItems : OrderItem[]=[];
+      public deliveryTypes: DeliveryType[]=[];
+      public customer : Customer = new Customer() ;
+      public isReadOnlyProp: boolean = true;
+      public formSubmitted: boolean = false;
+      public orderStatus: OrderStatus[]= [];
+      public loading: boolean= false;
+      public totalAmount: number;
+      public orderStatusId: number;
+      public baskets: Basket[]=[];
+      public total: number = 0;
+      public fileList: File[]=[];
+      public auditList: any[]=[];
+      public orderId :number;
+      public items: MenuItem[];
+      public selectedBasketOnContextMenu: Basket = new Basket();
+      public confirmDialogShow: boolean = false;
+      filtersLoaded: Promise<boolean>;
+      public weekOfYearTmp: Date;
+      public weekOfYear: number;
+      public checkedAdditionalSale: boolean = false;
+      public isDeliveryDateValid: boolean = true;
+      public isDeliveryWeekDateValid: boolean = true;
+      @ViewChild('form') orderForm :NgForm;
+      @ViewChild('formAdidtional') additionalForm :NgForm;
+      @ViewChild(Checkbox) el:Checkbox;
+      @ViewChild(FileUpload) fileUploadElement: FileUpload;
 
     constructor(private confirmationService: ConfirmationService,private fileSendService: FileSendService,
               private basketService : BasketService,private orderService : OrderService,activeRoute: ActivatedRoute,
@@ -131,41 +134,47 @@ export class OrderDetailsComponent implements OnInit {
 
 
   editOrderForm() {
-      if (this.order.deliveryType.deliveryTypeId == 5 || this.order.deliveryType.deliveryTypeId == 6 ||this.order.deliveryType.deliveryTypeId == 7 ){
-          this.order.cod *=100;
-      }else{
-          this.order.cod =0;
+
+
+       console.log(this.orderForm.valid , this.additionalForm.valid , this.isDeliveryDateValid );
+
+      if (this.orderForm.valid && this.additionalForm.valid && this.isDeliveryDateValid && this.isDeliveryWeekDateValid) {
+
+
+          if (this.order.deliveryType.deliveryTypeId == 5 || this.order.deliveryType.deliveryTypeId == 6 || this.order.deliveryType.deliveryTypeId == 7) {
+              this.order.cod *= 100;
+          } else {
+              this.order.cod = 0;
+          }
+
+          if (this.checkedAdditionalSale == true) {
+              this.order.additionalSale = 1;
+          } else {
+              this.order.additionalSale = 0;
+          }
+
+          this.order.customer = this.customer;
+          this.order.orderTotalAmount = this.total;
+          this.order.weekOfYear = this.weekOfYear;
+
+          this.orderService.saveOrder(this.order).subscribe(data => {
+
+              this.fileUploadElement.url = "http://www.kosze.ovh:8080/uploadfiles?orderId=" + this.orderId;  // PrimeNg fileUpload component
+              this.fileUploadElement.upload();
+
+
+              setTimeout(() => {
+                  this.router.navigateByUrl('/orders');
+                  this.messageServiceExt.addMessageWithTime('success', 'Status', 'Dokonano edycji zamówienia', 5000);
+              }, 400);
+
+
+          }, error => {
+              this.messageServiceExt.addMessage('error', 'Błąd', "Status: " + error._body + ' ' + error.statusText);
+              console.log(error);
+          })
+
       }
-
-      if(this.checkedAdditionalSale == true) {
-          this.order.additionalSale=1;
-      }else{
-          this.order.additionalSale=0;
-      }
-
-      this.order.customer = this.customer;
-      this.order.orderTotalAmount = this.total;
-      this.order.weekOfYear =this.weekOfYear;
-
-      this.orderService.saveOrder(this.order).subscribe(data=>{
-
-          this.fileUploadElement.url = "http://www.kosze.ovh:8080/uploadfiles?orderId="+ this.orderId;  // PrimeNg fileUpload component
-          this.fileUploadElement.upload();
-
-
-
-
-          setTimeout(() => {
-              this.router.navigateByUrl('/orders');
-              this.messageServiceExt.addMessageWithTime('success', 'Status', 'Dokonano edycji zamówienia',5000);
-          }, 400);
-
-
-
-      },error => {
-          this.messageServiceExt.addMessage('error', 'Błąd', "Status: " + error._body + ' ' + error.statusText );
-          console.log(error);
-      })
   }
 
     addBasketToOrder(basket: Basket){
@@ -279,8 +288,36 @@ export class OrderDetailsComponent implements OnInit {
     }
 
     OnWeekOfYearDateChange(){
-
         this.weekOfYear = this.getWeekNumber(this.weekOfYearTmp)
+        this.isDeliveryWeekValid();
+    }
+
+
+    isDeliveryWeekValid(){
+
+        let weekOfYearFromOrderDate = this.getWeekNumber(this.order.orderDate);
+
+        if(weekOfYearFromOrderDate > this.weekOfYear){
+            this.isDeliveryWeekDateValid = false
+        }else {
+            this.isDeliveryWeekDateValid = true
+        }
+        console.log(this.isDeliveryWeekDateValid);
+    }
+
+
+    onDeliveryDataChange(){
+        var tmpDeliveryDate = new Date(this.order.deliveryDate);
+
+        tmpDeliveryDate.setHours(23,59,59,99);
+
+        if(tmpDeliveryDate > this.order.orderDate){
+            this.isDeliveryDateValid = true
+        }else {
+            this.isDeliveryDateValid = false
+        }
+
+
 
     }
 }

@@ -99,6 +99,13 @@ export class ProductsComponent implements OnInit {
     this.router.navigate(["/product/", id]);
   }
 
+
+    goToEditBasketPage(id) {
+
+
+        this.router.navigate(["/basket/", id]);
+    }
+
   selectProduct(id: number) {
     this.router.navigateByUrl('/products/${id}');
 

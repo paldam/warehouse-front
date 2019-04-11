@@ -231,13 +231,17 @@
 
                             <div class="form-group">
                                 <small id="delivery_typeDesc" class="text-muted">Rodzaj dostawy</small>
-                                <select class="form-control" [(ngModel)]="order.deliveryType" name="delivery_type" #delivery_type="ngModel" required >
+                                <select class="form-control" [compareWith]="compareDeliveryType" [(ngModel)]="order.deliveryType" name="delivery_type" #delivery_type="ngModel" required >
                                     <option *ngFor="let item of deliveryTypes" [ngValue]="item">{{item.deliveryTypeName}}</option>
                                 </select>
                                 <ul class="text-danger list-unstyled" *ngIf="delivery_type.dirty|| formSubmitted">
                                     <li  *ngIf="delivery_type.errors?.required">Wybierz typ dostawy</li>
                                 </ul>
                             </div>
+
+
+
+
 
                                 <div class="form-group">
                                     <div class="form-group">
@@ -263,12 +267,15 @@
 
                             <div class="form-group">
                                 <div class="input-group">
-                                    <input type="date" name="delivery_date"   class="form-control" #delivery_date="ngModel" [(ngModel)]="order.deliveryDate"  aria-describedby="delivery_dateDesc" required>
+                                    <input type="date" name="delivery_date" (change)="onDeliveryDataChange()"   class="form-control" #delivery_date="ngModel" [(ngModel)]="order.deliveryDate"  aria-describedby="delivery_dateDesc" required>
 
                                     <span class="input-group-addon" id="taxDesc">Planowana data wysyłki</span>
                                 </div>
                                 <ul class="text-danger list-unstyled" *ngIf="delivery_date.dirty|| formSubmitted">
                                     <li  *ngIf="delivery_date.errors?.required">Wprowadz planowaną datę wysyłki</li>
+                                </ul>
+                                <ul class="text-danger list-unstyled" *ngIf="!isDeliveryDateValid">
+                                    <li >Data wysyłki nie może być wcześniej niż data zamówienia</li>
                                 </ul>
                             </div>
 
@@ -285,6 +292,9 @@
                                     </div>
                                     <ul class="text-danger list-unstyled" *ngIf="weekofyear_date.dirty|| formSubmitted">
                                         <li  *ngIf="weekofyear_date.errors?.required">Wybierz tydzień z kalenarza</li>
+                                    </ul>
+                                    <ul class="text-danger list-unstyled" *ngIf="!isDeliveryWeekDateValid">
+                                        <li >Tydzień dostawy nie moży być przed nr. tygodnia złożenia zamówienia</li>
                                     </ul>
                                 </div>
 

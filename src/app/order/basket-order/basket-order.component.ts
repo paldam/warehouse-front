@@ -54,6 +54,8 @@ export class BasketOrderComponent implements OnInit {
     public pickCityByZipCodeWindow: boolean = false;
     public weekOfYearTmp: Date;
     public weekOfYear: number;
+    public isDeliveryDateValid: boolean = true;
+    public isDeliveryWeekDateValid: boolean = true;
 
 
     public selectedBasketOnContextMenu: Basket = new Basket();
@@ -70,7 +72,7 @@ export class BasketOrderComponent implements OnInit {
         basketService.getBaskets().subscribe(data=> this.baskets = data);
         customerService.getCustomers().subscribe(data=> this.customers = data);
         orderService.getDeliveryTypes().subscribe(data=> this.deliveryTypes = data);
-        this.order.deliveryType = new DeliveryType();
+
 
 
     }
@@ -199,7 +201,7 @@ export class BasketOrderComponent implements OnInit {
     submitOrderForm(form: NgForm, formAdidtional: NgForm) {
         this.formSubmitted = true;
        // consthis.storedCustomerAddressList.model
-        if (form.valid && formAdidtional.valid && this.orderItems.length>0) {
+        if (form.valid && formAdidtional.valid && this.orderItems.length>0  && this.isDeliveryDateValid && this.isDeliveryWeekDateValid) {
             this.setUpOrderBeforeSave();
             console.log(this.order);
             this.orderService.saveOrder(this.order).subscribe(data=>{
@@ -375,7 +377,8 @@ export class BasketOrderComponent implements OnInit {
 
     OnWeekOfYearDateChange(){
 
-        this.weekOfYear = this.getWeekNumber(this.weekOfYearTmp)
+        this.weekOfYear = this.getWeekNumber(this.weekOfYearTmp);
+        this.isDeliveryWeekValid();
 
     }
 
@@ -388,19 +391,39 @@ export class BasketOrderComponent implements OnInit {
 
     }
 
+    isDeliveryWeekValid(){
+
+        let weekOfYearFromNowDate = this.getWeekNumber(new Date());
+
+        if(weekOfYearFromNowDate > this.weekOfYear){
+            this.isDeliveryWeekDateValid = false
+        }else {
+            this.isDeliveryWeekDateValid = true
+        }
+        console.log(this.isDeliveryWeekDateValid);
+    }
 
 
+    onDeliveryDataChange() {
+
+        var tmpDeliveryDate = new Date(this.order.deliveryDate);
+
+        tmpDeliveryDate.setHours(23, 59, 59, 99);
+
+        let now = new Date();
+
+        console.log(now.getTime());
+
+        if (tmpDeliveryDate.getTime() > now.getTime()) {
+            this.isDeliveryDateValid = true
+        } else {
+            this.isDeliveryDateValid = false
+        }
 
 
-    // setPopUpDarkBackgroudTrue(){
-    //     this.PopUpBackgroundStyle= {
-    //         'dark_background': true,
-    //     }
-    // }
-    //
-    // setPopUpDarkBackgroudFalse(){
-    //     this.PopUpBackgroundStyle= {
-    //         'dark_background': false,
-    //     }
-    // }
+    }
+
+    compareDeliveryType( optionOne : DeliveryType, optionTwo : DeliveryType) : boolean {
+        return optionTwo && optionTwo ? optionOne.deliveryTypeId === optionTwo.deliveryTypeId :optionOne === optionTwo;
+    }
 }
