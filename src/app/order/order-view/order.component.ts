@@ -2,7 +2,7 @@ import {Component, ElementRef, OnInit, ViewChild, ViewEncapsulation} from '@angu
 import {Order} from '../../model/order.model';
 import {OrderService} from '../order.service';
 import {ActivatedRoute, Router, RoutesRecognized} from "@angular/router";
-import {ConfirmationService, DataTable, Dropdown, SelectItem} from "primeng/primeng";
+import {ConfirmationService, DataTable, Dropdown, OverlayPanel, SelectItem} from "primeng/primeng";
 import {AuthenticationService} from "../../authentication.service";
 import {filter, pairwise} from "rxjs/internal/operators";
 import {FileSendService} from "../../file-send/file-send.service";
@@ -38,6 +38,7 @@ export class OrderComponent implements OnInit {
     public orderStatusList: SelectItem[];
     public items: MenuItem[];
     public paginatorValues = AppConstans.PAGINATOR_VALUES;
+    public additionalInforamtionTmp : string = "";
     fileFilterLoaded: Promise<boolean>;
 
     public selectedOrderFileList: File[]=[];
@@ -46,6 +47,7 @@ export class OrderComponent implements OnInit {
     @ViewChild('statusFilter') statusFilterEl :Dropdown;
     @ViewChild('yearFilter') yearFilterEl :Dropdown;
     @ViewChild('dt') datatable:DataTable;
+    @ViewChild('information_extention') information_extention : OverlayPanel;
     public ordersYears: any[];
 
     constructor(private orderService :OrderService,private router: Router,private confirmationService: ConfirmationService,
@@ -97,6 +99,7 @@ export class OrderComponent implements OnInit {
     }
 
     ngOnInit() {
+
 
         this.orderStatusList = [];
         this.orderStatusList.push({label: 'wszystkie', value: 'wszystkie'});
@@ -153,8 +156,6 @@ export class OrderComponent implements OnInit {
     }
     refreshData() {
 
-        console.log(JSON.stringify(this.orders));
-
 
         this.loading = true;
         setTimeout(() => {
@@ -194,6 +195,9 @@ export class OrderComponent implements OnInit {
 
     goToEditPage(index,id) {
 
+
+        this.information_extention.hide();
+
         let pageTmp = ((index-1) / 20)+1;
         localStorage.setItem('lastPageOrder', pageTmp.toString());
         let textTmp = this.findInputtextOrder;
@@ -202,7 +206,7 @@ export class OrderComponent implements OnInit {
     }
 
     OnSelectRow(event){
-        console.log(event.data.orderId);
+
         this.selectedToMenuOrder = event.data.orderId;
 
     }
@@ -243,7 +247,6 @@ export class OrderComponent implements OnInit {
         this.orderService.changeOrderStatus(this.selectedToMenuOrder,orderStatus).subscribe(data =>{
             this.messageServiceExt.addMessage('success','Status','Zmieniono status zamówienia');
         },error =>{
-            console.log(error);
             this.messageServiceExt.addMessage('error', 'Błąd ',error._body);
 
         } );
@@ -276,7 +279,7 @@ export class OrderComponent implements OnInit {
 
     ShowConfirmModal(order: Order) {
 
-        console.log(order.orderStatus.orderStatusId);
+
 
 
         if (order.orderStatus.orderStatusId == 1){
@@ -362,7 +365,7 @@ export class OrderComponent implements OnInit {
 
         if (orderStatus == 'wszystkie'){
             this.orders = this.ordersNotFiltered;
-            console.log("AAAAAA");
+
         }else{
 
 
@@ -371,14 +374,13 @@ export class OrderComponent implements OnInit {
                 return value.orderStatus.orderStatusName == orderStatus;
             });
 
-            console.log(this.yearFilterEl);
+
         }
 
     }
 
     filterOrderYear(orderDate : number){
-        console.log(this.statusFilterEl);
-        console.log(this.yearFilterEl);
+
         this.statusFilterEl.value="wszystkie";
         this.statusFilterEl.selectedOption = {label: "wszystkie", value: "wszystkie"};
 
@@ -425,6 +427,31 @@ export class OrderComponent implements OnInit {
             }
         )
     }
+
+    isLongCell(textFromCell : string): boolean{
+
+        if (textFromCell == null){
+            return false
+        } else{
+            return (textFromCell.length >90);
+        }
+
+
+    }
+
+
+    showAdditionalIInfExtension(event, additonalInformationText : string){
+        this.additionalInforamtionTmp = additonalInformationText;
+
+       this.information_extention.toggle(event);
+
+    }
+
+
+
+
+
+
 
 
 }

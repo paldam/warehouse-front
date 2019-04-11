@@ -106,9 +106,7 @@ export class OrderDetailsComponent implements OnInit {
           {label: 'Dodaj kosz', icon: 'fa fa-plus',command: (event) => this.addBasketToOrder(this.selectedBasketOnContextMenu)},
       ];
 
-      setTimeout(() => {
-          console.log(this.customer); ;
-      },3000 );
+
 
   }
 
@@ -124,7 +122,6 @@ export class OrderDetailsComponent implements OnInit {
         return optionTwo && optionTwo ? optionOne.addressId=== optionTwo.addressId :optionOne === optionTwo;
     }
     compareOrderStatus( optionOne : OrderStatus, optionTwo : OrderStatus) : boolean {
-        console.log(optionOne + '' + optionTwo);
         return optionTwo && optionTwo ? optionOne.orderStatusId === optionTwo.orderStatusId :optionOne === optionTwo;
 
     }
@@ -136,7 +133,6 @@ export class OrderDetailsComponent implements OnInit {
   editOrderForm() {
 
 
-       console.log(this.orderForm.valid , this.additionalForm.valid , this.isDeliveryDateValid );
 
       if (this.orderForm.valid && this.additionalForm.valid && this.isDeliveryDateValid && this.isDeliveryWeekDateValid) {
 
@@ -171,7 +167,6 @@ export class OrderDetailsComponent implements OnInit {
 
           }, error => {
               this.messageServiceExt.addMessage('error', 'Błąd', "Status: " + error._body + ' ' + error.statusText);
-              console.log(error);
           })
 
       }
@@ -230,7 +225,6 @@ export class OrderDetailsComponent implements OnInit {
     getFile(id: number){
         this.fileSendService.getFile(id).subscribe(res=>{
             let a = document.createElement("a")
-            console.log("sdsdssdd");
             let blobURL = URL.createObjectURL(res);
             a.download = this.fileSendService.fileName;
             a.href = blobURL
@@ -302,7 +296,7 @@ export class OrderDetailsComponent implements OnInit {
         }else {
             this.isDeliveryWeekDateValid = true
         }
-        console.log(this.isDeliveryWeekDateValid);
+
     }
 
 
