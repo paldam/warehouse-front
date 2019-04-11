@@ -1,7 +1,7 @@
 import {Component, ElementRef, OnInit, ViewChild, ViewEncapsulation} from '@angular/core';
 import {Order} from '../../model/order.model';
 import {ActivatedRoute, Router, RoutesRecognized} from "@angular/router";
-import {ConfirmationService, DataTable, Dropdown, SelectItem} from "primeng/primeng";
+import {ConfirmationService, DataTable, Dropdown, OverlayPanel, SelectItem} from "primeng/primeng";
 import {AuthenticationService} from "../../authentication.service";
 import {filter, pairwise} from "rxjs/internal/operators";
 import {FileSendService} from "../../file-send/file-send.service";
@@ -37,9 +37,9 @@ export class OrderStatsComponent implements OnInit {
     public orderStatusList: SelectItem[];
     public items: MenuItem[];
     fileFilterLoaded: Promise<boolean>;
-
+    public additionalInforamtionTmp : string = "";
     public selectedOrderFileList: File[]=[];
-
+    @ViewChild('information_extention') information_extention : OverlayPanel;
     @ViewChild('onlyWithAttach') el :ElementRef;
     @ViewChild('statusFilter') statusFilterEl :Dropdown;
     @ViewChild('yearFilter') yearFilterEl :Dropdown;
@@ -448,7 +448,7 @@ export class OrderStatsComponent implements OnInit {
             }
 
 
-            dataToGenerateFile[i] = {"Data Zamówienia":orderDateTmp.toLocaleString(), "Numer Zamówienia":filt[i].orderId,"Klient":filt[i].customer.organizationName,"Data dostawy":filt[i].deliveryDate,"Typ Dostawy":filt[i].deliveryType.deliveryTypeName,"Wybrane zestawy":zestawy}
+            dataToGenerateFile[i] = {"Data Zamówienia":orderDateTmp.toLocaleDateString(), "Numer FV":filt[i].orderId,"Klient":filt[i].customer.organizationName,"Data dostawy":filt[i].deliveryDate,"Typ Dostawy":filt[i].deliveryType.deliveryTypeName,"Wartość zamówienia":filt[i].orderTotalAmount/100,"Wybrane zestawy":zestawy}
         }
 
 
@@ -520,6 +520,25 @@ export class OrderStatsComponent implements OnInit {
         let fileName = "Zestawienie_" + date + ".xls" ;
 
         XLSX.writeFile(workbook, fileName, { bookType: 'xls', type: 'buffer' });
+    }
+
+    isLongCell(textFromCell : string): boolean{
+
+        if (textFromCell == null){
+            return false
+        } else{
+            return (textFromCell.length >90);
+        }
+
+
+    }
+
+
+    showAdditionalIInfExtension(event, additonalInformationText : string){
+        this.additionalInforamtionTmp = additonalInformationText;
+
+        this.information_extention.toggle(event);
+
     }
 
 }

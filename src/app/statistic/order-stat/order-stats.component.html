@@ -42,7 +42,7 @@
             </ng-template>
 
             <ng-template let-row="rowData" pTemplate="body"  >
-                {{row.orderDate| date: 'dd/MM/yyyy HH:mm:ss'}}
+                {{row.orderDate| date: 'dd/MM/yyyy'}}
             </ng-template>
         </p-column>
 
@@ -62,7 +62,29 @@
 
 
 
-        <p-column field="additionalInformation" header="Dodatkowe informacje" ></p-column>
+
+
+
+
+        <p-column field="additionalInformation" header="Dodatkowe informacje" >
+            <ng-template let-row="rowData" pTemplate="body" >
+
+
+                <span *ngIf="!isLongCell(row.additionalInformation)">
+                    {{row.additionalInformation}}
+                </span>
+                <span pTooltip="dsadassd" *ngIf="isLongCell(row.additionalInformation)" (click)="showAdditionalIInfExtension($event,row.additionalInformation)">
+                    {{row.additionalInformation| slice:0:90}}... <i class="fa fa-bolt " aria-hidden="true"></i>
+
+                </span>
+            </ng-template>
+        </p-column>
+
+
+
+
+
+
 
         <p-column field="deliveryDate" header="Data dostawy"  [sortable]="true">
             <ng-template let-row="rowData" pTemplate="body"  >
@@ -192,3 +214,6 @@
 
 <p-contextMenu #cm [model]="items"> </p-contextMenu>
 
+<p-overlayPanel #information_extention  >
+    {{additionalInforamtionTmp}}
+</p-overlayPanel>
