@@ -43,6 +43,12 @@ export class OrderService {
                 response.json());
     }
 
+    getOrdersByBasketIdAndOrderDateRange(basketId,startDate,endDate): Observable<any[]> {
+        return this.http.get(this.baseUrl+`/order/statistic/orderdaterange?basketId=${basketId}startDate=${startDate}&endDate=${endDate}`)
+            .map((response: Response) =>
+                response.json());
+    }
+
 
     getOrderItems(id: number): Observable<OrderItem>{
         return this.http.get(this.baseUrl+`/order/${id}`)

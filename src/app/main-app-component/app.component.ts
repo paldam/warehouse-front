@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import {Router} from "@angular/router";
+import {RoutingState} from "../routing-stage";
 
 @Component({
   selector: 'app-root',
@@ -10,4 +11,7 @@ export class AppComponent {
   title = 'app';
 
 
+    constructor(routingState: RoutingState) {
+        routingState.loadRouting();
+    }
 }

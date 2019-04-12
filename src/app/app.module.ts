@@ -64,6 +64,7 @@ import {OrderStatsComponent} from "./statistic/order-stat/order-stats.component"
 import {Statistic2Component} from "./statistic/products-statistic2/statistic2.component";
 import {AdminService} from "./admin/admin.service";
 import {SuppliersComponent} from "./suppliers/suppliers.component";
+import {RoutingState} from "./routing-stage";
 
 
 
@@ -112,7 +113,7 @@ export function httpExt(backend: XHRBackend, options: RequestOptions, router: Ro
   ],
   providers: [ {
     provide: HttpService, useFactory: (httpExt) , deps: [XHRBackend, RequestOptions,Router,MessageService]},
-    CalendarSetingsComponent,MessageServiceExt,AdminService, NotesService,MessageService,ProductsService,BasketService,BasketExtService,CustomerService,FileSendService,CustomerService,OrderService,MapService,ConfirmationService,AuthGuard,AdminGuard,AdminOrSuperUserGuard,AuthenticationService,UserService],
+    CalendarSetingsComponent,MessageServiceExt,AdminService,RoutingState, NotesService,MessageService,ProductsService,BasketService,BasketExtService,CustomerService,FileSendService,CustomerService,OrderService,MapService,ConfirmationService,AuthGuard,AdminGuard,AdminOrSuperUserGuard,AuthenticationService,UserService],
 
   bootstrap: [AppComponent]
 })

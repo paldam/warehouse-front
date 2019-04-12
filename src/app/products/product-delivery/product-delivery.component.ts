@@ -106,7 +106,7 @@ export class ProductDeliveryComponent implements OnInit {
 
           this.productsService.changeStockEndResetOfProductsToDelivery(id,add).subscribe(data=>{
               this.refreshData();
-              //this.findInputtextOrder ='';
+              //this.findInputTextOnOrderViewPage ='';
 
           });
 
@@ -117,7 +117,7 @@ export class ProductDeliveryComponent implements OnInit {
           this.productsService.addNumberOfProductsDelivery(id,add).subscribe(data=>{
 
               this.refreshData();
-              //this.findInputtextOrder ='';
+              //this.findInputTextOnOrderViewPage ='';
 
           })
 

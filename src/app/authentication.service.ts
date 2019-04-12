@@ -55,8 +55,8 @@ export class AuthenticationService {
         localStorage.removeItem(TOKEN);
         localStorage.removeItem(TOKEN_USER);
         localStorage.removeItem('findInputtext');
-        localStorage.removeItem('findInputtextOrder');
-        localStorage.removeItem('lastPageOrder');
+        localStorage.removeItem('findInputTextOnOrderViewPage');
+        localStorage.removeItem('lastPaginationPageNumberOnOrderViewPage');
         localStorage.removeItem('lastPage');
         this.getLoggedInName.emit("wylogowano");
     }

@@ -12,6 +12,7 @@ import {MenuItem} from "primeng/api";
 import {File} from "../../model/file";
 import * as XLSX from "xlsx";
 import {AppConstans} from "../../constans";
+import {RoutingState} from "../../routing-stage";
 
 @Component({
     selector: 'order',
@@ -24,9 +25,11 @@ export class OrderComponent implements OnInit {
     public loading: boolean= false;
     public orders: any[]=[];
     public ordersNotFiltered: any[]=[];
-    public lastVisitedPageOrder: number ;
-    public findInputtextOrder: string = "";
+    public lastPaginationPageNumberOnOrderViewPage: number ;
+    public findInputTextOnOrderViewPage: string = "";
     public isCurrentPageCustomerEdit : boolean = false;
+    public isCurrentPageOrdersView : boolean = false;
+    public isCurrentPageOrdersViewRedirectedFromBasketStatitis : boolean = false;
     public showAttachmentModal: boolean = false;
     public currentCustomerOnCustomerEditPage : number;
     public SelectedRowOrderItems: OrderItem[]=[];
@@ -52,9 +55,17 @@ export class OrderComponent implements OnInit {
 
     constructor(private orderService :OrderService,private router: Router,private confirmationService: ConfirmationService,
                 private authenticationService: AuthenticationService,private  activeRoute: ActivatedRoute, private fileSendService :FileSendService,
-                private  messageServiceExt: MessageServiceExt ) {
+                private  messageServiceExt: MessageServiceExt, private routingState :RoutingState) {
 
-        this.isCurrentPageCustomerEdit = router.url.substring(0, 9) == "/customer";
+
+
+        this.setSearchOptions();
+        this.isCurrentPageCustomerEdit = this.routingState.getCurrentPage().substring(0, 9) =="/customer";
+        this.isCurrentPageOrdersView = this.routingState.getCurrentPage().substring(0, 7) =="/orders";
+        this.isCurrentPageOrdersViewRedirectedFromBasketStatitis = this.routingState.getPreviousUrl() =="/statistics/basket";
+        console.log(this.routingState.getHistory());
+
+
 
 
         if (this.isCurrentPageCustomerEdit) {
@@ -63,38 +74,21 @@ export class OrderComponent implements OnInit {
                 this.ordersNotFiltered = data;
                 this.currentCustomerOnCustomerEditPage = activeRoute.snapshot.params["id"];
             })
+        }else if (this.isCurrentPageOrdersViewRedirectedFromBasketStatitis) {
+            orderService.getOrdersByBasketIdAndOrderDateRange(54,'2017-12-12','2018-12-12').subscribe(data => {
+                this.orders = data;
+                this.ordersNotFiltered = data;
+            })
 
-
-
-        } else {
+        }else  { // current page is simple Order View
             orderService.getOrdersDto().subscribe(data => {
                 this.orders = data;
                 this.ordersNotFiltered = data;
-            });
-        }
-
-        this.router.events
-            .pipe(filter((e: any) => e instanceof RoutesRecognized),
-                pairwise()
-            ).subscribe((e: any) => {
-            let previousUrlTmp = e[0].urlAfterRedirects;
-
-            if (previousUrlTmp.search('/order') == -1) {
-                localStorage.removeItem('findInputtextOrder');
-                localStorage.removeItem('lastPageOrder');
-            } else {
-            }
-
-        });
-
-
-        if (localStorage.getItem('findInputtextOrder')) {
-            this.findInputtextOrder = (localStorage.getItem('findInputtextOrder'));
-        } else {
-            this.findInputtextOrder = "";
+            })
         }
 
 
+        console.log(this.isCurrentPageCustomerEdit,this.isCurrentPageOrdersViewRedirectedFromBasketStatitis)
 
     }
 
@@ -115,16 +109,6 @@ export class OrderComponent implements OnInit {
         this.ordersYears.push({label: '2018', value: 2018});
         this.ordersYears.push({label: '2019', value: 2019});
 
-
-
-        setTimeout(() => {
-            if (localStorage.getItem('lastPageOrder')){
-                let tmplastVisitedPage =parseInt(localStorage.getItem('lastPageOrder'));
-                this.lastVisitedPageOrder = (tmplastVisitedPage -1)*20;
-            }else{
-                this.lastVisitedPageOrder = 0;
-            }
-        }, 300);
 
 
 
@@ -154,6 +138,40 @@ export class OrderComponent implements OnInit {
         ];
 
     }
+
+
+     setSearchOptions() {
+
+        let previousUrlTmp = this.routingState.getPreviousUrl();
+
+
+        if (previousUrlTmp.search('/order') == -1) {
+                localStorage.removeItem('findInputTextOnOrderViewPage');
+                localStorage.removeItem('lastPaginationPageNumberOnOrderViewPage');
+        } else {
+        }
+
+
+        if (localStorage.getItem('findInputTextOnOrderViewPage')) {
+            this.findInputTextOnOrderViewPage = (localStorage.getItem('findInputTextOnOrderViewPage'));
+        } else {
+            this.findInputTextOnOrderViewPage = "";
+        }
+
+
+         setTimeout(() => {
+             if (localStorage.getItem('lastPaginationPageNumberOnOrderViewPage')){
+                 let tmplastVisitedPage =parseInt(localStorage.getItem('lastPaginationPageNumberOnOrderViewPage'));
+                 this.lastPaginationPageNumberOnOrderViewPage = (tmplastVisitedPage -1)*20;
+             }else{
+                 this.lastPaginationPageNumberOnOrderViewPage = 0;
+             }
+         }, 300);
+
+    }
+
+
+
     refreshData() {
 
 
@@ -199,9 +217,9 @@ export class OrderComponent implements OnInit {
         this.information_extention.hide();
 
         let pageTmp = ((index-1) / 20)+1;
-        localStorage.setItem('lastPageOrder', pageTmp.toString());
-        let textTmp = this.findInputtextOrder;
-        localStorage.setItem('findInputtextOrder', textTmp);
+        localStorage.setItem('lastPaginationPageNumberOnOrderViewPage', pageTmp.toString());
+        let textTmp = this.findInputTextOnOrderViewPage;
+        localStorage.setItem('findInputTextOnOrderViewPage', textTmp);
         this.router.navigate(["/order/",id]);
     }
 

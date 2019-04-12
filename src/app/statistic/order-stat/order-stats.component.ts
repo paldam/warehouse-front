@@ -77,7 +77,7 @@ export class OrderStatsComponent implements OnInit {
 
             if (previousUrlTmp.search('/order') == -1) {
                 localStorage.removeItem('findInputtextOrder');
-                localStorage.removeItem('lastPageOrder');
+                localStorage.removeItem('lastPaginationPageNumberOnOrderViewPage');
             } else {
             }
 
@@ -113,8 +113,8 @@ export class OrderStatsComponent implements OnInit {
 
 
         setTimeout(() => {
-            if (localStorage.getItem('lastPageOrder')){
-                let tmplastVisitedPage =parseInt(localStorage.getItem('lastPageOrder'));
+            if (localStorage.getItem('lastPaginationPageNumberOnOrderViewPage')){
+                let tmplastVisitedPage =parseInt(localStorage.getItem('lastPaginationPageNumberOnOrderViewPage'));
                 this.lastVisitedPageOrder = (tmplastVisitedPage -1)*20;
             }else{
                 this.lastVisitedPageOrder = 0;
@@ -193,7 +193,7 @@ export class OrderStatsComponent implements OnInit {
     goToEditPage(index,id) {
 
         let pageTmp = ((index-1) / 20)+1;
-        localStorage.setItem('lastPageOrder', pageTmp.toString());
+        localStorage.setItem('lastPaginationPageNumberOnOrderViewPage', pageTmp.toString());
         let textTmp = this.findInputtextOrder;
         localStorage.setItem('findInputtextOrder', textTmp);
         this.router.navigate(["/order/",id]);
