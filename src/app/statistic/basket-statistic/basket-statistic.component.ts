@@ -4,6 +4,7 @@ import {BasketService} from "../../basket/basket.service";
 import {CalendarSetingsComponent} from "../../primeNgCalendarSetings/calendarStings.component";
 import * as XLSX from "xlsx";
 import {DataTable} from "primeng/primeng";
+import {Router} from "@angular/router";
 
 declare var $ :any;
 @Component({
@@ -26,7 +27,8 @@ export class BasketStatisticComponent implements OnInit {
   @ViewChild('dt') el:DataTable;
 
 
-  constructor(private basketService :BasketService,private calendarSetingsComponent: CalendarSetingsComponent) { }
+  constructor(private basketService :BasketService,private calendarSetingsComponent: CalendarSetingsComponent, private router: Router
+  ) { }
 
   ngOnInit() {
     this.dateLang = this.calendarSetingsComponent.dateLang;
@@ -100,6 +102,13 @@ export class BasketStatisticComponent implements OnInit {
         let fileName = "Zestawienie_" + date + ".xls" ;
 
         XLSX.writeFile(workbook, fileName, { bookType: 'xls', type: 'buffer' });
+    }
+
+    goToOrderListByBasket(id) {
+      console.log(id);
+
+        this.router.navigate(["/orders/",{id:id}]);
+
     }
 
 

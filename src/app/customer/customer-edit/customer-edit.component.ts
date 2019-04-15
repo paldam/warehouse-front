@@ -195,6 +195,9 @@ export class CustomerEditComponent implements OnInit {
     isAdmin() : boolean {
         return this.authenticationService.isAdmin();
     }
+    goBack(){
+        this.router.navigateByUrl('/customer');
+    }
 
 
     submitEditCustomerForm(form: NgForm) {

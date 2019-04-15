@@ -47,4 +47,11 @@
   <p-column field="basketName"  header="Nazwa"></p-column>
   <p-column field="quantity" [sortable]="true" header="Ilość"></p-column>
   <p-column field="numberOfOrdersWhereBasketOccur" [sortable]="true" header="Ilość zamówień z tym koszem"></p-column>
+
+  <p-column class="action_col"  field="orders" header="Akcja" styleClass="action_col">
+    <ng-template let-row="rowData" let-i="rowIndex" pTemplate="body">
+      <i class="fa fa-pencil-square-o fa-2x" aria-hidden="true"  title="Lista zamowien z danym koszem" (click)="goToOrderListByBasket(row.basketId)"></i>
+    </ng-template>
+  </p-column>
+
 </p-dataTable>

@@ -53,7 +53,7 @@ export class OrderComponent implements OnInit {
     @ViewChild('information_extention') information_extention : OverlayPanel;
     public ordersYears: any[];
 
-    constructor(private orderService :OrderService,private router: Router,private confirmationService: ConfirmationService,
+    constructor(private activatedRoute :ActivatedRoute,private orderService :OrderService,private router: Router,private confirmationService: ConfirmationService,
                 private authenticationService: AuthenticationService,private  activeRoute: ActivatedRoute, private fileSendService :FileSendService,
                 private  messageServiceExt: MessageServiceExt, private routingState :RoutingState) {
 
@@ -68,6 +68,7 @@ export class OrderComponent implements OnInit {
 
 
 
+
         if (this.isCurrentPageCustomerEdit) {
             orderService.getOrderByCustomer(activeRoute.snapshot.params["id"]).subscribe(data => {
                 this.orders = data;
@@ -75,6 +76,9 @@ export class OrderComponent implements OnInit {
                 this.currentCustomerOnCustomerEditPage = activeRoute.snapshot.params["id"];
             })
         }else if (this.isCurrentPageOrdersViewRedirectedFromBasketStatitis) {
+
+            //let basketIdTmp = activatedRoute.snapshot.queryParamMap.get('id');
+
             orderService.getOrdersByBasketIdAndOrderDateRange(54,'2017-12-12','2018-12-12').subscribe(data => {
                 this.orders = data;
                 this.ordersNotFiltered = data;

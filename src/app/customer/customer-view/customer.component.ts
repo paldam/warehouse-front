@@ -8,6 +8,7 @@ import {ConfirmationService} from "primeng/api";
 import {AuthenticationService} from "../../authentication.service";
 import {AppConstans} from "../../constans";
 import {Router} from "@angular/router";
+import {RoutingState} from "../../routing-stage";
 
 @Component({
   selector: 'app-customer',
@@ -20,11 +21,16 @@ export class CustomerComponent implements OnInit {
   public loading: boolean= false;
   public customersList :any[]=[];
   public allOrdersByCustomerList : Order[] = [];
+    public findInputTextOnCustomerViewPage: string = "";
+    public lastPaginationPageNumberOnCustomerViewPage: number ;
   public selectedValue: any ;
     public paginatorValues = AppConstans.PAGINATOR_VALUES;
 
   constructor(private customerService :CustomerService, private  orderService: OrderService,private messageServiceExt: MessageServiceExt,
-              private confirmationService : ConfirmationService, private authenticationService :AuthenticationService, public router :Router) {
+              private confirmationService : ConfirmationService, private authenticationService :AuthenticationService, public router :Router,private routingState :RoutingState) {
+
+
+      this.setSearchOptions();
 
     customerService.getAllCustomerWithPrimaryAddress().subscribe(data=>{
       this.customersList = data;
@@ -48,6 +54,36 @@ export class CustomerComponent implements OnInit {
   }
 
 
+    setSearchOptions() {
+
+        let previousUrlTmp = this.routingState.getPreviousUrl();
+
+
+        if (previousUrlTmp.search('/customer') == -1) {
+            localStorage.removeItem('findInputTextOnCustomerViewPage');
+            localStorage.removeItem('lastPaginationPageNumberOnOrderViewPage');
+        } else {
+        }
+
+
+        if (localStorage.getItem('findInputTextOnCustomerViewPage')) {
+            this.findInputTextOnCustomerViewPage = (localStorage.getItem('findInputTextOnCustomerViewPage'));
+        } else {
+            this.findInputTextOnCustomerViewPage = "";
+        }
+
+
+        setTimeout(() => {
+            if (localStorage.getItem('lastPaginationPageNumberOnCustomerViewPage')) {
+                let tmplastVisitedPage = parseInt(localStorage.getItem('lastPaginationPageNumberOnCustomerViewPage'));
+                this.lastPaginationPageNumberOnCustomerViewPage = (tmplastVisitedPage - 1) * 20;
+            } else {
+                this.lastPaginationPageNumberOnCustomerViewPage = 0;
+            }
+        }, 300);
+
+    }
+
 
   getOrdersByCustomer(id :number){
 
@@ -57,6 +93,15 @@ export class CustomerComponent implements OnInit {
 
     })
   }
+
+    goToEditPage(index,id) {
+
+        let pageTmp = ((index-1) / 20)+1;
+        localStorage.setItem('lastPaginationPageNumberOnCustomerViewPage', pageTmp.toString());
+        let textTmp = this.findInputTextOnCustomerViewPage;
+        localStorage.setItem('findInputTextOnCustomerViewPage', textTmp);
+        this.router.navigate(["/customer/",id]);
+    }
 
   showDeleteConfirmWindow(customerId : number) {
 

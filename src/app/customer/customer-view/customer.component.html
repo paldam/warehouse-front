@@ -3,7 +3,7 @@
             <span class="input-group-addon" id="basic-addon1">
                  <i class="fa fa-search" aria-hidden="true"></i>
             </span>
-    <input #gb type="text" class="dd form-control search_input" pInputText size="50" placeholder="Szukaj"aria-describedby="basic-addon1">
+    <input #gb type="text" class="dd form-control search_input" pInputText size="50" placeholder="Szukaj"aria-describedby="basic-addon1" [(ngModel)]="findInputTextOnCustomerViewPage">
 
 
 
@@ -12,7 +12,7 @@
   </div>
 
   <p-dataTable [value]="customersList" [rows]="50" [paginator]="true" [globalFilter]="gb" #dt (onRowDblclick)="router.navigateByUrl('/customer/' + $event.data.customerId)"
-               [loading]="loading" loadingIcon="fa-circle-o-notch" expandableRows="true" [paginator]="true" [pageLinks]="5" [rowsPerPageOptions]= paginatorValues>
+               [loading]="loading" loadingIcon="fa-circle-o-notch" [(first)]="lastPaginationPageNumberOnCustomerViewPage" expandableRows="true" [paginator]="true" [pageLinks]="5" [rowsPerPageOptions]= paginatorValues>
 
     <p-column styleClass="lp_col"  header="lp." >
       <ng-template let-i="rowIndex" pTemplate="rowexpansion">
@@ -40,8 +40,8 @@
     <p-column field="email" header="Email"  ></p-column>
 
     <p-column  header="Akcja"  styleClass="action_col">
-      <ng-template let-customer="rowData" pTemplate="body">
-        <i *ngIf="authenticationService.isAdmin() || authenticationService.isBiuroUser()" class="fa fa-pencil-square-o fa-2x" aria-hidden="true"  title="Edytuj klienta" [routerLink]="['/customer/', customer.customerId] "></i>
+      <ng-template let-customer="rowData"   let-i="rowIndex" pTemplate="body">
+        <i *ngIf="authenticationService.isAdmin() || authenticationService.isBiuroUser()" class="fa fa-pencil-square-o fa-2x" aria-hidden="true"  title="Edytuj klienta" (click)="goToEditPage(i+1,customer.customerId)"  ></i>
         <i *ngIf="authenticationService.isAdmin() || authenticationService.isBiuroUser()" class="fa fa fa-trash  fa-2x" aria-hidden="true"  (click)="showDeleteConfirmWindow(customer.customerId)" title="Usuń klienta"  ></i>
 
       </ng-template>
