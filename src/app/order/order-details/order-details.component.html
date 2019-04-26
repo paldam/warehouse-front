@@ -336,6 +336,11 @@
           {{i+1}}
         </ng-template>
       </p-column>
+      <p-column ield="user" header="Użytkownik"  >
+        <ng-template let-row="rowData" pTemplate="body"  >
+          {{row.revId}}
+        </ng-template>
+      </p-column>
       <p-column field="changeDate" header="Data zmiany" [sortable]="true">
         <ng-template let-row="rowData" pTemplate="body"  >
           {{row.changeTime| date: 'dd/MM/yyyy HH:mm:ss'}}

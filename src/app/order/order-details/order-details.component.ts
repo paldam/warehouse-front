@@ -322,19 +322,9 @@ export class OrderDetailsComponent implements OnInit {
 
     goToAuditPage(event){
 
-       let revId: any;
-
 
         let orderId = event.data.orderId;
-
-        if (this.auditList.length >1){
-            console.log("YYYYYYYYYYYY");
-            console.log(this.auditList[1].revId);
-            revId = this.auditList[1].revId;
-        }else{
-             revId = event.data.revId;
-        }
-
+        let revId = event.data.revId;
 
 
         this.router.navigate(['/order_audit',{revId:revId,orderId:orderId}]);
