@@ -1,0 +1,253 @@
+<div class="order_summary col-12">
+  <p-fieldset [legend]="'Audyt'" [toggleable]="true">
+<div class="row">
+
+
+    <div class="col-md-6">
+        <p-panel  *ngIf="isDataFetchCompleteForBeforeOrderState | async" header="Wersja zamówienia przed zmianą">
+
+            <div class="form-group">
+                <div class="input-group">
+                    <input  [ngClass]=" (orderStateBeforeChange.customer.organizationName === orderStateAfterChange.customer.organizationName) ? 'redcolor3': 'redcolor' " type="text" name="organization"  #organization="ngModel" class="form-control"  size="300" aria-describedby="organizationDesc"  [readonly]="true" [(ngModel)]="orderStateBeforeChange.customer.organizationName" disabled>
+                    <span class="input-group-addon" id="organizationDesc">Klient</span>
+                </div>
+            </div>
+
+
+            <div class="form-group">
+                <small id="fv_numbereDescript" class="text-muted">Numer FV</small>
+                <input [ngClass]=" (orderStateBeforeChange.orderFvNumber === orderStateAfterChange.orderFvNumber) ? 'redcolor3': 'redcolor'" type="text" name="fv_number" #fv_number="ngModel"  class="form-control"  [readonly]="true" aria-describedby="delivery_dateDesc"  [(ngModel)]="orderStateBeforeChange.orderFvNumber">
+            </div>
+
+
+
+            <div class="form-group">
+                <div class="form-group">
+                    <small id="order_date_Desc" class="text-muted">Data złożenia zamówienia</small>
+                    <input [ngClass]=" (orderStateBeforeChange.orderDate === orderStateAfterChange.orderDate) ? 'redcolor3': 'redcolor'" type="text" name="order_date" class="form-control"  size="300" aria-describedby="order_date_Desc" [readonly]="true" [value]="orderStateBeforeChange.orderDate| date: 'dd/MM/yyyy HH:mm:ss'"  >
+                </div>
+            </div>
+
+
+            <div  class="form-group">
+                <small id="statusDesc" class="text-muted">Status zamówienia</small>
+                <input [ngClass]=" (orderStateBeforeChange.orderStatus.orderStatusName === orderStateAfterChange.orderStatus.orderStatusName) ? 'redcolor3': 'redcolor'" type="text" class="form-control"  [(ngModel)]="orderStateBeforeChange.orderStatus.orderStatusName" name="status" [readonly]="true" >
+
+            </div>
+
+
+
+
+            <div class="form-group">
+                <small id="total_Desc" class="text-muted">Wartość zamówienia</small>
+                <input [ngClass]=" (orderStateBeforeChange.orderTotalAmount == orderStateAfterChange.orderTotalAmount) ? 'redcolor3': 'redcolor'" type="text" name="total" class="form-control"  size="300" aria-describedby="total_Desc" [readonly]="true" [(ngModel)]="orderStateBeforeChange.orderTotalAmount"  >
+            </div>
+
+            <div   class="form-group">
+                <small id="delivery_typeDesc" class="text-muted">Rodzaj dostawy</small>
+                <input [ngClass]=" (orderStateBeforeChange.deliveryType.deliveryTypeName === orderStateAfterChange.deliveryType.deliveryTypeName) ? 'redcolor3': 'redcolor'" class="form-control" [disabled]="true" #delivery_type="ngModel" [(ngModel)]="orderStateBeforeChange.deliveryType.deliveryTypeName" name="delivery_type" >
+            </div>
+
+            <div class="form-group">
+                <small id="contact_personDesc" class="text-muted">Osoba do kontaktu</small>
+                <textarea [ngClass]=" (orderStateBeforeChange.contactPerson === orderStateAfterChange.contactPerson) ? 'redcolor3': 'redcolor'" class="form-control" name="contact_person" id="contact_person"  size="200" rows="1" [readonly]="true"  [(ngModel)]="orderStateBeforeChange.contactPerson"></textarea>
+            </div>
+
+
+
+            <div >
+                <div class="form-group" >
+                    <small id="codDescript" class="text-muted">Kwota pobrania</small>
+                    <input  [ngClass]=" (orderStateBeforeChange.cod == orderStateAfterChange.cod) ? 'redcolor3': 'redcolor'" type="number" name="cod" #cod="ngModel"  class="form-control" size="200"  aria-describedby="codDesc" [readonly]="true"  [(ngModel)]="orderStateBeforeChange.cod">
+                </div>
+            </div>
+
+
+            <div class="form-group">
+                <small id="taxDesc" class="text-muted">Planowana data wysyłki</small>
+                <input [ngClass]=" (orderStateBeforeChange.deliveryDate == orderStateAfterChange.deliveryDate) ? 'redcolor3': 'redcolor'" type="date" name="delivery_date"  class="form-control" #delivery_date="ngModel" [(ngModel)]="orderStateBeforeChange.deliveryDate" [readonly]="true" aria-describedby="delivery_dateDesc">
+            </div>
+
+            <div class="form-group">
+                <small id="weekNr" class="text-muted">Tydzień dostawy</small>
+                <input [ngClass]=" (orderStateBeforeChange.weekOfYear == orderStateAfterChange.weekOfYear) ? 'redcolor3': 'redcolor'"  type="text" name="weekofyear_date"  class="form-control" #weekofyear_date="ngModel" [(ngModel)]="orderStateBeforeChange.weekOfYear"  [readonly]="true"  aria-describedby="weekofyear_dateDesc" >
+            </div>
+
+
+            <div class="form-group">
+                <small id="additional_informationDesc"   class="text-muted">Dodatkowe informacje</small>
+                <textarea [ngClass]="(orderStateBeforeChange.additionalInformation === orderStateAfterChange.additionalInformation) ? 'redcolor3': 'redcolor' " class="form-control redcolor" name="additional_information" id="additional_information" rows="3" [readonly]="true" [(ngModel)]="orderStateBeforeChange.additionalInformation" ></textarea>
+            </div>
+
+
+            <div class="form-group">
+                <p>
+                    <p-checkbox  name="additionalSaleCheckbox" binary="true" (disabled)="true" [(ngModel)]="additionalSaleCheckbox"></p-checkbox>
+                    <span [ngClass]="(additionalSaleCheckbox == additionalSaleCheckboxForAfterOrderPanel) ? '': 'redcolor2' ">dosprzedaż</span>
+                </p>
+            </div>
+
+            <!--<div *ngIf="fileList.length>0" class="form-group">-->
+            <!--<table>-->
+            <!--<thead>-->
+            <!--Pliki-->
+            <!--</thead>-->
+            <!--<tbody>-->
+            <!--<tr *ngFor="let item of fileList" >-->
+            <!--<td> {{item.fileName}}</td>-->
+            <!--</tr>-->
+            <!--</tbody>-->
+            <!--</table>-->
+            <!--</div>-->
+
+            <p-panel  [styleClass]=" (orderStateBeforeChange.orderTotalAmount == orderStateAfterChange.orderTotalAmount) ? 'redcolor3': 'redcolor'" header="Zawartość zamówienia" >
+                <table  >
+                    <thead>
+                    <tr>
+                        <th>nazwa kosza</th>
+                        <th class="col_quantity">ilość</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr *ngFor="let orderItems of orderStateBeforeChange.orderItems">
+                        <td scope="row">{{orderItems.basket.basketName}} </td>
+                        <td><input type="number" class="form-control" name="" id="" aria-describedby="helpId" placeholder="" min="0" [value]="orderItems.quantity" [readonly]="true"  ></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </p-panel>
+
+
+        </p-panel>
+
+    </div>
+
+
+
+
+
+
+      <div  class="col-md-6">
+        <p-panel  *ngIf="isDataFetchCompleteForAfterOrderState | async" header="Wersja zamówienia po zmianie">
+
+          <div class="form-group">
+            <div class="input-group">
+              <input  [ngClass]=" (orderStateBeforeChange.customer.organizationName === orderStateAfterChange.customer.organizationName) ? 'redcolor3': 'redcolor' " type="text" name="organization" #organization="ngModel" class="form-control"  size="300" aria-describedby="organizationDesc"  [readonly]="true" [(ngModel)]="orderStateAfterChange.customer.organizationName" disabled>
+              <span class="input-group-addon" id="organizationDesc">Klient</span>
+            </div>
+          </div>
+
+
+          <div class="form-group">
+            <small id="fv_numbereDescript" class="text-muted">Numer FV</small>
+            <input [ngClass]=" (orderStateBeforeChange.orderFvNumber === orderStateAfterChange.orderFvNumber) ? 'redcolor3': 'redcolor' " type="text" name="fv_number" #fv_number="ngModel"  class="form-control"  [readonly]="true" aria-describedby="delivery_dateDesc"  [(ngModel)]="orderStateAfterChange.orderFvNumber">
+          </div>
+
+
+
+          <div class="form-group">
+            <div class="form-group">
+              <small id="order_date_Desc" class="text-muted">Data złożenia zamówienia</small>
+              <input [ngClass]=" (orderStateBeforeChange.orderDate === orderStateAfterChange.orderDate) ? 'redcolor3': 'redcolor'" type="text" name="order_date" class="form-control"  size="300" aria-describedby="order_date_Desc" [readonly]="true" [value]="orderStateAfterChange.orderDate| date: 'dd/MM/yyyy HH:mm:ss'"  >
+            </div>
+          </div>
+
+
+          <div  class="form-group">
+          <small id="statusDesc" class="text-muted">Status zamówienia</small>
+          <input [ngClass]=" (orderStateBeforeChange.orderStatus.orderStatusName === orderStateAfterChange.orderStatus.orderStatusName) ? 'redcolor3': 'redcolor'" type="text" class="form-control"  [(ngModel)]="orderStateAfterChange.orderStatus.orderStatusName" name="status" [readonly]="true" >
+
+        </div>
+
+
+
+
+            <div class="form-group">
+              <small id="total_Desc" class="text-muted">Wartość zamówienia</small>
+              <input [ngClass]=" (orderStateBeforeChange.orderTotalAmount == orderStateAfterChange.orderTotalAmount) ? 'redcolor3': 'redcolor'" type="text" name="total" class="form-control"  size="300" aria-describedby="total_Desc" [readonly]="true" [(ngModel)]="orderStateAfterChange.orderTotalAmount"  >
+            </div>
+
+          <div   class="form-group">
+            <small id="delivery_typeDesc" class="text-muted">Rodzaj dostawy</small>
+            <input  [ngClass]=" (orderStateBeforeChange.deliveryType.deliveryTypeName === orderStateAfterChange.deliveryType.deliveryTypeName) ? 'redcolor3': 'redcolor'" class="form-control" [disabled]="true" #delivery_type="ngModel" [(ngModel)]="orderStateAfterChange.deliveryType.deliveryTypeName" name="delivery_type" >
+          </div>
+
+            <div class="form-group">
+              <small id="contact_personDesc" class="text-muted">Osoba do kontaktu</small>
+              <textarea [ngClass]=" (orderStateBeforeChange.contactPerson === orderStateAfterChange.contactPerson) ? 'redcolor3': 'redcolor'" class="form-control" name="contact_person" id="contact_person"  size="200" rows="1" [readonly]="true"  [(ngModel)]="orderStateAfterChange.contactPerson"></textarea>
+            </div>
+
+
+
+          <div>
+            <div class="form-group" >
+              <small id="codDescript" class="text-muted">Kwota pobrania</small>
+              <input [ngClass]=" (orderStateBeforeChange.cod == orderStateAfterChange.cod) ? 'redcolor3': 'redcolor'" type="number" name="cod" #cod="ngModel"  class="form-control" size="200"  aria-describedby="codDesc" [readonly]="true"  [(ngModel)]="orderStateAfterChange.cod">
+            </div>
+          </div>
+
+
+          <div class="form-group">
+              <small id="taxDesc" class="text-muted">Planowana data wysyłki</small>
+              <input [ngClass]=" (orderStateBeforeChange.deliveryDate == orderStateAfterChange.deliveryDate) ? 'redcolor3': 'redcolor'" type="date" name="delivery_date"  class="form-control" #delivery_date="ngModel" [(ngModel)]="orderStateAfterChange.deliveryDate" [readonly]="true" aria-describedby="delivery_dateDesc">
+          </div>
+
+          <div class="form-group">
+              <small id="weekNr" class="text-muted">Tydzień dostawy</small>
+              <input [ngClass]=" (orderStateBeforeChange.weekOfYear == orderStateAfterChange.weekOfYear) ? 'redcolor3': 'redcolor'" type="text" name="weekofyear_date"  class="form-control" #weekofyear_date="ngModel" [(ngModel)]="orderStateAfterChange.weekOfYear"  [readonly]="true"  aria-describedby="weekofyear_dateDesc" >
+          </div>
+
+
+            <div class="form-group">
+              <small id="additional_informationDesc" class="text-muted">Dodatkowe informacje</small>
+              <textarea [ngClass]="(orderStateBeforeChange.additionalInformation === orderStateAfterChange.additionalInformation) ? 'redcolor3': 'redcolor' " class="form-control " name="additional_information" id="additional_information"  rows="3" [readonly]="true" [(ngModel)]="orderStateAfterChange.additionalInformation" ></textarea>
+            </div>
+
+
+            <div class="form-group">
+              <p>
+                <p-checkbox  name="additionalSaleCheckboxForAfterOrderPanel" binary="true" (disabled)="true" [(ngModel)]="additionalSaleCheckboxForAfterOrderPanel" ></p-checkbox>
+                <span [ngClass]="(additionalSaleCheckbox == additionalSaleCheckboxForAfterOrderPanel) ? '': 'redcolor2' ">dosprzedaż</span>
+              </p>
+            </div>
+
+          <!--<div *ngIf="fileList.length>0" class="form-group">-->
+            <!--<table>-->
+              <!--<thead>-->
+              <!--Pliki-->
+              <!--</thead>-->
+              <!--<tbody>-->
+                <!--<tr *ngFor="let item of fileList" >-->
+                  <!--<td> {{item.fileName}}</td>-->
+                <!--</tr>-->
+              <!--</tbody>-->
+            <!--</table>-->
+          <!--</div>-->
+            <p-panel  [styleClass]=" (orderStateBeforeChange.orderTotalAmount == orderStateAfterChange.orderTotalAmount) ? 'redcolor3': 'redcolor'" header="Zawartość zamówienia" >
+
+          <table >
+            <thead>
+            <tr>
+              <th>nazwa kosza</th>
+              <th class="col_quantity">ilość</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let orderItems of orderStateAfterChange.orderItems">
+              <td scope="row">{{orderItems.basket.basketName}} </td>
+              <td><input type="number" class="form-control" name="" id="" aria-describedby="helpId" placeholder="" min="0" [value]="orderItems.quantity" [readonly]="true"  ></td>
+            </tr>
+            </tbody>
+          </table>
+            </p-panel>
+
+
+
+        </p-panel>
+
+      </div>
+
+
+</div>
+  </p-fieldset>
+</div>
