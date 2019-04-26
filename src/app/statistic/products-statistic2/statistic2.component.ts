@@ -45,7 +45,7 @@ export class Statistic2Component implements OnInit {
     this.startDate = today.toISOString().substring(0,10);
     this.endDate = today.toISOString().substring(0,10);
   }
-
+rou
 
   submitOrderForm(form: NgForm) {
 

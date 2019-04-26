@@ -27,6 +27,7 @@ import {NotesComponent} from "./notes/notes.component";
 import {OrderStatsComponent} from "./statistic/order-stat/order-stats.component";
 import {Statistic2Component} from "./statistic/products-statistic2/statistic2.component";
 import {SuppliersComponent} from "./suppliers/suppliers.component";
+import {OrderAuditComponent} from "./order-audit/order-audit.component";
 const routes: Routes = [
     {path: '', component: ProductsComponent, pathMatch: 'full', canActivate: [AuthGuard]},
     { path: 'product', component: ProductsComponent, canActivate: [AuthGuard] },
@@ -41,6 +42,7 @@ const routes: Routes = [
     {path:   'basket/:basketId', component: GiftBasketEditComponent, canActivate: [AuthGuard] },
     { path: 'orders', component:OrderComponent, canActivate: [AuthGuard]},
     {path:   'order/:id', component:OrderDetailsComponent, canActivate: [AuthGuard]},
+    {path:   'order_audit', component:OrderAuditComponent, canActivate: [AuthGuard]},
     {path:   'admin', component: AdminComponent,canActivate: [AuthGuard,AdminGuard]},
     {path:   'maps', component: MapsComponent,canActivate: [AuthGuard]},
     {path:   'statistics/products', component: StatisticComponent,canActivate: [AuthGuard]},

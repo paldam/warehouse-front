@@ -54,7 +54,7 @@ export class OrderComponent implements OnInit {
     public ordersYears: any[];
 
     constructor(private activatedRoute :ActivatedRoute,private orderService :OrderService,private router: Router,private confirmationService: ConfirmationService,
-                private authenticationService: AuthenticationService,private  activeRoute: ActivatedRoute, private fileSendService :FileSendService,
+                private authenticationService: AuthenticationService,private  activedRoute: ActivatedRoute, private fileSendService :FileSendService,
                 private  messageServiceExt: MessageServiceExt, private routingState :RoutingState) {
 
 
@@ -63,23 +63,25 @@ export class OrderComponent implements OnInit {
         this.isCurrentPageCustomerEdit = this.routingState.getCurrentPage().substring(0, 9) =="/customer";
         this.isCurrentPageOrdersView = this.routingState.getCurrentPage().substring(0, 7) =="/orders";
         this.isCurrentPageOrdersViewRedirectedFromBasketStatitis = this.routingState.getPreviousUrl() =="/statistics/basket";
-        console.log(this.routingState.getHistory());
+
 
 
 
 
 
         if (this.isCurrentPageCustomerEdit) {
-            orderService.getOrderByCustomer(activeRoute.snapshot.params["id"]).subscribe(data => {
+            orderService.getOrderByCustomer(activedRoute.snapshot.params["id"]).subscribe(data => {
                 this.orders = data;
                 this.ordersNotFiltered = data;
-                this.currentCustomerOnCustomerEditPage = activeRoute.snapshot.params["id"];
+                this.currentCustomerOnCustomerEditPage = activedRoute.snapshot.params["id"];
             })
         }else if (this.isCurrentPageOrdersViewRedirectedFromBasketStatitis) {
 
-            //let basketIdTmp = activatedRoute.snapshot.queryParamMap.get('id');
+            let basketIdTmp = activatedRoute.snapshot.paramMap.get('id');
+            let startDateTmp = activatedRoute.snapshot.paramMap.get('startDate');
+            let endDateTmp = activatedRoute.snapshot.paramMap.get('endDate');
 
-            orderService.getOrdersByBasketIdAndOrderDateRange(54,'2017-12-12','2018-12-12').subscribe(data => {
+            orderService.getOrdersByBasketIdAndOrderDateRange(basketIdTmp,startDateTmp,endDateTmp).subscribe(data => {
                 this.orders = data;
                 this.ordersNotFiltered = data;
             })
@@ -92,7 +94,6 @@ export class OrderComponent implements OnInit {
         }
 
 
-        console.log(this.isCurrentPageCustomerEdit,this.isCurrentPageOrdersViewRedirectedFromBasketStatitis)
 
     }
 
