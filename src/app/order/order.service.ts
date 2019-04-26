@@ -42,17 +42,17 @@ export class OrderService {
             .map((response: Response) =>
                 response.json());
     }
-    getOrderHistoryById(id: number): Observable<Order>{
+    getOrderStateFromHistoryByRevId(id: number): Observable<Order>{
         return this.http.get(this.baseUrl+`/orderhistory/${id}`)
             .map((response: Response) =>
                 response.json());
     }
-
-    getOrderItemsHistoryById(id: number): Observable<Order>{
-        return this.http.get(this.baseUrl+`/orderitemshistory/${id}`)
+    getOrderPrevStateFromHistoryByRevId(id: number): Observable<Order>{
+        return this.http.get(this.baseUrl+`/order_history_prev_rev/${id}`)
             .map((response: Response) =>
                 response.json());
     }
+
 
     getOrdersByBasketIdAndOrderDateRange(basketId,startDate,endDate): Observable<any[]> {
         return this.http.get(this.baseUrl+`/order/statistic/orderdaterange?basketId=${basketId}&startDate=${startDate}&endDate=${endDate}`)

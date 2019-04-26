@@ -9,7 +9,7 @@ import {LeftNavComponent} from './nav-bars/left-nav/left-nav.component';
 import {
     PanelMenuModule, DataTableModule, SharedModule, FieldsetModule, OverlayPanelModule, LightboxModule,
     PanelModule, ConfirmationService, ConfirmDialogModule, DialogModule, ContextMenuModule, MenuModule,
-    RadioButtonModule, DropdownModule, SpinnerModule, CheckboxModule, CardModule,
+    RadioButtonModule, DropdownModule, SpinnerModule, CheckboxModule, CardModule, ProgressSpinnerModule,
 } from 'primeng/primeng';
 
 import {CalendarModule} from 'primeng/calendar';
@@ -111,7 +111,7 @@ export function httpExt(backend: XHRBackend, options: RequestOptions, router: Ro
   imports: [
     BrowserModule,HttpModule,BrowserAnimationsModule,FormsModule,DialogModule,CheckboxModule,ConfirmDialogModule,PanelMenuModule,
     PanelModule,DropdownModule,ListboxModule,RadioButtonModule,ToastModule,TableModule,FileUploadModule,DataTableModule,
-    SharedModule,SpinnerModule,CardModule,FieldsetModule,LightboxModule,OverlayPanelModule,ContextMenuModule, MenuModule,CalendarModule, routing
+    SharedModule,SpinnerModule,CardModule,ProgressSpinnerModule,FieldsetModule,LightboxModule,OverlayPanelModule,ContextMenuModule, MenuModule,CalendarModule, routing
   ],
   providers: [ {
     provide: HttpService, useFactory: (httpExt) , deps: [XHRBackend, RequestOptions,Router,MessageService]},
