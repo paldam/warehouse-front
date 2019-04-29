@@ -2,7 +2,7 @@ import {Component, ElementRef, OnInit, ViewChild, ViewEncapsulation} from '@angu
 import {Order} from '../../model/order.model';
 import {OrderService} from '../order.service';
 import {ActivatedRoute, Router, RoutesRecognized} from "@angular/router";
-import {ConfirmationService, DataTable, Dropdown, OverlayPanel, SelectItem} from "primeng/primeng";
+import {ConfirmationService, DataTable, Dropdown, LazyLoadEvent, OverlayPanel, SelectItem} from "primeng/primeng";
 import {AuthenticationService} from "../../authentication.service";
 import {filter, pairwise} from "rxjs/internal/operators";
 import {FileSendService} from "../../file-send/file-send.service";
@@ -23,6 +23,7 @@ import {RoutingState} from "../../routing-stage";
 
 export class OrderComponent implements OnInit {
     public loading: boolean= false;
+    public totalRecords: number;
     public orders: any[]=[];
     public ordersNotFiltered: any[]=[];
     public lastPaginationPageNumberOnOrderViewPage: number ;
@@ -86,10 +87,10 @@ export class OrderComponent implements OnInit {
                 this.ordersNotFiltered = data;
             })
 
-        }else  { // current page is simple Order View
-            orderService.getOrdersDto().subscribe(data => {
-                this.orders = data;
-                this.ordersNotFiltered = data;
+        }else  {
+             orderService.getOrdersDto(0,50,"").subscribe((data  :any) => {
+                 this.orders = data.orderDtoList;
+                 //this.ordersNotFiltered = data;
             })
         }
 
@@ -98,6 +99,7 @@ export class OrderComponent implements OnInit {
     }
 
     ngOnInit() {
+
 
 
         this.orderStatusList = [];
@@ -113,6 +115,8 @@ export class OrderComponent implements OnInit {
         this.ordersYears.push({label: '2017', value: 2017});
         this.ordersYears.push({label: '2018', value: 2018});
         this.ordersYears.push({label: '2019', value: 2019});
+
+
 
 
 
@@ -151,6 +155,7 @@ export class OrderComponent implements OnInit {
 
 
         if (previousUrlTmp.search('/order') == -1) {
+
                 localStorage.removeItem('findInputTextOnOrderViewPage');
                 localStorage.removeItem('lastPaginationPageNumberOnOrderViewPage');
         } else {
@@ -167,7 +172,7 @@ export class OrderComponent implements OnInit {
          setTimeout(() => {
              if (localStorage.getItem('lastPaginationPageNumberOnOrderViewPage')){
                  let tmplastVisitedPage =parseInt(localStorage.getItem('lastPaginationPageNumberOnOrderViewPage'));
-                 this.lastPaginationPageNumberOnOrderViewPage = (tmplastVisitedPage -1)*20;
+                 this.lastPaginationPageNumberOnOrderViewPage = (tmplastVisitedPage-1)*50;
              }else{
                  this.lastPaginationPageNumberOnOrderViewPage = 0;
              }
@@ -186,7 +191,10 @@ export class OrderComponent implements OnInit {
                 this.orderService.getOrderByCustomer(this.currentCustomerOnCustomerEditPage).subscribe(data=> this.orders=data);
 
             }else{
-                this.orderService.getOrdersDto().subscribe(data=> this.orders=data);
+
+                this.orderService.getOrdersDto((this.datatable.first/this.datatable.rows), this.datatable.rows,this.datatable.globalFilter).subscribe(data=>{
+                    this.orders=data
+                } );
             }
 
             this.loading = false;
@@ -204,6 +212,21 @@ export class OrderComponent implements OnInit {
 
     }
 
+
+    loadOrdersLazy(event: LazyLoadEvent) {
+
+        this.loading = true;
+
+        this.orderService.getOrdersDto((event.first/event.rows), event.rows, event.globalFilter).subscribe((data : any)=>{
+            this.orders = data.orderDtoList;
+            this.totalRecords = data.totalRowsOfRequest;
+        },null
+         ,() => {
+            this.loading = false;
+            })
+    }
+
+
     getFile(id: number){
         this.fileSendService.getFile(id).subscribe(res=>{
             let a = document.createElement("a")
@@ -217,11 +240,14 @@ export class OrderComponent implements OnInit {
     }
 
     goToEditPage(index,id) {
+        
+
 
 
         this.information_extention.hide();
 
-        let pageTmp = ((index-1) / 20)+1;
+        console.log((this.datatable.first/this.datatable.rows) +1);
+        let pageTmp =(this.datatable.first/this.datatable.rows) +1;
         localStorage.setItem('lastPaginationPageNumberOnOrderViewPage', pageTmp.toString());
         let textTmp = this.findInputTextOnOrderViewPage;
         localStorage.setItem('findInputTextOnOrderViewPage', textTmp);

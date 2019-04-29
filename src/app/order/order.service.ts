@@ -54,6 +54,8 @@ export class OrderService {
     }
 
 
+
+
     getOrdersByBasketIdAndOrderDateRange(basketId,startDate,endDate): Observable<any[]> {
         return this.http.get(this.baseUrl+`/order/statistic/orderdaterange?basketId=${basketId}&startDate=${startDate}&endDate=${endDate}`)
             .map((response: Response) =>
@@ -86,11 +88,24 @@ export class OrderService {
             response.json());
 }
 
-    getOrdersDto(): Observable<any[]>{
-        return this.http.get(this.baseUrl+`/orderdao/`)
+    getOrdersDto( page : number, size : number, text: string): Observable<any[]>{
+        return this.http.get(this.baseUrl+`/orderdao?page=${page}&size=${size}&searchtext=${text}`)
             .map((response: Response) =>
                 response.json());
     }
+
+    getOrdersDtoTotalRows( page : number, size : number, text: string): Observable<any[]>{
+        return this.http.get(this.baseUrl+`/orderdaocount?page=${page}&size=${size}&searchtext=${text}`)
+            .map((response: Response) =>
+                response.json());
+    }
+
+    getOrderTotalRows(): Observable<number>{
+        return this.http.get(this.baseUrl+`/ordercount`)
+            .map((response: Response) =>
+                response.json());
+    }
+
 
     getOrderStats(): Observable<any[]>{
         return this.http.get(this.baseUrl+`/orderstats/`)
