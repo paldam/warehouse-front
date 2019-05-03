@@ -13,6 +13,7 @@ import {File} from "../../model/file";
 import * as XLSX from "xlsx";
 import {AppConstans} from "../../constans";
 import {RoutingState} from "../../routing-stage";
+import {isUndefined} from "util";
 
 @Component({
     selector: 'order',
@@ -39,7 +40,8 @@ export class OrderComponent implements OnInit {
     public selectedToMenuOrder : number;
     public selectedToPrintOrderItems : OrderItem[]=[];
     public selectedOrdersMultiselction: Order[]=[];
-    public orderStatusList: SelectItem[];
+    public orderStatusList: SelectItem[]=[];
+    public ordersYears: SelectItem[]=[];
     public items: MenuItem[];
     public paginatorValues = AppConstans.PAGINATOR_VALUES;
     public additionalInforamtionTmp : string = "";
@@ -52,7 +54,7 @@ export class OrderComponent implements OnInit {
     @ViewChild('yearFilter') yearFilterEl :Dropdown;
     @ViewChild('dt') datatable:DataTable;
     @ViewChild('information_extention') information_extention : OverlayPanel;
-    public ordersYears: any[];
+
 
     constructor(private activatedRoute :ActivatedRoute,private orderService :OrderService,private router: Router,private confirmationService: ConfirmationService,
                 private authenticationService: AuthenticationService,private  activedRoute: ActivatedRoute, private fileSendService :FileSendService,
@@ -88,9 +90,9 @@ export class OrderComponent implements OnInit {
             })
 
         }else  {
-             orderService.getOrdersDto(0,50,"").subscribe((data  :any) => {
+             orderService.getOrdersDto(0,50,"","orderDate",1,[],[]).subscribe((data  :any) => {
                  this.orders = data.orderDtoList;
-                 //this.ordersNotFiltered = data;
+                 this.totalRecords = data.totalRowsOfRequest;
             })
         }
 
@@ -100,23 +102,8 @@ export class OrderComponent implements OnInit {
 
     ngOnInit() {
 
-
-
-        this.orderStatusList = [];
-        this.orderStatusList.push({label: 'wszystkie', value: 'wszystkie'});
-        this.orderStatusList.push({label: 'przyjęte', value: 'przyjęte'});
-        this.orderStatusList.push({label: 'nowe', value: 'nowe'});
-        this.orderStatusList.push({label: 'skompletowane', value: 'skompletowane'});
-        this.orderStatusList.push({label: 'wysłane', value: 'wysłane'});
-        this.orderStatusList.push({label: 'zrealizowane', value: 'zrealizowane'});
-
-        this.ordersYears = [];
-        this.ordersYears.push({label: 'wszystkie', value: 1111});
-        this.ordersYears.push({label: '2017', value: 2017});
-        this.ordersYears.push({label: '2018', value: 2018});
-        this.ordersYears.push({label: '2019', value: 2019});
-
-
+        this.getOrderStatusForDataTableFilter();
+        this.getOrderYearsForDataTableFilter();
 
 
 
@@ -149,7 +136,23 @@ export class OrderComponent implements OnInit {
     }
 
 
-     setSearchOptions() {
+    private getOrderStatusForDataTableFilter() {
+        this.orderService.getOrderStatus().subscribe(data => {
+            data.forEach(value => {
+                this.orderStatusList.push({label: '' + value.orderStatusName, value: value.orderStatusId});
+            });
+        });
+    }
+
+    private getOrderYearsForDataTableFilter() {
+        this.orderService.getOrdersYears().subscribe((year:any) => {
+            year.forEach(value => {
+                this.ordersYears.push({label: '' + value, value: value});
+            });
+        });
+    }
+
+    setSearchOptions() {
 
         let previousUrlTmp = this.routingState.getPreviousUrl();
 
@@ -191,9 +194,9 @@ export class OrderComponent implements OnInit {
                 this.orderService.getOrderByCustomer(this.currentCustomerOnCustomerEditPage).subscribe(data=> this.orders=data);
 
             }else{
-
-                this.orderService.getOrdersDto((this.datatable.first/this.datatable.rows), this.datatable.rows,this.datatable.globalFilter).subscribe(data=>{
-                    this.orders=data
+                this.orderService.getOrdersDto(0, 50,"","orderDate",1,[],[]).subscribe((data: any)=>{
+                    this.orders=data.orderDtoList;
+                    this.totalRecords = data.totalRowsOfRequest;
                 } );
             }
 
@@ -215,16 +218,51 @@ export class OrderComponent implements OnInit {
 
     loadOrdersLazy(event: LazyLoadEvent) {
 
+
         this.loading = true;
 
-        this.orderService.getOrdersDto((event.first/event.rows), event.rows, event.globalFilter).subscribe((data : any)=>{
-            this.orders = data.orderDtoList;
-            this.totalRecords = data.totalRowsOfRequest;
-        },null
-         ,() => {
-            this.loading = false;
+        let pageNumber = 0;
+
+        if (event.first) {  // in the beginning event.first is NaN so it's initiate by 0;
+            pageNumber = event.first / event.rows;
+        }
+
+        console.log(event);
+        
+        let sortField= event.sortField;
+        let orderStatusFilterList: any[]=[];
+        let orderDataFilterList: any[]=[];
+
+        if(sortField == undefined){
+            sortField="orderDate";
+        }
+
+
+        if(event.filters != undefined && event.filters["orderStatus.orderStatusName"] != undefined){
+            orderStatusFilterList= event.filters["orderStatus.orderStatusName"].value;
+        }
+
+        if(event.filters != undefined && event.filters["orderDate"] != undefined){
+             orderDataFilterList= event.filters["orderDate"].value;
+        }
+
+
+        this.orderService.getOrdersDto(pageNumber, event.rows, event.globalFilter,sortField,event.sortOrder,orderStatusFilterList, orderDataFilterList).subscribe(
+            (data : any)=>{
+                    this.orders = data.orderDtoList;
+                    this.totalRecords = data.totalRowsOfRequest;
+            }
+            ,null
+            ,() => {
+                    this.loading = false;
             })
-    }
+        }
+
+
+
+
+
+
 
 
     getFile(id: number){
@@ -428,23 +466,26 @@ export class OrderComponent implements OnInit {
 
     }
 
+
+    
+    
     filterOrderYear(orderDate : number){
 
-        this.statusFilterEl.value="wszystkie";
-        this.statusFilterEl.selectedOption = {label: "wszystkie", value: "wszystkie"};
-
-        if (orderDate == 1111){
-            this.orders = this.ordersNotFiltered;
-        }else{
-
-
-
-            this.orders = this.ordersNotFiltered.filter((value: Order) => {
-
-                return new Date(value.orderDate).getFullYear() == orderDate;
-
-            })
-        }
+        // this.statusFilterEl.value="wszystkie";
+        // this.statusFilterEl.selectedOption = {label: "wszystkie", value: "wszystkie"};
+        //
+        // if (orderDate == 1111){
+        //     this.orders = this.ordersNotFiltered;
+        // }else{
+        //
+        //
+        //
+        //     this.orders = this.ordersNotFiltered.filter((value: Order) => {
+        //
+        //         return new Date(value.orderDate).getFullYear() == orderDate;
+        //
+        //     })
+        // }
 
 
     }

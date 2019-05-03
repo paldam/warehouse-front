@@ -31,7 +31,7 @@
                 <!--{{i+1}}-->
             <!--</ng-template>-->
         <!--</p-column>-->
-        <p-column field="orderFvNumber" header="Numer FV" [sortable]="true" ></p-column>
+        <p-column field="orderFvNumber" header="Numer FV"  ></p-column>
 
 
 
@@ -39,7 +39,10 @@
         <p-column field="orderDate" header="Data zamówienia" [sortable]="true" [filter]="!this.isCurrentPageCustomerEdit" filterMatchMode="equals">
 
             <ng-template *ngIf="!this.isCurrentPageCustomerEdit" let-col pTemplate="filter"  >
-                <p-dropdown #yearFilter [options]="ordersYears" [style]="{'width':'100%'}" (onChange)="filterOrderYear($event.value)" styleClass="ui-column-filter"></p-dropdown>
+                <div>
+                    <p-multiSelect  [filter]="false" [showToggleAll]="false" [options]="ordersYears" defaultLabel="Wszystkie" (onChange)="datatable.filter($event.value, col.field, 'in')"></p-multiSelect>
+                </div>
+
             </ng-template>
 
             <ng-template let-row="rowData" pTemplate="body"  >
@@ -51,7 +54,7 @@
 
 
 
-        <p-column field="customer.customerName" header="Nabywca" [sortable]="true">
+        <p-column field="customer.customerName" header="Nabywca" >
             <ng-template let-row="rowData" pTemplate="body"  >
                 {{row.customer.name}} {{row.customer.organizationName}}
             </ng-template>
@@ -102,7 +105,7 @@
         <p-column field="orderStatus.orderStatusName" header="Status" [filter]="!this.isCurrentPageCustomerEdit" filterMatchMode="equals" [sortable]="true" >
 
             <ng-template *ngIf="!this.isCurrentPageCustomerEdit" let-col pTemplate="filter"  >
-                <p-dropdown #statusFilter [options]="orderStatusList" [style]="{'width':'100%'}" (onChange)="filterStatus($event.value)" styleClass="ui-column-filter"></p-dropdown>
+                <p-multiSelect  [filter]="false" [showToggleAll]="false" [options]="orderStatusList" defaultLabel="Wszystkie" (onChange)="datatable.filter($event.value, col.field, 'in')"></p-multiSelect>
             </ng-template>
 
             <ng-template let-row="rowData" pTemplate="body"  >
@@ -116,7 +119,7 @@
         <p-column field="deliveryType.deliveryTypeName" header="Rodzaj dostawy" ></p-column>
 
 
-        <p-column class="attach_col" field="dbFileId"   [sortable]="true" header="Z" styleClass="attach_col">
+        <p-column class="attach_col" field="dbFileId"   [sortable]="false" header="Z" styleClass="attach_col">
             <ng-template let-row="rowData"  pTemplate="body">
 
                 <span *ngIf="row.dbFileId!=0"> <i class="fa fa-2x fa-paperclip" aria-hidden="true"></i></span>

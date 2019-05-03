@@ -88,11 +88,12 @@ export class OrderService {
             response.json());
 }
 
-    getOrdersDto( page : number, size : number, text: string): Observable<any[]>{
-        return this.http.get(this.baseUrl+`/orderdao?page=${page}&size=${size}&searchtext=${text}`)
+    getOrdersDto( page : number, size : number, text: string, sortField:string , sortingDirection: number,orderStatusFilterList : any[],orderDataFilterList : any[] ): Observable<any[]>{
+        return this.http.get(this.baseUrl+`/orderdao?page=${page}&size=${size}&searchtext=${text}&orderBy=${sortField}&sortingDirection=${sortingDirection}&orderStatusFilterList=${orderStatusFilterList}&orderYearsFilterList=${orderDataFilterList}`)
             .map((response: Response) =>
                 response.json());
     }
+
 
     getOrdersDtoTotalRows( page : number, size : number, text: string): Observable<any[]>{
         return this.http.get(this.baseUrl+`/orderdaocount?page=${page}&size=${size}&searchtext=${text}`)
@@ -102,6 +103,12 @@ export class OrderService {
 
     getOrderTotalRows(): Observable<number>{
         return this.http.get(this.baseUrl+`/ordercount`)
+            .map((response: Response) =>
+                response.json());
+    }
+
+    getOrdersYears(): Observable<number>{
+        return this.http.get(this.baseUrl+`/ordersyears`)
             .map((response: Response) =>
                 response.json());
     }

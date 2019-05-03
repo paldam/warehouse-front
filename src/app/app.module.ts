@@ -7,9 +7,25 @@ import {HttpModule, RequestOptions, XHRBackend} from '@angular/http';
 import { NavComponent } from './nav-bars/top-nav/top-nav.component';
 import {LeftNavComponent} from './nav-bars/left-nav/left-nav.component';
 import {
-    PanelMenuModule, DataTableModule, SharedModule, FieldsetModule, OverlayPanelModule, LightboxModule,
-    PanelModule, ConfirmationService, ConfirmDialogModule, DialogModule, ContextMenuModule, MenuModule,
-    RadioButtonModule, DropdownModule, SpinnerModule, CheckboxModule, CardModule, ProgressSpinnerModule,
+    PanelMenuModule,
+    DataTableModule,
+    SharedModule,
+    FieldsetModule,
+    OverlayPanelModule,
+    LightboxModule,
+    PanelModule,
+    ConfirmationService,
+    ConfirmDialogModule,
+    DialogModule,
+    ContextMenuModule,
+    MenuModule,
+    RadioButtonModule,
+    DropdownModule,
+    SpinnerModule,
+    CheckboxModule,
+    CardModule,
+    ProgressSpinnerModule,
+    MultiSelectModule,
 } from 'primeng/primeng';
 
 import {CalendarModule} from 'primeng/calendar';
@@ -111,7 +127,7 @@ export function httpExt(backend: XHRBackend, options: RequestOptions, router: Ro
   imports: [
     BrowserModule,HttpModule,BrowserAnimationsModule,FormsModule,DialogModule,CheckboxModule,ConfirmDialogModule,PanelMenuModule,
     PanelModule,DropdownModule,ListboxModule,RadioButtonModule,ToastModule,TableModule,FileUploadModule,DataTableModule,
-    SharedModule,SpinnerModule,CardModule,ProgressSpinnerModule,FieldsetModule,LightboxModule,OverlayPanelModule,ContextMenuModule, MenuModule,CalendarModule, routing
+    SharedModule,MultiSelectModule,SpinnerModule,CardModule,ProgressSpinnerModule,FieldsetModule,LightboxModule,OverlayPanelModule,ContextMenuModule, MenuModule,CalendarModule, routing
   ],
   providers: [ {
     provide: HttpService, useFactory: (httpExt) , deps: [XHRBackend, RequestOptions,Router,MessageService]},
