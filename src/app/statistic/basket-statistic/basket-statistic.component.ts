@@ -106,7 +106,8 @@ export class BasketStatisticComponent implements OnInit {
 
     goToOrderListByBasket(id) {
 
-        this.router.navigate(["/orders/",{id:id,startDate:this.startDate,endDte:this.endDate}]);
+
+        this.router.navigate(["/orders/",{id:id,startDate:this.startDate,endDate:this.endDate}]);
 
     }
 

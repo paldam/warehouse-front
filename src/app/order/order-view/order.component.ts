@@ -65,7 +65,9 @@ export class OrderComponent implements OnInit {
         this.setSearchOptions();
         this.isCurrentPageCustomerEdit = this.routingState.getCurrentPage().substring(0, 9) =="/customer";
         this.isCurrentPageOrdersView = this.routingState.getCurrentPage().substring(0, 7) =="/orders";
-        this.isCurrentPageOrdersViewRedirectedFromBasketStatitis = this.routingState.getPreviousUrl() =="/statistics/basket";
+        this.isCurrentPageOrdersViewRedirectedFromBasketStatitis = this.routingState.getCurrentPage().substring(0, 10) =="/orders;id";
+
+
 
 
 
@@ -105,6 +107,8 @@ export class OrderComponent implements OnInit {
         this.getOrderStatusForDataTableFilter();
         this.getOrderYearsForDataTableFilter();
 
+
+        console.log(this.isCurrentPageOrdersView );
 
 
 
@@ -233,6 +237,7 @@ export class OrderComponent implements OnInit {
         let orderStatusFilterList: any[]=[];
         let orderDataFilterList: any[]=[];
 
+
         if(sortField == undefined){
             sortField="orderDate";
         }
@@ -247,21 +252,28 @@ export class OrderComponent implements OnInit {
         }
 
 
-        this.orderService.getOrdersDto(pageNumber, event.rows, event.globalFilter,sortField,event.sortOrder,orderStatusFilterList, orderDataFilterList).subscribe(
-            (data : any)=>{
+
+            this.orderService.getOrdersDto(pageNumber, event.rows, event.globalFilter,sortField,event.sortOrder,orderStatusFilterList, orderDataFilterList).subscribe((data : any)=>{
                     this.orders = data.orderDtoList;
                     this.totalRecords = data.totalRowsOfRequest;
-            }
-            ,null
-            ,() => {
+                },null
+                ,() => {
                     this.loading = false;
-            })
+                })
         }
 
 
 
 
+    backToRegularOrderView(){
+        this.isCurrentPageOrdersViewRedirectedFromBasketStatitis = false;
 
+        this.refreshData();
+    }
+
+    backToBasketStatistic(){
+        this.router.navigate(["/statistics/basket"]);
+    }
 
 
 

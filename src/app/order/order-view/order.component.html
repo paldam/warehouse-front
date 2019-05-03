@@ -1,4 +1,6 @@
 
+<button  *ngIf="this.isCurrentPageOrdersViewRedirectedFromBasketStatitis" (click)="backToRegularOrderView()" class="btn bg-primary" type="button"> Czyść </button>
+<button *ngIf="this.isCurrentPageOrdersViewRedirectedFromBasketStatitis" (click)="backToBasketStatistic()" class="btn bg-primary" type="button"> Powrót do statystyki koszy koszy </button>
 <div class="products_box">
 
     <div  class="input-group search_bar" >
@@ -6,6 +8,9 @@
                  <i class="fa fa-search" aria-hidden="true"></i>
             </span>
         <input #globalfilter type="text"  class="form-control search_input" pInputText size="50" placeholder="Szukaj"aria-describedby="basic-addon1" [(ngModel)]="findInputTextOnOrderViewPage">
+
+
+
 
         <div class="onlyWithAttach form-check">
             <label class="form-check-label">
@@ -17,13 +22,17 @@
 
         <i class="fa fa-refresh pull-right refresh_icon fa-2x" aria-hidden="true" (click)="refreshData()"></i>
 
+
     </div>
+
+
+
     <p-dataTable [value]="orders" [rows]="50" [paginator]="true" [globalFilter]="globalfilter" #dt
                  [loading]="loading" loadingIcon="fa-circle-o-notch" expandableRows="true" [(first)]="lastPaginationPageNumberOnOrderViewPage"
                  (onRowExpand)="rowExpand($event)" selectionMode="multiple" [(selection)]="selectedOrdersMultiselction"  dataKey="orderId" [contextMenu]="cm" (onContextMenuSelect)="OnSelectRow($event)"
                  [paginator]="true" [pageLinks]="5" [rowsPerPageOptions]= paginatorValues
                  (onRowDblclick)="goToEditPage(1,$event.data.orderId)"
-                 [lazy]="true" (onLazyLoad)="loadOrdersLazy($event)" [totalRecords]="totalRecords">
+                 [lazy]="!isCurrentPageOrdersViewRedirectedFromBasketStatitis && !this.isCurrentPageCustomerEdit" (onLazyLoad)="loadOrdersLazy($event)" [totalRecords]="totalRecords">
         <p-header>Lista Zamówień</p-header>
         <p-column expander="true" header="" styleClass="col-icon " [style]="{'width':'40px'}"></p-column>
         <!--<p-column  header="lp."   [style]="{'width':'70px'}">-->
@@ -40,7 +49,7 @@
 
             <ng-template *ngIf="!this.isCurrentPageCustomerEdit" let-col pTemplate="filter"  >
                 <div>
-                    <p-multiSelect  [filter]="false" [showToggleAll]="false" [options]="ordersYears" defaultLabel="Wszystkie" (onChange)="datatable.filter($event.value, col.field, 'in')"></p-multiSelect>
+                    <p-multiSelect *ngIf="!this.isCurrentPageOrdersViewRedirectedFromBasketStatitis" [filter]="false" [showToggleAll]="false" [options]="ordersYears" defaultLabel="Wszystkie" (onChange)="datatable.filter($event.value, col.field, 'in')"></p-multiSelect>
                 </div>
 
             </ng-template>
@@ -105,7 +114,7 @@
         <p-column field="orderStatus.orderStatusName" header="Status" [filter]="!this.isCurrentPageCustomerEdit" filterMatchMode="equals" [sortable]="true" >
 
             <ng-template *ngIf="!this.isCurrentPageCustomerEdit" let-col pTemplate="filter"  >
-                <p-multiSelect  [filter]="false" [showToggleAll]="false" [options]="orderStatusList" defaultLabel="Wszystkie" (onChange)="datatable.filter($event.value, col.field, 'in')"></p-multiSelect>
+                <p-multiSelect *ngIf="!this.isCurrentPageOrdersViewRedirectedFromBasketStatitis" [filter]="false" [showToggleAll]="false" [options]="orderStatusList" defaultLabel="Wszystkie" (onChange)="datatable.filter($event.value, col.field, 'in')"></p-multiSelect>
             </ng-template>
 
             <ng-template let-row="rowData" pTemplate="body"  >
