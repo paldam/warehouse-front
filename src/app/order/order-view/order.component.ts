@@ -36,7 +36,9 @@ export class OrderComponent implements OnInit {
     public currentCustomerOnCustomerEditPage : number;
     public SelectedRowOrderItems: OrderItem[]=[];
     public printDeliveryConfirmationPdFSettings: boolean = false;
+    public pdialogBasketProductsPrint: boolean = false;
     public selectedToPrintOrder : Order = new Order();
+    public selectedOrderToPrintBasketProducts: any;
     public selectedToMenuOrder : number;
     public selectedToPrintOrderItems : OrderItem[]=[];
     public selectedOrdersMultiselction: Order[]=[];
@@ -46,7 +48,7 @@ export class OrderComponent implements OnInit {
     public paginatorValues = AppConstans.PAGINATOR_VALUES;
     public additionalInforamtionTmp : string = "";
     fileFilterLoaded: Promise<boolean>;
-
+    isOrderToPrintProductOfBasketsFetchComplete: Promise<boolean>;
     public selectedOrderFileList: File[]=[];
 
     @ViewChild('onlyWithAttach') el :ElementRef;
@@ -108,7 +110,6 @@ export class OrderComponent implements OnInit {
         this.getOrderYearsForDataTableFilter();
 
 
-        console.log(this.isCurrentPageOrdersView );
 
 
 
@@ -514,6 +515,66 @@ export class OrderComponent implements OnInit {
         })
 
     }
+
+
+    showPdialogBasketProductsPrint(orderId : number){
+
+        this.pdialogBasketProductsPrint = true;
+
+        this.orderService.getOrder(orderId).subscribe(data=>{
+            this.selectedOrderToPrintBasketProducts = data;
+        },null,
+        () => {
+            this.selectedOrderToPrintBasketProducts.orderItems.forEach(orderItems =>{
+                orderItems.added = true;
+
+            });
+            console.log(this.selectedOrderToPrintBasketProducts);
+            this.isOrderToPrintProductOfBasketsFetchComplete = Promise.resolve(true);
+
+        })
+
+    }
+
+
+    printOrderBasketsProductsPdf(){
+
+
+
+
+
+        this.orderService.getOrderBasketsProductsPdf(this.selectedOrderToPrintBasketProducts.orderItems).subscribe(res=>{
+                var fileURL = URL.createObjectURL(res);
+                window.open(fileURL);
+            this.pdialogBasketProductsPrint = false;
+
+            },error =>{
+                this.messageServiceExt.addMessage('error', 'Błąd przy generowaniu wydruku', "Status: " + error.status + ' ' + error.statusText);
+
+            }
+        )
+    }
+
+
+    ConfirmationPdf(){
+
+
+        this.orderService.getConfirmationPdf(this.selectedToPrintOrder.orderId, this.selectedToPrintOrder.orderItems).subscribe(res=>{
+                var fileURL = URL.createObjectURL(res);
+                window.open(fileURL);
+                this.printDeliveryConfirmationPdFSettings = false;
+
+            },error =>{
+                this.messageServiceExt.addMessage('error', 'Błąd przy generowaniu wydruku', "Status: " + error.status + ' ' + error.statusText);
+
+            }
+        )
+    }
+
+
+
+
+
 
     printConfirmationPdf(){
 
