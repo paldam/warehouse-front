@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit, ViewChild, ViewEncapsulation} from '@angular/core';
 import {BasketService} from "../basket.service";
 import {ActivatedRoute, Router} from "@angular/router";
 import {Basket} from "../../model/basket.model";
@@ -8,11 +8,13 @@ import {ProductsService} from "../../products/products.service";
 import {Product} from "../../model/product.model";
 import {BasketItems} from "../../model/basket_items.model";
 import {NgForm} from '@angular/forms';
+import {FileUpload} from "primeng/primeng";
 
 @Component({
   selector: 'app-gift-basket-edit',
   templateUrl: './gift-basket-edit.component.html',
-  styleUrls: ['./gift-basket-edit.component.css']
+  styleUrls: ['./gift-basket-edit.component.css'],
+      encapsulation: ViewEncapsulation.None
 })
 export class GiftBasketEditComponent implements OnInit {
 
@@ -23,15 +25,18 @@ export class GiftBasketEditComponent implements OnInit {
   public total: number=0;
   public formSubmitted: boolean = false;
   public loading: boolean;
+    public isAddNewImg: boolean;
   public productTmp: Product[]=[];
+    public fileToUpload: File = null;
+    public basketImege: any = null;
+    @ViewChild(FileUpload) fileUploadElement: FileUpload;
 
 
   constructor(private productsService: ProductsService,private basketService :BasketService, private router: Router, activeRoute: ActivatedRoute) {
 
-      console.log("dsdsd" + activeRoute.snapshot.params["basketId"]);
+
       basketService.getBasket(activeRoute.snapshot.params["basketId"]).subscribe(data => {
 
-          console.log("dsdsd" + activeRoute.snapshot.params["basketId"]);
 
           this.basket = data;
           this.basketItems = data.basketItems;
@@ -46,6 +51,8 @@ export class GiftBasketEditComponent implements OnInit {
       });
       productsService.getProducts().subscribe(data => this.products = data);
 
+      this.getBasketImage(activeRoute.snapshot.params["basketId"]);
+
   }
 
   ngOnInit() {
@@ -57,7 +64,6 @@ export class GiftBasketEditComponent implements OnInit {
 }
 
   compareBasketType( optionOne : BasketType, optionTwo : BasketType) : boolean {
-    console.log(optionOne + '' + optionTwo);
     return optionTwo && optionTwo ? optionOne.basketTypeId === optionTwo.basketTypeId :optionOne === optionTwo;
 
   }
@@ -116,27 +122,92 @@ export class GiftBasketEditComponent implements OnInit {
     })
   }
 
+  handleFileInput(event){
+        this.fileToUpload = this.fileUploadElement.files[0];
 
+
+        if(this.fileUploadElement.files.length ==1){
+            this.fileUploadElement.disabled = true;
+            this.isAddNewImg = true;
+        }else{
+            this.isAddNewImg = false;
+        }
+
+        
+        console.log("OO" + this.isAddNewImg);
+    }
+
+    enableUploadButton(){
+        this.fileUploadElement.disabled = false;
+    }
+
+    setWheterImgIsSet(){
+        this.isAddNewImg = false;
+        console.log("OO" + this.isAddNewImg);
+    }
 
   submitForm(form: NgForm) {
     this.formSubmitted = true;
 
-    if (form.valid && this.basketItems.length>0) {
+    if (form.valid && this.basketItems.length>0 && (this.fileUploadElement.files.length ==1 || this.basket.isBasketImg == 1)) {
       this.basket.basketItems= this.basketItems;
       this.basket.basketTotalPrice*=100;
-      this.basketService.saveBasket(this.basket).subscribe(data=>{
-            this.basket=new Basket();
-            this.basketItems=[];
-            form.resetForm();
-            this.formSubmitted = false;
-            this.recalculate();
-            this.router.navigateByUrl('/baskets');
+      
 
-          },
-          err =>  console.log("error " ));
+
+
+      if(this.isAddNewImg ){
+
+          this.basketService.saveBasketWithImg(this.basket,this.fileToUpload).subscribe(data=>{
+              this.basket=new Basket();
+              this.basketItems=[];
+              form.resetForm();
+              this.formSubmitted = false;
+              this.recalculate();
+              this.router.navigateByUrl('/baskets');
+          })
+      }else{
+
+          this.basketService.saveBasketWithoutImg(this.basket).subscribe(data=>{
+              this.basket=new Basket();
+              this.basketItems=[];
+              form.resetForm();
+              this.formSubmitted = false;
+              this.recalculate();
+              this.router.navigateByUrl('/baskets');
+          })
+
+      }
+
+
+
+
     }
 
   }
+
+
+
+
+     getBasketImage(basketId : number){
+
+         this.basketService.getBasketImg(basketId).subscribe(res =>{
+
+
+             let reader = new FileReader();
+             reader.addEventListener("load", () => {
+                 this.basketImege = reader.result;
+
+             }, false);
+
+             if (res) {
+                 reader.readAsDataURL(res);
+             }
+
+         });
+
+
+    }
 
 
 }

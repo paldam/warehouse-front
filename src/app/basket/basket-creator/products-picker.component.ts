@@ -7,6 +7,8 @@ import {BasketType} from '../../model/basket_type.model';
 import {BasketService} from '../basket.service';
 import {NgForm} from '@angular/forms';
 import {GiftBasketComponent} from '../basket-helper-list/gift-baskets.component';
+import {FileUpload} from "primeng/primeng";
+import {MessageServiceExt} from "../../messages/messageServiceExt";
 
 
 @Component({
@@ -26,12 +28,16 @@ export class ProductPickerComponent implements OnInit{
     public basketsToSchema: Basket[]=[];
     public total: number=0;
     public formSubmitted: boolean = false;
+    public IsFilePicked: boolean = false;
+    public fileToUpload: File = null;
     public loading: boolean;
     public basketPatterPickDialogShow: boolean = false;
     public filtersLoaded: Promise<boolean>;
+    public basketFile: any;
     @ViewChild(GiftBasketComponent) giftBasketComponent : GiftBasketComponent;
+    @ViewChild(FileUpload) fileUploadElement: FileUpload;
 
-    constructor(private productsService : ProductsService, private basketService :BasketService) {
+    constructor(private productsService : ProductsService, private basketService :BasketService,private messageServiceExt: MessageServiceExt) {
         productsService.getProducts().subscribe(data=> this.products = data);
         basketService.getBasketsTypes().subscribe(data=>{
             this.basketTypes = data;
@@ -111,22 +117,31 @@ export class ProductPickerComponent implements OnInit{
 
     submitForm(form: NgForm) {
         this.formSubmitted = true;
-
-        if (form.valid && this.basketItems.length>0) {
+        if (form.valid && this.basketItems.length>0 && this.fileUploadElement.files.length ==1) {
             this.basket.basketItems= this.basketItems;
             this.basket.basketTotalPrice*=100;
             this.basket.isAlcoholic = 0;
             this.basket.isAvailable = 0;
-            this.basketService.saveBasket(this.basket).subscribe(data=>{
-                   this.basket=new Basket();
-                   this.basketItems=[];
-                   form.resetForm();
-                    this.formSubmitted = false;
-                   this.recalculate();
-                   this.giftBasketComponent.refreshData();
+            this.basketService.saveBasketWithImg(this.basket,this.fileToUpload).subscribe(data=>{
+
             },
-                err =>  console.log("error " ));
+                error =>    {
+                    this.messageServiceExt.addMessage('error','Błąd',"Status: " + error.status + ' ' + error.statusText)
+                } ,
+                () => {
+                    this.messageServiceExt.addMessage('success','Status','Poprawnie dodano kosz');
+                    this.basket=new Basket();
+                    this.basketItems=[];
+                    form.resetForm();
+                    this.formSubmitted = false;
+                    this.recalculate();
+                    this.fileUploadElement.clear();
+                    this.giftBasketComponent.refreshData();
+
+                });
         }
+
+
 
     }
     pickBasket(basket : Basket) {
@@ -140,4 +155,23 @@ export class ProductPickerComponent implements OnInit{
         this.basketService.getBasketsWithDeleted().subscribe(data => this.basketsToSchema = data);
 
     }
+
+    handleFileInput(event){
+        this.fileToUpload = this.fileUploadElement.files[0];
+        
+
+        if(this.fileUploadElement.files.length ==1){
+            this.fileUploadElement.disabled = true;
+            console.log("TAK");
+            console.log(this.fileUploadElement.files);
+        }
+
+    }
+
+
+    enableUploadButton(){
+        this.fileUploadElement.disabled = false;
+    }
+
+
 }

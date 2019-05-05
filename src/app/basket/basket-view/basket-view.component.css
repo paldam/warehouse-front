@@ -17,12 +17,18 @@
 
 }
 
-
+.action_col{
+    width: 200px;
+    text-align: center;
+}
 .product_tab_row {
     text-align: left;
 }
 
 
+i{
+    margin-right: 5px;
+}
 .onlyDeleted {
      margin-left: 10px;
  }
@@ -34,5 +40,11 @@
     position: absolute;
     right: 5px;
     top: 1px;
+}
+
+.centered {
+    position: fixed !important;
+    top: 50%!important;
+    left: 55%!important;
 }
 

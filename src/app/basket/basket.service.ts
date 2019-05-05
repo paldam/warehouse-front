@@ -1,4 +1,4 @@
-import {Http,Response} from '@angular/http';
+import {Http, Response, ResponseContentType} from '@angular/http';
 import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs/Observable';
 import {Basket} from '../model/basket.model';
@@ -17,9 +17,40 @@ export class BasketService {
     }
 
 
-    saveBasket(basket: Basket): Observable<Response> {
-        return this.http.post(this.baseUrl+`/baskets/`, basket)
-       .map((response: Response) => response.json());
+    saveBasketWithoutImg(basket: Basket): Observable<Response> {
+        return this.http.post(this.baseUrl+`/basketswithoutimage/`, basket)
+            .map((response: Response) => response.json());
+
+    }
+
+    saveBasketWithImg(basket: Basket,fileToUpload: File): Observable<Response> {
+
+        const formData: FormData = new FormData();
+        formData.append('basketimage', fileToUpload, fileToUpload.name);
+
+        const blobOverrides = new Blob([JSON.stringify(basket)], {
+            type: 'application/json',
+        });
+        formData.append('basketobject', blobOverrides);
+
+        return this.http.post(this.baseUrl+`/baskets/`, formData)
+            .map((response: Response) => response.json());
+
+    }
+
+    getBasketImg(basketId: number): any {
+        return this.http.get(this.baseUrl + `/basketimage/${basketId}`,{ responseType: ResponseContentType.Blob })
+            .map(res => {
+                return new Blob([res.blob()], { type: 'image/jpeg' })
+            })
+
+    }
+
+    getBasketPdf(id: number): any {
+        return this.http.get(this.baseUrl + `/basket/pdf/${id}`,{ responseType: ResponseContentType.Blob })
+            .map(res => {
+                return new Blob([res.blob()], { type: 'application/pdf' })
+            })
 
     }
 

@@ -1,3 +1,10 @@
+
+<p-dialog  header="Kosz" [(visible)]="showImageFrame">
+  <img [src]="imageToShow" [height]="700" [width]="700">
+</p-dialog>
+
+
+
 <p-fieldset legend="Lista Koszy" [toggleable]="true">
   <div class="input-group search_bar">
             <span class="input-group-addon" id="basic-addon1">
@@ -41,6 +48,9 @@
         <ng-template let-basket="rowData" pTemplate="body">
           <i *ngIf="authenticationService.isAdmin() || authenticationService.isBiuroUser() " class="fa fa-pencil-square-o fa-2x" aria-hidden="true"  title="Edytuj kosz" [routerLink]="['/basket/', basket.basketId] "></i>
           <i *ngIf="authenticationService.isAdmin()" class="fa fa-trash fa-2x edit_icon" aria-hidden="true" title="Usuń kosz"  (click)="ShowConfirmModal(basket)"></i>
+          <i *ngIf="basket.isBasketImg!=1" class="fa fa-picture-o fa-2x" style="color:grey" aria-hidden="true" title="Zdjęcie kosza niedostępne" ></i>
+          <i *ngIf="basket.isBasketImg==1" class="fa fa-picture-o fa-2x" aria-hidden="true" title="Pokaż zdjęcie kosza" (click)=" showBacketImg($event,basket.basketId)" ></i>
+          <i class="fa fa-file-pdf-o fa-2x " aria-hidden="true" title="Drukuj skład kosza ze zdjęciem" (click)="printProductListInBasketPdf(basket.basketId)" ></i>
         </ng-template>
       </p-column>
 

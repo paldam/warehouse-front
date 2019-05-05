@@ -1,8 +1,8 @@
-import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
+import {Component, ElementRef, OnInit, ViewChild, ViewEncapsulation} from '@angular/core';
 import {BasketService} from "../basket.service";
 import {Router} from "@angular/router";
 import {Basket} from "../../model/basket.model";
-import {ConfirmationService} from "primeng/primeng";
+import {ConfirmationService, OverlayPanel} from "primeng/primeng";
 import {BasketType} from "../../model/basket_type.model";
 import {AuthenticationService} from "../../authentication.service";
 import {AppConstans} from "../../constans";
@@ -10,7 +10,8 @@ import {AppConstans} from "../../constans";
 @Component({
   selector: 'app-basket',
   templateUrl: './basket-view.component.html',
-  styleUrls: ['./basket-view.component.css']
+  styleUrls: ['./basket-view.component.css'],
+    encapsulation: ViewEncapsulation.None
 })
 export class BasketComponent implements OnInit {
 
@@ -18,7 +19,10 @@ export class BasketComponent implements OnInit {
   public loading: boolean;
   public gb: any;
   public url: string ='';
+  public imageToShow: any[];
+  public showImageFrame: boolean =false;
   @ViewChild('onlyDeleted') el:ElementRef;
+    @ViewChild('op') overlayPanel:OverlayPanel;
     public paginatorValues = AppConstans.PAGINATOR_VALUES;
 
   constructor(private basketService: BasketService, public router :Router, private confirmationService: ConfirmationService, private authenticationService :AuthenticationService) {
@@ -45,7 +49,7 @@ export class BasketComponent implements OnInit {
         accept: () => {
           let tmpBaskettype : BasketType= new BasketType(999);
           basket.basketType=tmpBaskettype;
-          this.basketService.saveBasket(basket).subscribe(data=>{
+          this.basketService.saveBasketWithoutImg(basket).subscribe(data=>{
               this.refreshData();
           });
 
@@ -61,7 +65,7 @@ export class BasketComponent implements OnInit {
         accept: () => {
           let tmpBaskettype : BasketType= new BasketType(99);
           basket.basketType=tmpBaskettype;
-          this.basketService.saveBasket(basket).subscribe(data=>{
+          this.basketService.saveBasketWithoutImg(basket).subscribe(data=>{
             this.refreshData();
           });
 
@@ -83,8 +87,44 @@ export class BasketComponent implements OnInit {
       this.basketService.getBaskets().subscribe(data => this.baskets = data);
     }
 
-
-
   }
+
+    showBacketImg(event, basketId : number ){
+
+
+      this.basketService.getBasketImg(basketId).subscribe(res =>{
+          this.createImageFromBlob(res);
+      },error =>{
+
+      },complete =>{
+
+      });
+
+
+        this.showImageFrame = true;
+    }
+
+    private createImageFromBlob(image: Blob){
+        let reader = new FileReader();
+        reader.addEventListener("load", () => {
+            this.imageToShow = reader.result;
+
+
+        }, false);
+
+        if (image) {
+            reader.readAsDataURL(image);
+        }
+    }
+
+    printProductListInBasketPdf(basketId: number){
+        this.basketService.getBasketPdf(basketId).subscribe(res=>{
+                var fileURL = URL.createObjectURL(res);
+                window.open(fileURL);
+
+            }
+        )
+    }
+
 
 }

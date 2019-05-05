@@ -12,6 +12,7 @@ export class Basket{
         public season?: string,
         public isAlcoholic?: number,
         public isAvailable?: number,
+        public isBasketImg?: number
         ) {
     }
 }
