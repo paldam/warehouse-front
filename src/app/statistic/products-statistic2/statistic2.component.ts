@@ -5,6 +5,7 @@ import {NgForm} from "@angular/forms";
 import {SelectItem} from "primeng/api";
 import * as XLSX from "xlsx";
 import {DataTable} from "primeng/primeng";
+import {AppConstans} from "../../constans";
 declare var $ :any;
 
 @Component({
@@ -24,6 +25,7 @@ export class Statistic2Component implements OnInit {
   public suppliers: SelectItem[] = [];
   public dateError: boolean = false;
   @ViewChild('dt') el:DataTable;
+    public paginatorValues = AppConstans.PAGINATOR_VALUES;
     @ViewChild('sortByOrderDate') sortByOrderDateCheckBox :ElementRef;
 
 

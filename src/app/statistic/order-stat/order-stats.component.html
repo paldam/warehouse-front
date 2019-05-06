@@ -20,7 +20,7 @@
         <i class="fa fa-refresh pull-right refresh_icon fa-2x" aria-hidden="true" (click)="refreshData()"></i>
 
     </div>
-    <p-dataTable [value]="orders" [rows]="20" [paginator]="true" [globalFilter]="globalfilter" #dt
+    <p-dataTable [value]="orders" [rows]="20" [paginator]="true" [pageLinks]="5" [rowsPerPageOptions]= paginatorValues [globalFilter]="globalfilter" #dt
                  [loading]="loading" loadingIcon="fa-circle-o-notch" expandableRows="true" [(first)]="lastVisitedPageOrder"
                  (onRowExpand)="rowExpand($event)" selectionMode="multiple" [(selection)]="selectedOrdersMultiselction"  dataKey="orderId" [contextMenu]="cm" (onContextMenuSelect)="OnSelectRow($event)">
         <p-header>Lista Zamówień</p-header>

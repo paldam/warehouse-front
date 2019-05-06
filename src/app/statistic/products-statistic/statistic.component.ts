@@ -5,6 +5,7 @@ import {NgForm} from "@angular/forms";
 import {SelectItem} from "primeng/api";
 import * as XLSX from "xlsx";
 import {DataTable} from "primeng/primeng";
+import {AppConstans} from "../../constans";
 declare var $ :any;
 
 @Component({
@@ -23,6 +24,7 @@ export class StatisticComponent implements OnInit {
   public loading: boolean= false;
   public suppliers: SelectItem[] = [];
   public dateError: boolean = false;
+    public paginatorValues = AppConstans.PAGINATOR_VALUES;
   @ViewChild('dt') el:DataTable;
 
 

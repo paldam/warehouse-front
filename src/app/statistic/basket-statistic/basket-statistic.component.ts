@@ -5,6 +5,7 @@ import {CalendarSetingsComponent} from "../../primeNgCalendarSetings/calendarSti
 import * as XLSX from "xlsx";
 import {DataTable} from "primeng/primeng";
 import {Router} from "@angular/router";
+import {AppConstans} from "../../constans";
 
 declare var $ :any;
 @Component({
@@ -23,6 +24,7 @@ export class BasketStatisticComponent implements OnInit {
   public loading: boolean= false;
   public formSubbmitted: boolean = false;
   public dateError: boolean = false;
+  public paginatorValues = AppConstans.PAGINATOR_VALUES;
   @ViewChild('sortByOrderDate') sortByOrderDateCheckBox :ElementRef;
   @ViewChild('dt') el:DataTable;
 

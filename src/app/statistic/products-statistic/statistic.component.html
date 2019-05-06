@@ -24,7 +24,7 @@
 
 
 
-<p-dataTable [value]="productsToOrder" [rows]="20" [paginator]="true"
+<p-dataTable [value]="productsToOrder" [rows]="20" [paginator]="true" [pageLinks]="5" [rowsPerPageOptions]= paginatorValues
              [loading]="loading" loadingIcon="fa-circle-o-notch" #dt  >
   <p-header>Lista Produktów potrzebych do zamówień</p-header>
 

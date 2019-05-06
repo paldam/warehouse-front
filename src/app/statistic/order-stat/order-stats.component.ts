@@ -11,6 +11,7 @@ import {MenuItem} from "primeng/api";
 import {File} from "../../model/file";
 import * as XLSX from "xlsx";
 import {OrderService} from "../../order/order.service";
+import {AppConstans} from "../../constans";
 
 @Component({
     selector: 'order-stats',
@@ -45,6 +46,7 @@ export class OrderStatsComponent implements OnInit {
     @ViewChild('yearFilter') yearFilterEl :Dropdown;
     @ViewChild('dt') datatable:DataTable;
     public ordersYears: any[];
+    public paginatorValues = AppConstans.PAGINATOR_VALUES;
 
     constructor(private orderService :OrderService,private router: Router,private confirmationService: ConfirmationService,
                 private authenticationService: AuthenticationService,private  activeRoute: ActivatedRoute, private fileSendService :FileSendService,

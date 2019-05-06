@@ -36,7 +36,7 @@
 
 
 <p-dataTable [value]="basketStatistic" [rows]="20" [paginator]="true"
-             [loading]="loading" loadingIcon="fa-circle-o-notch" #dt >
+             [loading]="loading" loadingIcon="fa-circle-o-notch" #dt   [pageLinks]="5" [rowsPerPageOptions]= paginatorValues>
   <p-header>Liczba sprzedanych koszy</p-header>
 
   <p-column  header="lp."   [style]="{'width':'70px'}">
