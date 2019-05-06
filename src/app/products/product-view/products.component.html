@@ -16,7 +16,7 @@
         <p-header>Lista Produktów</p-header>
 
 
-        <p-column  header="lp."   [style]="{'width':'70px'}">
+        <p-column  header="lp."   [style]="{'width':'50px','text-align': 'center'}">
             <ng-template let-row="rowData" let-i="rowIndex" pTemplate="rowexpansion">
                 {{i+1}}
             </ng-template>
@@ -38,14 +38,14 @@
             </ng-template>
 
         </p-column>
-    <p-column field="tmpStock" styleClass="capacity_col" header="Buffor" [sortable]="true">
+    <p-column field="tmpStock" styleClass="state_col" header="Buffor" [sortable]="true">
 
         <ng-template let-row="rowData" pTemplate="body">
             {{row.tmpStock}} szt.
         </ng-template>
     </p-column>
 
-    <p-column  field="tmpOrdered" styleClass="capacity_col" header="Liczba zamówionych" [sortable]="true">
+    <p-column  field="tmpOrdered" styleClass="state_col" header="Liczba zam." [sortable]="true">
 
         <ng-template let-row="rowData" pTemplate="body">
             {{row.tmpOrdered}} szt.

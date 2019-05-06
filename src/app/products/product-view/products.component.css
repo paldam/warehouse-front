@@ -15,26 +15,29 @@
 }
 .price_col{
     text-align: right;
-    width: 70px;
+    width: 90px;
 }
 .stock_col{
-    width: 90px;
+    width: 70px;
     text-align: right;
 }
 .action_col{
-    width: 80px;
+    width: 110px;
     text-align: center;
 }
 
-.name_col{
-    width: 30%;
+.state_col{
+width: 60px;
 }
 .deliver_col{
-     width: 15%;
+     width: 150px;
  }
+.type_col{
+    width: 130px;
+}
 
 .capacity_col{
-    width: 7%;
+    width: 100px;
 }
 .edit_icon{
     position: relative;

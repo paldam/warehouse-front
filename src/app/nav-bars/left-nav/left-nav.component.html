@@ -90,7 +90,7 @@
                 <h3 [class.cursor_dis]="isWysylkaUser() || isBiuroUser()" ><span class="fa fa-bar-chart"></span>Statystyki</h3>
                 <ul>
                     <li *ngIf="isMagazynOrProdukcjaOrAdmin()"><a [routerLink]="['/statistics/products']" routerLinkActive="active"[routerLinkActiveOptions]="{ exact: true }" >Statystka produktów</a></li>
-                    <li *ngIf="isMagazynOrProdukcjaOrAdmin()"><a [routerLink]="['/statistics/products2']" routerLinkActive="active"[routerLinkActiveOptions]="{ exact: true }" >Statystka produktów 2</a></li>
+                    <li *ngIf="isMagazynOrProdukcjaOrAdmin()"><a [routerLink]="['/statistics/products2']" routerLinkActive="active"[routerLinkActiveOptions]="{ exact: true }" >Statystyka zużycia</a></li>
                     <li *ngIf="isMagazynOrProdukcjaOrAdmin()" ><a [routerLink]="['/statistics/basket']" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" >Statystyka koszy</a></li>
                     <li *ngIf="isMagazynOrProdukcjaOrAdmin()" ><a [routerLink]="['/statistics/orderstats']" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" >Zamówienia  / Klienci</a></li>
 
