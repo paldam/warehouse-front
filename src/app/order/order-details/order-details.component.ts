@@ -75,8 +75,10 @@ export class OrderDetailsComponent implements OnInit {
 
                   if(res.additionalSale ==1){
                       this.el.checked = true;
+                      this.checkedAdditionalSale = true;
                   }else{
                       this.el.checked = false;
+                      this.checkedAdditionalSale = false;
                   }
 
          });
@@ -110,9 +112,6 @@ export class OrderDetailsComponent implements OnInit {
       ];
 
 
-
-
-
   }
 
     contextMenuSelected(event){
@@ -138,8 +137,7 @@ export class OrderDetailsComponent implements OnInit {
   editOrderForm() {
 
 
-
-      if (this.orderForm.valid && this.additionalForm.valid && this.isDeliveryDateValid && this.isDeliveryWeekDateValid) {
+      if (this.orderForm.valid && this.additionalForm.valid && this.isDeliveryDateValid && this.isDeliveryWeekDateValid && this.orderItems.length>0) {
 
 
           if (this.order.deliveryType.deliveryTypeId == 5 || this.order.deliveryType.deliveryTypeId == 6 || this.order.deliveryType.deliveryTypeId == 7) {
@@ -148,11 +146,14 @@ export class OrderDetailsComponent implements OnInit {
               this.order.cod = 0;
           }
 
+
           if (this.checkedAdditionalSale == true) {
               this.order.additionalSale = 1;
           } else {
               this.order.additionalSale = 0;
           }
+
+          console.log("W order" + this.order.additionalSale);
 
           this.order.customer = this.customer;
           this.order.orderTotalAmount = this.total;

@@ -1,0 +1,105 @@
+
+
+      <div class="col-md-12">
+        <p-panel   header="Zamówienie">
+
+          <div class="form-group">
+            <div class="input-group">
+              <input   type="text" name="organization" #organization="ngModel" class="form-control" size="300" aria-describedby="organizationDesc" [readonly]="true" [(ngModel)]="orderToShow.customer.organizationName" disabled>
+              <span class="input-group-addon" id="organizationDesc">Klient</span>
+            </div>
+          </div>
+
+
+          <div class="form-group">
+            <small id="fv_numbereDescript" class="text-muted">Numer FV</small>
+            <input  type="text" name="fv_number" #fv_number="ngModel" class="form-control" [readonly]="true" aria-describedby="delivery_dateDesc" [(ngModel)]="orderToShow.orderFvNumber">
+          </div>
+
+
+
+          <div class="form-group">
+            <div class="form-group">
+              <small id="order_date_Desc" class="text-muted">Data złożenia zamówienia</small>
+              <input  name="order_date" class="form-control" size="300" aria-describedby="order_date_Desc" [readonly]="true" [value]="orderToShow.orderDate| date: 'dd/MM/yyyy HH:mm:ss'"  >
+            </div>
+          </div>
+
+
+          <div  class="form-group">
+            <small id="statusDesc" class="text-muted">Status zamówienia</small>
+            <input  type="text" class="form-control" [(ngModel)]="orderToShow.orderStatus.orderStatusName" name="status" [readonly]="true" >
+
+          </div>
+
+
+
+
+          <div class="form-group">
+            <small id="total_Desc" class="text-muted">Wartość zamówienia</small>
+            <input  type="text" name="total" class="form-control" size="300" aria-describedby="total_Desc" [readonly]="true" [(ngModel)]="orderToShow.orderTotalAmount"  >
+          </div>
+
+          <div   class="form-group">
+            <small id="delivery_typeDesc" class="text-muted">Rodzaj dostawy</small>
+            <input class="form-control" [disabled]="true" #delivery_type="ngModel" [(ngModel)]="orderToShow.deliveryType.deliveryTypeName" name="delivery_type" >
+          </div>
+
+          <div class="form-group">
+            <small id="contact_personDesc" class="text-muted">Osoba do kontaktu</small>
+            <textarea  class="form-control" name="contact_person" id="contact_person" size="200" rows="1" [readonly]="true" [(ngModel)]="orderToShow.contactPerson"></textarea>
+          </div>
+
+
+
+          <div >
+            <div class="form-group" >
+              <small id="codDescript" class="text-muted">Kwota pobrania</small>
+              <input type="number" name="cod" #cod="ngModel" class="form-control" size="200" aria-describedby="codDesc" [readonly]="true" [(ngModel)]="orderToShow.cod">
+            </div>
+          </div>
+
+
+          <div class="form-group">
+            <small id="taxDesc" class="text-muted">Planowana data wysyłki</small>
+            <input  type="date" name="delivery_date" class="form-control" #delivery_date="ngModel" [(ngModel)]="orderToShow.deliveryDate" [readonly]="true" aria-describedby="delivery_dateDesc">
+          </div>
+
+          <div class="form-group">
+            <small id="weekNr" class="text-muted">Tydzień dostawy</small>
+            <input  type="text" name="weekofyear_date" class="form-control" #weekofyear_date="ngModel" [(ngModel)]="orderToShow.weekOfYear" [readonly]="true" aria-describedby="weekofyear_dateDesc" >
+          </div>
+
+
+          <div class="form-group">
+            <small id="additional_informationDesc"   class="text-muted">Dodatkowe informacje</small>
+            <textarea  class="form-control" name="additional_information" id="additional_information" rows="3" [readonly]="true" [(ngModel)]="orderToShow.additionalInformation" ></textarea>
+          </div>
+
+
+          <div class="form-group">
+            <p>
+              <p-checkbox  name="additionalSaleCheckbox" binary="true" (disabled)="true" [(ngModel)]="additionalSaleCheckbox"></p-checkbox>
+              <span >dosprzedaż</span>
+            </p>
+          </div>
+
+
+          <p-panel  header="Zawartość zamówienia" >
+            <table  >
+              <thead>
+              <tr>
+                <th>nazwa kosza</th>
+                <th class="col_quantity">ilość</th>
+              </tr>
+              </thead>
+              <tbody>
+              <tr *ngFor="let orderItems of orderToShow.orderItems">
+                <td scope="row">{{orderItems.basket.basketName}} </td>
+                <td><input type="number" class="form-control" name="" id="" aria-describedby="helpId" placeholder="" min="0" [value]="orderItems.quantity" [readonly]="true"  ></td>
+              </tr>
+              </tbody>
+            </table>
+          </p-panel>
+        </p-panel>
+</div>

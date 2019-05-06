@@ -224,23 +224,36 @@
 
 
 
+<p-dialog *ngIf="isOrderToShowFetchComplete | async" header="Podgląd Zamówienia" closeOnEscape="false" modal="true" width="600" [(visible)]="showOrderPreviewModal"  >
+
+
+   <app-order-preview [orderToShow]="selectedToPrintOrder"> </app-order-preview>
+
+</p-dialog>
+
+
 <p-dialog *ngIf="fileFilterLoaded | async" header="Podgląd załączników do zamówienia" closeOnEscape="false" modal="true" width="600" [(visible)]="showAttachmentModal"  >
 
 
-       <p *ngIf="selectedOrderFileList.length ==0"> Brak załączników dla tego zamówienia</p>
+    <p *ngIf="selectedOrderFileList.length ==0"> Brak załączników dla tego zamówienia</p>
 
-        <table >
-            <thead>
-            </thead>
-            <tbody>
-            <tr class="fileLink"  *ngFor="let item of selectedOrderFileList" >
-                <td class="fileprev" (click)="getFile(item.fileId)" ><i class="fa fa-file-text-o" aria-hidden="true"></i>  {{item.fileName}}</td>
-                <!--<td *ngIf="authenticationService.isAdmin() || authenticationService.isBiuroUser()"> <i (click)="ShowConfirmModal(item)" class="fa fa-trash"></i></td>-->
-            </tr>
-            </tbody>
-        </table>
+    <table >
+        <thead>
+        </thead>
+        <tbody>
+        <tr class="fileLink"  *ngFor="let item of selectedOrderFileList" >
+            <td class="fileprev" (click)="getFile(item.fileId)" ><i class="fa fa-file-text-o" aria-hidden="true"></i>  {{item.fileName}}</td>
+            <!--<td *ngIf="authenticationService.isAdmin() || authenticationService.isBiuroUser()"> <i (click)="ShowConfirmModal(item)" class="fa fa-trash"></i></td>-->
+        </tr>
+        </tbody>
+    </table>
 
 </p-dialog>
+
+
+
+
+
 
 
 <p-contextMenu #cm [model]="items"> </p-contextMenu>

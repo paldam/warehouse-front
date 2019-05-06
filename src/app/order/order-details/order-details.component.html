@@ -180,7 +180,7 @@
             <div class="form-group">
               <div class="form-group">
                 <p>
-                  <p-checkbox [(ngModel)]="checkedAdditionalSale" #additionalSaleCheckBox="ngModel" name="additionalSaleCheckBox" binary="true"></p-checkbox>
+                  <p-checkbox [(ngModel)]="checkedAdditionalSale" #additionalSaleCheckBox="ngModel" name="additionalSaleCheckBox" (onChange)="test()" binary="true"></p-checkbox>
                   <span>dosprzedaż</span>
                 </p>
               </div>
@@ -222,6 +222,8 @@
           <div *ngIf="orderItems.length<1 && formSubmitted" class="alert alert-danger" role="alert">
             <strong>Błąd. Zamówienie nie może być puste</strong>
           </div>
+
+
         </p-panel>
 
       </div>

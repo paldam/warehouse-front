@@ -33,6 +33,7 @@ export class OrderComponent implements OnInit {
     public isCurrentPageOrdersView : boolean = false;
     public isCurrentPageOrdersViewRedirectedFromBasketStatitis : boolean = false;
     public showAttachmentModal: boolean = false;
+    public showOrderPreviewModal: boolean = false;
     public currentCustomerOnCustomerEditPage : number;
     public SelectedRowOrderItems: OrderItem[]=[];
     public printDeliveryConfirmationPdFSettings: boolean = false;
@@ -48,6 +49,7 @@ export class OrderComponent implements OnInit {
     public paginatorValues = AppConstans.PAGINATOR_VALUES;
     public additionalInforamtionTmp : string = "";
     fileFilterLoaded: Promise<boolean>;
+    isOrderToShowFetchComplete: Promise<boolean>;
     isOrderToPrintProductOfBasketsFetchComplete: Promise<boolean>;
     public selectedOrderFileList: File[]=[];
 
@@ -114,6 +116,7 @@ export class OrderComponent implements OnInit {
 
 
         this.items = [
+            {label: 'Szybki podgląd zamówienia', icon: 'fa fa-search',command: (event) => this.showOrderPreview(event)},
             {label: 'Zmień status ', icon: 'fa fa-share',
                 items: [
                     // {label: 'nowe', icon: 'pi pi-fw pi-plus',command: (event) => this.changeOrderStatus(event.data.orderId,1)},
@@ -218,6 +221,20 @@ export class OrderComponent implements OnInit {
         this.showAttachmentModal = true;
 
 
+    }
+
+
+    showOrderPreview(event){
+        this.orderService.getOrder(this.selectedToMenuOrder).subscribe(data=>{
+            this.selectedToPrintOrder = data;
+        }
+            ,null
+            ,() => {
+
+                this.isOrderToShowFetchComplete =Promise.resolve(true);
+            });
+        
+        this.showOrderPreviewModal = true;
     }
 
 

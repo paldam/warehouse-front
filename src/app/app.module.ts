@@ -82,6 +82,7 @@ import {AdminService} from "./admin/admin.service";
 import {SuppliersComponent} from "./suppliers/suppliers.component";
 import {RoutingState} from "./routing-stage";
 import { OrderAuditComponent } from './order-audit/order-audit.component';
+import { OrderPreviewComponent } from './order/order-preview/order-preview.component';
 
 
 
@@ -122,6 +123,7 @@ export function httpExt(backend: XHRBackend, options: RequestOptions, router: Ro
     NotesComponent,
     SuppliersComponent,
     OrderAuditComponent,
+    OrderPreviewComponent,
 
   ],
   imports: [
