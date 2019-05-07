@@ -28,6 +28,11 @@ declare var $ :any;
 })
 
 export class BasketOrderComponent implements OnInit {
+    public selectedCompany: any={comapnyId:0,companyName:"Wybierz firmę"};
+    public companyList: any[]=[];
+    
+    
+    
     public orderItems: OrderItem[]=[];
     public baskets: Basket[]=[];
     public customers: Customer[]=[];
@@ -48,6 +53,7 @@ export class BasketOrderComponent implements OnInit {
     public loading: boolean;
     public confirmDialogShow: boolean = false;
     public customerPickDialogShow: boolean = false;
+    public companyPickDialogShow: boolean = false;
     public generatedOrderId: number = null; //id too print PDF
     public items: MenuItem[];
     public tmpCityList: any[] = [];
@@ -71,6 +77,7 @@ export class BasketOrderComponent implements OnInit {
                 private orderService: OrderService,private messageServiceExt: MessageServiceExt,private confirmationService: ConfirmationService,private authenticationService: AuthenticationService) {
         basketService.getBaskets().subscribe(data=> this.baskets = data);
         customerService.getCustomers().subscribe(data=> this.customers = data);
+        orderService.getCompany().subscribe(data => this.companyList = data );
         orderService.getDeliveryTypes().subscribe(data=> this.deliveryTypes = data);
 
 
@@ -170,6 +177,11 @@ export class BasketOrderComponent implements OnInit {
 
     }
 
+    pickCompany(event){
+        this.selectedCompany = event;
+        this.companyPickDialogShow = false;
+    }
+
     isAdmin() : boolean {
         return this.authenticationService.isAdmin();
     }
@@ -184,6 +196,14 @@ export class BasketOrderComponent implements OnInit {
             console.log(data)
         })
     }
+
+    showCompanyList() {
+        this.companyPickDialogShow = true;
+
+
+    }
+
+
     cleanForm(form : NgForm, formAdidtional : NgForm){
         form.resetForm();
         this.storedCustomerMode=false;

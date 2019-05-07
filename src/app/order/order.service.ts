@@ -37,6 +37,13 @@ export class OrderService {
                 response.json());
     }
 
+
+    getCompany() :Observable<any[]>{
+        return this.http.get(this.baseUrl+`/company`)
+            .map((response: Response) =>
+                response.json());
+    }
+
     getOrder(id: number): Observable<Order>{
         return this.http.get(this.baseUrl+`/order/${id}`)
             .map((response: Response) =>
