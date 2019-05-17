@@ -28,7 +28,7 @@ declare var $ :any;
 })
 
 export class BasketOrderComponent implements OnInit {
-    public selectedCompany: any={comapnyId:0,companyName:"Wybierz firmę"};
+    public selectedCompany: any={};
     public companyList: any[]=[];
     
     
@@ -50,6 +50,8 @@ export class BasketOrderComponent implements OnInit {
     public addAddressDialogShow: boolean = false;
     public addressToAdd: Address = new Address();
     public storedCustomerMode: boolean = false;
+    public isStoredCompanyMode: boolean = false;
+    public isNewCompanyMode: boolean = false;
     public loading: boolean;
     public confirmDialogShow: boolean = false;
     public customerPickDialogShow: boolean = false;
@@ -156,6 +158,23 @@ export class BasketOrderComponent implements OnInit {
     }
 
 
+
+
+    changeCompanyPickerMode(event){
+
+       if(event.target.value == 1){
+           this.isNewCompanyMode = true ;
+       } else {
+           this.isStoredCompanyMode = true;
+           this.companyPickDialogShow = true;
+       }
+
+
+    }
+
+
+
+
     recalculate(){
         this.total = 0;
         this.orderItems.forEach(orderItem=> {
@@ -198,6 +217,7 @@ export class BasketOrderComponent implements OnInit {
     }
 
     showCompanyList() {
+
         this.companyPickDialogShow = true;
 
 

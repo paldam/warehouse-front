@@ -1,16 +1,18 @@
 import {Address} from "./address.model";
+import {Company} from "./company.model";
 export class Customer{
 
     constructor(
         public customerId?: number,
-        public organizationName?: string,
         public name?: string,
-        public addresses?: Address[],
         public email?: string,
         public phoneNumber?: string,
-        public additionalInformation?: string
+        public additionalInformation?: string,
+        public cimapny?: Company,
+        public addresses?: Address[],
     ){
 
     }
 
 }
+

@@ -1,13 +1,13 @@
-export class Address{
+export class Address {
 
     constructor(
+        public addressId?: number,
         public address?: string,
         public zipCode?: string,
         public cityName?: string,
         public isPrimaryAddress?: number,
-       public addressId?: number,
+        public contactPerson?: string
+    ) {
 
-
-) {
-
-    }}
+    }
+}

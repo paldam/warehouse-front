@@ -114,6 +114,28 @@
 
 
 
+
+
+                            <div  class="form-group">
+                                <small id="company-pick-mode" class="text-muted">Tryb wyboru firmy</small>
+                                <select  class="form-control" (change)="changeCompanyPickerMode($event)" [value]='1' name="companyPickMode"  required  >
+                                    <option [value]="1">Nowa Firma</option>
+                                    <option [value]="2">Wybierz firmę z bazy</option>
+                                </select>
+                            </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
                             <div *ngIf="isAddressesOptionVisable" class="form-group">
                                 <small id="addressDesc" class="text-muted">Wybierz Adres</small>
                                 <select class="form-control" [(ngModel)]="order.address" name="address2" #address2="ngModel" required  >
