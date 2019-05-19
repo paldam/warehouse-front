@@ -15,6 +15,7 @@ import {ContextMenuModule,MenuItem,ContextMenu} from 'primeng/primeng';
 import {Router} from "@angular/router";
 import {Address} from "../../model/address.model";
 import {MessageServiceExt} from "../../messages/messageServiceExt";
+import {Company} from "../../model/company.model";
 
 declare var jquery:any;
 declare var $ :any;
@@ -28,19 +29,20 @@ declare var $ :any;
 })
 
 export class BasketOrderComponent implements OnInit {
-    public selectedCompany: any={};
-    public companyList: any[]=[];
-    
-    
-    
-    public orderItems: OrderItem[]=[];
-    public baskets: Basket[]=[];
+
+
+    public customerEntryDataType : CustomerEntryDataType = 0;
+    public company: Company = new Company();
     public customers: Customer[]=[];
+    //public customerAddress: Address = new Address();
+    public customer: Customer = new Customer();
     public customerAddress: Address = new Address();
-    public deliveryTypes: DeliveryType[]=[];
-    public deliveryType: DeliveryType= new DeliveryType();
-    public selectedCustomer: Customer = new Customer();
-    public selectedCustomerAddress: Address = new Address();
+    public addressToAdd: Address = new Address();
+    public companyList: any[]=[];
+
+
+
+
     public order: Order = new Order();
     public total: number = 0;
     public formSubmitted: boolean = false;
@@ -48,10 +50,14 @@ export class BasketOrderComponent implements OnInit {
     public isAddressesOptionVisable = false;
     public isReadOnlyProp: boolean = false;
     public addAddressDialogShow: boolean = false;
-    public addressToAdd: Address = new Address();
-    public storedCustomerMode: boolean = false;
-    public isStoredCompanyMode: boolean = false;
-    public isNewCompanyMode: boolean = false;
+
+    public deliveryTypes: DeliveryType[]=[];
+    public deliveryType: DeliveryType= new DeliveryType();
+
+
+    public orderItems: OrderItem[]=[];
+    public baskets: Basket[]=[];
+
     public loading: boolean;
     public confirmDialogShow: boolean = false;
     public customerPickDialogShow: boolean = false;
@@ -102,6 +108,7 @@ export class BasketOrderComponent implements OnInit {
             {label: 'Dodaj kosz', icon: 'fa fa-plus',command: (event) => this.addBasketToOrder(this.selectedBasketOnContextMenu)},
         ];
 
+        this.customer.company = null;
 
     }
     ngAfterViewInit(): void{
@@ -160,17 +167,26 @@ export class BasketOrderComponent implements OnInit {
 
 
 
-    changeCompanyPickerMode(event){
+    changeCompanyPickerMode(event) {
 
-       if(event.target.value == 1){
-           this.isNewCompanyMode = true ;
-       } else {
-           this.isStoredCompanyMode = true;
-           this.companyPickDialogShow = true;
-       }
+        console.log(event.target.value);
 
+        switch (event.target.value) {
+            case "0" :
+                this.customerEntryDataType = 0;
+                break;
+            case "1" :
+                this.customerEntryDataType = 1;
+                break;
+            case "2" :
+                this.customerEntryDataType = 2;
+                break;
+        }
+        
+        console.log(this.customerEntryDataType);
 
     }
+
 
 
 
@@ -189,15 +205,15 @@ export class BasketOrderComponent implements OnInit {
 
 
     pickCustomer(customer : Customer){
-        this.selectedCustomer = customer;
+        this.customer = customer;
         this.isReadOnlyProp= true;
         this.customerPickDialogShow = false;
-        console.log(this.selectedCustomer.addresses);
+        console.log(this.customer.addresses);
 
     }
 
     pickCompany(event){
-        this.selectedCompany = event;
+        this.company = event;
         this.companyPickDialogShow = false;
     }
 
@@ -209,7 +225,7 @@ export class BasketOrderComponent implements OnInit {
         this.addressToAdd.cityName = null;
         this.customerPickDialogShow = true;
         this.isAddressesOptionVisable = true;
-        this.storedCustomerMode = true;
+        //this.storedCustomerMode = true;
 
         this.customers.forEach(data=>{
             console.log(data)
@@ -226,10 +242,10 @@ export class BasketOrderComponent implements OnInit {
 
     cleanForm(form : NgForm, formAdidtional : NgForm){
         form.resetForm();
-        this.storedCustomerMode=false;
+        this.customerEntryDataType = 0;
         formAdidtional.resetForm();
         this.order= new Order();
-        this.selectedCustomer= new Customer();
+        this.customer= new Customer();
         this.addressToAdd.cityName = null;
         this.addressToAdd.zipCode = null;
         this.isReadOnlyProp= false;
@@ -239,48 +255,56 @@ export class BasketOrderComponent implements OnInit {
     }
 
     submitOrderForm(form: NgForm, formAdidtional: NgForm) {
+
         this.formSubmitted = true;
-       // consthis.storedCustomerAddressList.model
-        if (form.valid && formAdidtional.valid && this.orderItems.length>0  && this.isDeliveryDateValid && this.isDeliveryWeekDateValid) {
+
+        if (this.isAllDataValid(form,formAdidtional)) {
             this.setUpOrderBeforeSave();
-            console.log(this.order);
-            this.orderService.saveOrder(this.order).subscribe(data=>{
 
-                    this.generatedOrderId  = data.orderId;
-                    this.cleanAfterSave(form,formAdidtional);
-                    this.recalculate();
+            this.orderService.saveOrder(this.order).subscribe(
+                data=>{
 
-                    this.fileUploadElement.url = "http://www.kosze.ovh:8080/uploadfiles?orderId="+ data.orderId;
-                    this.fileUploadElement.upload();
-
-
-                    this.showAddOrderConfirmModal();
-
-                    this.customerService.getCustomers().subscribe(data=> this.customers = data);
+                        this.generatedOrderId  = data.orderId;
+                        this.fileUploadElement.url = "http://www.kosze.ovh:8080/uploadfiles?orderId="+ data.orderId;
+                        this.fileUploadElement.upload();
+                        console.log(this.order);
 
                     },
                 error =>  {
                         this.messageServiceExt.addMessage('error', 'Błąd', "Status: " + error.status + ' ' + error.statusText);
-
+                    },
+                () => {
+                        this.recalculate();
+                        this.showAddOrderConfirmModal();
+                        this.cleanAfterSave(form,formAdidtional);
+                        this.customerService.getCustomers().subscribe(data=> this.customers = data)
                     }
             );
         }
     }
 
-    setUpOrderBeforeSave(){
+
+    private isAllDataValid(form: NgForm, formAdidtional: NgForm): boolean{
+
+        return (form.valid && formAdidtional.valid && this.orderItems.length>0  && this.isDeliveryDateValid && this.isDeliveryWeekDateValid);
+    }
+
+
+
+   private setUpOrderBeforeSave(){
         this.order.orderTotalAmount = this.total;
         this.order.orderItems = this.orderItems;
         this.order.additionalSale = 0;
 
 
+        this.order.customer = this.customer;
+        this.order.customer.company = this.company;
+       this.order.customer.addresses = [];
+
+        this.order.customer.addresses[0]= this.customerAddress;
 
 
 
-        this.order.customer = this.selectedCustomer;
-
-        this.order.customer.addresses = [];
-        this.selectedCustomerAddress.isPrimaryAddress=1;
-        this.order.customer.addresses.push(this.selectedCustomerAddress);
 
         if (this.order.deliveryType.deliveryTypeId == 5 || this.order.deliveryType.deliveryTypeId == 6 || this.order.deliveryType.deliveryTypeId == 7 ){
             this.order.cod *=100;
@@ -294,17 +318,18 @@ export class BasketOrderComponent implements OnInit {
         this.order.weekOfYear = this.getWeekNumber(this.weekOfYearTmp);
     }
 
+
     cleanAfterSave(form: NgForm, formAdidtional: NgForm){
         this.formSubmitted = false;
-        this.selectedCustomer= new Customer();
+        this.customer= new Customer();
 
         this.orderItems=[];
         this.isReadOnlyProp= false;
         form.resetForm();
         formAdidtional.resetForm();
         this.isAddressesOptionVisable = false;
-        this.storedCustomerMode = false;
-        this.selectedCustomer.addresses=[];
+        this.customerEntryDataType = 0;
+        this.customer.addresses=[];
     }
 
     printPdf() {
@@ -351,7 +376,7 @@ export class BasketOrderComponent implements OnInit {
 
     selectCity(city: string) {
         this.addressToAdd.cityName = city;
-        this.selectedCustomerAddress.cityName = city;
+        this.customerAddress.cityName = city;
         this.tmpCityList = [];
         this.pickCityByZipCodeWindow = false;
     }
@@ -360,17 +385,17 @@ export class BasketOrderComponent implements OnInit {
     submitAddAddresForm(form: NgForm) {
         this.formAddAdrrSubmitted = true;
         if (form.valid) {
-            this.selectedCustomer.addresses.push(this.addressToAdd);
+            this.customer.addresses.push(this.addressToAdd);
 
-            this.customerService.saveCustomers(this.selectedCustomer).subscribe(data => {
+            this.customerService.saveCustomers(this.customer).subscribe(data => {
 
                 this.addAddressDialogShow = false;
                 form.reset();
                 this.formAddAdrrSubmitted  = false;
                 this.showSuccessMassage();
 
-                this.customerService.getCustomer(this.selectedCustomer.customerId).subscribe(data => {
-                    this.selectedCustomer = data;
+                this.customerService.getCustomer(this.customer.customerId).subscribe(data => {
+                    this.customer = data;
                 })
 
             }, error => {
@@ -394,8 +419,8 @@ export class BasketOrderComponent implements OnInit {
         this.addAddressDialogShow=false;
         this.addressToAdd.cityName = null;
         this.addressToAdd.zipCode =null;
-        this.selectedCustomerAddress.zipCode = null;
-        this.selectedCustomerAddress.cityName = null;
+        this.customerAddress.zipCode = null;
+        this.customerAddress.cityName = null;
     }
 
     onBeforeUpload(event){
@@ -424,8 +449,8 @@ export class BasketOrderComponent implements OnInit {
 
     closeCustomerPicker(){
 
-        if(this.selectedCustomer.name == null){
-            this.storedCustomerMode=false;
+        if(this.customer.name == null){
+            //this.storedCustomerMode=false;
             this.isAddressesOptionVisable = false;
         }
 

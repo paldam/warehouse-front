@@ -65,7 +65,7 @@
 
         <p-column field="customer.customerName" header="Nabywca" >
             <ng-template let-row="rowData" pTemplate="body"  >
-                {{row.customer.name}} | {{row.customer.company.companyName}}
+                {{row.customer.name}} | {{row.customer.company?.companyName}}
             </ng-template>
         </p-column>
 

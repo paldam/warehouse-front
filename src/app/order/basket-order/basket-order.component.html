@@ -117,8 +117,9 @@
 
 
                             <div  class="form-group">
-                                <small id="company-pick-mode" class="text-muted">Tryb wyboru firmy</small>
+                                <small id="company-pick-mode" class="text-muted">Tryb wprowadzania klienta</small>
                                 <select  class="form-control" (change)="changeCompanyPickerMode($event)" [value]='1' name="companyPickMode"  required  >
+                                    <option [value]="0">Nowy klient (Bez firmy)</option>
                                     <option [value]="1">Nowa Firma</option>
                                     <option [value]="2">Wybierz firmę z bazy</option>
                                 </select>
@@ -136,22 +137,22 @@
 
 
 
-                            <div *ngIf="isAddressesOptionVisable" class="form-group">
-                                <small id="addressDesc" class="text-muted">Wybierz Adres</small>
-                                <select class="form-control" [(ngModel)]="order.address" name="address2" #address2="ngModel" required  >
-                                    <option  *ngFor="let a of selectedCustomer.addresses" [ngValue]="a">{{a.address +" "+ a.cityName +" "+ a.zipCode}}</option>
-                                </select>
-                                <ul class="text-danger list-unstyled" *ngIf="address2.dirty|| formSubmitted">
-                                    <li  *ngIf="address2.errors?.required">Wybierz adres z listy</li>
-                                </ul>
-                            </div>
+                            <!--<div *ngIf="isAddressesOptionVisable" class="form-group">-->
+                                <!--<small id="addressDesc" class="text-muted">Wybierz Adres</small>-->
+                                <!--<select class="form-control" [(ngModel)]="order.address" name="address2" #address2="ngModel" required  >-->
+                                    <!--<option  *ngFor="let a of customer.addresses" [ngValue]="a">{{a.address +" "+ a.cityName +" "+ a.zipCode}}</option>-->
+                                <!--</select>-->
+                                <!--<ul class="text-danger list-unstyled" *ngIf="address2.dirty|| formSubmitted">-->
+                                    <!--<li  *ngIf="address2.errors?.required">Wybierz adres z listy</li>-->
+                                <!--</ul>-->
+                            <!--</div>-->
 
 
 
 
-                            <div class="form-group">
+                            <div  *ngIf="this.customerEntryDataType == 1;" class="form-group">
                                 <div class="input-group">
-                                    <input type="text" name="organization" #organization="ngModel" class="form-control"  size="300" aria-describedby="organizationDesc"  [readonly]="isFormReadOnly()" [(ngModel)]="selectedCompany.companyName">
+                                    <input type="text" name="organization" #organization="ngModel" class="form-control"  size="300" aria-describedby="organizationDesc"   [(ngModel)]="company.companyName">
                                     <span class="input-group-addon" id="organizationDesc">Nazwa Firmy</span>
                                 </div>
                             </div>
@@ -159,7 +160,7 @@
 
                            <div class="form-group">
                                 <div class="input-group">
-                                    <input type="text" name="name" #name="ngModel" class="form-control"  size="300" aria-describedby="nameDesc" [readonly]="isFormReadOnly()"  [(ngModel)]="selectedCustomer.name" required >
+                                    <input type="text" name="name" #name="ngModel" class="form-control" size="300" aria-describedby="nameDesc" [readonly]="isFormReadOnly()" [(ngModel)]="customer.name" required >
                                     <span class="input-group-addon" id="nameDesc">Imię i Nazwisko </span>
                                 </div>
                                <ul class="text-danger list-unstyled" *ngIf="name.dirty|| formSubmitted">
@@ -171,21 +172,21 @@
 
                             <div class="form-group">
                                 <div class="input-group">
-                                    <input type="email" name="email" class="form-control"  size="300" aria-describedby="emailDesc" [readonly]="isFormReadOnly()" [(ngModel)]="selectedCustomer.email">
+                                    <input type="email" name="email" class="form-control"  size="300" aria-describedby="emailDesc" [readonly]="isFormReadOnly()" [(ngModel)]="customer.email">
                                     <span class="input-group-addon" id="emailDesc">Email</span>
                                 </div>
                             </div>
 
                             <div class="form-group">
                                 <div class="input-group">
-                                    <input type="text" name="tel" class="form-control"  size="300" aria-describedby="telDesc" [readonly]="isFormReadOnly()" [(ngModel)]="selectedCustomer.phoneNumber" >
+                                    <input type="text" name="tel" class="form-control"  size="300" aria-describedby="telDesc" [readonly]="isFormReadOnly()" [(ngModel)]="customer.phoneNumber" >
                                     <span class="input-group-addon" id="telDesc">Telefon</span>
                                 </div>
                             </div>
 
                             <div class="form-group">
                                 <div class="input-group">
-                                    <input type="text" name="cust_inf" class="form-control"  size="300" aria-describedby="custDesc"  [(ngModel)]="selectedCustomer.additionalInformation" >
+                                    <input type="text" name="cust_inf" class="form-control"  size="300" aria-describedby="custDesc"  [(ngModel)]="customer.additionalInformation" >
                                     <span class="input-group-addon" id="custDesc">Uwagi</span>
                                 </div>
                             </div>
@@ -200,7 +201,7 @@
 
                         <div *ngIf="!storedCustomerMode" class="form-group">
                             <div class="input-group">
-                                <input type="text" name="contactPerson" #contactPerson="ngModel" class="form-control"  size="300" aria-describedby="streetDesc" [readonly]="isFormReadOnly()" [(ngModel)]="selectedCustomerAddress.address" >
+                                <input type="text" name="contactPerson" #contactPerson="ngModel" class="form-control"  size="300" aria-describedby="streetDesc" [readonly]="isFormReadOnly()" [(ngModel)]="customerAddress.address" >
                                 <span class="input-group-addon" id="streetDesc">Osoba kontaktowa</span>
                             </div>
                             <ul class="text-danger list-unstyled" *ngIf="contactPerson.dirty|| formSubmitted">
@@ -211,7 +212,7 @@
 
                         <div *ngIf="!storedCustomerMode" class="form-group">
                             <div class="input-group">
-                                <input type="text" name="address" #address="ngModel" class="form-control"  size="300" aria-describedby="streetDesc" [readonly]="isFormReadOnly()" [(ngModel)]="selectedCustomerAddress.address" >
+                                <input type="text" name="address" #address="ngModel" class="form-control"  size="300" aria-describedby="streetDesc" [readonly]="isFormReadOnly()" [(ngModel)]="customerAddress.address" >
                                 <span class="input-group-addon" id="streetDesc">Ulica / nr. lokalu</span>
                             </div>
                             <ul class="text-danger list-unstyled" *ngIf="address.dirty|| formSubmitted">
@@ -221,8 +222,8 @@
 
                         <div *ngIf="!storedCustomerMode" class="form-group">
                             <div class="input-group">
-                                <input type="text" name="zip_code" #zip_code="ngModel" class="form-control"  size="300" aria-describedby="zip_codeDesc"
-                                       [readonly]="isFormReadOnly()" [(ngModel)]="selectedCustomerAddress.zipCode" required pattern="\d{2}-\d{3}" (keyup)="ZipCodeUtil($event.target.value)"  >
+                                <input type="text" name="zip_code" #zip_code="ngModel" class="form-control" size="300" aria-describedby="zip_codeDesc"
+                                       [readonly]="isFormReadOnly()" [(ngModel)]="customerAddress.zipCode" required pattern="\d{2}-\d{3}" (keyup)="ZipCodeUtil($event.target.value)"  >
                                 <span class="input-group-addon" id="zip_codeDesc">Kod pocztowy</span>
                             </div>
                             <ul class="text-danger list-unstyled" *ngIf="zip_code.dirty|| formSubmitted">
@@ -236,7 +237,7 @@
 
                         <div *ngIf="!storedCustomerMode" class="form-group">
                             <div class="input-group">
-                                <input type="text" name="city_name" #city_name="ngModel" class="form-control"  size="300" aria-describedby="city_nameDesc" [readonly]="isFormReadOnly()" [(ngModel)]="selectedCustomerAddress.cityName" >
+                                <input type="text" name="city_name" #city_name="ngModel" class="form-control"  size="300" aria-describedby="city_nameDesc" [readonly]="isFormReadOnly()" [(ngModel)]="customerAddress.cityName" >
                                 <span class="input-group-addon" id="city_nameDesc">Miejscowość</span>
                             </div>
                             <ul class="text-danger list-unstyled" *ngIf="city_name.dirty|| formSubmitted">

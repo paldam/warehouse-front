@@ -8,7 +8,7 @@ export class Customer{
         public email?: string,
         public phoneNumber?: string,
         public additionalInformation?: string,
-        public cimapny?: Company,
+        public company?: Company,
         public addresses?: Address[],
     ){
 
