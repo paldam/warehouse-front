@@ -6,7 +6,11 @@ export class Address {
         public zipCode?: string,
         public cityName?: string,
         public isPrimaryAddress?: number,
-        public contactPerson?: string
+        public contactPerson?: string,
+        public phoneNumber ?: string,
+        public additionalInformation?: string
+
+
     ) {
 
     }

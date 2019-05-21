@@ -1,4 +1,4 @@
-import {Component, OnInit, ViewChild, ViewEncapsulation} from '@angular/core';
+import {Component, ElementRef, OnInit, ViewChild, ViewEncapsulation} from '@angular/core';
 import {Basket} from '../../model/basket.model';
 import {OrderItem} from '../../model/order_item';
 import {BasketService} from '../../basket/basket.service';
@@ -9,7 +9,7 @@ import {Order} from '../../model/order.model';
 import {OrderService} from '../order.service';
 import {DeliveryType} from '../../model/delivery_type.model';
 import {OrderStatus} from "../../model/OrderStatus";
-import {ConfirmationService, FileUpload} from "primeng/primeng";
+import {ConfirmationService, FileUpload, Panel} from "primeng/primeng";
 import {AuthenticationService, TOKEN, TOKEN_USER} from "../../authentication.service";
 import {ContextMenuModule,MenuItem,ContextMenu} from 'primeng/primeng';
 import {Router} from "@angular/router";
@@ -31,7 +31,6 @@ declare var $ :any;
 export class BasketOrderComponent implements OnInit {
 
 
-    public customerEntryDataType : CustomerEntryDataType = 0;
     public company: Company = new Company();
     public customers: Customer[]=[];
     //public customerAddress: Address = new Address();
@@ -39,18 +38,18 @@ export class BasketOrderComponent implements OnInit {
     public customerAddress: Address = new Address();
     public addressToAdd: Address = new Address();
     public companyList: any[]=[];
+    public companyAddressList: Address[]=[];
 
 
-
-
+    public addressPickDialogShow: boolean = false;
     public order: Order = new Order();
     public total: number = 0;
     public formSubmitted: boolean = false;
     public formAddAdrrSubmitted: boolean = false;
     public isAddressesOptionVisable = false;
-    public isReadOnlyProp: boolean = false;
     public addAddressDialogShow: boolean = false;
-
+    public clickSelectcomapnyGuard: boolean = false;
+    public clickSelectCustomerGuard:boolean = false;
     public deliveryTypes: DeliveryType[]=[];
     public deliveryType: DeliveryType= new DeliveryType();
 
@@ -74,9 +73,13 @@ export class BasketOrderComponent implements OnInit {
 
     public selectedBasketOnContextMenu: Basket = new Basket();
     public addrs: Address[]=[];
+    @ViewChild('choseCompanyPanel') choseCompanyPanel: Panel;
     @ViewChild(FileUpload) fileUploadElement: FileUpload;
     @ViewChild('zip_code') el: any;
     @ViewChild('address2') storedCustomerAddressList: any;
+    @ViewChild('companyPickMode') selectPickcompany: ElementRef;
+
+
     value: Date;
     dateLang: any;
 
@@ -109,6 +112,13 @@ export class BasketOrderComponent implements OnInit {
         ];
 
         this.customer.company = null;
+
+        setTimeout(() => {
+            console.log(this.choseCompanyPanel);
+        }, 2000);
+
+
+
 
     }
     ngAfterViewInit(): void{
@@ -167,24 +177,16 @@ export class BasketOrderComponent implements OnInit {
 
 
 
-    changeCompanyPickerMode(event) {
+    cleanCompany(){
+        this.company = new Company();
+        this.clickSelectcomapnyGuard = false;
+    }
 
-        console.log(event.target.value);
 
-        switch (event.target.value) {
-            case "0" :
-                this.customerEntryDataType = 0;
-                break;
-            case "1" :
-                this.customerEntryDataType = 1;
-                break;
-            case "2" :
-                this.customerEntryDataType = 2;
-                break;
-        }
-        
-        console.log(this.customerEntryDataType);
 
+    cleanCustomer(){
+        this.customer = new Customer();
+        this.clickSelectCustomerGuard = false;
     }
 
 
@@ -199,22 +201,30 @@ export class BasketOrderComponent implements OnInit {
 
     }
 
-    isFormReadOnly() : boolean{
-        return this.isReadOnlyProp;
-    }
+
 
 
     pickCustomer(customer : Customer){
         this.customer = customer;
-        this.isReadOnlyProp= true;
+        if(customer.company == null){
+            this.company = new Company();
+        }else{
+            this.company = customer.company;
+            this.clickSelectcomapnyGuard = true;
+            this.clickSelectCustomerGuard = true
+        }
+
+
         this.customerPickDialogShow = false;
-        console.log(this.customer.addresses);
+
 
     }
 
     pickCompany(event){
-        this.company = event;
         this.companyPickDialogShow = false;
+        this.company = event;
+        this.clickSelectcomapnyGuard = true;
+
     }
 
     isAdmin() : boolean {
@@ -234,23 +244,30 @@ export class BasketOrderComponent implements OnInit {
 
     showCompanyList() {
 
+        this.clickSelectcomapnyGuard = false;
+
         this.companyPickDialogShow = true;
 
+    }
 
+    onHideComapnyPanel(){
+        if(this.company.companyId){
+            this.clickSelectcomapnyGuard = true;
+        }
     }
 
 
     cleanForm(form : NgForm, formAdidtional : NgForm){
         form.resetForm();
-        this.customerEntryDataType = 0;
         formAdidtional.resetForm();
         this.order= new Order();
         this.customer= new Customer();
         this.addressToAdd.cityName = null;
         this.addressToAdd.zipCode = null;
-        this.isReadOnlyProp= false;
         this.formSubmitted = false;
         this.isAddressesOptionVisable = false;
+        this.clickSelectcomapnyGuard = false;
+        this.clickSelectCustomerGuard = false;
         this.customerService.getCustomers().subscribe(data=> this.customers = data);
     }
 
@@ -324,11 +341,9 @@ export class BasketOrderComponent implements OnInit {
         this.customer= new Customer();
 
         this.orderItems=[];
-        this.isReadOnlyProp= false;
         form.resetForm();
         formAdidtional.resetForm();
         this.isAddressesOptionVisable = false;
-        this.customerEntryDataType = 0;
         this.customer.addresses=[];
     }
 

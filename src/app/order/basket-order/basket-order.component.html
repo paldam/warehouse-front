@@ -101,12 +101,10 @@
             <div class="row">
                 <div class="customer_data_form col-md-6">
                 <p-panel header="Dane osoby zamawiającej">
-                    <button class="btn bg-primary text" (click)="showCompanyList()">Wybierz Firmę</button>
-                    <button class="btn bg-primary text" (click)="showCustomerList()">Wybierz klienta</button>
-                    <button *ngIf="storedCustomerMode" class="btn bg-primary text" (click)="showAddAddressWindow()">Dodaj adres</button>
-                    <button class="btn bg-primary text"  (click)="cleanForm(form,formAdidtional)">Wyczyść</button>
 
 
+
+                    <button class="btn bg-primary clean-button" (click)="cleanForm(form,formAdidtional)" >Wyczyść</button>
 
 
                     <div class="form-group">
@@ -116,92 +114,74 @@
 
 
 
-                            <div  class="form-group">
-                                <small id="company-pick-mode" class="text-muted">Tryb wprowadzania klienta</small>
-                                <select  class="form-control" (change)="changeCompanyPickerMode($event)" [value]='1' name="companyPickMode"  required  >
-                                    <option [value]="0">Nowy klient (Bez firmy)</option>
-                                    <option [value]="1">Nowa Firma</option>
-                                    <option [value]="2">Wybierz firmę z bazy</option>
-                                </select>
+                            <div class="cont">
+
+                                    <p-panel  class="customerpanels2"  header="Klient">
+                                        <i class="fa fa-address-card-o fa-2x pickfromdb " (click)="showCustomerList()" aria-hidden="true"></i>
+                                        <i  *ngIf="this.customer.name"  class="fa fa-times fa-2x clean-company-icon" aria-hidden="true" (click)="cleanCustomer()"></i>
+
+                                   <div class="form-group">
+                                        <div class="input-group">
+                                            <input type="text" name="name" #name="ngModel" class="form-control" size="300" aria-describedby="nameDesc" [readonly]="clickSelectCustomerGuard" [(ngModel)]="customer.name" required >
+                                            <span class="input-group-addon" id="nameDesc">Imię i Nazwisko </span>
+                                        </div>
+                                       <ul class="text-danger list-unstyled" *ngIf="name.dirty && formSubmitted">
+                                           <li  *ngIf="name.errors?.required">To pole nie może być puste</li>
+                                       </ul>
+                                   </div>
+
+
+
+                                    <div class="form-group">
+                                        <div class="input-group">
+                                            <input type="email" name="email" class="form-control"  size="300" aria-describedby="emailDesc" [readonly]="clickSelectCustomerGuard" [(ngModel)]="customer.email">
+                                            <span class="input-group-addon" id="emailDesc">Email</span>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <div class="input-group">
+                                            <input type="text" name="tel" class="form-control"  size="300" aria-describedby="telDesc" [readonly]="clickSelectCustomerGuard" [(ngModel)]="customer.phoneNumber" >
+                                            <span class="input-group-addon" id="telDesc">Telefon</span>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <div class="input-group">
+                                            <input type="text" name="cust_inf" class="form-control"  size="300" aria-describedby="custDesc"  [(ngModel)]="customer.additionalInformation" >
+                                            <span class="input-group-addon" id="custDesc">Uwagi</span>
+                                        </div>
+                                    </div>
+                                    </p-panel>
+                            </div>
+
+                            <div class="cont">
+                                <p-panel  class="customerpanels" header="Firma">
+
+                                    <i  class="fa fa-address-card-o fa-2x pickfromdb " (click)="showCompanyList()" aria-hidden="true"></i>
+                                    <i  *ngIf="this.company.companyName"  class="fa fa-times fa-2x clean-company-icon" aria-hidden="true" (click)="cleanCompany()"></i>
+
+
+                                    <div  class="form-group">
+                                        <div class="input-group">
+                                            <input type="text" name="organization" #organization="ngModel" class="form-control"  size="300" aria-describedby="organizationDesc"  [readonly]="this.clickSelectcomapnyGuard"  [(ngModel)]="company.companyName">
+                                            <span class="input-group-addon" id="organizationDesc">Nazwa Firmy</span>
+                                        </div>
+                                    </div>
+                                </p-panel>
                             </div>
 
 
 
+                            <div class="cont">
+                    <p-panel class="customerpanels" header="Adres Dostawy">
 
-
-
-
-
-
-
-
-
-
-                            <!--<div *ngIf="isAddressesOptionVisable" class="form-group">-->
-                                <!--<small id="addressDesc" class="text-muted">Wybierz Adres</small>-->
-                                <!--<select class="form-control" [(ngModel)]="order.address" name="address2" #address2="ngModel" required  >-->
-                                    <!--<option  *ngFor="let a of customer.addresses" [ngValue]="a">{{a.address +" "+ a.cityName +" "+ a.zipCode}}</option>-->
-                                <!--</select>-->
-                                <!--<ul class="text-danger list-unstyled" *ngIf="address2.dirty|| formSubmitted">-->
-                                    <!--<li  *ngIf="address2.errors?.required">Wybierz adres z listy</li>-->
-                                <!--</ul>-->
-                            <!--</div>-->
-
-
-
-
-                            <div  *ngIf="this.customerEntryDataType == 1;" class="form-group">
-                                <div class="input-group">
-                                    <input type="text" name="organization" #organization="ngModel" class="form-control"  size="300" aria-describedby="organizationDesc"   [(ngModel)]="company.companyName">
-                                    <span class="input-group-addon" id="organizationDesc">Nazwa Firmy</span>
-                                </div>
-                            </div>
-
-
-                           <div class="form-group">
-                                <div class="input-group">
-                                    <input type="text" name="name" #name="ngModel" class="form-control" size="300" aria-describedby="nameDesc" [readonly]="isFormReadOnly()" [(ngModel)]="customer.name" required >
-                                    <span class="input-group-addon" id="nameDesc">Imię i Nazwisko </span>
-                                </div>
-                               <ul class="text-danger list-unstyled" *ngIf="name.dirty|| formSubmitted">
-                                   <li  *ngIf="name.errors?.required">To pole nie może być puste</li>
-                               </ul>
-                           </div>
-
-
-
-                            <div class="form-group">
-                                <div class="input-group">
-                                    <input type="email" name="email" class="form-control"  size="300" aria-describedby="emailDesc" [readonly]="isFormReadOnly()" [(ngModel)]="customer.email">
-                                    <span class="input-group-addon" id="emailDesc">Email</span>
-                                </div>
-                            </div>
-
-                            <div class="form-group">
-                                <div class="input-group">
-                                    <input type="text" name="tel" class="form-control"  size="300" aria-describedby="telDesc" [readonly]="isFormReadOnly()" [(ngModel)]="customer.phoneNumber" >
-                                    <span class="input-group-addon" id="telDesc">Telefon</span>
-                                </div>
-                            </div>
-
-                            <div class="form-group">
-                                <div class="input-group">
-                                    <input type="text" name="cust_inf" class="form-control"  size="300" aria-describedby="custDesc"  [(ngModel)]="customer.additionalInformation" >
-                                    <span class="input-group-addon" id="custDesc">Uwagi</span>
-                                </div>
-                            </div>
-
-                        </form>
-
-                    </div>
-                </p-panel>
-
-                    <p-panel header="Adres Dostawy">
+                        <i class="fa fa-address-card-o fa-2x pickfromdb " (click)="showCustomerList()" aria-hidden="true"></i>
 
 
                         <div *ngIf="!storedCustomerMode" class="form-group">
                             <div class="input-group">
-                                <input type="text" name="contactPerson" #contactPerson="ngModel" class="form-control"  size="300" aria-describedby="streetDesc" [readonly]="isFormReadOnly()" [(ngModel)]="customerAddress.address" >
+                                <input type="text" name="contactPerson" #contactPerson="ngModel" class="form-control"  size="300" aria-describedby="streetDesc" [readonly]="" [(ngModel)]="customerAddress.address" >
                                 <span class="input-group-addon" id="streetDesc">Osoba kontaktowa</span>
                             </div>
                             <ul class="text-danger list-unstyled" *ngIf="contactPerson.dirty|| formSubmitted">
@@ -212,7 +192,7 @@
 
                         <div *ngIf="!storedCustomerMode" class="form-group">
                             <div class="input-group">
-                                <input type="text" name="address" #address="ngModel" class="form-control"  size="300" aria-describedby="streetDesc" [readonly]="isFormReadOnly()" [(ngModel)]="customerAddress.address" >
+                                <input type="text" name="address" #address="ngModel" class="form-control"  size="300" aria-describedby="streetDesc" [readonly]="" [(ngModel)]="customerAddress.address" >
                                 <span class="input-group-addon" id="streetDesc">Ulica / nr. lokalu</span>
                             </div>
                             <ul class="text-danger list-unstyled" *ngIf="address.dirty|| formSubmitted">
@@ -223,7 +203,7 @@
                         <div *ngIf="!storedCustomerMode" class="form-group">
                             <div class="input-group">
                                 <input type="text" name="zip_code" #zip_code="ngModel" class="form-control" size="300" aria-describedby="zip_codeDesc"
-                                       [readonly]="isFormReadOnly()" [(ngModel)]="customerAddress.zipCode" required pattern="\d{2}-\d{3}" (keyup)="ZipCodeUtil($event.target.value)"  >
+                                       [readonly]="" [(ngModel)]="customerAddress.zipCode" required pattern="\d{2}-\d{3}" (keyup)="ZipCodeUtil($event.target.value)"  >
                                 <span class="input-group-addon" id="zip_codeDesc">Kod pocztowy</span>
                             </div>
                             <ul class="text-danger list-unstyled" *ngIf="zip_code.dirty|| formSubmitted">
@@ -237,7 +217,7 @@
 
                         <div *ngIf="!storedCustomerMode" class="form-group">
                             <div class="input-group">
-                                <input type="text" name="city_name" #city_name="ngModel" class="form-control"  size="300" aria-describedby="city_nameDesc" [readonly]="isFormReadOnly()" [(ngModel)]="customerAddress.cityName" >
+                                <input type="text" name="city_name" #city_name="ngModel" class="form-control"  size="300" aria-describedby="city_nameDesc" [readonly]="" [(ngModel)]="customerAddress.cityName" >
                                 <span class="input-group-addon" id="city_nameDesc">Miejscowość</span>
                             </div>
                             <ul class="text-danger list-unstyled" *ngIf="city_name.dirty|| formSubmitted">
@@ -245,11 +225,27 @@
                             </ul>
                         </div>
 
+                        <div *ngIf="!storedCustomerMode" class="form-group">
+                            <div class="input-group">
+                                <input type="text" name="phone_number_addr" #city_name="ngModel" class="form-control"  size="300" aria-describedby="phone_numberDesc"  [(ngModel)]="customerAddress.phoneNumber" >
+                                <span class="input-group-addon" id="phone_numberDesc">Telefon kontaktowy</span>
+                            </div>
+                        </div>
+
+                        <div *ngIf="!storedCustomerMode" class="form-group">
+                            <div class="input-group">
+                                <input type="text" name="additional_inf_add" #city_name="ngModel" class="form-control"  size="300" aria-describedby="additional_inf_addDesc"  [(ngModel)]="customerAddress.additionalInformation" >
+                                <span class="input-group-addon" id="additional_inf_addDesc">Dodatkowe informacje</span>
+                            </div>
+                        </div>
+
+
                     </p-panel>
+                            </div>
 
-
-
-
+                    </form>
+                    </div>
+                </p-panel>
 
             </div>
                 <div class="order_detail_form col-md-6">
@@ -411,14 +407,15 @@
                 <span class="input-group-addon" id="basic-addon1">
                     <i class="fa fa-search" aria-hidden="true"></i>
                 </span>
-            <input #globalfilter type="text" class="form-control search_input" pInputText size="50" placeholder="Szukaj"aria-describedby="basic-addon1">
+            <input #globalfilter2 type="text" class="form-control search_input" pInputText size="50" placeholder="Szukaj"aria-describedby="basic-addon1">
 
         </div>
         <p-dataTable [value]="customers" [rows]="10" [paginator]="true"  #dt (onRowDblclick)="pickCustomer($event.data)"
-                     [loading]="loading" loadingIcon="fa-circle-o-notch" [globalFilter]="globalfilter">
+                     [loading]="loading" loadingIcon="fa-circle-o-notch" [globalFilter]="globalfilter2">
             <p-column field="name" header="Imię i Nazwisko" [sortable]="true" ></p-column>
-            <p-column field="organizationName" header="Firma" [sortable]="false"></p-column>
+            <p-column field="company.companyName" header="Firma" [sortable]="false"></p-column>
             <p-column field="email" header="Email" [sortable]="false"></p-column>
+            <p-column field="phoneNumber" header="Telefon" [sortable]="false"></p-column>
 
         </p-dataTable>
     </div>
@@ -499,7 +496,7 @@
 
 
 
-<p-dialog header="Wybierz Firmę:" closeOnEscape="false" modal="true" width="600" [(visible)]="companyPickDialogShow"   >
+<p-dialog #choseCompanyPanel header="Wybierz Firmę:" closeOnEscape="false" modal="true" width="600" [(visible)]="companyPickDialogShow"  (onHide)="onHideComapnyPanel()"    >
     <div >
 
         <div class="input-group search_bar">
@@ -517,4 +514,19 @@
 </p-dialog>
 
 
+<!--<p-dialog #choseAddressPanel header="Wybierz adres:" closeOnEscape="false" modal="true" width="600" [(visible)]="addressPickDialogShow"  (onHide)="onHideComapnyPanel()"    >-->
+    <!--<div >-->
 
+        <!--<div class="input-group search_bar">-->
+                <!--<span class="input-group-addon" id="basic-addon1">-->
+                    <!--<i class="fa fa-search" aria-hidden="true"></i>-->
+                <!--</span>-->
+            <!--<input #globalfilter type="text" class="form-control search_input" pInputText size="50" placeholder="Szukaj"aria-describedby="basic-addon1">-->
+
+        <!--</div>-->
+        <!--<p-dataTable [value]="addressList" [rows]="10" [paginator]="true"  #dt (onRowDblclick)="pickCompany($event.data)"-->
+                     <!--[loading]="loading" loadingIcon="fa-circle-o-notch" [globalFilter]="globalfilter">-->
+            <!--<p-column field="companyName" header="Imię i Nazwisko" [sortable]="true" ></p-column>-->
+        <!--</p-dataTable>-->
+    <!--</div>-->
+<!--</p-dialog>-->
