@@ -6,61 +6,145 @@
 
 
 
-
-
-
-          <div *ngIf="filtersLoaded | async" class="form-group">
-            <small id="addressDesc" class="text-muted">Wybierz Adres</small>
-            <select  class="form-control" [compareWith]="compareAddress" [(ngModel)]="order.address" name="address2" #address2="ngModel" required [disabled]="!authenticationService.isAdmin() && !authenticationService.isBiuroUser()"  >
-              <option *ngFor="let a of order.customer.addresses" [ngValue]="a" >{{a.address +" "+ a.cityName +" "+ a.zipCode}}</option>
-            </select>
-            <ul class="text-danger list-unstyled" *ngIf="address2.dirty|| formSubmitted">
-              <li  *ngIf="address2.errors?.required">Wybierz adres z listy</li>
-            </ul>
-          </div>
-
-
-
-
           <div class="form-group">
-            <form id="OrderForm" novalidate #form="ngForm" >
-              <div class="form-group">
-                <div class="input-group">
-                  <input type="text" name="name"  #name="ngModel" class="form-control"  size="300" aria-describedby="nameDesc" [readonly]="authenticationService.isUser() || authenticationService.isSuperUser()"  [(ngModel)]="customer.name" required disabled>
-                  <span class="input-group-addon" id="nameDesc">Imię i Nazwisko</span>
-                </div>
-                <ul class="text-danger list-unstyled" *ngIf="name.dirty|| formSubmitted">
-                  <li  *ngIf="name.errors?.required">To pole nie może być puste</li>
-                </ul>
+            <form id="OrderForm" novalidate #form="ngForm" (submit)="submitOrderForm(form,formAdidtional)">
+
+
+
+
+
+              <div class="cont">
+
+                <p-panel  class="customerpanels2"  header="Klient">
+                  <i class="fa fa-address-card-o fa-2x pickfromdb " (click)="showCustomerList()" aria-hidden="true"></i>
+                  <i  *ngIf="this.customer.name"  class="fa fa-times fa-2x clean-company-icon" aria-hidden="true" (click)="cleanCustomer()"></i>
+
+                  <div class="form-group">
+                    <div class="input-group">
+                      <input type="text" name="name" #name="ngModel" class="form-control" size="300" aria-describedby="nameDesc" [readonly]="true" [(ngModel)]="customer.name" required >
+                      <span class="input-group-addon" id="nameDesc">Imię i Nazwisko </span>
+                    </div>
+                    <ul class="text-danger list-unstyled" *ngIf="name.dirty && formSubmitted">
+                      <li  *ngIf="name.errors?.required">To pole nie może być puste</li>
+                    </ul>
+                  </div>
+
+
+
+                  <div class="form-group">
+                    <div class="input-group">
+                      <input type="email" name="email" class="form-control"  size="300" aria-describedby="emailDesc" [readonly]="true" [(ngModel)]="customer.email">
+                      <span class="input-group-addon" id="emailDesc">Email</span>
+                    </div>
+                  </div>
+
+                  <div class="form-group">
+                    <div class="input-group">
+                      <input type="text" name="tel" class="form-control"  size="300" aria-describedby="telDesc" [readonly]="true" [(ngModel)]="customer.phoneNumber" >
+                      <span class="input-group-addon" id="telDesc">Telefon</span>
+                    </div>
+                  </div>
+
+                  <div class="form-group">
+                    <div class="input-group">
+                      <input type="text" name="cust_inf" class="form-control"  size="300" aria-describedby="custDesc"   [(ngModel)]="customer.additionalInformation" >
+                      <span class="input-group-addon" id="custDesc">Uwagi</span>
+                    </div>
+                  </div>
+                </p-panel>
+              </div>
+
+              <div class="cont">
+                <p-panel  class="customerpanels" header="Firma">
+
+                  <i  class="fa fa-address-card-o fa-2x pickfromdb " (click)="showCompanyList()" aria-hidden="true"></i>
+                  <i  *ngIf="this.company.companyName && !this.customer.customerId"  class="fa fa-times fa-2x clean-company-icon" aria-hidden="true" (click)="cleanCompany()"></i>
+
+
+                  <div  class="form-group">
+                    <div class="input-group">
+                      <input type="text" name="organization" #organization="ngModel" class="form-control"  size="300" aria-describedby="organizationDesc"  [readonly]="true"  [(ngModel)]="company.companyName">
+                      <span class="input-group-addon" id="organizationDesc">Nazwa Firmy</span>
+                    </div>
+                  </div>
+                </p-panel>
               </div>
 
 
-              <div class="form-group">
-                <div class="input-group">
-                  <input type="text" name="organization" #organization="ngModel" class="form-control"  size="300" aria-describedby="organizationDesc"  [readonly]="authenticationService.isUser() || authenticationService.isSuperUser()" [(ngModel)]="customer.organizationName" disabled>
-                  <span class="input-group-addon" id="organizationDesc">Nazwa Firmy</span>
-                </div>
-              </div>
+
+              <div class="cont">
+                <p-panel class="customerpanels" header="Adres Dostawy">
+
+                  <i *ngIf="this.company.companyId != null" class="fa fa-address-card-o fa-2x pickfromdb " (click)="showAddressesList()" aria-hidden="true"></i>
+                  <i  *ngIf="this.orderAddress.contactPerson || this.orderAddress.address || this.orderAddress.additionalInformation ||this.orderAddress.zipCode || this.orderAddress.cityName || this.orderAddress.phoneNumber "
+                      class="fa fa-times fa-2x clean-company-icon" aria-hidden="true" (click)="cleanAddress()"></i>
+                  <i *ngIf="orderAddress.addressId" class="fa fa-pencil fa-2x edit-address-icon " aria-hidden="true" (click)="editAddressMode()" ></i>
+
+                  <div *ngIf="!storedCustomerMode" class="form-group">
+                    <div class="input-group">
+                      <input type="text" name="contactPerson" #contactPerson="ngModel" class="form-control"  size="300" aria-describedby="streetDesc" [readonly]="orderAddress.addressId" [(ngModel)]="orderAddress.contactPerson" required >
+                      <span class="input-group-addon" id="streetDesc">Osoba kontaktowa</span>
+                    </div>
+                    <ul class="text-danger list-unstyled" *ngIf="contactPerson.dirty || formSubmitted">
+                      <li  *ngIf="contactPerson.errors?.required">To pole nie może być puste</li>
+                    </ul>
+                  </div>
 
 
-              <div class="form-group">
-                <div class="input-group">
-                  <input type="email" name="email" class="form-control"  size="300" aria-describedby="emailDesc" [readonly]="authenticationService.isUser() || authenticationService.isSuperUser()" [(ngModel)]="customer.email" disabled>
-                  <span class="input-group-addon" id="emailDesc">Email</span>
-                </div>
-              </div>
+                  <div *ngIf="!storedCustomerMode" class="form-group">
+                    <div class="input-group">
+                      <input type="text" name="address" #address="ngModel" class="form-control"  size="300" aria-describedby="streetDesc" [readonly]="orderAddress.addressId" [(ngModel)]="orderAddress.address" required>
+                      <span class="input-group-addon" id="streetDesc">Ulica / nr. lokalu</span>
+                    </div>
+                    <ul class="text-danger list-unstyled" *ngIf="address.dirty|| formSubmitted">
+                      <li  *ngIf="address.errors?.required">To pole nie może być puste</li>
+                    </ul>
+                  </div>
 
-              <div class="form-group">
-                <div class="input-group">
-                  <input type="text" name="tel" class="form-control"  size="300" aria-describedby="telDesc" [readonly]="authenticationService.isUser() || authenticationService.isSuperUser()" [(ngModel)]="customer.phoneNumber"  disabled>
-                  <span class="input-group-addon" id="telDesc">Telefon</span>
-                </div>
-              </div>
-              <div class="form-group">
-                <div class="input-group">
-                  <input type="text" name="cust_add" class="form-control"  size="300" aria-describedby="custDesc"  [(ngModel)]="customer.additionalInformation" >
-                  <span class="input-group-addon" id="custDesc">Uwagi</span>
-                </div>
+                  <div *ngIf="!storedCustomerMode" class="form-group">
+                    <div class="input-group">
+                      <input type="text" name="zip_code" #zip_code="ngModel" class="form-control" size="300" aria-describedby="zip_codeDesc"
+                             [readonly]="orderAddress.addressId" [(ngModel)]="orderAddress.zipCode" required pattern="\d{2}-\d{3}" (keyup)="ZipCodeUtil($event.target.value)"  >
+                      <span class="input-group-addon" id="zip_codeDesc">Kod pocztowy</span>
+                    </div>
+                    <ul class="text-danger list-unstyled" *ngIf="zip_code.dirty || formSubmitted">
+                      <li  *ngIf="zip_code.errors?.pattern">Kod musi być w formacie xx-xxx </li>
+                      <li  *ngIf="zip_code.errors?.required">To pole nie może być puste</li>
+                    </ul>
+                  </div>
+
+
+
+
+                  <div *ngIf="!storedCustomerMode" class="form-group">
+                    <div class="input-group">
+                      <input type="text" name="city_name" #city_name="ngModel" class="form-control"  size="300" aria-describedby="city_nameDesc" [readonly]="false" [(ngModel)]="orderAddress.cityName" required>
+                      <span class="input-group-addon" id="city_nameDesc">Miejscowość</span>
+                    </div>
+                    <ul class="text-danger list-unstyled" *ngIf="city_name.dirty || formSubmitted">
+                      <li  *ngIf="city_name.errors?.required">To pole nie może być puste</li>
+                    </ul>
+                  </div>
+
+                  <div *ngIf="!storedCustomerMode" class="form-group">
+                    <div class="input-group">
+                      <input type="text" name="phone_number_addr" #phone_number_addr="ngModel" class="form-control"  size="300" aria-describedby="phone_numberDesc" [readonly]="orderAddress.addressId"  [(ngModel)]="orderAddress.phoneNumber" required >
+                      <span class="input-group-addon" id="phone_numberDesc">Telefon kontaktowy</span>
+                    </div>
+                    <ul class="text-danger list-unstyled" *ngIf="phone_number_addr.dirty || formSubmitted">
+                      <li  *ngIf="phone_number_addr?.errors?.required">To pole nie może być puste</li>
+                    </ul>
+                  </div>
+
+                  <div *ngIf="!storedCustomerMode" class="form-group">
+                    <div class="input-group">
+                      <input type="text" name="additional_inf_add" #additional_inf_add="ngModel" class="form-control"  size="300" aria-describedby="additional_inf_addDesc"  [readonly]="orderAddress.addressId" [(ngModel)]="orderAddress.additionalInformation" >
+                      <span class="input-group-addon" id="additional_inf_addDesc">Dodatkowe informacje</span>
+                    </div>
+                  </div>
+
+
+                </p-panel>
               </div>
 
             </form>
@@ -117,12 +201,7 @@
               </ul>
             </div>
 
-            <div class="form-group">
-              <div class="form-group">
-                <small id="contact_personDesc" class="text-muted">Osoba do kontaktu</small>
-                <textarea class="form-control" name="contact_person" id="contact_person"  size="500" rows="2" [(ngModel)]="order.contactPerson"></textarea>
-              </div>
-            </div>
+
 
             <div *ngIf="order.deliveryType?.deliveryTypeId==5 || order.deliveryType?.deliveryTypeId==6 || order.deliveryType?.deliveryTypeId==7">
               <div class="form-group" >

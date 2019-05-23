@@ -19,6 +19,7 @@ export class OrderAuditComponent implements OnInit {
     public revIdOfOrderStateAfterChange :number ;
     public isDataFetchCompleteForAfterOrderState: Promise<boolean> = Promise.resolve(false);
     public isDataFetchCompleteForBeforeOrderState: Promise<boolean> = Promise.resolve(false);
+    public customerDesc : string="";
 
     public fileList: File[]=[];
 
@@ -34,12 +35,14 @@ export class OrderAuditComponent implements OnInit {
       orderService.getOrderPrevStateFromHistoryByRevId(this.revIdOfOrderStateAfterChange).subscribe(
           data => {
               this.orderStateBeforeChange = data[0];
+              this.customerDesc = data[0].customer.name +" | "+ data[0].customer.company.companyName;
           },
           null,
           () => {
               this.isDataFetchCompleteForBeforeOrderState = Promise.resolve(true) ;
               this.orderStateBeforeChange.orderTotalAmount /=100 ;
               this.orderStateBeforeChange.cod /=100;
+
 
               setTimeout(() => {
 

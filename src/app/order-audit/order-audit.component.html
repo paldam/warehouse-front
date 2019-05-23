@@ -8,10 +8,56 @@
 
             <div class="form-group">
                 <div class="input-group">
-                    <input  [ngClass]=" (orderStateBeforeChange.customer.organizationName === orderStateAfterChange.customer.organizationName) ? 'redcolor3': 'redcolor' " type="text" name="organization"  #organization="ngModel" class="form-control"  size="300" aria-describedby="organizationDesc"  [readonly]="true" [(ngModel)]="orderStateBeforeChange.customer.organizationName" disabled>
+                    <input  [ngClass]=" (orderStateBeforeChange.customer.company.companyName === orderStateAfterChange.customer.company.companyName) ? 'redcolor3': 'redcolor' " type="text" name="organization"  #organization="ngModel" class="form-control"  size="300" aria-describedby="organizationDesc"  [readonly]="true" [(ngModel)]="customerDesc" disabled>
                     <span class="input-group-addon" id="organizationDesc">Klient</span>
                 </div>
             </div>
+
+
+
+            <div class="form-group">
+                <div class="input-group">
+                    <input  [ngClass]=" (orderStateBeforeChange.address.address === orderStateAfterChange.address.address) ? 'redcolor3': 'redcolor' " type="text" name="organization"  #organization="ngModel" class="form-control"  size="300" aria-describedby="organizationDesc"  [readonly]="true" [(ngModel)]="orderStateBeforeChange.address.address" disabled>
+                    <span class="input-group-addon" id="organizationDesc">Adres</span>
+                </div>
+            </div>
+
+            <div class="form-group">
+            <div class="input-group">
+                <input  [ngClass]=" (orderStateBeforeChange.address.cityName === orderStateAfterChange.address.cityName) ? 'redcolor3': 'redcolor' " type="text" name="organization"  #organization="ngModel" class="form-control"  size="300" aria-describedby="organizationDesc"  [readonly]="true" [(ngModel)]="orderStateBeforeChange.address.cityName" disabled>
+                <span class="input-group-addon" id="organizationDesc">Miasto</span>
+            </div>
+        </div>
+
+            <div class="form-group">
+                <div class="input-group">
+                    <input  [ngClass]=" (orderStateBeforeChange.address.zipCode === orderStateAfterChange.address.zipCode) ? 'redcolor3': 'redcolor' " type="text" name="organization"  #organization="ngModel" class="form-control"  size="300" aria-describedby="organizationDesc"  [readonly]="true" [(ngModel)]="orderStateBeforeChange.address.zipCode" disabled>
+                    <span class="input-group-addon" id="organizationDesc">Kod Pocztowy</span>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="input-group">
+                    <input  [ngClass]=" (orderStateBeforeChange.address.additionalInformation === orderStateAfterChange.address.additionalInformation) ? 'redcolor3': 'redcolor' " type="text" name="organization"  #organization="ngModel" class="form-control"  size="300" aria-describedby="organizationDesc"  [readonly]="true" [(ngModel)]="orderStateBeforeChange.address.additionalInformation" disabled>
+                    <span class="input-group-addon" id="organizationDesc">Uwagi do wysyłki</span>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="input-group">
+                    <input  [ngClass]=" (orderStateBeforeChange.address.contactPerson === orderStateAfterChange.address.contactPerson) ? 'redcolor3': 'redcolor' " type="text" name="organization"  #organization="ngModel" class="form-control"  size="300" aria-describedby="organizationDesc"  [readonly]="true" [(ngModel)]="orderStateBeforeChange.address.contactPerson" disabled>
+                    <span class="input-group-addon" id="organizationDesc">Osoba do kontaktu</span>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="input-group">
+                    <input  [ngClass]=" (orderStateBeforeChange.address.phoneNumber === orderStateAfterChange.address.phoneNumber) ? 'redcolor3': 'redcolor' " type="text" name="organization"  #organization="ngModel" class="form-control"  size="300" aria-describedby="organizationDesc"  [readonly]="true" [(ngModel)]="orderStateBeforeChange.address.phoneNumber" disabled>
+                    <span class="input-group-addon" id="organizationDesc">Numer telefonu (wysyłka) </span>
+                </div>
+            </div>
+
+
 
 
             <div class="form-group">
@@ -48,10 +94,6 @@
                 <input [ngClass]=" (orderStateBeforeChange.deliveryType.deliveryTypeName === orderStateAfterChange.deliveryType.deliveryTypeName) ? 'redcolor3': 'redcolor'" class="form-control" [disabled]="true" #delivery_type="ngModel" [(ngModel)]="orderStateBeforeChange.deliveryType.deliveryTypeName" name="delivery_type" >
             </div>
 
-            <div class="form-group">
-                <small id="contact_personDesc" class="text-muted">Osoba do kontaktu</small>
-                <textarea [ngClass]=" (orderStateBeforeChange.contactPerson === orderStateAfterChange.contactPerson) ? 'redcolor3': 'redcolor'" class="form-control" name="contact_person" id="contact_person"  size="200" rows="1" [readonly]="true"  [(ngModel)]="orderStateBeforeChange.contactPerson"></textarea>
-            </div>
 
 
 
@@ -130,12 +172,54 @@
       <div  class="col-md-6">
         <p-panel  *ngIf="isDataFetchCompleteForAfterOrderState | async" header="Wersja zamówienia po zmianie">
 
-          <div class="form-group">
-            <div class="input-group">
-              <input  [ngClass]=" (orderStateBeforeChange.customer.organizationName === orderStateAfterChange.customer.organizationName) ? 'redcolor3': 'redcolor' " type="text" name="organization" #organization="ngModel" class="form-control"  size="300" aria-describedby="organizationDesc"  [readonly]="true" [(ngModel)]="orderStateAfterChange.customer.organizationName" disabled>
-              <span class="input-group-addon" id="organizationDesc">Klient</span>
+            <div class="form-group">
+                <div class="input-group">
+                    <input  [ngClass]=" (orderStateBeforeChange.customer.company.companyName === orderStateAfterChange.customer.company.companyName) ? 'redcolor3': 'redcolor' " type="text" name="organization"  #organization="ngModel" class="form-control"  size="300" aria-describedby="organizationDesc"  [readonly]="true" [(ngModel)]="customerDesc" disabled>
+                    <span class="input-group-addon" id="organizationDesc">Klient</span>
+                </div>
             </div>
-          </div>
+
+            <div class="form-group">
+                <div class="input-group">
+                    <input  [ngClass]=" (orderStateBeforeChange.address.address === orderStateAfterChange.address.address) ? 'redcolor3': 'redcolor' " type="text" name="organization"  #organization="ngModel" class="form-control"  size="300" aria-describedby="organizationDesc"  [readonly]="true" [(ngModel)]="orderStateAfterChange.address.address" disabled>
+                    <span class="input-group-addon" id="organizationDesc">Adres</span>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="input-group">
+                    <input  [ngClass]=" (orderStateBeforeChange.address.cityName === orderStateAfterChange.address.cityName) ? 'redcolor3': 'redcolor' " type="text" name="organization"  #organization="ngModel" class="form-control"  size="300" aria-describedby="organizationDesc"  [readonly]="true" [(ngModel)]="orderStateAfterChange.address.cityName" disabled>
+                    <span class="input-group-addon" id="organizationDesc">Miasto</span>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="input-group">
+                    <input  [ngClass]=" (orderStateBeforeChange.address.zipCode === orderStateAfterChange.address.zipCode) ? 'redcolor3': 'redcolor' " type="text" name="organization"  #organization="ngModel" class="form-control"  size="300" aria-describedby="organizationDesc"  [readonly]="true" [(ngModel)]="orderStateAfterChange.address.zipCode" disabled>
+                    <span class="input-group-addon" id="organizationDesc">Kod Pocztowy</span>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="input-group">
+                    <input  [ngClass]=" (orderStateBeforeChange.address.additionalInformation === orderStateAfterChange.address.additionalInformation) ? 'redcolor3': 'redcolor' " type="text" name="organization"  #organization="ngModel" class="form-control"  size="300" aria-describedby="organizationDesc"  [readonly]="true" [(ngModel)]="orderStateAfterChange.address.additionalInformation" disabled>
+                    <span class="input-group-addon" id="organizationDesc">Uwagi do wysyłki</span>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="input-group">
+                    <input  [ngClass]=" (orderStateBeforeChange.address.contactPerson === orderStateAfterChange.address.contactPerson) ? 'redcolor3': 'redcolor' " type="text" name="organization"  #organization="ngModel" class="form-control"  size="300" aria-describedby="organizationDesc"  [readonly]="true" [(ngModel)]="orderStateAfterChange.address.contactPerson" disabled>
+                    <span class="input-group-addon" id="organizationDesc">Osoba do kontaktu</span>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="input-group">
+                    <input  [ngClass]=" (orderStateBeforeChange.address.phoneNumber === orderStateAfterChange.address.phoneNumber) ? 'redcolor3': 'redcolor' " type="text" name="organization"  #organization="ngModel" class="form-control"  size="300" aria-describedby="organizationDesc"  [readonly]="true" [(ngModel)]="orderStateAfterChange.address.phoneNumber" disabled>
+                    <span class="input-group-addon" id="organizationDesc">Numer telefonu (wysyłka) </span>
+                </div>
+            </div>
 
 
           <div class="form-group">
@@ -172,10 +256,6 @@
             <input  [ngClass]=" (orderStateBeforeChange.deliveryType.deliveryTypeName === orderStateAfterChange.deliveryType.deliveryTypeName) ? 'redcolor3': 'redcolor'" class="form-control" [disabled]="true" #delivery_type="ngModel" [(ngModel)]="orderStateAfterChange.deliveryType.deliveryTypeName" name="delivery_type" >
           </div>
 
-            <div class="form-group">
-              <small id="contact_personDesc" class="text-muted">Osoba do kontaktu</small>
-              <textarea [ngClass]=" (orderStateBeforeChange.contactPerson === orderStateAfterChange.contactPerson) ? 'redcolor3': 'redcolor'" class="form-control" name="contact_person" id="contact_person"  size="200" rows="1" [readonly]="true"  [(ngModel)]="orderStateAfterChange.contactPerson"></textarea>
-            </div>
 
 
 

@@ -9,7 +9,6 @@ export class Customer{
         public phoneNumber?: string,
         public additionalInformation?: string,
         public company?: Company,
-        public addresses?: Address[],
     ){
 
     }

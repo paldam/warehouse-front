@@ -187,3 +187,10 @@ select.ng-dirty.ng-valid { border: 1px solid #6bc502 }
     right: 55px;
     z-index: 9;
 }
+
+.edit-address-icon{
+    position: absolute;
+    top: 5px;
+    right: 82px;
+    z-index: 9;
+}

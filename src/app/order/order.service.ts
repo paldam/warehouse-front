@@ -9,6 +9,7 @@ import {HttpService} from "../http-service";
 import {TOKEN_USER} from "../authentication.service";
 import {File} from "../model/file";
 import {OrderItem} from "../model/order_item";
+import {Address} from "../model/address.model";
 @Injectable()
 export class OrderService {
 
@@ -40,6 +41,12 @@ export class OrderService {
 
     getCompany() :Observable<any[]>{
         return this.http.get(this.baseUrl+`/company`)
+            .map((response: Response) =>
+                response.json());
+    }
+
+    getAddressesByCompanyId(id: number): Observable<Address[]>{
+        return this.http.get(this.baseUrl+`/address/${id}`)
             .map((response: Response) =>
                 response.json());
     }

@@ -16,6 +16,7 @@ import {Router} from "@angular/router";
 import {Address} from "../../model/address.model";
 import {MessageServiceExt} from "../../messages/messageServiceExt";
 import {Company} from "../../model/company.model";
+import {StringUtils} from "../../string-utils";
 
 declare var jquery:any;
 declare var $ :any;
@@ -33,30 +34,21 @@ export class BasketOrderComponent implements OnInit {
 
     public company: Company = new Company();
     public customers: Customer[]=[];
-    //public customerAddress: Address = new Address();
     public customer: Customer = new Customer();
-    public customerAddress: Address = new Address();
-    public addressToAdd: Address = new Address();
+    public orderAddress: Address = new Address();
     public companyList: any[]=[];
     public companyAddressList: Address[]=[];
-
-
     public addressPickDialogShow: boolean = false;
     public order: Order = new Order();
     public total: number = 0;
     public formSubmitted: boolean = false;
-    public formAddAdrrSubmitted: boolean = false;
-    public isAddressesOptionVisable = false;
     public addAddressDialogShow: boolean = false;
     public clickSelectcomapnyGuard: boolean = false;
     public clickSelectCustomerGuard:boolean = false;
     public deliveryTypes: DeliveryType[]=[];
     public deliveryType: DeliveryType= new DeliveryType();
-
-
     public orderItems: OrderItem[]=[];
     public baskets: Basket[]=[];
-
     public loading: boolean;
     public confirmDialogShow: boolean = false;
     public customerPickDialogShow: boolean = false;
@@ -69,17 +61,12 @@ export class BasketOrderComponent implements OnInit {
     public weekOfYear: number;
     public isDeliveryDateValid: boolean = true;
     public isDeliveryWeekDateValid: boolean = true;
-
-
     public selectedBasketOnContextMenu: Basket = new Basket();
-    public addrs: Address[]=[];
     @ViewChild('choseCompanyPanel') choseCompanyPanel: Panel;
     @ViewChild(FileUpload) fileUploadElement: FileUpload;
     @ViewChild('zip_code') el: any;
     @ViewChild('address2') storedCustomerAddressList: any;
     @ViewChild('companyPickMode') selectPickcompany: ElementRef;
-
-
     value: Date;
     dateLang: any;
 
@@ -131,10 +118,7 @@ export class BasketOrderComponent implements OnInit {
         })
     }
 
-    showAddAddressWindow() {
-        this.addAddressDialogShow = true;
 
-    }
     contextMenuSelected(event){
         this.selectedBasketOnContextMenu = event.data;
     }
@@ -189,6 +173,14 @@ export class BasketOrderComponent implements OnInit {
         this.clickSelectCustomerGuard = false;
     }
 
+    cleanAddress(){
+        this.orderAddress = new Address();
+    }
+
+    editAddressMode(){
+        this.orderAddress.addressId = null;
+    }
+
 
 
 
@@ -227,19 +219,37 @@ export class BasketOrderComponent implements OnInit {
 
     }
 
+    pickAddress(event){
+        this.orderAddress = event;
+        this.addressPickDialogShow= false;
+        
+        console.log(this.orderAddress);
+        
+
+    }
+
     isAdmin() : boolean {
         return this.authenticationService.isAdmin();
     }
 
     showCustomerList() {
-        this.addressToAdd.cityName = null;
         this.customerPickDialogShow = true;
-        this.isAddressesOptionVisable = true;
         //this.storedCustomerMode = true;
 
         this.customers.forEach(data=>{
             console.log(data)
         })
+    }
+
+    showAddressesList(){
+        this.addressPickDialogShow= true;
+
+        this.orderService.getAddressesByCompanyId(this.company.companyId).subscribe(data => {
+            this.companyAddressList = data;
+        });
+
+
+
     }
 
     showCompanyList() {
@@ -262,12 +272,11 @@ export class BasketOrderComponent implements OnInit {
         formAdidtional.resetForm();
         this.order= new Order();
         this.customer= new Customer();
-        this.addressToAdd.cityName = null;
-        this.addressToAdd.zipCode = null;
         this.formSubmitted = false;
-        this.isAddressesOptionVisable = false;
+        this.orderAddress = new Address();
         this.clickSelectcomapnyGuard = false;
         this.clickSelectCustomerGuard = false;
+        this.company = new Company();
         this.customerService.getCustomers().subscribe(data=> this.customers = data);
     }
 
@@ -315,10 +324,19 @@ export class BasketOrderComponent implements OnInit {
 
 
         this.order.customer = this.customer;
-        this.order.customer.company = this.company;
-       this.order.customer.addresses = [];
 
-        this.order.customer.addresses[0]= this.customerAddress;
+        if(StringUtils.isBlank(this.company.companyName)){
+            console.log("1");
+            this.order.customer.company = {companyId:0, companyName: "Klient indywidualny"}
+        }else{
+            console.log("2");
+            this.order.customer.company = this.company;
+        }
+
+
+        this.order.address = this.orderAddress;
+
+
 
 
 
@@ -333,18 +351,23 @@ export class BasketOrderComponent implements OnInit {
         this.order.userName = localStorage.getItem(TOKEN_USER);
 
         this.order.weekOfYear = this.getWeekNumber(this.weekOfYearTmp);
+        
+        console.log(this.order);
     }
 
 
     cleanAfterSave(form: NgForm, formAdidtional: NgForm){
         this.formSubmitted = false;
         this.customer= new Customer();
-
+        this.recalculate();
         this.orderItems=[];
         form.resetForm();
+        this.weekOfYear = null;
         formAdidtional.resetForm();
-        this.isAddressesOptionVisable = false;
-        this.customer.addresses=[];
+        this.order.address = new Address();
+        this.cleanAddress();
+        this.cleanCompany();
+        this.cleanCustomer()
     }
 
     printPdf() {
@@ -367,10 +390,7 @@ export class BasketOrderComponent implements OnInit {
     cancelCreateOrder(){
         this.router.navigateByUrl('/orders');
     }
-    onShowPopUp(){
 
-        this.customerService.getCustomers().subscribe(data=> this.customers = data);
-    }
 
     ZipCodeUtil(zipCode: string) {
 
@@ -390,53 +410,17 @@ export class BasketOrderComponent implements OnInit {
     }
 
     selectCity(city: string) {
-        this.addressToAdd.cityName = city;
-        this.customerAddress.cityName = city;
+        this.orderAddress.cityName = city;
         this.tmpCityList = [];
         this.pickCityByZipCodeWindow = false;
     }
 
 
-    submitAddAddresForm(form: NgForm) {
-        this.formAddAdrrSubmitted = true;
-        if (form.valid) {
-            this.customer.addresses.push(this.addressToAdd);
-
-            this.customerService.saveCustomers(this.customer).subscribe(data => {
-
-                this.addAddressDialogShow = false;
-                form.reset();
-                this.formAddAdrrSubmitted  = false;
-                this.showSuccessMassage();
-
-                this.customerService.getCustomer(this.customer.customerId).subscribe(data => {
-                    this.customer = data;
-                })
-
-            }, error => {
-
-                this.messageServiceExt.addMessage('error','Błąd',"Status: " + error.status + ' ' + error.statusText);
-
-            });
-
-        }
-    }
-
-    showSuccessMassage() {
-        this.messageServiceExt.addMessage('success','Status','Poprawnie dodano adres do klienta');
-    }
 
     clearOnCloseDialog() {
         this.tmpCityList = [];
-        this.formAddAdrrSubmitted = false;
     }
-    cancelAddAddr(){
-        this.addAddressDialogShow=false;
-        this.addressToAdd.cityName = null;
-        this.addressToAdd.zipCode =null;
-        this.customerAddress.zipCode = null;
-        this.customerAddress.cityName = null;
-    }
+
 
     onBeforeUpload(event){
         let token = localStorage.getItem(TOKEN);
@@ -466,7 +450,7 @@ export class BasketOrderComponent implements OnInit {
 
         if(this.customer.name == null){
             //this.storedCustomerMode=false;
-            this.isAddressesOptionVisable = false;
+
         }
 
     }

@@ -18,6 +18,7 @@ import {MenuItem} from "primeng/api";
 import {Address} from "../../model/address.model";
 import {MessageServiceExt} from "../../messages/messageServiceExt";
 import {NgForm} from "@angular/forms";
+import {Company} from "../../model/company.model";
 
 @Component({
   selector: 'order-details',
@@ -56,6 +57,14 @@ export class OrderDetailsComponent implements OnInit {
       @ViewChild(Checkbox) el:Checkbox;
       @ViewChild(FileUpload) fileUploadElement: FileUpload;
 
+
+    public company: Company = new Company();
+    public orderAddress: Address = new Address();
+
+
+
+
+
     constructor(private confirmationService: ConfirmationService,private fileSendService: FileSendService,
               private basketService : BasketService,private orderService : OrderService,activeRoute: ActivatedRoute,
               private  router: Router,public authenticationService: AuthenticationService, private messageServiceExt : MessageServiceExt) {
@@ -63,6 +72,10 @@ export class OrderDetailsComponent implements OnInit {
       this.orderId= activeRoute.snapshot.params["id"];
 
      orderService.getOrder(this.orderId).subscribe(res =>{
+
+                    this.orderAddress = res.address;
+                  this.company = res.customer.company;
+
                   this.order = res;
                   this.customer =  res.customer;
                   this.orderItems = res.orderItems;
@@ -136,6 +149,8 @@ export class OrderDetailsComponent implements OnInit {
 
   editOrderForm() {
 
+        this.formSubmitted = true;
+
 
       if (this.orderForm.valid && this.additionalForm.valid && this.isDeliveryDateValid && this.isDeliveryWeekDateValid && this.orderItems.length>0) {
 
@@ -158,6 +173,9 @@ export class OrderDetailsComponent implements OnInit {
           this.order.customer = this.customer;
           this.order.orderTotalAmount = this.total;
           this.order.weekOfYear = this.weekOfYear;
+          this.order.address = this.orderAddress;
+
+         console.log(this.order);
 
           this.orderService.saveOrder(this.order).subscribe(data => {
 
@@ -245,6 +263,14 @@ export class OrderDetailsComponent implements OnInit {
             this.refreshFileList();
         })
 
+    }
+
+    cleanAddress(){
+        this.orderAddress = new Address();
+    }
+
+    editAddressMode(){
+        this.orderAddress.addressId = null;
     }
 
     refreshFileList(){

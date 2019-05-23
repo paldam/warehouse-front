@@ -1,6 +1,6 @@
 
 .input-group-addon{
-    min-width: 100px;
+    min-width: 130px;
 }
 .customer_data_form{
     margin-bottom: 26px;
@@ -45,4 +45,44 @@ button i {
     position: relative;
     top: 5px;
     left: 10px;
+}
+
+.cont{
+    position: relative;
+}
+
+.customerpanels .ui-panel {
+    margin-top: 30px;
+}
+.customerpanels2 .ui-panel {
+    margin-top: 60px;
+}
+
+.clean-button{
+    position: absolute;
+    top: 50px;
+    left: 30px;
+}
+
+.pt { margin-top: 40px}
+
+.clean-company-icon {
+    position: absolute;
+    top: 5px;
+    right: 55px;
+    z-index: 9;
+}
+
+.edit-address-icon{
+    position: absolute;
+    top: 5px;
+    right: 82px;
+    z-index: 9;
+}
+
+.pickfromdb{
+    position: absolute;
+    top: 0px;
+    right: 6px;
+    padding: 5px;
 }
