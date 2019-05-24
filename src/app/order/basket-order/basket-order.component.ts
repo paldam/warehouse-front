@@ -33,7 +33,7 @@ declare var $ :any;
 
 export class BasketOrderComponent implements OnInit {
 
-
+    public selectedCompanyToMarge : Company []=[];
     public company: Company = new Company();
     public companyToPersist : Company = new Company();
     public customers: Customer[]=[];
@@ -41,12 +41,14 @@ export class BasketOrderComponent implements OnInit {
     public orderAddress: Address = new Address();
     public companyList: any[]=[];
     public companyAddressList: Address[]=[];
+    public comapnyNameToMarge: string ;
 
     public addressPickDialogShow: boolean = false;
     public order: Order = new Order();
     public total: number = 0;
     public formSubmitted: boolean = false;
     public formCompanyAddForm= false;
+    public formCompanyMargeForm : boolean = false;
     public addAddressDialogShow: boolean = false;
     public clickSelectcomapnyGuard: boolean = false;
     public clickSelectCustomerGuard:boolean = false;
@@ -59,6 +61,7 @@ export class BasketOrderComponent implements OnInit {
     public confirmDialogShow: boolean = false;
     public customerPickDialogShow: boolean = false;
     public companyPickDialogShow: boolean = false;
+    public mergeCompanyPanelShow: boolean = false;
     public generatedOrderId: number = null; //id too print PDF
     public items: MenuItem[];
     public tmpCityList: any[] = [];
@@ -125,6 +128,10 @@ export class BasketOrderComponent implements OnInit {
         })
     }
 
+    
+    test(){
+        console.log(this.selectedCompanyToMarge);
+    }
 
     contextMenuSelected(event){
         this.selectedBasketOnContextMenu = event.data;
@@ -272,11 +279,40 @@ export class BasketOrderComponent implements OnInit {
     }
 
     onHideComapnyPanel(){
+        this.selectedCompanyToMarge = [];
         if(this.company.companyId){
             this.clickSelectcomapnyGuard = true;
         }
+
+
     }
 
+    mergeCompany(){
+
+        this.mergeCompanyPanelShow = true;
+
+    }
+
+    selectCompanyNameInMergePanel(companyName: string){
+        this.comapnyNameToMarge = companyName;
+    }
+
+    deleteCompanyNameInMergePanel(comapnyId: number){
+
+
+            let index = this.selectedCompanyToMarge.findIndex(data=> data.companyId == comapnyId);
+
+            if (index > -1){
+                this.selectedCompanyToMarge.splice(index,1);
+            }
+
+            if(this.selectedCompanyToMarge.length == 0){
+                this.mergeCompanyPanelShow = false;
+                this.selectedCompanyToMarge = [];
+            }
+
+
+    }
 
     cleanForm(form : NgForm, formAdidtional : NgForm){
         form.resetForm();
@@ -290,6 +326,50 @@ export class BasketOrderComponent implements OnInit {
         this.company = new Company();
         this.customerService.getCustomers().subscribe(data=> this.customers = data);
     }
+
+
+    submitMergeCompanyForm(companyMergeForm: NgForm){
+        this.formCompanyMargeForm = true;
+
+        if (companyMergeForm.valid) {
+            this.spinerService.spinerOnCompanyAddPanelShow = true;
+            this.orderService.getMergeCompanies(this.selectedCompanyToMarge,this.comapnyNameToMarge).subscribe(data =>{
+
+                this.company= data;
+
+            },error =>{
+                this.messageServiceExt.addMessage('error', 'Błąd', "Status: " + error.status + ' ' + error.statusText);
+                this.mergeCompanyPanelShow = false;
+                this.spinerService.spinerOnCompanyAddPanelShow = false;
+                this.selectedCompanyToMarge = [];
+            },() => {
+                this.messageServiceExt.addMessage('success', 'Status', 'Poprawnie scalono firmy');
+
+                setTimeout(() => {
+                    this.spinerService.spinerOnCompanyAddPanelShow = false;   ;
+                }, 900);
+
+
+
+                this.mergeCompanyPanelShow = false;
+                this.selectedCompanyToMarge = [];
+                this.orderService.getCompany().subscribe(data => this.companyList = data );
+                this.companyPickDialogShow = false;
+
+            } )
+
+        }
+
+
+    }
+
+    onCloseMergePanel(){
+        this.comapnyNameToMarge = null;
+
+
+
+    }
+
 
     submitCompanyAddForm(formCompanyAdd: NgForm){
 

@@ -207,6 +207,21 @@ select.ng-dirty.ng-valid { border: 1px solid #6bc502 }
     top: 5px;
     right: 82px;
     z-index: 9;
+    text-align: center;
 }
 
+.merge-button{
+    margin-top: 20px;
+}
+
+.company_tab{
+    border: 1px solid black;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+.company_tab td{
+    padding: 7px;
+    border: 1px solid black;
+    cursor: pointer;
+}
 

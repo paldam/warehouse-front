@@ -11,6 +11,7 @@ import {File} from "../model/file";
 import {OrderItem} from "../model/order_item";
 import {Address} from "../model/address.model";
 import {Company} from "../model/company.model";
+import {Basket} from "../model/basket.model";
 @Injectable()
 export class OrderService {
 
@@ -113,6 +114,30 @@ export class OrderService {
             .map((response: Response) =>
                 response.json());
     }
+
+
+    getMergeCompanies(companies : Company[],newcompanyname : string ): Observable<Company>{
+
+        const formData: FormData = new FormData();
+        const blobcompanies = new Blob([JSON.stringify(companies)], {
+            type: 'application/json',
+        });
+        const blobnewcompanyname = new Blob([JSON.stringify(newcompanyname)], {
+            type: 'application/json',
+        });
+
+        formData.append('companies', blobcompanies);
+        formData.append('newcompanyname', blobnewcompanyname);
+
+        console.log(blobnewcompanyname);
+        return this.http.post(this.baseUrl+`/company/merge`,formData)
+            .map((response: Response) =>
+                response.json());
+    }
+
+
+
+
 
 
     getOrdersDtoTotalRows( page : number, size : number, text: string): Observable<any[]>{

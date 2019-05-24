@@ -449,22 +449,9 @@
 
 
 
-<p-dialog #choseCompanyPanel header="Wybierz Firmę:" closeOnEscape="false" modal="true" width="600" [(visible)]="companyPickDialogShow"  (onHide)="onHideComapnyPanel()"    >
-    <div >
 
-        <div class="input-group search_bar">
-                <span class="input-group-addon" id="basic-addon1">
-                    <i class="fa fa-search" aria-hidden="true"></i>
-                </span>
-            <input #globalfilter3 type="text" class="form-control search_input" pInputText size="50" placeholder="Szukaj"aria-describedby="basic-addon1">
 
-        </div>
-        <p-dataTable [value]="companyList" [rows]="10" [paginator]="true"  #dt (onRowDblclick)="pickCompany($event.data)"
-                     [loading]="loading" loadingIcon="fa-circle-o-notch" [globalFilter]="globalfilter3">
-            <p-column field="companyName" header="Imię i Nazwisko" [sortable]="true" ></p-column>
-        </p-dataTable>
-    </div>
-</p-dialog>
+
 
 
 <p-dialog #choseAddressPanel header="Wybierz adres:" closeOnEscape="false" modal="true" width="900" [(visible)]="addressPickDialogShow"     >
@@ -509,7 +496,64 @@
 </p-dialog>
 
 
+<p-dialog #choseCompanyPanel header="Wybierz Firmę:" closeOnEscape="false" modal="true" width="600" [(visible)]="companyPickDialogShow"  (onHide)="onHideComapnyPanel()"    >
+    <div >
+
+        <div class="input-group search_bar">
+                <span class="input-group-addon" id="basic-addon1">
+                    <i class="fa fa-search" aria-hidden="true"></i>
+                </span>
+            <input #globalfilter3 type="text" class="form-control search_input"   pInputText size="50" placeholder="Szukaj"aria-describedby="basic-addon1">
 
 
+        </div>
+        <p-dataTable [value]="companyList" [rows]="10" [paginator]="true"  #dt (onRowDblclick)="pickCompany($event.data)"
+                     [loading]="loading" loadingIcon="fa-circle-o-notch" [globalFilter]="globalfilter3">
+            <p-column field="companyName" header="Firma" [sortable]="true" ></p-column>
+            <p-column  header="Scal"  [style]="{'width':'50px', 'text-align':'center'}">
+                <ng-template let-row="rowData" pTemplate="rowexpansion">
+                    <p-checkbox name="group2" [value]="{'companyId':row.companyId,'companyName':row.companyName}"  [(ngModel)]="selectedCompanyToMarge"  (onChange)="test()"></p-checkbox>
+                </ng-template>
+            </p-column>
+        </p-dataTable>
+    </div>
+
+    <button  [disabled]="selectedCompanyToMarge.length ==0" class="btn btn-success btn-lg  pull-right merge-button" (click)="mergeCompany()"> Scal zaznaczone</button>
+</p-dialog>
+
+
+
+<p-dialog  header="Scal następujące firmy" closeOnEscape="false" modal="true" width="900" [(visible)]="mergeCompanyPanelShow" (onHide)="onCloseMergePanel()" >
+    <div >
+
+
+        <table class="company_tab" >
+            <thead>
+
+            </thead>
+            <tbody>
+            <tr class="city_tab_row"  *ngFor="let company of selectedCompanyToMarge; let i = index">
+                <td >{{i+1}}</td>
+                <td (click)="selectCompanyNameInMergePanel(company.companyName)" class="citySelect">{{company.companyName}}</td>
+                <td (click)="deleteCompanyNameInMergePanel(company.companyId)" class="citySelect"><i class="fa fa-times" aria-hidden="true"></i></td>
+            </tr>
+            </tbody>
+        </table>
+
+
+        <form id="companyMergeForm" novalidate #companyMergeForm="ngForm" >
+            <div class="form-group">
+                <small id="nameDescript" class="text-muted">Nowa nazwa dla powyższych firm </small>
+                <input type="text" name="nameCompany" class="form-control" [(ngModel)]="comapnyNameToMarge" #nameCompany="ngModel" aria-describedby="nameDescript" required >
+                <ul class="text-danger list-unstyled" *ngIf="nameCompany.dirty || formCompanyMargeForm">
+                    <li  *ngIf="nameCompany.errors?.required">To pole nie może być puste</li>
+                </ul>
+            </div>
+            <button  [disabled]="selectedCompanyToMarge.length ==0" class="btn btn-success btn-lg  pull-right merge-button " (click)="submitMergeCompanyForm(companyMergeForm)" > Zatwierdź</button>
+
+        </form>
+
+    </div>
+</p-dialog>
 
 
