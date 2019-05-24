@@ -52,13 +52,13 @@
 
         <p-column field="customer.customerName" header="Nabywca" [sortable]="true">
             <ng-template let-row="rowData" pTemplate="body"  >
-                {{row.customer.name}} {{row.customer.organizationName}}
+                {{row.customer.name}} | {{row.customer.company.companyName}}
             </ng-template>
         </p-column>
 
         <!--Hide columns, only to global search purpose-->
         <p-column field="customer.name" header=""  hidden="true"></p-column>
-        <p-column field="customer.organizationName" header=""  hidden="true"></p-column>
+        <p-column field="customer.company.companyName" header=""  hidden="true"></p-column>
 
 
 

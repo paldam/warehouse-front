@@ -17,6 +17,8 @@ import {Address} from "../../model/address.model";
 import {MessageServiceExt} from "../../messages/messageServiceExt";
 import {Company} from "../../model/company.model";
 import {StringUtils} from "../../string-utils";
+import {Supplier} from "../../model/supplier.model";
+import {SpinerService} from "../../spiner.service";
 
 declare var jquery:any;
 declare var $ :any;
@@ -33,15 +35,18 @@ export class BasketOrderComponent implements OnInit {
 
 
     public company: Company = new Company();
+    public companyToPersist : Company = new Company();
     public customers: Customer[]=[];
     public customer: Customer = new Customer();
     public orderAddress: Address = new Address();
     public companyList: any[]=[];
     public companyAddressList: Address[]=[];
+
     public addressPickDialogShow: boolean = false;
     public order: Order = new Order();
     public total: number = 0;
     public formSubmitted: boolean = false;
+    public formCompanyAddForm= false;
     public addAddressDialogShow: boolean = false;
     public clickSelectcomapnyGuard: boolean = false;
     public clickSelectCustomerGuard:boolean = false;
@@ -50,6 +55,7 @@ export class BasketOrderComponent implements OnInit {
     public orderItems: OrderItem[]=[];
     public baskets: Basket[]=[];
     public loading: boolean;
+    public companyAddDialogShow : boolean = false;
     public confirmDialogShow: boolean = false;
     public customerPickDialogShow: boolean = false;
     public companyPickDialogShow: boolean = false;
@@ -71,7 +77,8 @@ export class BasketOrderComponent implements OnInit {
     dateLang: any;
 
 
-    constructor(private router : Router,private basketService : BasketService, private  customerService: CustomerService,
+
+    constructor(private router : Router,private basketService : BasketService, private spinerService: SpinerService, private  customerService: CustomerService,
                 private orderService: OrderService,private messageServiceExt: MessageServiceExt,private confirmationService: ConfirmationService,private authenticationService: AuthenticationService) {
         basketService.getBaskets().subscribe(data=> this.baskets = data);
         customerService.getCustomers().subscribe(data=> this.customers = data);
@@ -244,6 +251,7 @@ export class BasketOrderComponent implements OnInit {
     showAddressesList(){
         this.addressPickDialogShow= true;
 
+        console.log("WWW" + this.company.companyId);
         this.orderService.getAddressesByCompanyId(this.company.companyId).subscribe(data => {
             this.companyAddressList = data;
         });
@@ -253,6 +261,9 @@ export class BasketOrderComponent implements OnInit {
     }
 
     showCompanyList() {
+
+
+        this.orderService.getCompany().subscribe(data => this.companyList = data );
 
         this.clickSelectcomapnyGuard = false;
 
@@ -278,6 +289,39 @@ export class BasketOrderComponent implements OnInit {
         this.clickSelectCustomerGuard = false;
         this.company = new Company();
         this.customerService.getCustomers().subscribe(data=> this.customers = data);
+    }
+
+    submitCompanyAddForm(formCompanyAdd: NgForm){
+
+        this.formCompanyAddForm= true;
+
+        if (formCompanyAdd.valid) {
+            this.spinerService.spinerOnCompanyAddPanelShow = true;
+            this.orderService.saveCompany(this.companyToPersist).subscribe(data=>{
+
+                this.companyToPersist = new Company();
+                this.formCompanyAddForm= false;
+                this.messageServiceExt.addMessage('success', 'Status', 'Poprawnie dodano firmę');
+
+
+                this.company = data;
+
+            }, error => {
+
+                this.messageServiceExt.addMessage('error', 'Błąd', "Status: " + error.status + ' ' + error.statusText);
+                this.companyAddDialogShow = false;
+                this.spinerService.spinerOnCompanyAddPanelShow = false;
+
+            },() => {
+                this.companyAddDialogShow = false;
+                this.spinerService.spinerOnCompanyAddPanelShow = false;
+
+            });
+
+
+
+        }
+
     }
 
     submitOrderForm(form: NgForm, formAdidtional: NgForm) {
@@ -377,6 +421,10 @@ export class BasketOrderComponent implements OnInit {
         })
 
         this.generatedOrderId = null;
+    }
+
+    addCompanyShowPanel(){
+        this.companyAddDialogShow = true;
     }
 
     showAddOrderConfirmModal() {

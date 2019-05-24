@@ -5,7 +5,7 @@
 
           <div class="form-group">
             <div class="input-group">
-              <input   type="text" name="organization" #organization="ngModel" class="form-control" size="300" aria-describedby="organizationDesc" [readonly]="true" [(ngModel)]="orderToShow.customer.organizationName" disabled>
+              <input   type="text" name="organization"  class="form-control" size="300" aria-describedby="organizationDesc" [readonly]="true"  [value]="getCustomerDesc()" disabled>
               <span class="input-group-addon" id="organizationDesc">Klient</span>
             </div>
           </div>
@@ -45,10 +45,6 @@
             <input class="form-control" [disabled]="true" #delivery_type="ngModel" [(ngModel)]="orderToShow.deliveryType.deliveryTypeName" name="delivery_type" >
           </div>
 
-          <div class="form-group">
-            <small id="contact_personDesc" class="text-muted">Osoba do kontaktu</small>
-            <textarea  class="form-control" name="contact_person" id="contact_person" size="200" rows="1" [readonly]="true" [(ngModel)]="orderToShow.contactPerson"></textarea>
-          </div>
 
 
 

@@ -32,7 +32,7 @@ export class CustomerComponent implements OnInit {
 
       this.setSearchOptions();
 
-    customerService.getAllCustomerWithPrimaryAddress().subscribe(data=>{
+    customerService.getCustomers().subscribe(data=>{
       this.customersList = data;
     })
 

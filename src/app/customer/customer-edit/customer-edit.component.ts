@@ -21,7 +21,6 @@ export class CustomerEditComponent implements OnInit {
   public addAddressDialogShow: boolean = false;
   public changeMainAddressDialogShow: boolean = false;
   public changeCustomerDataDialogShow: boolean = false;
-  public addressToAdd: Address = new Address();
   public formSubmitted: boolean = false;
   public pickCityByZipCodeWindow: boolean = false;
   public tmpCityList: any[] = [];
@@ -33,7 +32,6 @@ export class CustomerEditComponent implements OnInit {
               private confirmationService: ConfirmationService, private messageServiceExt: MessageServiceExt,private authenticationService: AuthenticationService) {
     customerService.getCustomer(activeRoute.snapshot.params["id"]).subscribe(data => {
 
-      data.addresses.sort(this.compareAddress);
       this.customer = data;
 
     })
@@ -46,98 +44,30 @@ export class CustomerEditComponent implements OnInit {
 
   }
 
-  compareAddress(a: Address, b: Address) {
-    if (a.isPrimaryAddress > b.isPrimaryAddress)
-      return -1
-    if (a.isPrimaryAddress < b.isPrimaryAddress)
-      return 1
-  }
-
-  showAddAddressWindow() {
-    this.addAddressDialogShow = true;
-
-  }
-
-  showChangeMainAddressWindow(){
-
-    this.changeMainAddressDialogShow = true;
-  }
 
   showChangeCustomerDataWindow(){
 
     this.changeCustomerDataDialogShow= true;
   }
 
-  submitAddAddresForm(form: NgForm) {
-    this.formSubmitted = true;
-    if (form.valid) {
-        this.customer.addresses.push(this.addressToAdd);
 
-        this.customerService.saveCustomers(this.customer).subscribe(data => {
-
-            this.addAddressDialogShow = false;
-            form.reset();
-            this.formSubmitted = false;
-            this.showSuccessMassage();
-
-            this.customerService.getCustomer(this.customer.customerId).subscribe(data => {
-                data.addresses.sort(this.compareAddress);
-                this.customer = data;
-              })
-
-         }, error => {
-
-              this.messageServiceExt.addMessage('error','Błąd',"Status: " + error.status + ' ' + error.statusText);
-
-        });
-
-    }
-  }
 
   showSuccessMassage() {
     this.messageServiceExt.addMessage('success','Status','Poprawnie dodano adres do klienta');
   }
 
 
-  ZipCodeUtil(zipCode: string) {
 
-    if (this.el.valid) {
-      this.pickCityByZipCodeWindow = true;
-      this.customerService.getCityByZipCode(zipCode).subscribe(data => {
-        data.forEach((value) => {
-          this.tmpCityList.push(value.zipCode.city);
-
-        });
-      })
-    }
-    ;
-
-  }
-
-  clearOnCloseDialog() {
-    this.tmpCityList = [];
-    this.formSubmitted = false;
-  }
 
   clearOnCloseChangeMainAddressDialog() {
     this.selectedAddr= null;
   }
 
-  selectCity(city: string) {
-    this.addressToAdd.cityName = city;
-    this.tmpCityList = [];
-    this.pickCityByZipCodeWindow = false;
-  }
 
-  cancelAddAddr() {
-    this.addAddressDialogShow = false;
-    this.addressToAdd = new Address();
-    this.formSubmitted = false;
-  }
 
   refreshCustomerAndAddressList(){
     this.customerService.getCustomer(this.customer.customerId).subscribe(data => {
-        data.addresses.sort(this.compareAddress);
+       // data.addresses.sort(this.compareAddress);
         this.customer = data;
 
     })
@@ -171,23 +101,7 @@ export class CustomerEditComponent implements OnInit {
 
   }
 
-  changePrimaryAddr(custId : number, addrId : number){
 
-    console.log(custId + " "+ addrId)
-
-      this.customerService.changeMainAddr(custId,addrId).subscribe(data=>{
-             this.messageServiceExt.addMessage('success','Status','Zmieniono główny addres');
-             this.changeMainAddressDialogShow = false;
-             this.selectedAddr = null;
-             this.refreshCustomerAndAddressList();
-      },
-          error =>{
-
-            this.messageServiceExt.addMessage('error','Błąd','Błąd');
-
-          });
-
-  }
 
     cancelEditCustomer(){
       this.changeCustomerDataDialogShow = false;

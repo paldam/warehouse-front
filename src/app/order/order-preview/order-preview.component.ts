@@ -23,4 +23,10 @@ export class OrderPreviewComponent implements OnInit {
       },500 );
   }
 
+
+  getCustomerDesc(): string{
+      return this.orderToShow.customer.name + " | " + this.orderToShow.customer.company.companyName;
+  }
+
+
 }

@@ -3,5 +3,17 @@
 }
 
 .tel_col{
-    width: 100px;
+    width: 150px;
+}
+
+.action_col{
+    width: 70px;
+}
+
+.email_col{
+    width: 220px;
+}
+
+.company_col{
+    width: 350px;
 }

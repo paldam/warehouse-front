@@ -16,15 +16,15 @@
               <div class="cont">
 
                 <p-panel  class="customerpanels2"  header="Klient">
-                  <i class="fa fa-address-card-o fa-2x pickfromdb " (click)="showCustomerList()" aria-hidden="true"></i>
-                  <i  *ngIf="this.customer.name"  class="fa fa-times fa-2x clean-company-icon" aria-hidden="true" (click)="cleanCustomer()"></i>
+                  <!--<i class="fa fa-address-card-o fa-2x pickfromdb " (click)="showCustomerList()" aria-hidden="true"></i>-->
+                  <!--<i  *ngIf="this.customer.name"  class="fa fa-times fa-2x clean-company-icon" aria-hidden="true" (click)="cleanCustomer()"></i>-->
 
                   <div class="form-group">
                     <div class="input-group">
                       <input type="text" name="name" #name="ngModel" class="form-control" size="300" aria-describedby="nameDesc" [readonly]="true" [(ngModel)]="customer.name" required >
                       <span class="input-group-addon" id="nameDesc">Imię i Nazwisko </span>
                     </div>
-                    <ul class="text-danger list-unstyled" *ngIf="name.dirty && formSubmitted">
+                    <ul class="text-danger list-unstyled" *ngIf="name.dirty || formSubmitted">
                       <li  *ngIf="name.errors?.required">To pole nie może być puste</li>
                     </ul>
                   </div>
@@ -57,8 +57,8 @@
               <div class="cont">
                 <p-panel  class="customerpanels" header="Firma">
 
-                  <i  class="fa fa-address-card-o fa-2x pickfromdb " (click)="showCompanyList()" aria-hidden="true"></i>
-                  <i  *ngIf="this.company.companyName && !this.customer.customerId"  class="fa fa-times fa-2x clean-company-icon" aria-hidden="true" (click)="cleanCompany()"></i>
+                  <!--<i  class="fa fa-address-card-o fa-2x pickfromdb " (click)="showCompanyList()" aria-hidden="true"></i>-->
+                  <!--<i  *ngIf="this.company.companyName && !this.customer.customerId"  class="fa fa-times fa-2x clean-company-icon" aria-hidden="true" (click)="cleanCompany()"></i>-->
 
 
                   <div  class="form-group">
@@ -118,7 +118,7 @@
 
                   <div *ngIf="!storedCustomerMode" class="form-group">
                     <div class="input-group">
-                      <input type="text" name="city_name" #city_name="ngModel" class="form-control"  size="300" aria-describedby="city_nameDesc" [readonly]="false" [(ngModel)]="orderAddress.cityName" required>
+                      <input type="text" name="city_name" #city_name="ngModel" class="form-control"  size="300" aria-describedby="city_nameDesc" [readonly]="orderAddress.addressId" [(ngModel)]="orderAddress.cityName" required>
                       <span class="input-group-addon" id="city_nameDesc">Miejscowość</span>
                     </div>
                     <ul class="text-danger list-unstyled" *ngIf="city_name.dirty || formSubmitted">
@@ -445,3 +445,25 @@
 <p-confirmDialog header="Usuwanie pliku" icon="fa fa-question-circle" width="425"></p-confirmDialog>
 
 <p-contextMenu  #cm [model]="items"> </p-contextMenu>
+
+<p-dialog #choseAddressPanel header="Wybierz adres:" closeOnEscape="false" modal="true" width="900" [(visible)]="addressPickDialogShow"      >
+  <div >
+
+    <div class="input-group search_bar">
+                <span class="input-group-addon" id="basic-addon1">
+                    <i class="fa fa-search" aria-hidden="true"></i>
+                </span>
+      <input #globalfilter type="text" class="form-control search_input" pInputText size="50" placeholder="Szukaj"aria-describedby="basic-addon1">
+
+    </div>
+    <p-dataTable [value]="companyAddressList" [rows]="10" [paginator]="true"  #dt (onRowDblclick)="pickAddress($event.data)"
+                 [loading]="loading" loadingIcon="fa-circle-o-notch" [globalFilter]="globalfilter">
+      <p-column field="address" header="adres" [sortable]="true" ></p-column>
+      <p-column field="zipCode" header="kod pocztowy" [sortable]="true" ></p-column>
+      <p-column field="cityName" header="Miasto" [sortable]="true" ></p-column>
+      <p-column field="contactPerson" header="Osoba kontaktowa" [sortable]="true" ></p-column>
+      <p-column field="phoneNumber" header="Telefon" [sortable]="true" ></p-column>
+      <p-column field="additionalInformation" header="dodatkowe informacje" [sortable]="true" ></p-column>
+    </p-dataTable>
+  </div>
+</p-dialog>

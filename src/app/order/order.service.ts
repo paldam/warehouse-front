@@ -10,6 +10,7 @@ import {TOKEN_USER} from "../authentication.service";
 import {File} from "../model/file";
 import {OrderItem} from "../model/order_item";
 import {Address} from "../model/address.model";
+import {Company} from "../model/company.model";
 @Injectable()
 export class OrderService {
 
@@ -43,6 +44,11 @@ export class OrderService {
         return this.http.get(this.baseUrl+`/company`)
             .map((response: Response) =>
                 response.json());
+    }
+
+    saveCompany(company: Company): Observable<Company> {
+        return this.http.post(this.baseUrl + `/company`, company)
+            .map((response: Response) => response.json());
     }
 
     getAddressesByCompanyId(id: number): Observable<Address[]>{

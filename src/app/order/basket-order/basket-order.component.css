@@ -188,9 +188,25 @@ select.ng-dirty.ng-valid { border: 1px solid #6bc502 }
     z-index: 9;
 }
 
+.clean-company-icon2 {
+    position: absolute;
+    top: 5px;
+    right: 88px;
+    z-index: 9;
+}
+
+.add-company-icon{
+    position: absolute;
+    top: 5px;
+    right: 55px;
+    z-index: 9;
+}
+
 .edit-address-icon{
     position: absolute;
     top: 5px;
     right: 82px;
     z-index: 9;
 }
+
+

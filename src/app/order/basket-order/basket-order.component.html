@@ -125,7 +125,7 @@
                                             <input type="text" name="name" #name="ngModel" class="form-control" size="300" aria-describedby="nameDesc" [readonly]="clickSelectCustomerGuard" [(ngModel)]="customer.name" required >
                                             <span class="input-group-addon" id="nameDesc">Imię i Nazwisko </span>
                                         </div>
-                                       <ul class="text-danger list-unstyled" *ngIf="name.dirty && formSubmitted">
+                                       <ul class="text-danger list-unstyled" *ngIf="name.dirty || formSubmitted">
                                            <li  *ngIf="name.errors?.required">To pole nie może być puste</li>
                                        </ul>
                                    </div>
@@ -159,14 +159,15 @@
                                 <p-panel  class="customerpanels" header="Firma">
 
                                     <i  class="fa fa-address-card-o fa-2x pickfromdb " (click)="showCompanyList()" aria-hidden="true"></i>
-                                    <i  *ngIf="this.company.companyName && !this.customer.customerId"  class="fa fa-times fa-2x clean-company-icon" aria-hidden="true" (click)="cleanCompany()"></i>
-
+                                    <i  *ngIf="this.company.companyName && !this.customer.customerId"  class="fa fa-times fa-2x clean-company-icon2" aria-hidden="true" (click)="cleanCompany()"></i>
+                                    <i class="fa fa-plus fa-2x add-company-icon" (click)="addCompanyShowPanel()" aria-hidden="true"></i>
 
                                     <div  class="form-group">
                                         <div class="input-group">
-                                            <input type="text" name="organization" #organization="ngModel" class="form-control"  size="300" aria-describedby="organizationDesc"  [readonly]="this.clickSelectcomapnyGuard"  [(ngModel)]="company.companyName">
+                                            <input type="text" name="organization" #organization="ngModel" class="form-control"  size="300" aria-describedby="organizationDesc"  [readonly]="true"  [(ngModel)]="company.companyName" >
                                             <span class="input-group-addon" id="organizationDesc">Nazwa Firmy</span>
                                         </div>
+
                                     </div>
                                 </p-panel>
                             </div>
@@ -455,18 +456,18 @@
                 <span class="input-group-addon" id="basic-addon1">
                     <i class="fa fa-search" aria-hidden="true"></i>
                 </span>
-            <input #globalfilter type="text" class="form-control search_input" pInputText size="50" placeholder="Szukaj"aria-describedby="basic-addon1">
+            <input #globalfilter3 type="text" class="form-control search_input" pInputText size="50" placeholder="Szukaj"aria-describedby="basic-addon1">
 
         </div>
         <p-dataTable [value]="companyList" [rows]="10" [paginator]="true"  #dt (onRowDblclick)="pickCompany($event.data)"
-                     [loading]="loading" loadingIcon="fa-circle-o-notch" [globalFilter]="globalfilter">
+                     [loading]="loading" loadingIcon="fa-circle-o-notch" [globalFilter]="globalfilter3">
             <p-column field="companyName" header="Imię i Nazwisko" [sortable]="true" ></p-column>
         </p-dataTable>
     </div>
 </p-dialog>
 
 
-<p-dialog #choseAddressPanel header="Wybierz adres:" closeOnEscape="false" modal="true" width="900" [(visible)]="addressPickDialogShow"  (onHide)="onHideComapnyPanel()"    >
+<p-dialog #choseAddressPanel header="Wybierz adres:" closeOnEscape="false" modal="true" width="900" [(visible)]="addressPickDialogShow"     >
     <div >
 
         <div class="input-group search_bar">
@@ -487,6 +488,28 @@
         </p-dataTable>
     </div>
 </p-dialog>
+
+
+<p-dialog  header="Dodaj Firmę:" closeOnEscape="false" modal="true" width="900" [(visible)]="companyAddDialogShow"  (onHide)="onHideComapnyPanel()"    >
+    <div >
+        <form id="companyAddForm" novalidate #formCompanyAdd="ngForm" >
+
+            <div class="form-group">
+                <small id="nameDescript" class="text-muted">Nazwa Firmy</small>
+                <input type="text" name="nameCompany" class="form-control" [(ngModel)]="companyToPersist.companyName" #nameCompany="ngModel" aria-describedby="nameDescript" required >
+                <ul class="text-danger list-unstyled" *ngIf="nameCompany.dirty || formCompanyAddForm">
+                    <li  *ngIf="nameCompany.errors?.required">To pole nie może być puste</li>
+                </ul>
+            </div>
+            <button class="btn bg-primary " (click)="submitCompanyAddForm(formCompanyAdd)" > Zatwierdź</button>
+
+        </form>
+
+    </div>
+</p-dialog>
+
+
+
 
 
 

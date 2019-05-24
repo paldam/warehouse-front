@@ -41,6 +41,7 @@ export class OrderDetailsComponent implements OnInit {
       public baskets: Basket[]=[];
       public total: number = 0;
       public fileList: File[]=[];
+    public companyAddressList: Address[]=[];
       public auditList: any[]=[];
       public orderId :number;
       public items: MenuItem[];
@@ -52,6 +53,7 @@ export class OrderDetailsComponent implements OnInit {
       public checkedAdditionalSale: boolean = false;
       public isDeliveryDateValid: boolean = true;
       public isDeliveryWeekDateValid: boolean = true;
+    public addressPickDialogShow: boolean = false;
       @ViewChild('form') orderForm :NgForm;
       @ViewChild('formAdidtional') additionalForm :NgForm;
       @ViewChild(Checkbox) el:Checkbox;
@@ -98,7 +100,7 @@ export class OrderDetailsComponent implements OnInit {
       this.orderService.getDeliveryTypes().subscribe(data=> this.deliveryTypes = data);
 
       this.orderService.getOrderStatus().subscribe(data=>{
-          this.orderStatus=data
+          this.orderStatus=data;
 
           let tmp = this.orderStatus[1];
           this.orderStatus[1] = this.orderStatus[3]
@@ -223,6 +225,16 @@ export class OrderDetailsComponent implements OnInit {
             return false
         }
     }
+
+    pickAddress(event){
+        this.orderAddress = event;
+        this.addressPickDialogShow= false;
+
+        console.log(this.orderAddress);
+
+
+    }
+
     cancelEdit(){
         this.router.navigateByUrl('/orders');
     }
@@ -280,6 +292,17 @@ export class OrderDetailsComponent implements OnInit {
 
     }
 
+
+    showAddressesList(){
+        this.addressPickDialogShow= true;
+
+        this.orderService.getAddressesByCompanyId(this.company.companyId).subscribe(data => {
+            this.companyAddressList = data;
+        });
+
+
+
+    }
 
     onBeforeUpload(event){
         let token = localStorage.getItem(TOKEN);

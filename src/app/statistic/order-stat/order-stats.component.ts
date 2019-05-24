@@ -450,7 +450,7 @@ export class OrderStatsComponent implements OnInit {
             }
 
 
-            dataToGenerateFile[i] = {"Data Zamówienia":orderDateTmp.toLocaleDateString(), "Numer FV":filt[i].orderId,"Klient":filt[i].customer.organizationName,"Data dostawy":filt[i].deliveryDate,"Typ Dostawy":filt[i].deliveryType.deliveryTypeName,"Wartość zamówienia":filt[i].orderTotalAmount/100,"Wybrane zestawy":zestawy}
+            dataToGenerateFile[i] = {"Data Zamówienia":orderDateTmp.toLocaleDateString(), "Numer FV":filt[i].orderId,"Klient":filt[i].customer.company.companyName,"Data dostawy":filt[i].deliveryDate,"Typ Dostawy":filt[i].deliveryType.deliveryTypeName,"Wartość zamówienia":filt[i].orderTotalAmount/100,"Wybrane zestawy":zestawy}
         }
 
 
@@ -490,17 +490,15 @@ export class OrderStatsComponent implements OnInit {
                     zestawy += " szt. " + filt[i].orderItems[n].quantity + " | ";
                 }
 
-                for (let z = 0; z < filt[i].customer.addresses.length;z++){
 
-                    if(filt[i].customer.addresses[z].isPrimaryAddress == 1){
 
-                         address += filt[i].customer.addresses[z].address + " " + filt[i].customer.addresses[z].cityName + " " + filt[i].customer.addresses[z].zipCode;
-                    }
-                }
+
+                address += filt[i].address.address + " " + filt[i].address.cityName + " " + filt[i].address.zipCode;
+
 
 
             dataToGenerateFile[i] = {
-                "Firma":filt[i].customer.organizationName,
+                "Firma":filt[i].customer.company.companyName,
                 "Nazwa Klienta":filt[i].customer.name,
                 "Adres": address,
                 "Telefon":filt[i].customer.phoneNumber,

@@ -2,6 +2,10 @@
 <top-nav></top-nav>
 
 <div id="main">
-    <router-outlet></router-outlet>
+    <router-outlet ></router-outlet>
     <p-toast position="top-right"></p-toast>
+    <div *ngIf="spinerService.spinerOnCompanyAddPanelShow" class="spinner_overlay">
+        <p-progressSpinner strokeWidth="5"></p-progressSpinner>
+    </div>
 </div>
+

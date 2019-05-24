@@ -1,7 +1,7 @@
 
 <p-confirmDialog key="delete" header="Usuwanie produktu" icon="fa fa-question-circle" width="425"></p-confirmDialog>
 
-<div class=" col-md-8">
+<div class="col-md-8">
   <p-panel [header]="'Szczegóły klienta nr:'+ customer.customerId" >
 
 
@@ -19,7 +19,7 @@
         <tbody>
           <tr>
               <td scope="row">{{customer.name}}</td>
-              <td>{{customer.organizationName}}</td>
+              <td>{{customer.company.companyName}}</td>
               <td>{{customer.email}}</td>
               <td>{{customer.phoneNumber}}</td>
               <td>{{customer.additionalInformation}}</td>
@@ -30,29 +30,8 @@
 
     <hr />
 
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Adresy</th>
-                <th>Usuń</th>
-
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let addr of customer.addresses; let i=index">
-                <td scope="row">{{i+1}}.   {{addr.address}}  {{addr.zipCode}} {{addr.cityName}} <i *ngIf="addr.isPrimaryAddress==1">(Główny)</i></td>
-                <td>
-                    <i *ngIf="authenticationService.isAdmin()" class="fa fa fa-trash  fa-2x" aria-hidden="true"  (click)="showDeleteConfirmWindow(addr.addressId, customer.customerId)" title="Usuń adres"  ></i>
-                </td>
-
-            </tr>
-        </tbody>
-    </table>
 
 
-      <button class="btn bg-primary"  (click)="showAddAddressWindow()" > Dodaj adres </button>
-      <button class="btn bg-primary"  (click)="showChangeMainAddressWindow()" > Zmień główny adres </button>
-      <button class="btn bg-primary"  (click)="goBack()" > Cofnij /Anuluj </button>
   </p-panel>
 </div>
 
@@ -66,83 +45,8 @@
 
 
 
-<p-dialog modal="true" width="600" [(visible)]="addAddressDialogShow" >
 
 
-    <p-panel [header]="'Dodaj adres'"   >
-        <form id="CustomerAddAddrForm" novalidate #form="ngForm">
-
-
-                <div class="form-group">
-                    <div class="input-group">
-                        <input type="text" name="address" #address="ngModel" class="form-control"  size="300" aria-describedby="streetDesc"  [(ngModel)]="addressToAdd.address" required>
-                        <span class="input-group-addon" id="streetDesc">Ulica / nr. lokalu</span>
-                    </div>
-                    <ul class="text-danger list-unstyled" *ngIf="address.dirty|| formSubmitted">
-                        <li  *ngIf="address.errors?.required">To pole nie może być puste</li>
-                    </ul>
-                </div>
-
-                <div class="form-group">
-                    <div class="input-group">
-                        <input type="text" #someVar name="zip_code" #zip_code="ngModel" class="form-control"  size="300" aria-describedby="zip_codeDesc" (keyup)="ZipCodeUtil($event.target.value)"
-                               [(ngModel)]="addressToAdd.zipCode" required pattern="\d{2}-\d{3}">
-                        <span class="input-group-addon" id="zip_codeDesc">Kod pocztowy</span>
-                    </div>
-                    <ul class="text-danger list-unstyled" *ngIf="zip_code.dirty|| formSubmitted">
-                        <li  *ngIf="zip_code.errors?.pattern">Kod musi być w formacie xx-xxx </li>
-                        <li  *ngIf="zip_code.errors?.required">To pole nie może być puste</li>
-                    </ul>
-
-                </div>
-
-                <div class="form-group">
-                    <div class="input-group">
-                        <input type="text" name="city_name" #city_name="ngModel" class="form-control"  size="300" aria-describedby="city_nameDesc"  [(ngModel)]="addressToAdd.cityName" required >
-                        <span class="input-group-addon" id="city_nameDesc">Miejscowość</span>
-                    </div>
-                    <ul class="text-danger list-unstyled" *ngIf="city_name.dirty|| formSubmitted">
-                        <li  *ngIf="city_name.errors?.required">To pole nie może być puste</li>
-                    </ul>
-                </div>
-
-
-
-            <button class="btn bg-primary" type="submit" form="CustomerAddAddrForm" (click)="submitAddAddresForm(form)" > Dodaj</button>
-            <button class="btn bg-primary " (click)="cancelAddAddr()"  >Anuluj </button>
-        </form>
-    </p-panel>
-</p-dialog>
-
-
-<p-dialog header="Wybierz Miasto:" closeOnEscape="false" modal="true" width="400" [(visible)]="pickCityByZipCodeWindow"  (onHide)="clearOnCloseDialog()" >
-    <div >
-
-        <table class="city_tab2" >
-            <thead>
-
-            </thead>
-            <tbody>
-            <tr class="city_tab_row" *ngFor="let city of tmpCityList">
-                <td (click)="selectCity(city)" class="citySelect">{{city}}</td>
-
-            </tr>
-            </tbody>
-        </table>
-    </div>
-</p-dialog>
-
-<p-dialog header="Wybierz główny adres:" closeOnEscape="false" modal="true" width="400" [(visible)]="changeMainAddressDialogShow"  (onHide)="clearOnCloseChangeMainAddressDialog()" >
-    <div >
-
-        <small id="addr_Desc" class="text-muted">Adres</small>
-        <select class="form-control" [(ngModel)]="selectedAddr" name="addr_select" #addr="ngModel" required (change)="changePrimaryAddr(customer.customerId,selectedAddr.addressId)">
-            <option *ngFor="let item of customer.addresses"  [ngValue]="item">{{item.address}} {{item.zipCode}} {{item.cityName}}</option>
-        </select>
-
-
-    </div>
-</p-dialog>
 
 
 
@@ -167,7 +71,7 @@
 
                 <div class="form-group">
                     <div class="input-group">
-                        <input type="text" name="organization" #organization="ngModel" class="form-control"  size="300" aria-describedby="organizationDesc"   [(ngModel)]="customer.organizationName">
+                        <input type="text" name="organization" #organization="ngModel" class="form-control"  size="300" aria-describedby="organizationDesc" [readonly]="true"  [(ngModel)]="customer.company.companyName">
                         <span class="input-group-addon" id="organizationDesc">Nazwa Firmy</span>
                     </div>
                 </div>

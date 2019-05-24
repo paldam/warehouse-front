@@ -21,7 +21,7 @@ export class CustomerAddComponent implements OnInit {
   public tmpCityList: any[]=[];
 
   constructor(private customerService: CustomerService, private router: Router, private messageService: MessageService) {
-    this.customer.addresses = [];
+    // this.customer.addresses = [];
   }
 
   ngOnInit() {
@@ -34,7 +34,7 @@ export class CustomerAddComponent implements OnInit {
 
     if (form.valid) {
       this.customerAddress.isPrimaryAddress=1;
-      this.customer.addresses.push(this.customerAddress);
+      // this.customer.addresses.push(this.customerAddress);
       this.customerService.saveCustomers(this.customer).subscribe(data => {
 
         form.reset();
