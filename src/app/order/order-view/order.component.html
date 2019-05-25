@@ -31,7 +31,7 @@
                  [loading]="loading" loadingIcon="fa-circle-o-notch" expandableRows="true" [(first)]="lastPaginationPageNumberOnOrderViewPage"
                  (onRowExpand)="rowExpand($event)" selectionMode="multiple" [(selection)]="selectedOrdersMultiselction"  dataKey="orderId" [contextMenu]="cm" (onContextMenuSelect)="OnSelectRow($event)"
                  [paginator]="true" [pageLinks]="5" [rowsPerPageOptions]= paginatorValues
-                 (onRowDblclick)="goToEditPage(1,$event.data.orderId)"
+                 (onRowDblclick)="showOrderPreview($event)"
                  [lazy]="!isCurrentPageOrdersViewRedirectedFromBasketStatitis && !this.isCurrentPageCustomerEdit" (onLazyLoad)="loadOrdersLazy($event)" [totalRecords]="totalRecords">
         <p-header>Lista Zamówień</p-header>
         <p-column expander="true" header="" styleClass="col-icon " [style]="{'width':'40px'}"></p-column>
