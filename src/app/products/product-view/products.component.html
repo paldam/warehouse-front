@@ -25,7 +25,26 @@
         <p-column field="productName" styleClass="name_col" header="Nazwa" [sortable]="true"></p-column>
         <p-column field="capacity" styleClass="capacity_col" header="Pojemność" [sortable]="true"></p-column>
         <p-column field="supplier.supplierName" styleClass="deliver_col" header="Dostawca"  [sortable]="true" ></p-column>
-        <p-column field="productType.typeName" styleClass="type_col" header="Typ produktu"  [sortable]="true" ></p-column>
+
+
+        <p-column field="productType.typeName" styleClass="type_col" [filter]="true" header="Typ produktu" filterMatchMode="equals" [sortable]="true" >
+            <ng-template  let-col pTemplate="filter"  >
+                <p-multiSelect  [filter]="false" [showToggleAll]="false" [options]="productsType" defaultLabel="Wszystkie" (onChange)="dt.filter($event.value, col.field, 'in')"></p-multiSelect>
+            </ng-template>
+
+            <ng-template let-row="rowData" pTemplate="body"  >
+                <span> {{row.productType?.typeName}} </span>
+            </ng-template>
+        </p-column>
+
+
+
+
+
+
+
+
+
         <p-column field="price" styleClass="price_col" header="Cena"  [sortable]="true">
             <ng-template let-row="rowData" pTemplate="body"  >
                 {{row.price /100 |number: '1.2-2'}} zł

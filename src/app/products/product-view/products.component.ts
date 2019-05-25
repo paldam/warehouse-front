@@ -1,6 +1,6 @@
 import {AfterViewChecked, Component, OnInit, ViewChild, ViewEncapsulation} from '@angular/core';
 import {ActivatedRoute,  Router, RoutesRecognized} from '@angular/router';
-import {ConfirmationService, DataTable} from "primeng/primeng";
+import {ConfirmationService, DataTable, SelectItem} from "primeng/primeng";
 import {isUndefined} from "util";
 import { filter } from 'rxjs/operators';
 import {pairwise} from "rxjs/internal/operators";
@@ -9,6 +9,7 @@ import {Product} from "../../model/product.model";
 import {consoleTestResultsHandler} from "tslint/lib/test";
 import {AuthenticationService} from "../../authentication.service";
 import {AppConstans} from "../../constans";
+import {ProductType} from "../../model/product_type.model";
 
 
 @Component({
@@ -25,6 +26,8 @@ export class ProductsComponent implements OnInit {
   public showBasketsContainsSpecyficProductModal : boolean = false;
   public basketsListByProduct: any[];
   public dataFilterLoaded: Promise<boolean>;
+  public productsType: SelectItem[] = [];
+
   public paginatorValues = AppConstans.PAGINATOR_VALUES;
 
 
@@ -33,7 +36,13 @@ export class ProductsComponent implements OnInit {
   constructor(private productsService: ProductsService, activeRoute: ActivatedRoute,
               private router: Router, private confirmationService: ConfirmationService, private authenticationService: AuthenticationService) {
 
-    productsService.getProducts().subscribe(data => this.products = data);
+	  productsService.getProducts().subscribe(data => this.products = data);
+	  productsService.getProductsTypes().subscribe((data: ProductType[]) => {
+		  data.forEach(value => {
+			  this.productsType.push({label: '' + value.typeName, value: value.typeName});
+
+		  })
+	  });
 
 
     this.router.events

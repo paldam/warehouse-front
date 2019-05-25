@@ -105,6 +105,10 @@ p-fieldset{
 
 }
 
+.ui-multiselect{
+  width: 100%;
+}
+
 body .ui-toast .ui-toast-message {
   -webkit-box-shadow: 0 3px 6px 0 rgba(0, 0, 0, 0.16);
   -moz-box-shadow: 0 3px 6px 0 rgba(0, 0, 0, 0.16);
