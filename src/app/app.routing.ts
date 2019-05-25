@@ -17,7 +17,6 @@ import {MapsComponent} from "./maps/maps.component";
 import {StatisticComponent} from "./statistic/products-statistic/statistic.component";
 import {FileSendComponent} from "./file-send/file-send.component";
 import {CustomerComponent} from "./customer/customer-view/customer.component";
-import {CustomerAddComponent} from "./customer/customer-add/customer-add.component";
 import {CustomerEditComponent} from "./customer/customer-edit/customer-edit.component";
 import {ProductDeliveryComponent} from "./products/product-delivery/product-delivery.component";
 import {BasketStatisticComponent} from "./statistic/basket-statistic/basket-statistic.component";
@@ -28,6 +27,7 @@ import {OrderStatsComponent} from "./statistic/order-stat/order-stats.component"
 import {Statistic2Component} from "./statistic/products-statistic2/statistic2.component";
 import {SuppliersComponent} from "./suppliers/suppliers.component";
 import {OrderAuditComponent} from "./order-audit/order-audit.component";
+import {CustomerAddComponent} from "./customer/customer-add(dep)/customer-add.component";
 const routes: Routes = [
     {path: '', component: ProductsComponent, pathMatch: 'full', canActivate: [AuthGuard]},
     { path: 'product', component: ProductsComponent, canActivate: [AuthGuard] },
@@ -53,7 +53,7 @@ const routes: Routes = [
     {path:   'login', component: LoginComponent},
     {path:   'file', component: FileSendComponent},
     {path:   'customer', component: CustomerComponent},
-    {path:   'customer/add', component: CustomerAddComponent},
+    // {path:   'customer/add', component: CustomerAddComponent},
     {path:   'customer/:id', component: CustomerEditComponent},
     {path:   'products/delivery', component: ProductDeliveryComponent},
     {path:   'products/setdelivery', component: ProductDeliveryComponent},

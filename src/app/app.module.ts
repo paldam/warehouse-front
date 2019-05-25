@@ -63,7 +63,6 @@ import { FileSendComponent } from './file-send/file-send.component';
 import {FileUploadModule} from 'primeng/fileupload';
 import {FileSendService} from "./file-send/file-send.service";
 import { CustomerComponent } from './customer/customer-view/customer.component';
-import { CustomerAddComponent } from './customer/customer-add/customer-add.component';
 import { CustomerEditComponent } from './customer/customer-edit/customer-edit.component';
 import {ToastModule} from "primeng/toast";
 import {MenuItem, MessageService} from "primeng/api";
@@ -84,6 +83,7 @@ import {RoutingState} from "./routing-stage";
 import { OrderAuditComponent } from './order-audit/order-audit.component';
 import { OrderPreviewComponent } from './order/order-preview/order-preview.component';
 import {SpinerService} from "./spiner.service";
+import {CustomerAddComponent} from "./customer/customer-add(dep)/customer-add.component";
 
 
 

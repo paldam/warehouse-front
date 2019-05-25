@@ -35,8 +35,17 @@
 </div>
 
 
+<div  class="input-group search_bar" >
+            <span class="input-group-addon" id="basic-addon1">
+                 <i class="fa fa-search" aria-hidden="true"></i>
+            </span>
+  <input #globalfilter type="text"  class="form-control search_input" pInputText size="50" placeholder="Szukaj"aria-describedby="basic-addon1" >
+
+</div>
+
+
 <p-dataTable [value]="basketStatistic" [rows]="20" [paginator]="true"
-             [loading]="loading" loadingIcon="fa-circle-o-notch" #dt   [pageLinks]="5" [rowsPerPageOptions]= paginatorValues>
+             [loading]="loading" loadingIcon="fa-circle-o-notch" #dt  [globalFilter]="globalfilter" [pageLinks]="5" [rowsPerPageOptions]= paginatorValues>
   <p-header>Liczba sprzedanych koszy</p-header>
 
   <p-column  header="lp."   [style]="{'width':'70px'}">
@@ -44,7 +53,7 @@
       {{i+1}}
     </ng-template>
   </p-column>
-  <p-column field="basketName"  header="Nazwa"></p-column>
+  <p-column field="basketName"  header="Nazwa" [sortable]="true"></p-column>
   <p-column field="quantity" [sortable]="true" header="Ilość"></p-column>
   <p-column field="numberOfOrdersWhereBasketOccur" [sortable]="true" header="Ilość zamówień z tym koszem"></p-column>
 
