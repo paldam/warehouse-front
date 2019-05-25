@@ -368,8 +368,8 @@
 
 
                         </form>
-                        <button class="btn bg-primary " type="submit" form="OrderForm" >Zapisz Zamówienie</button>
-                        <button class="btn bg-primary " (click)="cancelCreateOrder()"  >Anuluj </button>
+                        <button class="btn bg-primary" type="submit" form="OrderForm" >Zapisz Zamówienie</button>
+                        <button class="btn bg-primary" (click)="cancelCreateOrder()"  >Anuluj </button>
                         <div *ngIf="orderItems.length<1 && formSubmitted" class="alert alert-danger" role="alert">
                             <strong>Błąd. Zamówienie nie może być puste</strong>
                         </div>
@@ -488,7 +488,7 @@
                     <li  *ngIf="nameCompany.errors?.required">To pole nie może być puste</li>
                 </ul>
             </div>
-            <button class="btn bg-primary " (click)="submitCompanyAddForm(formCompanyAdd)" > Zatwierdź</button>
+            <button class="btn bg-primary" (click)="submitCompanyAddForm(formCompanyAdd)" > Zatwierdź</button>
 
         </form>
 

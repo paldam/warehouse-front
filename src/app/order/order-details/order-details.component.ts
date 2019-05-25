@@ -19,6 +19,9 @@ import {Address} from "../../model/address.model";
 import {MessageServiceExt} from "../../messages/messageServiceExt";
 import {NgForm} from "@angular/forms";
 import {Company} from "../../model/company.model";
+import {CustomerService} from "../../customer/customer.service";
+import {StringUtils} from "../../string-utils";
+import {SpinerService} from "../../spiner.service";
 
 @Component({
   selector: 'order-details',
@@ -40,6 +43,18 @@ export class OrderDetailsComponent implements OnInit {
       public orderStatusId: number;
       public baskets: Basket[]=[];
       public total: number = 0;
+
+
+	public companyToPersist : Company = new Company();
+	public formCompanyAddForm= false;
+	public companyAddDialogShow : boolean = false;
+	public companyList: any[]=[];
+	public companyPickDialogShow: boolean = false;
+	public clickSelectcomapnyGuard: boolean = false;
+	public clickSelectCustomerGuard:boolean = true;
+	public customers: Customer[]=[];
+	 public customerPickDialogShow: boolean = false;
+
       public fileList: File[]=[];
     public companyAddressList: Address[]=[];
       public auditList: any[]=[];
@@ -60,6 +75,7 @@ export class OrderDetailsComponent implements OnInit {
       @ViewChild(FileUpload) fileUploadElement: FileUpload;
 
 
+
     public company: Company = new Company();
     public orderAddress: Address = new Address();
 
@@ -69,7 +85,7 @@ export class OrderDetailsComponent implements OnInit {
 
     constructor(private confirmationService: ConfirmationService,private fileSendService: FileSendService,
               private basketService : BasketService,private orderService : OrderService,activeRoute: ActivatedRoute,
-              private  router: Router,public authenticationService: AuthenticationService, private messageServiceExt : MessageServiceExt) {
+              private  router: Router,private spinerService: SpinerService,public authenticationService: AuthenticationService,private customerService :CustomerService, private messageServiceExt : MessageServiceExt) {
 
       this.orderId= activeRoute.snapshot.params["id"];
 
@@ -115,10 +131,124 @@ export class OrderDetailsComponent implements OnInit {
 
       this.orderService.getOrderAudit(this.orderId).subscribe(data=> this.auditList = data)
 
-
+		this.customerService.getCustomers().subscribe(data=> this.customers = data);
+		orderService.getCompany().subscribe(data => this.companyList = data );
 
 
   }
+
+	cleanCustomer() {
+		this.customer = new Customer();
+		this.clickSelectCustomerGuard = false;
+	}
+	cleanCompany(){
+		this.company = new Company();
+		this.clickSelectcomapnyGuard = false;
+	}
+
+	closeCustomerPicker() {
+
+		if (this.customer.name == null) {
+			//this.storedCustomerMode=false;
+		}
+	}
+
+	pickCompany(event){
+		this.companyPickDialogShow = false;
+		this.company = event;
+		this.clickSelectcomapnyGuard = true;
+
+	}
+
+	pickCustomer(customer: Customer) {
+		this.customer = customer;
+		if (customer.company == null) {
+			this.company = new Company();
+		} else {
+			this.company = customer.company;
+			this.clickSelectcomapnyGuard = true;
+			this.clickSelectCustomerGuard = true
+		}
+
+		this.customerPickDialogShow = false;
+
+	}
+	addCompanyShowPanel(){
+		this.companyAddDialogShow = true;
+	}
+
+
+	onHideComapnyPanel(){
+		if(this.company.companyId){
+			this.clickSelectcomapnyGuard = true;
+		}
+
+
+	}
+
+	showCustomerList() {
+		this.customerService.getCustomers().subscribe(data=> this.customers = data);
+		this.customerPickDialogShow = true;
+		//this.storedCustomerMode = true;
+
+		this.customers.forEach(data => {
+			console.log(data)
+		})
+	}
+
+	showCompanyList() {
+
+
+		this.orderService.getCompany().subscribe(data => this.companyList = data );
+
+		this.clickSelectcomapnyGuard = false;
+
+		this.companyPickDialogShow = true;
+
+	}
+
+	showAddressesList() {
+		this.addressPickDialogShow = true;
+
+		this.orderService.getAddressesByCompanyId(this.company.companyId).subscribe(data => {
+			this.companyAddressList = data;
+		});
+
+	}
+
+	submitCompanyAddForm(formCompanyAdd: NgForm){
+
+		this.formCompanyAddForm= true;
+
+		if (formCompanyAdd.valid) {
+			this.spinerService.spinerOnCompanyAddPanelShow = true;
+			this.orderService.saveCompany(this.companyToPersist).subscribe(data=>{
+
+				this.companyToPersist = new Company();
+				this.formCompanyAddForm= false;
+				this.messageServiceExt.addMessage('success', 'Status', 'Poprawnie dodano firmę');
+
+
+				this.company = data;
+
+			}, error => {
+
+				this.messageServiceExt.addMessage('error', 'Błąd', "Status: " + error.status + ' ' + error.statusText);
+				this.companyAddDialogShow = false;
+				this.spinerService.spinerOnCompanyAddPanelShow = false;
+
+			},() => {
+				this.companyAddDialogShow = false;
+				this.spinerService.spinerOnCompanyAddPanelShow = false;
+
+			});
+
+
+
+		}
+
+	}
+
 
 
   ngOnInit() {
@@ -170,14 +300,20 @@ export class OrderDetailsComponent implements OnInit {
               this.order.additionalSale = 0;
           }
 
-          console.log("W order" + this.order.additionalSale);
+		  this.order.customer = this.customer;
+
+		  if(StringUtils.isBlank(this.company.companyName)){
+			  this.order.customer.company = {companyId:0, companyName: "Klient indywidualny"}
+		  }else{
+			  this.order.customer.company = this.company;
+		  }
 
           this.order.customer = this.customer;
           this.order.orderTotalAmount = this.total;
           this.order.weekOfYear = this.weekOfYear;
           this.order.address = this.orderAddress;
 
-         console.log(this.order);
+
 
           this.orderService.saveOrder(this.order).subscribe(data => {
 
@@ -293,16 +429,7 @@ export class OrderDetailsComponent implements OnInit {
     }
 
 
-    showAddressesList(){
-        this.addressPickDialogShow= true;
 
-        this.orderService.getAddressesByCompanyId(this.company.companyId).subscribe(data => {
-            this.companyAddressList = data;
-        });
-
-
-
-    }
 
     onBeforeUpload(event){
         let token = localStorage.getItem(TOKEN);

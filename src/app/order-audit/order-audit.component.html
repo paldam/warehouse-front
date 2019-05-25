@@ -8,7 +8,7 @@
 
             <div class="form-group">
                 <div class="input-group">
-                    <input  [ngClass]=" (orderStateBeforeChange.customer.company.companyName === orderStateAfterChange.customer.company.companyName) ? 'redcolor3': 'redcolor' " type="text" name="organization"  #organization="ngModel" class="form-control"  size="300" aria-describedby="organizationDesc"  [readonly]="true" [(ngModel)]="customerDesc" disabled>
+                    <input  [ngClass]="getClassForCustomerDesc()" type="text" name="organization"  #organization="ngModel" class="form-control"  size="300" aria-describedby="organizationDesc"  [readonly]="true" [(ngModel)]="customerDesc" disabled>
                     <span class="input-group-addon" id="organizationDesc">Klient</span>
                 </div>
             </div>
@@ -174,7 +174,7 @@
 
             <div class="form-group">
                 <div class="input-group">
-                    <input  [ngClass]=" (orderStateBeforeChange.customer.company.companyName === orderStateAfterChange.customer.company.companyName) ? 'redcolor3': 'redcolor' " type="text" name="organization"  #organization="ngModel" class="form-control"  size="300" aria-describedby="organizationDesc"  [readonly]="true" [(ngModel)]="customerDesc" disabled>
+                    <input  [ngClass]="getClassForCustomerDesc()" type="text" name="organization"  #organization="ngModel" class="form-control"  size="300" aria-describedby="organizationDesc"  [readonly]="true" [(ngModel)]="customerAfterDesc" disabled>
                     <span class="input-group-addon" id="organizationDesc">Klient</span>
                 </div>
             </div>

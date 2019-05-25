@@ -16,12 +16,12 @@
               <div class="cont">
 
                 <p-panel  class="customerpanels2"  header="Klient">
-                  <!--<i class="fa fa-address-card-o fa-2x pickfromdb " (click)="showCustomerList()" aria-hidden="true"></i>-->
-                  <!--<i  *ngIf="this.customer.name"  class="fa fa-times fa-2x clean-company-icon" aria-hidden="true" (click)="cleanCustomer()"></i>-->
+                  <i class="fa fa-address-card-o fa-2x pickfromdb " (click)="showCustomerList()" aria-hidden="true"></i>
+                  <i  *ngIf="this.customer.name"  class="fa fa-times fa-2x clean-company-icon" aria-hidden="true" (click)="cleanCustomer()"></i>
 
                   <div class="form-group">
                     <div class="input-group">
-                      <input type="text" name="name" #name="ngModel" class="form-control" size="300" aria-describedby="nameDesc" [readonly]="true" [(ngModel)]="customer.name" required >
+                      <input type="text" name="name" #name="ngModel" class="form-control" size="300" aria-describedby="nameDesc" [readonly]="clickSelectCustomerGuard" [(ngModel)]="customer.name" required >
                       <span class="input-group-addon" id="nameDesc">Imię i Nazwisko </span>
                     </div>
                     <ul class="text-danger list-unstyled" *ngIf="name.dirty || formSubmitted">
@@ -33,14 +33,14 @@
 
                   <div class="form-group">
                     <div class="input-group">
-                      <input type="email" name="email" class="form-control"  size="300" aria-describedby="emailDesc" [readonly]="true" [(ngModel)]="customer.email">
+                      <input type="email" name="email" class="form-control"  size="300" aria-describedby="emailDesc" [readonly]="clickSelectCustomerGuard" [(ngModel)]="customer.email">
                       <span class="input-group-addon" id="emailDesc">Email</span>
                     </div>
                   </div>
 
                   <div class="form-group">
                     <div class="input-group">
-                      <input type="text" name="tel" class="form-control"  size="300" aria-describedby="telDesc" [readonly]="true" [(ngModel)]="customer.phoneNumber" >
+                      <input type="text" name="tel" class="form-control"  size="300" aria-describedby="telDesc" [readonly]="clickSelectCustomerGuard" [(ngModel)]="customer.phoneNumber" >
                       <span class="input-group-addon" id="telDesc">Telefon</span>
                     </div>
                   </div>
@@ -57,8 +57,11 @@
               <div class="cont">
                 <p-panel  class="customerpanels" header="Firma">
 
-                  <!--<i  class="fa fa-address-card-o fa-2x pickfromdb " (click)="showCompanyList()" aria-hidden="true"></i>-->
-                  <!--<i  *ngIf="this.company.companyName && !this.customer.customerId"  class="fa fa-times fa-2x clean-company-icon" aria-hidden="true" (click)="cleanCompany()"></i>-->
+
+
+                  <i  class="fa fa-address-card-o fa-2x pickfromdb " (click)="showCompanyList()" aria-hidden="true"></i>
+                  <i  *ngIf="this.company.companyName && !this.customer.customerId"  class="fa fa-times fa-2x clean-company-icon2" aria-hidden="true" (click)="cleanCompany()"></i>
+                  <i class="fa fa-plus fa-2x add-company-icon" (click)="addCompanyShowPanel()" aria-hidden="true"></i>
 
 
                   <div  class="form-group">
@@ -465,5 +468,71 @@
       <p-column field="phoneNumber" header="Telefon" [sortable]="true" ></p-column>
       <p-column field="additionalInformation" header="dodatkowe informacje" [sortable]="true" ></p-column>
     </p-dataTable>
+  </div>
+</p-dialog>
+
+<p-dialog header="Wybierz klienta" modal="true" width="1300" [(visible)]="customerPickDialogShow" (onHide)="closeCustomerPicker()" >
+  <div >
+    <div class="input-group search_bar">
+                <span class="input-group-addon" id="basic-addon1">
+                    <i class="fa fa-search" aria-hidden="true"></i>
+                </span>
+      <input #globalfilter2 type="text" class="form-control search_input" pInputText size="50" placeholder="Szukaj"aria-describedby="basic-addon1">
+
+    </div>
+    <p-dataTable [value]="customers" [rows]="10" [paginator]="true"  #dt (onRowDblclick)="pickCustomer($event.data)"
+                 [loading]="loading" loadingIcon="fa-circle-o-notch" [globalFilter]="globalfilter2">
+      <p-column field="name" header="Imię i Nazwisko" [sortable]="true" ></p-column>
+      <p-column field="company.companyName" header="Firma" [sortable]="false"></p-column>
+      <p-column field="email" header="Email" [sortable]="false"></p-column>
+      <p-column field="phoneNumber" header="Telefon" [sortable]="false"></p-column>
+
+    </p-dataTable>
+  </div>
+</p-dialog>
+
+
+<p-dialog #choseCompanyPanel header="Wybierz Firmę:" closeOnEscape="false" modal="true" width="600" [(visible)]="companyPickDialogShow"  (onHide)="onHideComapnyPanel()"    >
+  <div >
+
+    <div class="input-group search_bar">
+                <span class="input-group-addon" id="basic-addon1">
+                    <i class="fa fa-search" aria-hidden="true"></i>
+                </span>
+      <input #globalfilter3 type="text" class="form-control search_input"   pInputText size="50" placeholder="Szukaj"aria-describedby="basic-addon1">
+
+
+    </div>
+    <p-dataTable [value]="companyList" [rows]="10" [paginator]="true"  #dt (onRowDblclick)="pickCompany($event.data)"
+                 [loading]="loading" loadingIcon="fa-circle-o-notch" [globalFilter]="globalfilter3">
+      <p-column field="companyName" header="Firma" [sortable]="true" ></p-column>
+      <!--<p-column  header="Scal"  [style]="{'width':'50px', 'text-align':'center'}">-->
+        <!--<ng-template let-row="rowData" pTemplate="rowexpansion">-->
+          <!--<p-checkbox name="group2" [value]="{'companyId':row.companyId,'companyName':row.companyName}"  [(ngModel)]="selectedCompanyToMarge"  (onChange)="test()"></p-checkbox>-->
+        <!--</ng-template>-->
+      <!--</p-column>-->
+    </p-dataTable>
+  </div>
+
+  <!--<button  [disabled]="selectedCompanyToMarge.length ==0" class="btn btn-success btn-lg  pull-right merge-button" (click)="mergeCompany()"> Scal zaznaczone</button>-->
+</p-dialog>
+
+
+
+<p-dialog  header="Dodaj Firmę:" closeOnEscape="false" modal="true" width="900" [(visible)]="companyAddDialogShow"  (onHide)="onHideComapnyPanel()"    >
+  <div >
+    <form id="companyAddForm" novalidate #formCompanyAdd="ngForm" >
+
+      <div class="form-group">
+        <small id="nameDescript" class="text-muted">Nazwa Firmy</small>
+        <input type="text" name="nameCompany" class="form-control" [(ngModel)]="companyToPersist.companyName" #nameCompany="ngModel" aria-describedby="nameDescript" required >
+        <ul class="text-danger list-unstyled" *ngIf="nameCompany.dirty || formCompanyAddForm">
+          <li  *ngIf="nameCompany.errors?.required">To pole nie może być puste</li>
+        </ul>
+      </div>
+      <button class="btn bg-primary " (click)="submitCompanyAddForm(formCompanyAdd)" > Zatwierdź</button>
+
+    </form>
+
   </div>
 </p-dialog>

@@ -86,3 +86,47 @@ button i {
     right: 6px;
     padding: 5px;
 }
+
+.clean-company-icon {
+    position: absolute;
+    top: 5px;
+    right: 55px;
+    z-index: 9;
+}
+
+.clean-company-icon2 {
+    position: absolute;
+    top: 5px;
+    right: 88px;
+    z-index: 9;
+}
+
+.add-company-icon{
+    position: absolute;
+    top: 5px;
+    right: 55px;
+    z-index: 9;
+}
+
+.edit-address-icon{
+    position: absolute;
+    top: 5px;
+    right: 82px;
+    z-index: 9;
+    text-align: center;
+}
+
+.merge-button{
+    margin-top: 20px;
+}
+
+.company_tab{
+    border: 1px solid black;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+.company_tab td{
+    padding: 7px;
+    border: 1px solid black;
+    cursor: pointer;
+}
