@@ -117,8 +117,8 @@
                             <div class="cont">
 
                                     <p-panel  class="customerpanels2"  header="Klient">
-                                        <i class="fa fa-address-card-o fa-2x pickfromdb " (click)="showCustomerList()" aria-hidden="true"></i>
-                                        <i  *ngIf="this.customer.name"  class="fa fa-times fa-2x clean-company-icon" aria-hidden="true" (click)="cleanCustomer()"></i>
+                                        <i class="fa fa-address-card-o fa-2x pickfromdb "title="Wybierz klienta z bazy" (click)="showCustomerList()" aria-hidden="true"></i>
+                                        <i  *ngIf="this.customer.name"  class="fa fa-times fa-2x clean-company-icon" title="Wyczyść" aria-hidden="true" (click)="cleanCustomer()"></i>
 
                                    <div class="form-group">
                                         <div class="input-group">
@@ -158,9 +158,9 @@
                             <div class="cont">
                                 <p-panel  class="customerpanels" header="Firma">
 
-                                    <i  class="fa fa-address-card-o fa-2x pickfromdb " (click)="showCompanyList()" aria-hidden="true"></i>
-                                    <i  *ngIf="this.company.companyName && !this.customer.customerId"  class="fa fa-times fa-2x clean-company-icon2" aria-hidden="true" (click)="cleanCompany()"></i>
-                                    <i class="fa fa-plus fa-2x add-company-icon" (click)="addCompanyShowPanel()" aria-hidden="true"></i>
+                                    <i  class="fa fa-address-card-o fa-2x pickfromdb " title="Wybierz firmę z bazy" (click)="showCompanyList()" aria-hidden="true"></i>
+                                    <i  *ngIf="this.company.companyName && !this.customer.customerId" title="Wyszczyć" class="fa fa-times fa-2x clean-company-icon2" aria-hidden="true" (click)="cleanCompany()"></i>
+                                    <i class="fa fa-plus fa-2x add-company-icon" title="Dodaj nową firmę" (click)="addCompanyShowPanel()" aria-hidden="true"></i>
 
                                     <div  class="form-group">
                                         <div class="input-group">
@@ -177,10 +177,10 @@
                             <div class="cont">
                     <p-panel class="customerpanels" header="Adres Dostawy">
 
-                        <i *ngIf="this.company.companyId != null" class="fa fa-address-card-o fa-2x pickfromdb " (click)="showAddressesList()" aria-hidden="true"></i>
+                        <i *ngIf="this.company.companyId != null" title="Wybierz adres z bazy" class="fa fa-address-card-o fa-2x pickfromdb " (click)="showAddressesList()" aria-hidden="true"></i>
                         <i  *ngIf="this.orderAddress.contactPerson || this.orderAddress.address || this.orderAddress.additionalInformation ||this.orderAddress.zipCode || this.orderAddress.cityName || this.orderAddress.phoneNumber "
-                            class="fa fa-times fa-2x clean-company-icon" aria-hidden="true" (click)="cleanAddress()"></i>
-                        <i *ngIf="orderAddress.addressId" class="fa fa-pencil fa-2x edit-address-icon " aria-hidden="true" (click)="editAddressMode()" ></i>
+                            class="fa fa-times fa-2x clean-company-icon" title="Wyczyść adres"  aria-hidden="true" (click)="cleanAddress()"></i>
+                        <i *ngIf="orderAddress.addressId" title="Odblokuj adres i utwórz nowy" class="fa fa-pencil fa-2x edit-address-icon " aria-hidden="true" (click)="editAddressMode()" ></i>
 
                         <div *ngIf="!storedCustomerMode" class="form-group">
                             <div class="input-group">
