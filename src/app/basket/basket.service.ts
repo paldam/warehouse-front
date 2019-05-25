@@ -16,12 +16,20 @@ export class BasketService {
         this.baseUrl = `${this.protocol}://${location.hostname}:${this.port}`;
     }
 
+    addBasket(basket: Basket): Observable<Response> {
+        return this.http.post(this.baseUrl+`/basket/add`, basket)
+            .map((response: Response) => response.json());
+
+    }
+
 
     saveBasketWithoutImg(basket: Basket): Observable<Response> {
         return this.http.post(this.baseUrl+`/basketswithoutimage/`, basket)
             .map((response: Response) => response.json());
 
     }
+
+
 
     saveBasketWithImg(basket: Basket,fileToUpload: File): Observable<Response> {
 

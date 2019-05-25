@@ -9,205 +9,240 @@ import {Product} from "../../model/product.model";
 import {BasketItems} from "../../model/basket_items.model";
 import {NgForm} from '@angular/forms';
 import {FileUpload} from "primeng/primeng";
+import {MessageServiceExt} from "../../messages/messageServiceExt";
 
 @Component({
-  selector: 'app-gift-basket-edit',
-  templateUrl: './gift-basket-edit.component.html',
-  styleUrls: ['./gift-basket-edit.component.css'],
-      encapsulation: ViewEncapsulation.None
+	selector: 'app-gift-basket-edit',
+	templateUrl: './gift-basket-edit.component.html',
+	styleUrls: ['./gift-basket-edit.component.css'],
+	encapsulation: ViewEncapsulation.None
 })
 export class GiftBasketEditComponent implements OnInit {
 
-  public basket: Basket = new Basket();
-  public basketTypes: BasketType[]=[];
-  public basketItems: BasketItems[]=[];
-  public products: Product[]=[];
-  public total: number=0;
-  public formSubmitted: boolean = false;
-  public loading: boolean;
-    public isAddNewImg: boolean;
-  public productTmp: Product[]=[];
-    public fileToUpload: File = null;
-    public basketImege: any = null;
-    @ViewChild(FileUpload) fileUploadElement: FileUpload;
+	public basket: Basket = new Basket();
+	public basketTypes: BasketType[] = [];
+	public basketItems: BasketItems[] = [];
+	public products: Product[] = [];
+	public total: number = 0;
+	public formSubmitted: boolean = false;
+	public loading: boolean;
+	public isAddNewImg: boolean;
+	public productTmp: Product[] = [];
+	public fileToUpload: File = null;
+	public basketImege: any = null;
+	@ViewChild(FileUpload) fileUploadElement: FileUpload;
 
+	constructor(private productsService: ProductsService, private basketService: BasketService, private router: Router, activeRoute: ActivatedRoute, private messageServiceExt: MessageServiceExt) {
 
-  constructor(private productsService: ProductsService,private basketService :BasketService, private router: Router, activeRoute: ActivatedRoute) {
+		basketService.getBasket(activeRoute.snapshot.params["basketId"]).subscribe(data => {
 
+			this.basket = data;
+			this.basketItems = data.basketItems;
+			this.basket.basketTotalPrice /= 100;
+		});
 
-      basketService.getBasket(activeRoute.snapshot.params["basketId"]).subscribe(data => {
+		basketService.getBasketsTypes().subscribe(data => {
+			this.basketTypes = data;
+			this.basketTypes = this.basketTypes
+				.filter(value => {
+					return value.basketTypeId != 999;
+				})
+				.filter(value => {
+					return value.basketTypeId != 99;
+				})
+				.filter(value => {
+					return value.basketTypeId != 100;
+				})
+		});
 
+		productsService.getProducts().subscribe(data => this.products = data);
 
-          this.basket = data;
-          this.basketItems = data.basketItems;
-          this.basket.basketTotalPrice /= 100;
-      });
-      basketService.getBasketsTypes().subscribe(data => {
-          this.basketTypes = data;
-          this.basketTypes = this.basketTypes
-              .filter(value => {return value.basketTypeId != 999 ;})
-              .filter(value => {return value.basketTypeId != 99 ;})
-              .filter(value => {return value.basketTypeId != 100 ;})
-      });
-      productsService.getProducts().subscribe(data => this.products = data);
+		this.getBasketImage(activeRoute.snapshot.params["basketId"]);
 
-      this.getBasketImage(activeRoute.snapshot.params["basketId"]);
+	}
 
-  }
+	ngOnInit() {
 
-  ngOnInit() {
+		setTimeout(() => {
+			this.recalculate();
+		}, 700);
 
-     setTimeout(() => {
-      this.recalculate() ;
-     }, 700);
+	}
 
-}
+	compareBasketType(optionOne: BasketType, optionTwo: BasketType): boolean {
+		return optionTwo && optionTwo ? optionOne.basketTypeId === optionTwo.basketTypeId : optionOne === optionTwo;
 
-  compareBasketType( optionOne : BasketType, optionTwo : BasketType) : boolean {
-    return optionTwo && optionTwo ? optionOne.basketTypeId === optionTwo.basketTypeId :optionOne === optionTwo;
+	}
 
-  }
-  addProductToGiftBasket(product: Product){
-    let line = this.basketItems.find(data => data.product.id == product.id );
+	addProductToGiftBasket(product: Product) {
 
-    if (line == undefined) {
-      this.basketItems.push(new BasketItems(product,1))
-    }else{
-      line.quantity= line.quantity + 1;
-    }
-    this.recalculate();
-  }
+		let line = this.basketItems.find(data => data.product.id == product.id);
 
-  filtrOnlyAvaileble(event) {
-    var isChecked = event.target.checked;
+		if (line == undefined) {
+			this.basketItems.push(new BasketItems(product, 1))
+		} else {
+			line.quantity = line.quantity + 1;
+		}
+		this.recalculate();
+	}
 
-    if (isChecked) {
-      if(this.productTmp.length == 0 ){
-        this.productTmp = this.products;
-      }
-      this.products = this.products.filter(data => data.stock > 0);
-    }else{
-      this.products = this.productTmp;
-    }
-  }
+	filtrOnlyAvaileble(event) {
+		var isChecked = event.target.checked;
 
-  isProductLinesEmpty() : boolean{
-    if (this.basketItems.length == 0) {
-      return true
-    } else {
-      return false
-    }
-  }
-  updateQuantity(productLine: BasketItems, quantity: number) {
-    let line = this.basketItems.find(line => line.product.id == productLine.product.id);
-    if (line != undefined) {
-      line.quantity = Number(quantity);
-    }
-    this.recalculate();
-  }
+		if (isChecked) {
+			if (this.productTmp.length == 0) {
+				this.productTmp = this.products;
+			}
+			this.products = this.products.filter(data => data.stock > 0);
+		} else {
+			this.products = this.productTmp;
+		}
+	}
 
-  deleteProductLine(id : number){
+	isProductLinesEmpty(): boolean {
+		if (this.basketItems.length == 0) {
+			return true
+		} else {
+			return false
+		}
+	}
 
-    let index = this.basketItems.findIndex(data=> data.product.id == id);
-    if (index > -1){
-      this.basketItems.splice(index,1);
-    }
-    this.recalculate();
-  }
+	updateQuantity(productLine: BasketItems, quantity: number) {
+		let line = this.basketItems.find(line => line.product.id == productLine.product.id);
+		if (line != undefined) {
+			line.quantity = Number(quantity);
+		}
+		this.recalculate();
+	}
 
-  recalculate(){
-    this.total = 0;
-    this.basketItems.forEach(data=> {
-      this.total += data.product.price * data.quantity;
-    })
-  }
+	deleteProductLine(id: number) {
 
-  handleFileInput(event){
-        this.fileToUpload = this.fileUploadElement.files[0];
+		let index = this.basketItems.findIndex(data => data.product.id == id);
+		if (index > -1) {
+			this.basketItems.splice(index, 1);
+		}
+		this.recalculate();
+	}
 
+	recalculate() {
+		this.total = 0;
+		this.basketItems.forEach(data => {
+			this.total += data.product.price * data.quantity;
+		})
+	}
 
-        if(this.fileUploadElement.files.length ==1){
-            this.fileUploadElement.disabled = true;
-            this.isAddNewImg = true;
-        }else{
-            this.isAddNewImg = false;
-        }
+	handleFileInput(event) {
+		this.fileToUpload = this.fileUploadElement.files[0];
 
-        
-        console.log("OO" + this.isAddNewImg);
-    }
+		if (this.fileUploadElement.files.length == 1) {
+			this.fileUploadElement.disabled = true;
+			this.isAddNewImg = true;
+		} else {
+			this.isAddNewImg = false;
+		}
 
-    enableUploadButton(){
-        this.fileUploadElement.disabled = false;
-    }
+	}
 
-    setWheterImgIsSet(){
-        this.isAddNewImg = false;
-        console.log("OO" + this.isAddNewImg);
-    }
+	enableUploadButton() {
+		this.fileUploadElement.disabled = false;
+	}
 
-  submitForm(form: NgForm) {
-    this.formSubmitted = true;
+	setWheterImgIsSet() {
+		this.isAddNewImg = false;
+	}
 
-    if (form.valid && this.basketItems.length>0 && (this.fileUploadElement.files.length ==1 || this.basket.isBasketImg == 1)) {
-      this.basket.basketItems= this.basketItems;
-      this.basket.basketTotalPrice*=100;
-      
+	submitForm(form: NgForm) {
+		this.formSubmitted = true;
 
+		if (this.isFormValid(form)) {
+			this.basket.basketItems = this.basketItems;
+			this.basket.basketTotalPrice *= 100;
 
+			if (this.basket.basketType.basketTypeId == 1) {
+				this.isAddNewImg ? this.performActionForBasketWithNewImg(form) : this.performActionForBasketWhichHasImgInDb(form);
+			} else {
+				if (this.isAddNewImg) {
+					this.performActionForBasketWithNewImg(form)
+				} else {
+					this.basket.isBasketImg ? this.performActionForBasketWhichHasImgInDb(form) : this.performActionForBasketWhitoutNewImgAndImgInDb(form);
+				}
+			}
+		}
 
-      if(this.isAddNewImg ){
+	}
 
-          this.basketService.saveBasketWithImg(this.basket,this.fileToUpload).subscribe(data=>{
-              this.basket=new Basket();
-              this.basketItems=[];
-              form.resetForm();
-              this.formSubmitted = false;
-              this.recalculate();
-              this.router.navigateByUrl('/baskets');
-          })
-      }else{
+	private performActionForBasketWithNewImg(form: NgForm) {
 
-          this.basketService.saveBasketWithoutImg(this.basket).subscribe(data=>{
-              this.basket=new Basket();
-              this.basketItems=[];
-              form.resetForm();
-              this.formSubmitted = false;
-              this.recalculate();
-              this.router.navigateByUrl('/baskets');
-          })
+		this.basketService.saveBasketWithImg(this.basket, this.fileToUpload).subscribe(data => {
+			this.basket = new Basket();
+			this.basketItems = [];
+			form.resetForm();
+			this.formSubmitted = false;
+			this.recalculate();
+			this.router.navigateByUrl('/baskets');
+		})
+	}
 
-      }
+	private performActionForBasketWhichHasImgInDb(form) {
+		this.basketService.saveBasketWithoutImg(this.basket).subscribe(data => {
+			this.basket = new Basket();
+			this.basketItems = [];
+			form.resetForm();
+			this.formSubmitted = false;
+			this.recalculate();
+			this.router.navigateByUrl('/baskets');
+		})
+	}
 
+	private performActionForBasketWhitoutNewImgAndImgInDb(form: NgForm) {
+		this.basketService.addBasket(this.basket).subscribe(data => {
+			},
+			error => {
+				this.messageServiceExt.addMessage('error', 'Błąd', "Status: " + error.status + ' ' + error.statusText)
+			},
+			() => {
+				this.messageServiceExt.addMessage('success', 'Status', 'Poprawnie edytowano kosz');
+				this.basket = new Basket();
+				this.basketItems = [];
+				form.resetForm();
+				this.formSubmitted = false;
+				this.recalculate();
+				this.fileUploadElement.clear();
+				this.router.navigateByUrl('/baskets');
 
+			});
+	}
 
+	private isFormValid(form: NgForm) {
 
-    }
+		if (this.basket.basketType) {
+			if (this.basket.basketType.basketTypeId == 1) {
+				return form.valid && this.basketItems.length > 0 && (this.fileUploadElement.files.length == 1 || this.basket.isBasketImg == 1)
+			} else {
+				return form.valid && this.basketItems.length > 0;
+			}
+		} else {
+			return false;
+		}
 
-  }
+	}
 
+	getBasketImage(basketId: number) {
 
+		this.basketService.getBasketImg(basketId).subscribe(res => {
 
+			let reader = new FileReader();
+			reader.addEventListener("load", () => {
+				this.basketImege = reader.result;
 
-     getBasketImage(basketId : number){
+			}, false);
 
-         this.basketService.getBasketImg(basketId).subscribe(res =>{
+			if (res) {
+				reader.readAsDataURL(res);
+			}
 
+		});
 
-             let reader = new FileReader();
-             reader.addEventListener("load", () => {
-                 this.basketImege = reader.result;
-
-             }, false);
-
-             if (res) {
-                 reader.readAsDataURL(res);
-             }
-
-         });
-
-
-    }
-
+	}
 
 }

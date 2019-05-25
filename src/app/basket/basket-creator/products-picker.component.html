@@ -114,8 +114,8 @@
                                     <select  class="form-control" #basket_type="ngModel" name="basket_type" [(ngModel)]="basket.basketType" required="">
                                         <option  *ngFor="let item of basketTypes" [ngValue]="item" aria-describedby="basketTypeDesc">{{item.basketTypeName}}</option>
                                     </select>
-                                    <ul class="text-danger list-unstyled" *ngIf="basket_type.dirty|| formSubmitted">
-                                        <li  *ngIf="basket_type.errors?.required">Wybierz typ koszyka</li>
+                                    <ul class="text-danger list-unstyled" *ngIf="basket_type.dirty || formSubmitted">
+                                        <li  *ngIf="basket_type.errors?.required">Wybierz typ kosza</li>
                                     </ul>
                                 </div>
 
@@ -133,7 +133,7 @@
                             </div>
 
 
-                            <div *ngIf="this.fileUploadElement.files.length !=1 && formSubmitted" class="alert alert-danger" role="alert">
+                            <div *ngIf="this.fileUploadElement.files.length !=1 && formSubmitted && this.basket.basketType?.basketTypeId == 1" class="alert alert-danger" role="alert">
                                 <strong>Wgraj plik </strong>
                             </div>
 

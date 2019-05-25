@@ -99,7 +99,7 @@
 
 
 
-            <div *ngIf="this.fileUploadElement.files.length !=1 && formSubmitted" class="alert alert-danger" role="alert">
+            <div *ngIf="this.fileUploadElement.files.length !=1 && formSubmitted && this.basket.basketType?.basketTypeId == 1" class="alert alert-danger" role="alert">
               <strong>Wgraj plik </strong>
             </div>
 

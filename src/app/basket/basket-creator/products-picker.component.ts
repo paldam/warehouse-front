@@ -52,6 +52,7 @@ export class ProductPickerComponent implements OnInit{
 
     ngOnInit(){
 
+
     }
 
 
@@ -117,33 +118,79 @@ export class ProductPickerComponent implements OnInit{
 
     submitForm(form: NgForm) {
         this.formSubmitted = true;
-        if (form.valid && this.basketItems.length>0 && this.fileUploadElement.files.length ==1) {
-            this.basket.basketItems= this.basketItems;
-            this.basket.basketTotalPrice*=100;
+
+
+        if (this.isFormValid(form)) {
+            this.basket.basketItems = this.basketItems;
+            this.basket.basketTotalPrice *= 100;
             this.basket.isAlcoholic = 0;
             this.basket.isAvailable = 0;
-            this.basketService.saveBasketWithImg(this.basket,this.fileToUpload).subscribe(data=>{
 
-            },
-                error =>    {
-                    this.messageServiceExt.addMessage('error','Błąd',"Status: " + error.status + ' ' + error.statusText)
-                } ,
-                () => {
-                    this.messageServiceExt.addMessage('success','Status','Poprawnie dodano kosz');
-                    this.basket=new Basket();
-                    this.basketItems=[];
-                    form.resetForm();
-                    this.formSubmitted = false;
-                    this.recalculate();
-                    this.fileUploadElement.clear();
-                    this.giftBasketComponent.refreshData();
 
-                });
+
+
+            if (this.fileUploadElement.files.length == 1) {
+
+                this.basketService.saveBasketWithImg(this.basket, this.fileToUpload).subscribe(data => {
+
+                    },
+                    error => {
+                        this.messageServiceExt.addMessage('error', 'Błąd', "Status: " + error.status + ' ' + error.statusText)
+                    },
+                    () => {
+                        this.messageServiceExt.addMessage('success', 'Status', 'Poprawnie dodano kosz');
+                        this.basket = new Basket();
+                        this.basketItems = [];
+                        form.resetForm();
+                        this.formSubmitted = false;
+                        this.recalculate();
+                        this.fileUploadElement.clear();
+                        this.giftBasketComponent.refreshData();
+
+                    });
+            }
+
+            else {
+
+                this.basketService.addBasket(this.basket).subscribe(data => {
+
+                    },
+                    error => {
+                        this.messageServiceExt.addMessage('error', 'Błąd', "Status: " + error.status + ' ' + error.statusText)
+                    },
+                    () => {
+                        this.messageServiceExt.addMessage('success', 'Status', 'Poprawnie dodano kosz');
+                        this.basket = new Basket();
+                        this.basketItems = [];
+                        form.resetForm();
+                        this.formSubmitted = false;
+                        this.recalculate();
+                        this.fileUploadElement.clear();
+                        this.giftBasketComponent.refreshData();
+
+                    });
+            }
+
+        }
+    }
+
+    private isFormValid(form : NgForm) {
+
+        if(this.basket.basketType){
+            if(this.basket.basketType.basketTypeId == 1){
+                return form.valid && this.basketItems.length > 0 && this.fileUploadElement.files.length == 1;
+            }else{
+                return form.valid && this.basketItems.length > 0;
+            }
+        }else{
+            return false;
         }
 
 
 
+
     }
+
     pickBasket(basket : Basket) {
         basket.basketItems.map(data=> data.basketItemsId = null)
         this.basketItems = basket.basketItems;
