@@ -182,7 +182,7 @@
                             class="fa fa-times fa-2x clean-company-icon" title="Wyczyść adres"  aria-hidden="true" (click)="cleanAddress()"></i>
                         <i *ngIf="orderAddress.addressId" title="Odblokuj adres i utwórz nowy" class="fa fa-pencil fa-2x edit-address-icon " aria-hidden="true" (click)="editAddressMode()" ></i>
 
-                        <div *ngIf="!storedCustomerMode" class="form-group">
+                        <div  class="form-group">
                             <div class="input-group">
                                 <input type="text" name="contactPerson" #contactPerson="ngModel" class="form-control"  size="300" aria-describedby="streetDesc" [readonly]="orderAddress.addressId" [(ngModel)]="orderAddress.contactPerson" required >
                                 <span class="input-group-addon" id="streetDesc">Osoba kontaktowa</span>
@@ -193,7 +193,7 @@
                         </div>
 
 
-                        <div *ngIf="!storedCustomerMode" class="form-group">
+                        <div  class="form-group">
                             <div class="input-group">
                                 <input type="text" name="address" #address="ngModel" class="form-control"  size="300" aria-describedby="streetDesc" [readonly]="orderAddress.addressId" [(ngModel)]="orderAddress.address" required>
                                 <span class="input-group-addon" id="streetDesc">Ulica / nr. lokalu</span>
@@ -203,7 +203,7 @@
                             </ul>
                         </div>
 
-                        <div *ngIf="!storedCustomerMode" class="form-group">
+                        <div  class="form-group">
                             <div class="input-group">
                                 <input type="text" name="zip_code" #zip_code="ngModel" class="form-control" size="300" aria-describedby="zip_codeDesc"
                                        [readonly]="orderAddress.addressId" [(ngModel)]="orderAddress.zipCode" required pattern="\d{2}-\d{3}" (keyup)="ZipCodeUtil($event.target.value)"  >
@@ -218,7 +218,7 @@
 
 
 
-                        <div *ngIf="!storedCustomerMode" class="form-group">
+                        <div  class="form-group">
                             <div class="input-group">
                                 <input type="text" name="city_name" #city_name="ngModel" class="form-control"  size="300" aria-describedby="city_nameDesc" [readonly]="orderAddress.addressId" [(ngModel)]="orderAddress.cityName" required>
                                 <span class="input-group-addon" id="city_nameDesc">Miejscowość</span>
@@ -228,7 +228,7 @@
                             </ul>
                         </div>
 
-                        <div *ngIf="!storedCustomerMode" class="form-group">
+                        <div  class="form-group">
                             <div class="input-group">
                                 <input type="text" name="phone_number_addr" #phone_number_addr="ngModel" class="form-control"  size="300" aria-describedby="phone_numberDesc" [readonly]="orderAddress.addressId"  [(ngModel)]="orderAddress.phoneNumber" required >
                                 <span class="input-group-addon" id="phone_numberDesc">Telefon kontaktowy</span>
@@ -238,7 +238,7 @@
                             </ul>
                         </div>
 
-                        <div *ngIf="!storedCustomerMode" class="form-group">
+                        <div  class="form-group">
                             <div class="input-group">
                                 <input type="text" name="additional_inf_add" #additional_inf_add="ngModel" class="form-control"  size="300" aria-describedby="additional_inf_addDesc"  [readonly]="orderAddress.addressId" [(ngModel)]="orderAddress.additionalInformation" >
                                 <span class="input-group-addon" id="additional_inf_addDesc">Dodatkowe informacje</span>
@@ -392,7 +392,7 @@
 
     <p-footer>
         <button class="btn btn-success btn-lg" (click)="hideAddOrderConfirmModal()"><i class="fa fa-reply fa-2x" aria-hidden="true"></i>Wyjdz</button>
-        <button class="btn btn-success btn-lg" [routerLink]="['/orders/']"><i class="fa fa-list-alt fa-2x" aria-hidden="true"></i>Lista zamówień</button>
+        <button class="btn btn-success btn-lg" [routerLink]="['/orders/all']"><i class="fa fa-list-alt fa-2x" aria-hidden="true"></i>Lista zamówień</button>
         <button class="btn btn-success btn-lg" (click)="printPdf()"><i class="fa fa-print fa-2x" aria-hidden="true"></i> Drukuj PDF</button>
 
     </p-footer>

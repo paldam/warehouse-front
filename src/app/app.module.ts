@@ -31,7 +31,7 @@ import {
 import {CalendarModule} from 'primeng/calendar';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {routing} from './app.routing';
-import {ProductFormComponent} from './products/products-add-form/product-form.component';
+//import {ProductFormComponent} from './products/products-add-form/product-form.component';
 import {FormsModule} from '@angular/forms'
 import {ProductEditFormComponent} from './products/products-edit-form/product-edit-form.component';
 import {ProductPickerComponent} from './basket/basket-creator/products-picker.component';
@@ -49,7 +49,6 @@ import { BasketComponent } from './basket/basket-view/basket-view.component';
 import {HttpService} from "./http-service";
 import {Router} from "@angular/router";
 import { GiftBasketEditComponent } from './basket/basket-edit/gift-basket-edit.component';
-import { AdminComponent } from './admin/admin.component';
 import {AdminGuard} from "./guard/admin.guard";
 import {UserService} from "./user.service";
 import {AdminOrSuperUserGuard} from "./guard/adminOrSuperUser.guard";
@@ -80,10 +79,13 @@ import {Statistic2Component} from "./statistic/products-statistic2/statistic2.co
 import {AdminService} from "./admin/admin.service";
 import {SuppliersComponent} from "./suppliers/suppliers.component";
 import {RoutingState} from "./routing-stage";
-import { OrderAuditComponent } from './order-audit/order-audit.component';
+import { OrderAuditComponent } from './order/order-audit/order-audit.component';
 import { OrderPreviewComponent } from './order/order-preview/order-preview.component';
 import {SpinerService} from "./spiner.service";
-import {CustomerAddComponent} from "./customer/customer-add(dep)/customer-add.component";
+import {AdminModule} from "./admin/admin.module";
+import {PrimeNgModule} from "./prime-ng.module";
+import {OrderModule} from "./order/order.module";
+import {ProductFormComponent} from "./products/products-add-form/product-form.component";
 
 
 
@@ -92,49 +94,42 @@ export function httpExt(backend: XHRBackend, options: RequestOptions, router: Ro
 }
 
 @NgModule({
-  declarations: [
+  declarations: [ //all loaded on start apps
     AppComponent,
-    ProductsComponent,
     NavComponent,
     LeftNavComponent,
-    ProductFormComponent,
-    ProductEditFormComponent,
-      ProductPickerComponent,
-      OrderStatsComponent,
-      GiftBasketComponent,
-      BasketOrderComponent,
-      OrderComponent,
-      OrderDetailsComponent,
-      LoginComponent,
-      BasketComponent,
-      GiftBasketEditComponent,
-      AdminComponent,
-    PageNotFoundComponent,
-    MapsComponent,
-    StatisticComponent,
-      Statistic2Component,
-    FileSendComponent,
-    CustomerComponent,
-    CustomerAddComponent,
-    CustomerEditComponent,
-    ProductDeliveryComponent,
-    BasketStatisticComponent,
-    BasketExtComponentComponent,
-    BasketExtAddComponentComponent,
-    NotesComponent,
-    SuppliersComponent,
-    OrderAuditComponent,
-    OrderPreviewComponent,
+    ProductsComponent,
+    // ProductFormComponent,
+    // ProductEditFormComponent,
+    //   ProductPickerComponent,
+    //   OrderStatsComponent,
+    //   GiftBasketComponent,
+    //
+    //   LoginComponent,
+    //   BasketComponent,
+    //   GiftBasketEditComponent,
+    // PageNotFoundComponent,
+    // MapsComponent,
+    // StatisticComponent,
+    //   Statistic2Component,
+    // FileSendComponent,
+    // CustomerComponent,
+    // //CustomerEditComponent,
+    // ProductDeliveryComponent,
+    // BasketStatisticComponent,
+    // BasketExtComponentComponent,
+    // BasketExtAddComponentComponent,
+    // NotesComponent,
+    // SuppliersComponent,
+
 
   ],
   imports: [
-    BrowserModule,HttpModule,BrowserAnimationsModule,FormsModule,DialogModule,CheckboxModule,ConfirmDialogModule,PanelMenuModule,
-    PanelModule,DropdownModule,ListboxModule,RadioButtonModule,ToastModule,TableModule,FileUploadModule,DataTableModule,
-    SharedModule,MultiSelectModule,SpinnerModule,CardModule,ProgressSpinnerModule,FieldsetModule,LightboxModule,OverlayPanelModule,ContextMenuModule, MenuModule,CalendarModule, routing
+	  routing,BrowserModule,HttpModule,BrowserAnimationsModule,PrimeNgModule
   ],
   providers: [ {
     provide: HttpService, useFactory: (httpExt) , deps: [XHRBackend, RequestOptions,Router,MessageService]},
-    CalendarSetingsComponent,MessageServiceExt,AdminService,RoutingState, NotesService,SpinerService,MessageService,ProductsService,BasketService,BasketExtService,CustomerService,FileSendService,CustomerService,OrderService,MapService,ConfirmationService,AuthGuard,AdminGuard,AdminOrSuperUserGuard,AuthenticationService,UserService],
+    CalendarSetingsComponent,MessageServiceExt,AdminService,RoutingState, NotesService,SpinerService,MessageService,ProductsService,BasketService,BasketExtService,CustomerService,FileSendService,CustomerService,MapService,ConfirmationService,AuthGuard,AdminGuard,AdminOrSuperUserGuard,AuthenticationService,UserService],
 
   bootstrap: [AppComponent]
 })

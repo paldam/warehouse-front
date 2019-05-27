@@ -322,7 +322,7 @@ export class OrderDetailsComponent implements OnInit {
 
 
               setTimeout(() => {
-                  this.router.navigateByUrl('/orders');
+                  this.router.navigateByUrl('/orders/all');
                   this.messageServiceExt.addMessageWithTime('success', 'Status', 'Dokonano edycji zamówienia', 5000);
               }, 400);
 
@@ -372,7 +372,7 @@ export class OrderDetailsComponent implements OnInit {
     }
 
     cancelEdit(){
-        this.router.navigateByUrl('/orders');
+        this.router.navigateByUrl('/orders/all');
     }
 
     deleteProductLine(id : number){
@@ -504,7 +504,7 @@ export class OrderDetailsComponent implements OnInit {
         let revId = event.data.revId;
 
 
-        this.router.navigate(['/order_audit',{revId:revId,orderId:orderId}]);
+        this.router.navigate(['orders/audit',{revId:revId,orderId:orderId}]);
 
     }
 }

@@ -59,8 +59,8 @@ export class OrderComponent implements OnInit {
 
 		this.setSearchOptions();
 		this.isCurrentPageCustomerEdit = this.routingState.getCurrentPage().substring(0, 9) == "/customer";
-		this.isCurrentPageOrdersView = this.routingState.getCurrentPage().substring(0, 7) == "/orders";
-		this.isCurrentPageOrdersViewRedirectedFromBasketStatitis = this.routingState.getCurrentPage().substring(0, 10) == "/orders;id";
+		this.isCurrentPageOrdersView = this.routingState.getCurrentPage().substring(0, 11) == "/orders/all";
+		this.isCurrentPageOrdersViewRedirectedFromBasketStatitis = this.routingState.getCurrentPage().substring(0, 10) == "/orders:id";
 
 		if (this.isCurrentPageCustomerEdit) {
 			orderService.getOrderByCustomer(activedRoute.snapshot.params["id"]).subscribe(data => {
@@ -280,7 +280,7 @@ export class OrderComponent implements OnInit {
 		localStorage.setItem('lastPaginationPageNumberOnOrderViewPage', pageTmp.toString());
 		let textTmp = this.findInputTextOnOrderViewPage;
 		localStorage.setItem('findInputTextOnOrderViewPage', textTmp);
-		this.router.navigate(["/order/", id]);
+		this.router.navigate(["/orders/", id]);
 	}
 
 	OnSelectRow(event) {

@@ -1,8 +1,8 @@
 import {Component, OnInit, ViewChild, ViewEncapsulation} from '@angular/core';
-import {Order} from "../model/order.model";
+import {Order} from "../../model/order.model";
 import {Checkbox} from "primeng/primeng";
-import {OrderService} from "../order/order.service";
-import {File} from "../model/file";
+import {OrderService} from "../order.service";
+import {File} from "../../model/file";
 import {ActivatedRoute} from "@angular/router";
 
 @Component({

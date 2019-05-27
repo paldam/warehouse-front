@@ -68,8 +68,8 @@
             <li routerLinkActive="active_main">
                 <h3 [class.cursor_dis]="isMagazynUser()" ><span class="fa fa-pencil"></span>Zamówienia</h3>
                 <ul>
-                    <li *ngIf="isAdmin() || isBiuroUser()" ><a [routerLink]="['/baskets/order']" routerLinkActive="active"[routerLinkActiveOptions]="{ exact: true }" >Stwórz zamówienie</a></li>
-                    <li *ngIf="isAdmin() || isBiuroUser() || isWysylkaUser() || isProdukcjaUser()"><a [routerLink]="['/orders']" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" >Lista zamówień</a></li>
+                    <li *ngIf="isAdmin() || isBiuroUser()" ><a [routerLink]="['/orders/baskets']" routerLinkActive="active"[routerLinkActiveOptions]="{ exact: true }" >Stwórz zamówienie</a></li>
+                    <li *ngIf="isAdmin() || isBiuroUser() || isWysylkaUser() || isProdukcjaUser()"><a [routerLink]="['/orders/all']" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" >Lista zamówień</a></li>
                 </ul>
             </li>
 

@@ -19,7 +19,7 @@ export class BasketComponent implements OnInit {
   public loading: boolean;
   public gb: any;
   public url: string ='';
-  public imageToShow: any[];
+  public imageToShow: any;
   public showImageFrame: boolean =false;
   @ViewChild('onlyDeleted') el:ElementRef;
     @ViewChild('op') overlayPanel:OverlayPanel;

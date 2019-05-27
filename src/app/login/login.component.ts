@@ -29,7 +29,7 @@ export class LoginComponent implements OnInit {
         .subscribe(result => {
           if (result === true) {
               if(this.authenticationService.isAdmin()){
-                  this.router.navigate(['/baskets/order']);
+                  this.router.navigate(['/orders/baskets']);
               }else{
                   this.router.navigate(['/']);
               }
