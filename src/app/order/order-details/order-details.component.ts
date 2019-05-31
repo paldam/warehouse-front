@@ -221,7 +221,7 @@ export class OrderDetailsComponent implements OnInit {
 		this.formCompanyAddForm= true;
 
 		if (formCompanyAdd.valid) {
-			this.spinerService.spinerOnCompanyAddPanelShow = true;
+			this.spinerService.showSpinner = true;
 			this.orderService.saveCompany(this.companyToPersist).subscribe(data=>{
 
 				this.companyToPersist = new Company();
@@ -235,11 +235,11 @@ export class OrderDetailsComponent implements OnInit {
 
 				this.messageServiceExt.addMessage('error', 'Błąd', "Status: " + error.status + ' ' + error.statusText);
 				this.companyAddDialogShow = false;
-				this.spinerService.spinerOnCompanyAddPanelShow = false;
+				this.spinerService.showSpinner = false;
 
 			},() => {
 				this.companyAddDialogShow = false;
-				this.spinerService.spinerOnCompanyAddPanelShow = false;
+				this.spinerService.showSpinner = false;
 
 			});
 

@@ -1,10 +1,10 @@
 import {Component, OnInit, ViewChild, ViewEncapsulation} from '@angular/core';
-import {ProductsService} from "../products/products.service";
-import {AuthenticationService, TOKEN_USER} from "../authentication.service";
-import {Supplier} from "../model/supplier.model";
-import {CoreDataTableViewComponent} from "../coreViewComponent";
-import {MessageServiceExt} from "../messages/messageServiceExt";
-import {User} from "../model/user.model";
+import {ProductsService} from "../products.service";
+import {AuthenticationService, TOKEN_USER} from "../../authentication.service";
+import {Supplier} from "../../model/supplier.model";
+import {CoreDataTableViewComponent} from "../../coreViewComponent";
+import {MessageServiceExt} from "../../messages/messageServiceExt";
+import {User} from "../../model/user.model";
 import {ConfirmationService} from "primeng/api";
 
 @Component({

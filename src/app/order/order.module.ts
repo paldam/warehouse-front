@@ -8,13 +8,18 @@ import {PrimeNgModule} from "../prime-ng.module";
 import {routing} from "./order.routing";
 import {OrderService} from "./order.service";
 import {OrderAuditComponent} from "./order-audit/order-audit.component";
+import {CustomerService} from "../customer/customer.service";
+import {CustomerModule} from "../customer/customer.module";
+import {BasketService} from "../basket/basket.service";
+
 
 
 
 @NgModule({
 	declarations: [OrderComponent,BasketOrderComponent,OrderDetailsComponent,OrderPreviewComponent,OrderAuditComponent],
 	imports: [routing,CommonModule,PrimeNgModule],
-	providers: [OrderService]
+	providers: [OrderService,CustomerService,BasketService],
+	exports:[OrderComponent,OrderPreviewComponent]
 })
 export class OrderModule {
 }

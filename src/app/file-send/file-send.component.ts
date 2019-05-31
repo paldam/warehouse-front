@@ -1,7 +1,6 @@
 import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import {FormGroup} from "@angular/forms";
-import {Http, ResponseContentType} from "@angular/http";
-import {Observable} from "rxjs/Rx";
+
 import {FileSendService} from "./file-send.service";
 import {FileUpload} from "primeng/primeng";
 

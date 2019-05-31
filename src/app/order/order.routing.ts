@@ -7,10 +7,10 @@ import {OrderDetailsComponent} from "./order-details/order-details.component";
 import {OrderAuditComponent} from "./order-audit/order-audit.component";
 
 const routes: Routes = [
-	{path: 'audit', component: OrderAuditComponent, canActivate: [AuthGuard]},
-	{path: 'baskets', component: BasketOrderComponent, canActivate: [AuthGuard]},
-	{path: 'all', component: OrderComponent, canActivate: [AuthGuard]},
-	{path: ':id', component: OrderDetailsComponent, canActivate: [AuthGuard]}
+	{path: 'orders/audit', component: OrderAuditComponent, canActivate: [AuthGuard]},
+	{path: 'orders/baskets', component: BasketOrderComponent, canActivate: [AuthGuard]},
+	{path: 'orders/all', component: OrderComponent, canActivate: [AuthGuard]},
+	{path: 'orders/:id', component: OrderDetailsComponent, canActivate: [AuthGuard]}
 ];
 
 export const routing: ModuleWithProviders = RouterModule.forChild(routes);

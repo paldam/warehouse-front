@@ -39,7 +39,7 @@
             <li routerLinkActive="active_main" >
                 <h3 [class.cursor_dis]="isProdukcjaUser() || isMagazynUser()" class="tak"><span class="fa fa-address-card-o"></span>Klienci</h3>
                 <ul>
-                    <li *ngIf="isAdmin() || isBiuroUser() || isWysylkaUser()" ><a  [routerLink]="['/customer/'] " routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Przeglądaj</a></li>
+                    <li *ngIf="isAdmin() || isBiuroUser() || isWysylkaUser()" ><a  [routerLink]="['/customer/list'] " routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Przeglądaj</a></li>
                     <!--<li *ngIf="isAdmin() || isBiuroUser()" ><a [routerLink]="['/customer/add'] " routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Dodaj</a></li>-->
                 </ul>
             </li>

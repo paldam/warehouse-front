@@ -27,12 +27,19 @@
 
 
 
-    <p-dataTable [value]="orders" [rows]="50" [paginator]="true" [globalFilter]="globalfilter" #dt
-                 [loading]="loading" loadingIcon="fa-circle-o-notch" expandableRows="true" [(first)]="lastPaginationPageNumberOnOrderViewPage"
-                 (onRowExpand)="rowExpand($event)" selectionMode="multiple" [(selection)]="selectedOrdersMultiselction"  dataKey="orderId" [contextMenu]="cm" (onContextMenuSelect)="OnSelectRow($event)"
-                 [paginator]="true" [pageLinks]="5" [rowsPerPageOptions]= paginatorValues
+    <p-dataTable #dt [value]="orders" [rows]="50" [paginator]="true" [globalFilter]="globalfilter"  [totalRecords]="totalRecords" selectionMode="multiple"
+                 [loading]="loading" loadingIcon="fa-circle-o-notch" expandableRows="true" [(first)]="lastPaginationPageNumberOnOrderViewPage"  [(selection)]="selectedOrdersMultiselction"
+                 dataKey="orderId" [contextMenu]="cm" [paginator]="true" [pageLinks]="5" [rowsPerPageOptions]= paginatorValues [lazy]="!isCurrentPageOrdersViewRedirectedFromBasketStatitis && !this.isCurrentPageCustomerEdit"
+                 (onContextMenuSelect)="OnSelectRow($event)"
+                 (onRowExpand)="rowExpand($event)"
+                 (onPage)="hideActionExtention2($event)"
+                 (onSort)="hideActionExtention2($event)"
+                 (onFilter)="hideActionExtention2($event)"
                  (onRowDblclick)="showOrderPreview($event)"
-                 [lazy]="!isCurrentPageOrdersViewRedirectedFromBasketStatitis && !this.isCurrentPageCustomerEdit" (onLazyLoad)="loadOrdersLazy($event)" [totalRecords]="totalRecords">
+                 (onRowClick)="hideActionExtention($event); getOrderFromRow($event)"
+                 (onLazyLoad)="loadOrdersLazy($event)"
+    >
+
         <p-header>Lista Zamówień</p-header>
         <p-column expander="true" header="" styleClass="col-icon " [style]="{'width':'40px'}"></p-column>
         <!--<p-column  header="lp."   [style]="{'width':'70px'}">-->
@@ -40,12 +47,12 @@
                 <!--{{i+1}}-->
             <!--</ng-template>-->
         <!--</p-column>-->
-        <p-column field="orderFvNumber" header="Numer FV"  ></p-column>
+        <p-column field="orderFvNumber" header="Numer FV"  [style]="{'width':'90px'}"></p-column>
 
 
 
 
-        <p-column field="orderDate" header="Data zamówienia" [sortable]="true" [filter]="!this.isCurrentPageCustomerEdit" filterMatchMode="equals">
+        <p-column field="orderDate" header="Data zamówienia" [style]="{'width':'140px', 'text-align':'center'}" [sortable]="true" [filter]="!this.isCurrentPageCustomerEdit" filterMatchMode="equals">
 
             <ng-template *ngIf="!this.isCurrentPageCustomerEdit" let-col pTemplate="filter"  >
                 <div>
@@ -91,27 +98,27 @@
         </p-column>
 
 
-        <p-column field="deliveryDate" header="Data dostawy"  [sortable]="true">
+        <p-column field="deliveryDate" header="Data dostawy" [style]="{'width':'85px', 'text-align':'center'}" [sortable]="true">
             <ng-template let-row="rowData" pTemplate="body"  >
             {{row.deliveryDate| date: 'dd/MM/yyyy'}}
             </ng-template>
         </p-column>
 
 
+        <p-column field="productionUser.login" header="Produkcja"  [style]="{'width':'67px', 'text-align':'center'}" ></p-column>
 
 
 
+        <p-column field="weekOfYear" header="T" [sortable]="true"  [style]="{'width':'35px', 'text-align':'center'}" ></p-column>
 
-        <p-column field="weekOfYear" header="T" [sortable]="true"[style]="{'width':'35px'}" ></p-column>
-
-        <p-column field="orderTotalAmount" header="total" [sortable]="true">
+        <p-column field="orderTotalAmount" header="total" [style]="{'width':'90px', 'text-align':'center'}" [sortable]="true">
             <ng-template let-row="rowData" pTemplate="body"  >
                 {{row.orderTotalAmount/100 | number : '1.2-2'}} zł
             </ng-template>
         </p-column>
 
 
-        <p-column field="orderStatus.orderStatusName" header="Status" [filter]="!this.isCurrentPageCustomerEdit" filterMatchMode="equals" [sortable]="true" >
+        <p-column field="orderStatus.orderStatusName" header="Status" [style]="{'width':'100px', 'text-align':'center'}" [filter]="!this.isCurrentPageCustomerEdit" filterMatchMode="equals" [sortable]="true" >
 
             <ng-template *ngIf="!this.isCurrentPageCustomerEdit" let-col pTemplate="filter"  >
                 <p-multiSelect *ngIf="!this.isCurrentPageOrdersViewRedirectedFromBasketStatitis" [filter]="false" [showToggleAll]="false" [options]="orderStatusList" defaultLabel="Wszystkie" (onChange)="datatable.filter($event.value, col.field, 'in')"></p-multiSelect>
@@ -125,34 +132,31 @@
 
 
 
-        <p-column field="deliveryType.deliveryTypeName" header="Rodzaj dostawy" ></p-column>
+        <p-column field="deliveryType.deliveryTypeName" header="Rodzaj dostawy" [style]="{'width':'130px', 'text-align':'center'}"></p-column>
 
 
         <p-column class="attach_col" field="dbFileId"   [sortable]="false" header="Z" styleClass="attach_col">
             <ng-template let-row="rowData"  pTemplate="body">
 
-                <span *ngIf="row.dbFileId!=0"> <i class="fa fa-2x fa-paperclip" aria-hidden="true"></i></span>
+                <span *ngIf="row.dbFileId!=0"> <i class="fa  fa-paperclip" aria-hidden="true"></i></span>
             </ng-template>
         </p-column>
 
-        <p-column class="attach_col" field="additionalSale"   [sortable]="true" header="Z" styleClass="attach_col">
+        <p-column class="attach_col" field="additionalSale"   [sortable]="true" header="D" styleClass="attach_col">
             <ng-template let-row="rowData"  pTemplate="body">
 
-                <span *ngIf="row.additionalSale==1"> <i class="fa fa-2x fa-check" aria-hidden="true"></i></span>
-            </ng-template>!=
+                <span *ngIf="row.additionalSale==1"> <i class="fa fa-check" aria-hidden="true"></i></span>
+            </ng-template>
         </p-column>
+
 
         <p-column class="action_col"  field="orders" header="Akcja" styleClass="action_col">
         <ng-template let-order="rowData" let-i="rowIndex" pTemplate="body">
-            <i class="fa fa-pencil-square-o fa-2x" aria-hidden="true"  title="Edytuj zamówienie" (click)="goToEditPage(i+1,order.orderId)"></i>
-            <i  *ngIf="authenticationService.isAdmin()" class="fa fa-trash fa-2x edit_icon" aria-hidden="true" title="Usuń zamówienie" (click)="ShowConfirmModal(order)"></i>
-            <i class="fa fa-print fa-2x " aria-hidden="true" title="Drukuj zamówienie" (click)="printPdf(order.orderId)" ></i>
-            <i class="fa fa-file-pdf-o fa-2x " aria-hidden="true" title="Drukuj potwierdzenie odbioru" (click)="showPrintOrderDeliveryConfirmationWindows(order.orderId)" ></i>
-            <i class="fa fa-file-text fa-2x " aria-hidden="true" title="Drukuj kompletna listę produktów zamówienia" (click)=" printProductListPdf(order.orderId)" ></i>
-            <i class="fa fa-file-text-o fa-2x " aria-hidden="true" title="Drukuj dostosowana liste produktów zamówienia" (click)=" showPdialogBasketProductsPrint(order.orderId)" ></i>
-
+            <i id="action_extention_icon" class="fa fa-cog fa-2x " aria-hidden="true"  title="Edytuj zamówienie"   (click)="showActionExtention($event)"></i>
         </ng-template>
     </p-column>
+
+
 
 
         <ng-template let-orders pTemplate="rowexpansion" >
@@ -261,3 +265,17 @@
 <p-overlayPanel #information_extention  >
     {{additionalInforamtionTmp}}
 </p-overlayPanel>
+
+
+
+<div #action_extention  [hidden]="true" class="action_extention" [style.top.px]="actionExtentionPositionTop" [style.left.px]="actionExtentionPositionLeft">
+    <div class="cont2">
+        <i [ngClass]="notAllowedStyle()" class="fa fa-pencil-square-o fa-2x famargin2 action_extention_icon" aria-hidden="true"  title="Edytuj zamówienie" (click)="goToEditPage(selectedOrderFromRow.orderId)"></i>
+        <i *ngIf="authenticationService.isAdmin()" class="fa fa-trash fa-2x edit_icon famargin2 action_extention_icon" aria-hidden="true" title="Usuń zamówienie" (click)="ShowConfirmModal(selectedOrderFromRow)"></i>
+        <i  class="fa fa-print fa-2x famargin2 action_extention_icon " aria-hidden="true" title="Drukuj zamówienie" (click)="printPdf(selectedOrderFromRow.orderId)" ></i>
+        <i  class="fa fa-file-pdf-o fa-2x  famargin2 action_extention_icon" aria-hidden="true" title="Drukuj potwierdzenie odbioru" (click)="showPrintOrderDeliveryConfirmationWindows(selectedOrderFromRow.orderId)" ></i>
+        <i  class="fa fa-file-text fa-2x famargin2 action_extention_icon" aria-hidden="true" title="Drukuj kompletna listę produktów zamówienia" (click)=" printProductListPdf(selectedOrderFromRow.orderId)" ></i>
+        <i  class="fa fa-file-text-o fa-2x fa_zero_margin action_extention_icon" aria-hidden="true" title="Drukuj dostosowana liste produktów zamówienia" (click)=" showPdialogBasketProductsPrint(selectedOrderFromRow.orderId)" ></i>
+    </div>
+
+</div>

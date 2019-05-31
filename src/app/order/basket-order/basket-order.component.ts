@@ -332,7 +332,7 @@ export class BasketOrderComponent implements OnInit {
         this.formCompanyMargeForm = true;
 
         if (companyMergeForm.valid) {
-            this.spinerService.spinerOnCompanyAddPanelShow = true;
+            this.spinerService.showSpinner = true;
             this.orderService.getMergeCompanies(this.selectedCompanyToMarge,this.comapnyNameToMarge).subscribe(data =>{
 
                 this.company= data;
@@ -340,13 +340,13 @@ export class BasketOrderComponent implements OnInit {
             },error =>{
                 this.messageServiceExt.addMessage('error', 'Błąd', "Status: " + error.status + ' ' + error.statusText);
                 this.mergeCompanyPanelShow = false;
-                this.spinerService.spinerOnCompanyAddPanelShow = false;
+                this.spinerService.showSpinner = false;
                 this.selectedCompanyToMarge = [];
             },() => {
                 this.messageServiceExt.addMessage('success', 'Status', 'Poprawnie scalono firmy');
 
                 setTimeout(() => {
-                    this.spinerService.spinerOnCompanyAddPanelShow = false;   ;
+                    this.spinerService.showSpinner = false;   ;
                 }, 900);
 
 
@@ -376,7 +376,7 @@ export class BasketOrderComponent implements OnInit {
         this.formCompanyAddForm= true;
 
         if (formCompanyAdd.valid) {
-            this.spinerService.spinerOnCompanyAddPanelShow = true;
+            this.spinerService.showSpinner = true;
             this.orderService.saveCompany(this.companyToPersist).subscribe(data=>{
 
                 this.companyToPersist = new Company();
@@ -390,11 +390,11 @@ export class BasketOrderComponent implements OnInit {
 
                 this.messageServiceExt.addMessage('error', 'Błąd', "Status: " + error.status + ' ' + error.statusText);
                 this.companyAddDialogShow = false;
-                this.spinerService.spinerOnCompanyAddPanelShow = false;
+                this.spinerService.showSpinner = false;
 
             },() => {
                 this.companyAddDialogShow = false;
-                this.spinerService.spinerOnCompanyAddPanelShow = false;
+                this.spinerService.showSpinner = false;
 
             });
 

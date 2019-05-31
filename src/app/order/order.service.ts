@@ -12,6 +12,7 @@ import {OrderItem} from "../model/order_item";
 import {Address} from "../model/address.model";
 import {Company} from "../model/company.model";
 import {Basket} from "../model/basket.model";
+import {HttpResponse} from "@angular/common/http";
 @Injectable()
 export class OrderService {
 
@@ -39,6 +40,7 @@ export class OrderService {
             .map((response: Response) =>
                 response.json());
     }
+
 
 
     getCompany() :Observable<any[]>{
@@ -114,6 +116,17 @@ export class OrderService {
             .map((response: Response) =>
                 response.json());
     }
+
+
+	assignOrdersToSpecifiedProduction(ordersIds :number[], productionId: number): Observable<Response> {
+		return this.http.post(this.baseUrl + `/order/assign_production?ordersIds=${ordersIds}&&productionId=${productionId}`,null)
+
+	}
+
+	changeOrderStatus(orderId: number, statusId: number): Observable<Response>{
+		return this.http.post(this.baseUrl+`/order/status/${orderId}/${statusId}`,null)
+
+	}
 
 
     getMergeCompanies(companies : Company[],newcompanyname : string ): Observable<Company>{
@@ -265,10 +278,7 @@ export class OrderService {
 
     }
 
-    changeOrderStatus(orderId: number, statusId: number): Observable<Response>{
-        return this.http.post(this.baseUrl+`/order/status/${orderId}/${statusId}`,null)
 
-    }
 
 
 

@@ -29,6 +29,12 @@ export class UserService {
                 response.json());
     }
 
+	getAllProductionUsers(): Observable<any[]> {
+		return this.http.get(this.baseUrl+`/production_users`)
+			.map((response: Response) =>
+				response.json());
+	}
+
     saveUser(user: User): Observable<Response> {
         return this.http.post(this.baseUrl+`/users/`, user)
         //.map((response: Response) => response.json());

@@ -10,7 +10,7 @@
   </div>
 
 
-<p-dataTable [value]="suppliers" [rows]="50"  #dt
+<p-dataTable [value]="suppliers" [rows]="50"  #dt [globalFilter]="gb"
              [loading]="loading" loadingIcon="fa-circle-o-notch" [editable]="true" (onEditComplete)="editSupplier($event.data)"   [paginator]="true" [pageLinks]="5" [rowsPerPageOptions]= paginatorValues  >
   <p-header>Lista Dostawców</p-header>
 

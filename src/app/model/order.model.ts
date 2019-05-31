@@ -3,6 +3,7 @@ import {OrderItem} from './order_item';
 import {DeliveryType} from './delivery_type.model';
 import {OrderStatus} from "./OrderStatus";
 import {Address} from "./address.model";
+import {User} from "./user.model";
 export class Order{
     constructor(
         public orderId?: number,
@@ -20,7 +21,8 @@ export class Order{
         public cod? : number,
         public address?: Address,
         public additionalSale?: number,
-        public contactPerson?: string
+        public contactPerson?: string,
+        public productionUser?: User
     ){
 
     }
