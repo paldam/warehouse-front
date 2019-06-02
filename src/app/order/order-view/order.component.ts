@@ -13,6 +13,7 @@ import {RoutingState} from "../../routing-stage";
 import {UserService} from "../../user.service";
 import {User} from "../../model/user.model";
 import {SpinerService} from "../../spiner.service";
+import * as Events from "events";
 
 @Component({
 	selector: 'order',
@@ -65,6 +66,8 @@ export class OrderComponent implements OnInit {
 		this.setCurentPageType();
 		this.setSearchOptions();
 		this.setOrderData();
+
+
 	}
 
 
