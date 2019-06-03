@@ -14,8 +14,7 @@ import {MessageServiceExt} from "../../messages/messageServiceExt";
 @Component({
 	selector: 'app-gift-basket-edit',
 	templateUrl: './gift-basket-edit.component.html',
-	styleUrls: ['./gift-basket-edit.component.css'],
-	encapsulation: ViewEncapsulation.None
+	styleUrls: ['./gift-basket-edit.component.css']
 })
 export class GiftBasketEditComponent implements OnInit {
 

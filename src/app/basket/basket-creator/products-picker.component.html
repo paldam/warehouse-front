@@ -1,189 +1,210 @@
-
 <div class="products_box">
     <p-fieldset legend="Lista produktów" [toggleable]="true">
         <div class="input-group search_bar">
             <span class="input-group-addon" id="basic-addon1">
                  <i class="fa fa-search" aria-hidden="true"></i>
             </span>
-            <input #gb type="text" class="form-control search_input" pInputText size="50" placeholder="Szukaj"aria-describedby="basic-addon1">
+            <input #gb type="text" class="form-control search_input" pInputText size="50" placeholder="Szukaj"
+                   aria-describedby="basic-addon1">
 
             <label class="form-check-label only_availeble_product_checkbox">
-                <input class="form-check-input" type="checkbox"  (change)="filtrOnlyAvaileble($event)"> pokaż tylko dostępne produkty
+                <input class="form-check-input" type="checkbox" (change)="filtrOnlyAvaileble($event)"> pokaż tylko
+                dostępne produkty
             </label>
-
-
 
 
         </div>
         <p-dataTable [value]="products" [rows]="10" [paginator]="true" [globalFilter]="gb" #dt
-                     [loading]="loading" loadingIcon="fa-circle-o-notch" (onRowDblclick)="addProductToGiftBasket($event.data)">
+                     [loading]="loading" loadingIcon="fa-circle-o-notch"
+                     (onRowDblclick)="addProductToGiftBasket($event.data)">
 
-            <p-column  header="lp."  [style]="{'width':'70px'}">
+            <p-column header="lp." [style]="{'width':'70px'}">
                 <ng-template let-i="rowIndex" pTemplate="rowexpansion">
                     {{i+1}}
                 </ng-template>
             </p-column>
-                <p-column field="productName" header="Nazwa" [sortable]="true"></p-column>
-            <p-column field="capacity" header="Pojemność" [sortable]="true" [style]="{'width':'120px'}" ></p-column>
-                <p-column field="supplier.supplierName" header="Dostawca"  [sortable]="true" ></p-column>
-                <p-column field="price" styleClass="price_col" header="Cena"  [sortable]="true">
-                    <ng-template let-row="rowData" pTemplate="body"  >
-                        {{row.price/100| number : '1.2-2'}} zł
-                    </ng-template>
-                </p-column>
+            <p-column field="productName" header="Nazwa" [sortable]="true"></p-column>
+            <p-column field="capacity" header="Pojemność" [sortable]="true" [style]="{'width':'120px'}"></p-column>
+            <p-column field="supplier.supplierName" header="Dostawca" [sortable]="true"></p-column>
+            <p-column field="price" styleClass="price_col" header="Cena" [sortable]="true">
+                <ng-template let-row="rowData" pTemplate="body">
+                    {{row.price/100| number : '1.2-2'}} zł
+                </ng-template>
+            </p-column>
 
-                <p-column field="stock" styleClass="stock_col" header="Stan"  [sortable]="true">
-                    <ng-template let-row="rowData" pTemplate="body">
-                        {{row.stock}} szt.
-                    </ng-template>
+            <p-column field="stock" styleClass="stock_col" header="Stan" [sortable]="true">
+                <ng-template let-row="rowData" pTemplate="body">
+                    {{row.stock}} szt.
+                </ng-template>
 
-                </p-column>
+            </p-column>
 
         </p-dataTable>
     </p-fieldset>
 </div>
 
 <div class="row">
-    <div class="picked_products_list col-sm-6">
+    <div class="picked_products_list col-xl-6">
         <p-fieldset legend="Zawartość kosza" [toggleable]="true">
-            <button class="btn bg-primary text pull-right" (click)="showBasketPatterList()">kosz na wzór</button>
-            <table *ngIf="isProductLinesEmpty()==false">
-                <thead>
-                <tr>
-                    <th>nazwa</th>
-                    <th class="col_quantity">ilość</th>
-                    <th>usuń</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr *ngFor="let basketItems of basketItems">
-                    <td scope="row">{{basketItems.product.productName}}</td>
-                    <td><input type="number" class="form-control" name="" id="" aria-describedby="helpId" placeholder="" min="0" [value]="basketItems.quantity" (change)="updateQuantity(basketItems,$event.target.value)"  ></td>
-                    <td class="col_delete"><i class="fa fa-trash" aria-hidden="true" (click)="deleteProductLine(basketItems.product.id)"></i></td>
-                </tr>
-                </tbody>
-            </table>
+            <button class="btn bg-primary text pull-right btnsample" (click)="showBasketPatterList()">kosz na wzór</button>
+
+            <div class="d-table-wrapper">
+                <table class="d-table" *ngIf="isProductLinesEmpty()==false">
+                    <thead>
+                    <tr>
+                        <th>Nazwa</th>
+                        <th class="col_quantity">Ilość</th>
+                        <th>Usuń</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr *ngFor="let basketItems of basketItems">
+                        <td scope="row">{{basketItems.product.productName}}</td>
+                        <td><input type="number" class="form-control" name="" id="" aria-describedby="helpId"
+                                   placeholder="" min="0" [value]="basketItems.quantity"
+                                   (change)="updateQuantity(basketItems,$event.target.value)"></td>
+                        <td class="col_delete"><i class="fa fa-trash" aria-hidden="true"
+                                                  (click)="deleteProductLine(basketItems.product.id)"></i></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
             <p *ngIf="isProductLinesEmpty()==true"> Kosz jest pusty</p>
         </p-fieldset>
     </div>
 
-    <div class="basket_summary col-sm-6">
+    <div class="basket_summary col-xl-6">
         <p-fieldset legend="Podsumowanie kosza" [toggleable]="true">
             <div class="row">
-                    <div class="col-lg-4">
-                        <p>Cena Netto Produktów: {{total/100| number : '1.2-2'}} zł</p>
-                    </div>
+                <div class="col-lg-4">
+                    <p>Cena Netto Produktów: {{total/100| number : '1.2-2'}} zł</p>
+                </div>
 
-                    <div class="col-lg-8">
-                        <form id="BasketForm" novalidate #form="ngForm" (submit)="submitForm(form)">
-
-
-                            <div class="form-group">
-                                <div class="input-group">
-                                    <input type="text" name="price" class="form-control" #price="ngModel" aria-describedby="priceDesc"   [(ngModel)]="basket.basketTotalPrice" pattern="^(?=.*?\d)\d*[.]?\d{1,2}$" required >
-                                    <span class="input-group-addon" id="priceDesc">Cena kosza</span>
-                                </div>
-                                    <ul class="text-danger list-unstyled" *ngIf="price.dirty|| formSubmitted">
-                                        <li  *ngIf="price.errors?.pattern">To pole musi zawierać format waluty z kropką np : 0.59 , 2.5 , 0.99 , 19.99 </li>
-                                        <li  *ngIf="price.errors?.required">To pole nie może być puste</li>
-                                    </ul>
-                                </div>
+                <div class="col-lg-8">
+                    <form id="BasketForm" novalidate #form="ngForm" (submit)="submitForm(form)">
 
 
-                            <div class="form-group">
-                                <div class="input-group">
-                                    <input type="text" name="basketName" #basketName="ngModel" class="form-control"  size="300" aria-describedby="nameDesc" [(ngModel)]="basket.basketName" required>
-                                    <span class="input-group-addon" id="nameDesc">Nazwa kosza</span>
-                                </div>
-                                <ul class="text-danger list-unstyled" *ngIf="basketName.dirty|| formSubmitted">
-                                    <li  *ngIf="basketName.errors?.required">To pole nie może być puste</li>
-                                </ul>
+                        <div class="form-group">
+                            <div class="input-group">
+                                <input type="text" name="price" class="form-control" #price="ngModel"
+                                       aria-describedby="priceDesc" [(ngModel)]="basket.basketTotalPrice"
+                                       pattern="^(?=.*?\d)\d*[.]?\d{1,2}$" required>
+                                <span class="input-group-addon" id="priceDesc">Cena kosza</span>
                             </div>
+                            <ul class="text-danger list-unstyled" *ngIf="price.dirty|| formSubmitted">
+                                <li *ngIf="price.errors?.pattern">To pole musi zawierać format waluty z kropką np : 0.59
+                                    , 2.5 , 0.99 , 19.99
+                                </li>
+                                <li *ngIf="price.errors?.required">To pole nie może być puste</li>
+                            </ul>
+                        </div>
 
-                            <div class="form-group">
-                                <div class="input-group">
-                                    <input type="text" name="basketSeason" #basketSeason="ngModel" class="form-control"  size="300" aria-describedby="nameDesc" [(ngModel)]="basket.season">
-                                    <span class="input-group-addon" id="nameDesc">Sezon</span>
-                                </div>
+
+                        <div class="form-group">
+                            <div class="input-group">
+                                <input type="text" name="basketName" #basketName="ngModel" class="form-control"
+                                       size="300" aria-describedby="nameDesc" [(ngModel)]="basket.basketName" required>
+                                <span class="input-group-addon" id="nameDesc">Nazwa kosza</span>
                             </div>
+                            <ul class="text-danger list-unstyled" *ngIf="basketName.dirty|| formSubmitted">
+                                <li *ngIf="basketName.errors?.required">To pole nie może być puste</li>
+                            </ul>
+                        </div>
 
-
-
-                                <div *ngIf="filtersLoaded | async" class="form-group">
-                                    <small id="basket_typeDesc" class="text-muted">Typ kosza</small>
-                                    <select  class="form-control" #basket_type="ngModel" name="basket_type" [(ngModel)]="basket.basketType" required="">
-                                        <option  *ngFor="let item of basketTypes" [ngValue]="item" aria-describedby="basketTypeDesc">{{item.basketTypeName}}</option>
-                                    </select>
-                                    <ul class="text-danger list-unstyled" *ngIf="basket_type.dirty || formSubmitted">
-                                        <li  *ngIf="basket_type.errors?.required">Wybierz typ kosza</li>
-                                    </ul>
-                                </div>
-
-
-                            <div class="form-group">
-                                <small id="add_file" class="text-muted">Wgraj zdjęcie kosza</small>
-                                <p-fileUpload  name="files" accept=".jpg" invalidFileTypeMessageSummary="Niedozwolony typ pliku" invalidFileTypeMessageDetail="Dozwolone sa tylko pliki .jpg" maxFileSize="250000" [showUploadButton]="false" (onRemove)="enableUploadButton()" (onError)="enableUploadButton()" (onClear)="enableUploadButton()"
-                                              invalidFileSizeMessageSummary="{0} - plik jest za duży" invalidFileSizeMessageDetail="rozmiar pliku może wynosić maksymalnie {0}"
-                                              chooseLabel="Wybierz zdjęcie" uploadLabel="Wgraj" cancelLabel="Anuluj" (onSelect)="handleFileInput($event)" >
-
-
-
-
-                                </p-fileUpload>
+                        <div class="form-group">
+                            <div class="input-group">
+                                <input type="text" name="basketSeason" #basketSeason="ngModel" class="form-control"
+                                       size="300" aria-describedby="nameDesc" [(ngModel)]="basket.season">
+                                <span class="input-group-addon" id="nameDesc">Sezon</span>
                             </div>
+                        </div>
 
 
-                            <div *ngIf="this.fileUploadElement.files.length !=1 && formSubmitted && this.basket.basketType?.basketTypeId == 1" class="alert alert-danger" role="alert">
-                                <strong>Wgraj plik </strong>
-                            </div>
+                        <div *ngIf="filtersLoaded | async" class="form-group">
+                            <small id="basket_typeDesc" class="text-muted">Typ kosza</small>
+                            <select class="form-control" #basket_type="ngModel" name="basket_type"
+                                    [(ngModel)]="basket.basketType" required="">
+                                <option *ngFor="let item of basketTypes" [ngValue]="item"
+                                        aria-describedby="basketTypeDesc">{{item.basketTypeName}}
+                                </option>
+                            </select>
+                            <ul class="text-danger list-unstyled" *ngIf="basket_type.dirty || formSubmitted">
+                                <li *ngIf="basket_type.errors?.required">Wybierz typ kosza</li>
+                            </ul>
+                        </div>
 
-                                <div *ngIf="basketItems.length<1 && formSubmitted" class="alert alert-danger" role="alert">
-                                    <strong>Błąd. Zawartość kosza nie może być pusta</strong>
-                                </div>
 
-                              <button class="btn bg-primary pull-right" type="submit" form="BasketForm" > Zapisz Kosz</button>
-                        </form>
-                    </div>
+                        <div class="form-group">
+                            <small id="add_file" class="text-muted">Wgraj zdjęcie kosza</small>
+                            <p-fileUpload name="files" accept=".jpg"
+                                          invalidFileTypeMessageSummary="Niedozwolony typ pliku"
+                                          invalidFileTypeMessageDetail="Dozwolone sa tylko pliki .jpg"
+                                          maxFileSize="250000" [showUploadButton]="false"
+                                          (onRemove)="enableUploadButton()" (onError)="enableUploadButton()"
+                                          (onClear)="enableUploadButton()"
+                                          invalidFileSizeMessageSummary="{0} - plik jest za duży"
+                                          invalidFileSizeMessageDetail="rozmiar pliku może wynosić maksymalnie {0}"
+                                          chooseLabel="Wybierz zdjęcie" uploadLabel="Wgraj" cancelLabel="Anuluj"
+                                          (onSelect)="handleFileInput($event)">
+
+
+                            </p-fileUpload>
+                        </div>
+
+
+                        <div *ngIf="this.fileUploadElement.files.length !=1 && formSubmitted && this.basket.basketType?.basketTypeId == 1"
+                             class="alert alert-danger" role="alert">
+                            <strong>Wgraj plik </strong>
+                        </div>
+
+                        <div *ngIf="basketItems.length<1 && formSubmitted" class="alert alert-danger" role="alert">
+                            <strong>Błąd. Zawartość kosza nie może być pusta</strong>
+                        </div>
+
+                        <button class="btn bg-primary pull-right" type="submit" form="BasketForm"> Zapisz Kosz</button>
+                    </form>
+                </div>
             </div>
         </p-fieldset>
     </div>
-    </div>
+</div>
 <gift-baskets></gift-baskets>
 
 
-
-
-<p-dialog header="Wybierz kosz na wzór" modal="true" width="1300" [(visible)]="basketPatterPickDialogShow" >
+<p-dialog header="Wybierz kosz na wzór" modal="true" width="1300" [(visible)]="basketPatterPickDialogShow">
     <div>
         <div class="input-group search_bar">
                 <span class="input-group-addon" id="basic-addon1">
                     <i class="fa fa-search" aria-hidden="true"></i>
                 </span>
-            <input #globalfilter type="text" class="form-control search_input" pInputText size="50" placeholder="Szukaj"aria-describedby="basic-addon1">
+            <input #globalfilter type="text" class="form-control search_input" pInputText size="50" placeholder="Szukaj"
+                   aria-describedby="basic-addon1">
 
         </div>
 
 
-        <p-dataTable [value]="basketsToSchema" [rows]="10" [paginator]="true"  #dt (onRowDblclick)="pickBasket($event.data)"
-                     [loading]="loading" loadingIcon="fa-circle-o-notch" [globalFilter]="globalfilter" expandableRows="true">
+        <p-dataTable [value]="basketsToSchema" [rows]="10" [paginator]="true" #dt
+                     (onRowDblclick)="pickBasket($event.data)"
+                     [loading]="loading" loadingIcon="fa-circle-o-notch" [globalFilter]="globalfilter"
+                     expandableRows="true">
 
             <p-column expander="true" header="Zawartość" styleClass="col-icon " [style]="{'width':'70px'}"></p-column>
-            <p-column  header="lp."   [style]="{'width':'70px'}">
+            <p-column header="lp." [style]="{'width':'70px'}">
                 <ng-template let-i="rowIndex" pTemplate="rowexpansion">
                     {{i+1}}
                 </ng-template>
             </p-column>
             <p-column field="basketName" header="Nazwa kosza" [sortable]="true"></p-column>
-            <p-column field="basketType.basketTypeName" header="Typ kosza" [sortable]="true" ></p-column>
-            <p-column field="basketTotalPrice"  header="Cena kosza"  [sortable]="true" >
+            <p-column field="basketType.basketTypeName" header="Typ kosza" [sortable]="true"></p-column>
+            <p-column field="basketTotalPrice" header="Cena kosza" [sortable]="true">
                 <ng-template let-row="rowData" pTemplate="body">
                     {{row.basketTotalPrice/100| number : '1.2-2'}} zł.
                 </ng-template>
             </p-column>
             <ng-template let-basket pTemplate="rowexpansion">
-                <div class="basket_products_info">
-                    Zawartość kosza:  {{basket.basketName}}
-                    <table class="product_tab" >
+                Zawartość kosza: {{basket.basketName}}
+                <div class="d-table-wrapper">
+                    <table class="d-table">
                         <thead>
                         <tr class="product_tab_row">
                             <th>Nazwa Produktu</th>

@@ -14,8 +14,7 @@ import {MessageServiceExt} from "../../messages/messageServiceExt";
 @Component({
     selector: 'products-picker',
     templateUrl: './products-picker.component.html',
-    styleUrls: ['./products-picker.component.css'],
-    encapsulation: ViewEncapsulation.None
+    styleUrls: ['./products-picker.component.css']
 })
 export class ProductPickerComponent implements OnInit{
 

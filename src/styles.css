@@ -5,6 +5,9 @@ body{
 legend {
   font-size: 16px;
 }
+
+
+
 body .ui-datatable .ui-datatable-data tr.ui-datatable-even:hover {
   background-color: #d6f2c2;
   cursor: pointer;
@@ -20,9 +23,88 @@ body .ui-datatable .ui-datatable-data tr.ui-datatable-even {
 body .ui-datatable .ui-datatable-data tr.ui-datatable-odd {
   background-color:#eaeaea;
 }
+
+.ui-datatable tbody > tr.ui-widget-content.ui-state-highlight {
+  background-color: #d6f2c2;
+  color:black;
+}
+
+@media screen and (max-width: 1250px) {
+  .removable-col{
+    display: none;
+  }
+
+}
+@media screen and (max-width: 1320px) {
+  .removable-col2{
+    display: none;
+  }
+
+}
+
+.ui-datatable {
+  /*border: 1px ridge #888888 ;*/
+}
+
+
 .bg-primary{
   background-color:#a4abaf!important;
 }
+
+
+.d-table-wrapper{
+  margin: 10px 20px 20px;
+  /*box-shadow: 0px 35px 50px rgba( 0, 0, 0, 0.2 );*/
+}
+
+.d-table {
+  border-radius: 5px;
+  text-align: center;
+  font-family:Arial;
+  font-size: 12px;
+  font-weight: normal;
+  border-collapse: collapse;
+  width: 100%;
+  max-width: 100%;
+  /*//white-space: nowrap;*/
+  background-color: white;
+ border: none
+}
+
+.d-table th {
+  text-align: center;
+  padding: 8px;
+}
+.d-table tr {
+
+
+}
+
+.d-table td {
+  border-right: 1px solid #f8f8f8;
+  font-size: 12px;
+}
+
+
+
+.d-table thead th {
+  color: black;
+  background: #ebedf0;
+}
+
+
+/*.d-table thead th:nth-child(odd) {*/
+  /*color: #ffffff;*/
+  /*background: #60666f;*/
+/*}*/
+
+.d-table tr:nth-child(even) {
+  background: #F8F8F8;
+}
+
+
+
+
 .input-group-addon{
   background-color:#a4abaf;
   color: white;
@@ -78,8 +160,7 @@ body .ui-datatable .ui-datatable-data tr.ui-datatable-odd {
 .input-group{
   padding-top: 5px;
 }
-.row{
-}
+
 .ui-fieldset, .ui-fieldset .ui-fieldset-legend{
   margin-top: 26px;
 }

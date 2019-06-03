@@ -4,35 +4,13 @@
 .basket_products_info{
     padding: 10px;
 }
-.product_tab{
-    width: 65% !important;
-    border: 1px solid black;
-}
-.product_tab th ,td,tr{
-
-}
-.product_tab th{
-    background-color: #ebedf0;
-    text-align: left;
-
-}
 
 
-.product_tab_row {
-    text-align: left;
-}
-.action_col{
-    width: 40px;
-    max-height: 40px;
-    text-align: center;
-}
 .status_col{
     color: red;
 }
 
-.attach_col{
-    width: 28px;
-}
+
 
 .onlyWithAttach {
     margin-left: 10px;
@@ -55,21 +33,6 @@
 .fa_zero_margin{
     margin-right:  0px;
 }
-
-.ui-datatable tbody > tr.ui-widget-content.ui-state-highlight {
-    background-color: #d6f2c2 !important;
-    color: black;
-}
-
-body .ui-datatable .ui-datatable-data tr.ui-datatable-even:hover {
-    background-color:#d6f2c2 !important;
-    cursor: pointer;
-}
-
-body .ui-datatable .ui-datatable-data tr.ui-datatable-odd:hover {
-      cursor: pointer;
-      background-color:#d6f2c2 !important;
-  }
 
 
 .fileprev{
@@ -142,3 +105,14 @@ body .ui-datatable .ui-datatable-data tr.ui-datatable-odd:hover {
 .not_allowed:hover{
     cursor: not-allowed;
 }
+
+
+.d-table-wrapper{
+    width: 400px ;
+}
+
+
+
+
+
+

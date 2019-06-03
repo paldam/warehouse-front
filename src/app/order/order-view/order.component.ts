@@ -18,8 +18,7 @@ import * as Events from "events";
 @Component({
 	selector: 'order',
 	templateUrl: './order.component.html',
-	styleUrls: ['./order.component.css'],
-	encapsulation: ViewEncapsulation.None
+	styleUrls: ['./order.component.css']
 })
 export class OrderComponent implements OnInit {
 	public selectedOrderFromRow: Order = new Order();
@@ -138,20 +137,28 @@ export class OrderComponent implements OnInit {
 	}
 
 	refreshData() {
+		let paginationPageTmp = this.datatable.first;
+		this.lastPaginationPageNumberOnOrderViewPage = 0;
 		this.action_extention.nativeElement.hidden = true;
 		this.getProductionUserForContextMenuSet();
 		this.spinerService.showSpinner = true;
-		setTimeout(() => {
-			if (this.isCurrentPageCustomerEdit) {
-				this.orderService.getOrderByCustomer(this.currentCustomerOnCustomerEditPage).subscribe(data => this.orders = data);
-			} else {
-				this.orderService.getOrdersDto(0, 50, "", "orderDate", 1, [], []).subscribe((data: any) => {
-					this.orders = data.orderDtoList;
-					this.totalRecords = data.totalRowsOfRequest;
-				});
-			}
-			this.spinerService.showSpinner=false;
-		}, 1000);
+		if (this.isCurrentPageCustomerEdit) {
+			this.orderService.getOrderByCustomer(this.currentCustomerOnCustomerEditPage).subscribe(data => this.orders = data);
+		} else {
+			this.orderService.getOrdersDto(0, 50, "", "orderDate", 1, [], []).subscribe((data: any) => {
+				this.orders = data.orderDtoList;
+				this.totalRecords = data.totalRowsOfRequest;
+			}, error1 => {
+				this.spinerService.showSpinner = false;
+			}, () => {
+				setTimeout(() => {
+					this.lastPaginationPageNumberOnOrderViewPage = paginationPageTmp;
+				}, 50);
+				setTimeout(() => {
+					this.spinerService.showSpinner = false;
+				}, 1000);
+			});
+		}
 	}
 
 	setSearchOptions() {
@@ -163,8 +170,10 @@ export class OrderComponent implements OnInit {
 		this.findInputTextOnOrderViewPage = localStorage.getItem('findInputTextOnOrderViewPage') ? (localStorage.getItem('findInputTextOnOrderViewPage')) : "";
 		setTimeout(() => {
 			if (localStorage.getItem('lastPaginationPageNumberOnOrderViewPage')) {
+
 				let tmplastVisitedPage = parseInt(localStorage.getItem('lastPaginationPageNumberOnOrderViewPage'));
 				this.lastPaginationPageNumberOnOrderViewPage = (tmplastVisitedPage - 1) * 50;
+				console.log(this.lastPaginationPageNumberOnOrderViewPage);
 			} else {
 				this.lastPaginationPageNumberOnOrderViewPage = 0;
 			}
@@ -309,9 +318,6 @@ export class OrderComponent implements OnInit {
 			this.messageServiceExt.addMessage('error', 'Błąd ', error._body);
 		});
 		this.refreshData();
-		setTimeout(() => {
-			this.refreshData();
-		}, 1000);
 	}
 
 	printPdf(id: number) {

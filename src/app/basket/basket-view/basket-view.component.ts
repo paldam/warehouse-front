@@ -10,8 +10,7 @@ import {AppConstans} from "../../constans";
 @Component({
   selector: 'app-basket',
   templateUrl: './basket-view.component.html',
-  styleUrls: ['./basket-view.component.css'],
-    encapsulation: ViewEncapsulation.None
+  styleUrls: ['./basket-view.component.css']
 })
 export class BasketComponent implements OnInit {
 

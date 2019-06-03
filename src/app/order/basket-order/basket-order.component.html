@@ -58,29 +58,40 @@
 </div>
 
 <div class="row">
-    <div class="picked_products_list col-md-6 ">
+    <div class="picked_products_list col-xl-6 ">
             <p-fieldset legend="Pozycje zamówienia" [toggleable]="true">
-                <table *ngIf="isBasketLinesEmpty()==false">
-                    <thead>
-                    <tr>
-                        <th>nazwa kosza</th>
-                        <th class="col_quantity">ilość</th>
-                        <th>usuń</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr *ngFor="let orderItems of orderItems">
-                        <td scope="row">{{orderItems.basket.basketName}}</td>
-                        <td><input type="number" class="form-control" name="" id="" aria-describedby="helpId" placeholder="" min="0" [value]="orderItems.quantity" (change)="updateQuantity(orderItems,$event.target.value)"  ></td>
-                        <td class="col_delete"><i class="fa fa-trash" aria-hidden="true" (click)="deleteProductLine(orderItems.basket.basketId)"></i></td>
-                    </tr>
-                    </tbody>
-                </table>
+                <div class="d-table-wrapper">
+                    <table class="d-table" *ngIf="isBasketLinesEmpty()==false">
+                        <colgroup>
+                            <col span="1" style="width: 70%;">
+                            <col span="1" style="width: 25%;">
+                            <col span="1" style="width: 5%;">
+
+                        </colgroup>
+                        <thead>
+                        <tr>
+                            <th>Nazwa kosza</th>
+                            <th >Ilość</th>
+                            <th>Usuń</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr *ngFor="let orderItems of orderItems">
+                            <td scope="row">{{orderItems.basket.basketName}}</td>
+                            <td><input type="number" class="form-control" name="" id="" aria-describedby="helpId"
+                                       placeholder="" min="0" [value]="orderItems.quantity"
+                                       (change)="updateQuantity(orderItems,$event.target.value)"></td>
+                            <td ><i class="fa fa-trash" aria-hidden="true"
+                                                      (click)="deleteProductLine(orderItems.basket.basketId)"></i></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
                 <p *ngIf="isBasketLinesEmpty()==true">Brak pozycji w zamówieniu</p>
             </p-fieldset>
     </div>
 
-    <div #basketsummary class="basket_summary col-md-6">
+    <div #basketsummary class="basket_summary col-xl-6">
         <p-fieldset legend="Podsumowanie koszyka" [toggleable]="true">
             <div class="row">
                 <div class="col-lg-5">
@@ -99,7 +110,7 @@
     <div class="order_summary col-12">
         <p-fieldset legend="Szczegóły zamówienia" [toggleable]="true">
             <div class="row">
-                <div class="customer_data_form col-md-6">
+                <div class="customer_data_form col-xl-6">
                 <p-panel header="Dane osoby zamawiającej">
 
 
@@ -254,7 +265,7 @@
                 </p-panel>
 
             </div>
-                <div class="order_detail_form col-md-6">
+                <div class="order_detail_form col-xl-6">
                     <p-panel header="Dodatkowe informacje">
                             <form id="OrderFormAdditional" novalidate #formAdidtional="ngForm">
 

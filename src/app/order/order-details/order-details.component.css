@@ -130,3 +130,7 @@ button i {
     border: 1px solid black;
     cursor: pointer;
 }
+
+.d-table{
+    width: 400px;
+}

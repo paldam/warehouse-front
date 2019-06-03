@@ -36,15 +36,15 @@
 
 
     <p-column field="basketName" header="Nazwa kosza" [sortable]="true"></p-column>
-    <p-column field="basketType.basketTypeName" header="Typ kosza" [sortable]="true" ></p-column>
-    <p-column field="season" header="Sezon" [sortable]="true" ></p-column>
-    <p-column field="basketTotalPrice"  header="Cena kosza "  [sortable]="true" >
+    <p-column field="basketType.basketTypeName" header="Typ kosza" [sortable]="true" [style]="{'width':'120px'}" ></p-column>
+    <p-column field="season" header="Sezon" [sortable]="true" [style]="{'width':'120px'}"></p-column>
+    <p-column field="basketTotalPrice"  header="Cena kosza "  [sortable]="true" [style]="{'width':'120px'}">
       <ng-template let-row="rowData" pTemplate="body">
         {{row.basketTotalPrice/100| number : '1.2-2'}} zł.
       </ng-template>
     </p-column>
 
-      <p-column  header="Akcja" styleClass="action_col">
+      <p-column  header="Akcja" [style]="{'width':'140px'}">
         <ng-template let-basket="rowData" pTemplate="body">
           <i *ngIf="authenticationService.isAdmin() || authenticationService.isBiuroUser() " class="fa fa-pencil-square-o fa-2x" aria-hidden="true"  title="Edytuj kosz" [routerLink]="['/basket/', basket.basketId] "></i>
           <i *ngIf="authenticationService.isAdmin()" class="fa fa-trash fa-2x edit_icon" aria-hidden="true" title="Usuń kosz"  (click)="ShowConfirmModal(basket)"></i>
@@ -55,19 +55,28 @@
       </p-column>
 
     <ng-template let-basket pTemplate="rowexpansion">
-      <div class="basket_products_info">
-        Zawartość kosza:  {{basket.basketName}}
-        <table class="product_tab" >
+      Zawartość kosza:  {{basket.basketName}}
+      <div class="d-table-wrapper">
+
+        <table class="d-table">
+          <colgroup>
+            <col span="1" style="width: 60%;">
+            <col span="1" style="width: 15%;">
+            <col span="1" style="width: 15%;">
+            <col span="1" style="width: 10%;">
+          </colgroup>
+
           <thead>
-          <tr class="product_tab_row">
+          <tr>
             <th>Nazwa Produktu</th>
             <th>Pojemność</th>
             <th>Cena zakupu</th>
             <th>Ilość</th>
           </tr>
           </thead>
+
           <tbody>
-          <tr class="product_tab_row" *ngFor="let i of basket.basketItems">
+          <tr *ngFor="let i of basket.basketItems">
             <td>{{i.product.productName}}</td>
             <td>{{i.product.capacity}}</td>
             <td>{{i.product.price/100| number : '1.2-2'}} zł</td>

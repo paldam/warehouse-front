@@ -226,3 +226,7 @@ select.ng-dirty.ng-valid { border: 1px solid #6bc502 }
     cursor: pointer;
 }
 
+
+.d-table{
+    width: 400px;
+}
