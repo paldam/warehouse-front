@@ -152,6 +152,11 @@ body .ui-datatable .ui-datatable-data tr.ui-datatable-odd {
   background-color:#282b30;
 }
 
+.ui-progressbar{
+  height: 20px;
+  font-size: 12px;
+}
+
 .input-group-addon{
   font-size: 12px;
   padding-top: 3px;
@@ -189,6 +194,17 @@ p-fieldset{
 .ui-multiselect{
   width: 100%;
 }
+
+.progressbar-color-red .ui-progressbar  .ui-progressbar-value   {
+  background: red;
+}
+
+.progressbar-color-green .ui-progressbar .ui-progressbar-value{
+  background: green;
+}
+
+
+
 
 body .ui-toast .ui-toast-message {
   -webkit-box-shadow: 0 3px 6px 0 rgba(0, 0, 0, 0.16);

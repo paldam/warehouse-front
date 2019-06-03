@@ -1,4 +1,4 @@
-import {Component, ElementRef, HostListener, OnInit, ViewChild, ViewEncapsulation} from '@angular/core';
+import {Component, ElementRef, HostListener, OnInit, ViewChild} from '@angular/core';
 import {Order} from '../../model/order.model';
 import {OrderService} from '../order.service';
 import {ActivatedRoute, Router} from "@angular/router";
@@ -13,7 +13,6 @@ import {RoutingState} from "../../routing-stage";
 import {UserService} from "../../user.service";
 import {User} from "../../model/user.model";
 import {SpinerService} from "../../spiner.service";
-import * as Events from "events";
 
 @Component({
 	selector: 'order',
@@ -61,16 +60,12 @@ export class OrderComponent implements OnInit {
 
 	constructor(private activatedRoute: ActivatedRoute, private orderService: OrderService, private userService: UserService, private router: Router, private confirmationService: ConfirmationService,
 				private authenticationService: AuthenticationService, private fileSendService: FileSendService,
-				private  messageServiceExt: MessageServiceExt, private routingState: RoutingState,private spinerService: SpinerService) {
+				private  messageServiceExt: MessageServiceExt, private routingState: RoutingState, private spinerService: SpinerService) {
 		this.setCurentPageType();
 		this.setSearchOptions();
 		this.setOrderData();
-
-
 	}
 
-
-	
 	ngOnInit() {
 		this.getOrderStatusForDataTableFilter();
 		this.getOrderYearsForDataTableFilter();
@@ -83,8 +78,6 @@ export class OrderComponent implements OnInit {
 	}
 
 	private setCurentPageType() {
-
-		console.log(this.routingState.getCurrentPage());
 		this.isCurrentPageCustomerEdit = this.routingState.getCurrentPage().substring(0, 9) == "/customer";
 		this.isCurrentPageOrdersView = this.routingState.getCurrentPage().substring(0, 11) == "/orders/all";
 		this.isCurrentPageOrdersViewRedirectedFromBasketStatitis = this.routingState.getCurrentPage().substring(0, 14) == "/orders/all;id";
@@ -92,25 +85,65 @@ export class OrderComponent implements OnInit {
 
 	private setOrderData() {
 		if (this.isCurrentPageCustomerEdit) {
-			this.orderService.getOrderByCustomer(this.activatedRoute.snapshot.params["id"]).subscribe(data => {
+			this.performSetDataActionForCustomerEditPage();
+		} else if (this.isCurrentPageOrdersViewRedirectedFromBasketStatitis) {
+			this.performSetDataActionForOrderPageRedirectedFromStatistic();
+		} else if (this.isCurrentPageOrdersView) {
+			this.performSetDataActionForRegularOrderView();
+		}
+	}
+
+	private performSetDataActionForRegularOrderView() {
+		this.orderService.getOrdersDto(0, 50, "", "orderDate", 1, [], []).subscribe(
+			(data: any) => {
+				this.orders = data.orderDtoList;
+				this.totalRecords = data.totalRowsOfRequest;
+			}, error1 => {
+			}, () => {
+				this.calculateOrderProcessInPercentForStatusInProgress();
+			})
+	}
+
+	private performSetDataActionForOrderPageRedirectedFromStatistic() {
+		let basketIdTmp = this.activatedRoute.snapshot.paramMap.get('id');
+		let startDateTmp = this.activatedRoute.snapshot.paramMap.get('startDate');
+		let endDateTmp = this.activatedRoute.snapshot.paramMap.get('endDate');
+		this.orderService.getOrdersByBasketIdAndOrderDateRange(basketIdTmp, startDateTmp, endDateTmp).subscribe(data => {
+			this.orders = data;
+			this.ordersNotFiltered = data;
+		}, error => {
+		}, () => {
+			this.calculateOrderProcessInPercentForStatusInProgress();
+		})
+	}
+
+	private performSetDataActionForCustomerEditPage() {
+		this.orderService.getOrderByCustomer(this.activatedRoute.snapshot.params["id"]).subscribe(data => {
 				this.orders = data;
 				this.ordersNotFiltered = data;
 				this.currentCustomerOnCustomerEditPage = this.activatedRoute.snapshot.params["id"];
-			})
-		} else if (this.isCurrentPageOrdersViewRedirectedFromBasketStatitis) {
-			let basketIdTmp = this.activatedRoute.snapshot.paramMap.get('id');
-			let startDateTmp = this.activatedRoute.snapshot.paramMap.get('startDate');
-			let endDateTmp = this.activatedRoute.snapshot.paramMap.get('endDate');
-			this.orderService.getOrdersByBasketIdAndOrderDateRange(basketIdTmp, startDateTmp, endDateTmp).subscribe(data => {
-				this.orders = data;
-				this.ordersNotFiltered = data;
-			})
-		} else if (this.isCurrentPageOrdersView) {
-			this.orderService.getOrdersDto(0, 50, "", "orderDate", 1, [], []).subscribe((data: any) => {
-				this.orders = data.orderDtoList;
-				this.totalRecords = data.totalRowsOfRequest;
-			})
-		}
+			}, error => {
+			}
+			, () => {
+				this.calculateOrderProcessInPercentForStatusInProgress();
+			}
+		)
+	}
+
+	private calculateOrderProcessInPercentForStatusInProgress() {
+		setTimeout(() => {
+			this.orders.forEach(order => {
+				if (order.orderStatus.orderStatusId == 6) {
+					let totalBasketItem = 0;
+					let totalComplete = 0;
+					order.orderItems.forEach(orderItems => {
+						totalBasketItem += orderItems.quantity;
+						totalComplete = totalComplete + orderItems.stateOnLogistics + orderItems.stateOnProduction + orderItems.stateOnWarehouse;
+					});
+					order.progress = Math.floor(((totalComplete / 3) / totalBasketItem) * 100);
+				}
+			});
+		}, 800);
 	}
 
 	private getOrderStatusForDataTableFilter() {
@@ -148,7 +181,7 @@ export class OrderComponent implements OnInit {
 			this.orderService.getOrdersDto(0, 50, "", "orderDate", 1, [], []).subscribe((data: any) => {
 				this.orders = data.orderDtoList;
 				this.totalRecords = data.totalRowsOfRequest;
-			}, error1 => {
+			}, error => {
 				this.spinerService.showSpinner = false;
 			}, () => {
 				setTimeout(() => {
@@ -157,6 +190,7 @@ export class OrderComponent implements OnInit {
 				setTimeout(() => {
 					this.spinerService.showSpinner = false;
 				}, 1000);
+				this.calculateOrderProcessInPercentForStatusInProgress();
 			});
 		}
 	}
@@ -170,7 +204,6 @@ export class OrderComponent implements OnInit {
 		this.findInputTextOnOrderViewPage = localStorage.getItem('findInputTextOnOrderViewPage') ? (localStorage.getItem('findInputTextOnOrderViewPage')) : "";
 		setTimeout(() => {
 			if (localStorage.getItem('lastPaginationPageNumberOnOrderViewPage')) {
-
 				let tmplastVisitedPage = parseInt(localStorage.getItem('lastPaginationPageNumberOnOrderViewPage'));
 				this.lastPaginationPageNumberOnOrderViewPage = (tmplastVisitedPage - 1) * 50;
 				console.log(this.lastPaginationPageNumberOnOrderViewPage);
@@ -180,7 +213,8 @@ export class OrderComponent implements OnInit {
 		}, 300);
 	}
 
-
+	updateStatusState() {
+	}
 
 	showAttachment() {
 		this.orderService.getFileList(this.selectedToMenuOrder).subscribe(data => {
@@ -242,6 +276,7 @@ export class OrderComponent implements OnInit {
 			}, null
 			, () => {
 				this.loading = false;
+				this.calculateOrderProcessInPercentForStatusInProgress();
 			})
 	}
 
@@ -271,16 +306,14 @@ export class OrderComponent implements OnInit {
 	}
 
 	goToEditPage(id) {
-		if(this.authenticationService.isAdmin() || this.authenticationService.isBiuroUser()){
+		if (this.authenticationService.isAdmin() || this.authenticationService.isBiuroUser()) {
 			this.information_extention.hide();
 			let pageTmp = (this.datatable.first / this.datatable.rows) + 1;
 			localStorage.setItem('lastPaginationPageNumberOnOrderViewPage', pageTmp.toString());
 			let textTmp = this.findInputTextOnOrderViewPage;
 			localStorage.setItem('findInputTextOnOrderViewPage', textTmp);
 			this.router.navigate(["/orders/", id]);
-
 		}
-
 	}
 
 	OnSelectRow(event) {
@@ -328,11 +361,10 @@ export class OrderComponent implements OnInit {
 		)
 	}
 
-	notAllowedStyle(): string{
-		if (!this.authenticationService.isAdmin()){
+	notAllowedStyle(): string {
+		if (!this.authenticationService.isAdmin()) {
 			return "not_allowed";
 		}
-
 	}
 
 	printProductListPdf(id: number) {
@@ -469,19 +501,13 @@ export class OrderComponent implements OnInit {
 		this.information_extention.toggle(event);
 	}
 
-
-	assignOrdersToSpecifiedProduction(productionId: number){
-
-
-		let orderIds=[];
+	assignOrdersToSpecifiedProduction(productionId: number) {
+		let orderIds = [];
 		this.selectedOrdersMultiselction.forEach(order => {
 			orderIds.push(order.orderId);
 		});
-
-
-		
 		this.orderService.assignOrdersToSpecifiedProduction(orderIds, productionId).subscribe(
-				value => {
+			value => {
 				null
 			}, error => {
 				this.messageServiceExt.addMessage('error', 'Błąd', "Status: " + error.status + ' ' + error.statusText);
@@ -490,16 +516,17 @@ export class OrderComponent implements OnInit {
 				this.refreshData();
 				this.messageServiceExt.addMessage('success', 'Status', 'Przydzielono produkcję do zamówienia');
 			});
-
 	}
-
 
 	private setContextMenu() {
 		let tmpLabel = [];
-		this.productionUserList.forEach((user:User) => {
-			tmpLabel.push({label: user.login, icon: 'fa fa-user-o', command: () => this.assignOrdersToSpecifiedProduction(user.id)})
+		this.productionUserList.forEach((user: User) => {
+			tmpLabel.push({
+				label: user.login,
+				icon: 'fa fa-user-o',
+				command: () => this.assignOrdersToSpecifiedProduction(user.id)
+			})
 		});
-		
 		this.items = [
 			{
 				label: 'Szybki podgląd zamówienia',
