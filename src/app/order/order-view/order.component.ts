@@ -213,7 +213,34 @@ export class OrderComponent implements OnInit {
 		}, 300);
 	}
 
-	updateStatusState() {
+	updateOrderProgress(order: Order) {
+
+		this.orderService.changeOrderProgress(order.orderId, order.orderItems).subscribe(value => {
+
+		});
+		console.log(order);
+
+	}
+	updateStateOnProduction(orderToChange, value,i:number){
+		let orderLine = this.orders.find(order =>order.orderId == orderToChange.orderId);
+		if (orderLine != undefined) {
+			orderLine.orderItems[i].stateOnProduction = Number(value);
+		}
+
+	}
+
+	updateStateOnWarehouse(orderToChange, value,i:number){
+		let orderLine = this.orders.find(order =>order.orderId == orderToChange.orderId);
+		if (orderLine != undefined) {
+			orderLine.orderItems[i].stateOnWarehouse = Number(value);
+		}
+	}
+
+	updateStateOnLogistics(orderToChange, value,i:number){
+		let orderLine = this.orders.find(order =>order.orderId == orderToChange.orderId);
+		if (orderLine != undefined) {
+			orderLine.orderItems[i].stateOnLogistics = Number(value);
+		}
 	}
 
 	showAttachment() {

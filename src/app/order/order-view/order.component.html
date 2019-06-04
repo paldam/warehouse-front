@@ -177,22 +177,22 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <tr  *ngFor="let i of orders.orderItems">
-                        <td >{{i.basket.basketName}}</td>
-                        <td>{{i.quantity}}</td>
+                    <tr  *ngFor="let row of orders.orderItems; index as i">
+                        <td >{{row.basket.basketName}}</td>
+                        <td>{{row.quantity}}</td>
                         <td>
-                            <input type="number" class="form-control" name="" id="" aria-describedby="helpId" placeholder="" min="0" [max]="i.quantity" [value]="i.stateOnProduction" (change)="updateStatusState()">
+                            <input type="number"  class="form-control" aria-describedby="helpId" placeholder="" min="0" [max]="row.quantity" [value]="row.stateOnProduction"  (change)="updateStateOnProduction(orders,$event.target.value,i)" >
                         </td>
                         <td>
-                            <input type="number" class="form-control" name="" id="" aria-describedby="helpId" placeholder="" min="0" [max]="i.quantity" [value]="i.stateOnWarehouse" (change)="updateStatusState()">
+                            <input type="number"  class="form-control" aria-describedby="helpId" placeholder="" min="0" [max]="row.quantity" [value]="row.stateOnWarehouse" (change)="updateStateOnWarehouse(orders,$event.target.value,i)">
                         </td>
                         <td>
-                            <input type="number" class="form-control" name="" id="" aria-describedby="helpId" placeholder="" min="0" [max]="i.quantity" [value]="i.stateOnLogistics" (change)="updateStatusState()">
+                            <input type="number"  class="form-control"  aria-describedby="helpId" placeholder="" min="0" [max]="row.quantity" [value]="row.stateOnLogistics" (change)="updateStateOnLogistics(orders,$event.target.value,i)">
                         </td>
                     </tr>
                     </tbody>
                 </table>
-                <button class="btn bg-primary change-state-btn " >Aktualizuj</button>
+                <button class="btn bg-primary change-state-btn" (click)="updateOrderProgress(orders)" >Aktualizuj</button>
 
             </div>
 

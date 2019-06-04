@@ -41,7 +41,10 @@ export class OrderService {
                 response.json());
     }
 
+	changeOrderProgress(id: number, orderItems: OrderItem[]): Observable<Response>{
+		return this.http.post(this.baseUrl+`/order/progress/${id}`,orderItems)
 
+	}
 
     getCompany() :Observable<any[]>{
         return this.http.get(this.baseUrl+`/company`)

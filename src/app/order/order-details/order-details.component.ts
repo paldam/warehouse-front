@@ -314,6 +314,19 @@ export class OrderDetailsComponent implements OnInit {
           this.order.address = this.orderAddress;
 
 
+          this.order.orderItems.forEach((value : OrderItem) => {
+			  if (!value.stateOnLogistics) {
+				  value.stateOnLogistics = 0;
+			  }
+			  if (!value.stateOnWarehouse) {
+				  value.stateOnWarehouse = 0;
+			  }
+			  if (!value.stateOnProduction) {
+				  value.stateOnProduction = 0;
+			  }
+		  });
+
+
 
           this.orderService.saveOrder(this.order).subscribe(data => {
 
