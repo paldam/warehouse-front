@@ -8,13 +8,14 @@ import 'rxjs/add/operator/catch';
 import {TOKEN, TOKEN_USER} from './authentication.service';
 import {Router} from "@angular/router";
 import {MessageService} from "primeng/api";
+import {MessageServiceExt} from "./messages/messageServiceExt";
 
 
 @Injectable()
 
 export class HttpService extends Http {
 
-    constructor (backend: XHRBackend, options: RequestOptions,private router: Router,private messageService: MessageService) {
+    constructor (backend: XHRBackend, options: RequestOptions,private router: Router,private messageService: MessageService, private messageServiceExt: MessageServiceExt) {
         super(backend, options);
         let token = localStorage.getItem(TOKEN);
         options.headers.set('Authorization', `Bearer ${token}`);
@@ -40,6 +41,13 @@ export class HttpService extends Http {
     private catchAuthError (self: HttpService) {
         // we have to pass HttpService's own instance here as `self`
         return (res: Response) => {
+            
+            console.log("TTTTTTTTT");
+
+			if (res.status === 400) {
+
+				this.messageServiceExt.addMessage('error', 'Błąd ', "Status: " + res.status + ' ' + res.text());
+			}
             if (res.status === 401) {
                 // if not authenticated
                 this.router.navigateByUrl('/login');
@@ -56,4 +64,8 @@ export class HttpService extends Http {
             return Observable.throw(res);
         };
     }
+
+
+
+
 }

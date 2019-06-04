@@ -214,13 +214,19 @@ export class OrderComponent implements OnInit {
 	}
 
 	updateOrderProgress(order: Order) {
-
 		this.orderService.changeOrderProgress(order.orderId, order.orderItems).subscribe(value => {
+		}, error => {
 
+		}, () => {
+			this.messageServiceExt.addMessage('success', 'Status', 'Zmieniono stan zamówienia');
+			this.refreshData();
 		});
-		console.log(order);
-
 	}
+	
+	test(event){
+		console.log(event);
+	}
+
 	updateStateOnProduction(orderToChange, value,i:number){
 		let orderLine = this.orders.find(order =>order.orderId == orderToChange.orderId);
 		if (orderLine != undefined) {

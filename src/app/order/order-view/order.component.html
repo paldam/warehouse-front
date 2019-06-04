@@ -170,7 +170,7 @@
                     <thead>
                     <tr >
                         <th >Nazwa kosza</th>
-                        <th >illość</th>
+                        <th >Ilość koszy</th>
                         <th >Produkcja</th>
                         <th >Magazyn</th>
                         <th >Logistyka</th>
@@ -181,7 +181,7 @@
                         <td >{{row.basket.basketName}}</td>
                         <td>{{row.quantity}}</td>
                         <td>
-                            <input type="number"  class="form-control" aria-describedby="helpId" placeholder="" min="0" [max]="row.quantity" [value]="row.stateOnProduction"  (change)="updateStateOnProduction(orders,$event.target.value,i)" >
+                            <input type="number"  class="form-control" aria-describedby="helpId" placeholder="" min="0" [max]="row.quantity" [value]="row.stateOnProduction"  (change)="updateStateOnProduction(orders,$event.target.value,i);test($event)" >
                         </td>
                         <td>
                             <input type="number"  class="form-control" aria-describedby="helpId" placeholder="" min="0" [max]="row.quantity" [value]="row.stateOnWarehouse" (change)="updateStateOnWarehouse(orders,$event.target.value,i)">

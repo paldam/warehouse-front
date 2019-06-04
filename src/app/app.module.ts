@@ -27,8 +27,8 @@ import {PrimeNgModule} from "./prime-ng.module";
 import {MapsComponent} from "./maps/maps.component";
 import {FileSendComponent} from "./file-send/file-send.component";
 
-export function httpExt(backend: XHRBackend, options: RequestOptions, router: Router, messageService: MessageService) {
-	return new HttpService(backend, options, router, messageService);
+export function httpExt(backend: XHRBackend, options: RequestOptions, router: Router, messageService: MessageService,messageServiceExt: MessageServiceExt) {
+	return new HttpService(backend, options, router, messageService,messageServiceExt );
 }
 
 @NgModule({
@@ -44,7 +44,7 @@ export function httpExt(backend: XHRBackend, options: RequestOptions, router: Ro
 		routing, BrowserModule, HttpModule, BrowserAnimationsModule, PrimeNgModule
 	],
 	providers: [{
-		provide: HttpService, useFactory: (httpExt), deps: [XHRBackend, RequestOptions, Router, MessageService]
+		provide: HttpService, useFactory: (httpExt), deps: [XHRBackend, RequestOptions, Router, MessageService, MessageServiceExt]
 	},
 		CalendarSetingsComponent, MessageServiceExt, RoutingState, SpinerService, MessageService, FileSendService, MapService,
 		ConfirmationService, AuthGuard, AdminGuard, AdminOrSuperUserGuard, AuthenticationService, UserService],
