@@ -12,7 +12,7 @@
 
 
 
-        <div class="onlyWithAttach form-check">
+        <div *ngIf="this.isCurrentPageOrdersView" class="onlyWithAttach form-check">
             <label class="form-check-label">
                 <input  #onlyWithAttach type="checkbox" class="form-check-input" name=""  (click)="clickOnlyWithAtttach()" >
                 Tylko z załącznikami
@@ -29,7 +29,7 @@
 
     <p-dataTable #dt [value]="orders" [rows]="50" [paginator]="true" [globalFilter]="globalfilter"  [totalRecords]="totalRecords" selectionMode="multiple"
                  [loading]="loading" loadingIcon="fa-circle-o-notch" expandableRows="true" [(first)]="lastPaginationPageNumberOnOrderViewPage"  [(selection)]="selectedOrdersMultiselction"
-                 dataKey="orderId" [contextMenu]="cm" [paginator]="true" [pageLinks]="5" [rowsPerPageOptions]= paginatorValues [lazy]="!isCurrentPageOrdersViewRedirectedFromBasketStatitis && !this.isCurrentPageCustomerEdit"
+                 dataKey="orderId" [contextMenu]="cm" [paginator]="true" [pageLinks]="5" [rowsPerPageOptions]= paginatorValues [lazy]="isCurrentPageOrdersView"
                  (onContextMenuSelect)="OnSelectRow($event)"
                  (onRowExpand)="rowExpand($event)"
                  (onPage)="hideActionExtention2($event)"
@@ -49,9 +49,9 @@
 
 
 
-        <p-column field="orderDate" header="Data zamówienia" [style]="{'width':'140px', 'text-align':'center'}" [sortable]="true" [filter]="!this.isCurrentPageCustomerEdit" filterMatchMode="equals">
+        <p-column field="orderDate" header="Data zamówienia" [style]="{'width':'140px', 'text-align':'center'}" [sortable]="true" [filter]="this.isCurrentPageOrdersView" filterMatchMode="equals">
 
-            <ng-template *ngIf="!this.isCurrentPageCustomerEdit" let-col pTemplate="filter"  >
+            <ng-template *ngIf="this.isCurrentPageOrdersView" let-col pTemplate="filter"  >
                 <div>
                     <p-multiSelect *ngIf="!this.isCurrentPageOrdersViewRedirectedFromBasketStatitis" [filter]="false" [showToggleAll]="false" [options]="ordersYears" defaultLabel="Wszystkie" (onChange)="datatable.filter($event.value, col.field, 'in')"></p-multiSelect>
                 </div>
@@ -115,16 +115,16 @@
         </p-column>
 
 
-        <p-column field="orderStatus.orderStatusName" header="Status" [style]="{'width':'150px', 'text-align':'center'}" [filter]="!this.isCurrentPageCustomerEdit" filterMatchMode="equals" [sortable]="true" >
+        <p-column field="orderStatus.orderStatusName" header="Status" [style]="{'width':'150px', 'text-align':'center'}" [filter]="this.isCurrentPageOrdersView" filterMatchMode="equals" [sortable]="true" >
 
-            <ng-template *ngIf="!this.isCurrentPageCustomerEdit" let-col pTemplate="filter"  >
-                <p-multiSelect *ngIf="!this.isCurrentPageOrdersViewRedirectedFromBasketStatitis" [filter]="false" [showToggleAll]="false" [options]="orderStatusList" defaultLabel="Wszystkie" (onChange)="datatable.filter($event.value, col.field, 'in')"></p-multiSelect>
+            <ng-template  let-col pTemplate="filter"  >
+                <p-multiSelect [filter]="false" [showToggleAll]="false" [options]="orderStatusList" defaultLabel="Wszystkie" (onChange)="datatable.filter($event.value, col.field, 'in')"></p-multiSelect>
             </ng-template>
 
             <ng-template let-row="rowData" pTemplate="body"  >
 
-                <span *ngIf="row.orderStatus.orderStatusId == 6 && isCurrentPageOrdersView" ><p-progressBar [ngClass]="{'progressbar-color-green': value < 50, 'progressbar-color-red': value > 50}"   [value]="row.progress"></p-progressBar></span>
-                <span *ngIf="row.orderStatus.orderStatusId != 6 || !isCurrentPageOrdersView" [ngStyle]="calculateStyles(row.orderStatus.orderStatusName)">{{row.orderStatus.orderStatusName }}</span>
+                <span *ngIf="(row.orderStatus.orderStatusId == 6 && (isCurrentPageOrdersView || isCurrentPageOrdersViewForProduction))" ><p-progressBar [ngClass]="{'progressbar-color-green': value < 50, 'progressbar-color-red': value > 50}"   [value]="row.progress"></p-progressBar></span>
+                <span *ngIf="(row.orderStatus.orderStatusId != 6 ||isCurrentPageCustomerEdit || isCurrentPageOrdersViewRedirectedFromBasketStatitis)" [ngStyle]="calculateStyles(row.orderStatus.orderStatusName)">{{row.orderStatus.orderStatusName }}</span>
             </ng-template>
 
         </p-column>
@@ -156,12 +156,16 @@
     </p-column>
 
 
+
+
         <ng-template let-orders pTemplate="rowexpansion">
             <p>Pozycje zamówienia</p>
             <div class="d-table-wrapper">
                 <table class="d-table">
                     <colgroup>
-                        <col span="1" style="width: 60%;">
+                        <col span="1" style="width: 40%;">
+                        <col span="1" style="width: 10%;">
+                        <col span="1" style="width: 10%;">
                         <col span="1" style="width: 10%;">
                         <col span="1" style="width: 10%;">
                         <col span="1" style="width: 10%;">
@@ -170,6 +174,8 @@
                     <thead>
                     <tr >
                         <th >Nazwa kosza</th>
+                        <th >Zdjęcie</th>
+                        <th >Skład kosza</th>
                         <th >Ilość koszy</th>
                         <th >Produkcja</th>
                         <th >Magazyn</th>
@@ -179,15 +185,28 @@
                     <tbody>
                     <tr  *ngFor="let row of orders.orderItems; index as i">
                         <td >{{row.basket.basketName}}</td>
+
+                        <td>
+                            <i class="fa fa-picture-o fa-2x" aria-hidden="true" title="Pokaż zdjęcie kosza"
+                               (click)=" showBacketImg($event,row.basket.basketId)"></i>
+                        </td>
+                        <td>
+                            <i class="fa fa-file-pdf-o fa-2x " aria-hidden="true" title="Drukuj skład kosza ze zdjęciem"
+                               (click)="printProductListInBasketPdf(row.basket.basketId)"></i>
+                        </td>
                         <td>{{row.quantity}}</td>
                         <td>
-                            <input type="number"  class="form-control" aria-describedby="helpId" placeholder="" min="0" [max]="row.quantity" [value]="row.stateOnProduction"  (change)="updateStateOnProduction(orders,$event.target.value,i);test($event)" >
+                            <input type="number"
+                                   [disabled]="orders.orderStatus.orderStatusId != ORDER_STATUS_W_TRAKCIE_REALIZACJI"
+                                   class="form-control" aria-describedby="helpId" placeholder="" min="0"
+                                   [max]="row.quantity" [value]="row.stateOnProduction"
+                                   (change)="updateStateOnProduction(orders,$event.target.value,i);test($event)">
                         </td>
                         <td>
-                            <input type="number"  class="form-control" aria-describedby="helpId" placeholder="" min="0" [max]="row.quantity" [value]="row.stateOnWarehouse" (change)="updateStateOnWarehouse(orders,$event.target.value,i)">
+                            <input type="number"  [disabled]="orders.orderStatus.orderStatusId != ORDER_STATUS_W_TRAKCIE_REALIZACJI" class="form-control" aria-describedby="helpId" placeholder="" min="0" [max]="row.quantity" [value]="row.stateOnWarehouse" (change)="updateStateOnWarehouse(orders,$event.target.value,i)">
                         </td>
                         <td>
-                            <input type="number"  class="form-control"  aria-describedby="helpId" placeholder="" min="0" [max]="row.quantity" [value]="row.stateOnLogistics" (change)="updateStateOnLogistics(orders,$event.target.value,i)">
+                            <input type="number" [disabled]="orders.orderStatus.orderStatusId != ORDER_STATUS_W_TRAKCIE_REALIZACJI"  class="form-control"  aria-describedby="helpId" placeholder="" min="0" [max]="row.quantity" [value]="row.stateOnLogistics" (change)="updateStateOnLogistics(orders,$event.target.value,i)">
                         </td>
                     </tr>
                     </tbody>
@@ -299,3 +318,7 @@
     </div>
 
 </div>
+
+<p-dialog  header="Kosz" [(visible)]="showImageFrame">
+    <img [src]="imageToShow" [height]="700" [width]="700">
+</p-dialog>

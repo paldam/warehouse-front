@@ -11,12 +11,13 @@ import {OrderAuditComponent} from "./order-audit/order-audit.component";
 import {CustomerService} from "../customer/customer.service";
 import {CustomerModule} from "../customer/customer.module";
 import {BasketService} from "../basket/basket.service";
+import { OrderViewProductionComponent } from './order-view-production/order-view-production.component';
 
 
 
 
 @NgModule({
-	declarations: [OrderComponent,BasketOrderComponent,OrderDetailsComponent,OrderPreviewComponent,OrderAuditComponent],
+	declarations: [OrderComponent,BasketOrderComponent,OrderDetailsComponent,OrderPreviewComponent,OrderAuditComponent, OrderViewProductionComponent],
 	imports: [routing,CommonModule,PrimeNgModule],
 	providers: [OrderService,CustomerService,BasketService],
 	exports:[OrderComponent,OrderPreviewComponent]

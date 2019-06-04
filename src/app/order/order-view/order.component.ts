@@ -13,6 +13,8 @@ import {RoutingState} from "../../routing-stage";
 import {UserService} from "../../user.service";
 import {User} from "../../model/user.model";
 import {SpinerService} from "../../spiner.service";
+import {BasketService} from "../../basket/basket.service";
+
 
 @Component({
 	selector: 'order',
@@ -20,7 +22,9 @@ import {SpinerService} from "../../spiner.service";
 	styleUrls: ['./order.component.css']
 })
 export class OrderComponent implements OnInit {
+
 	public selectedOrderFromRow: Order = new Order();
+	public ORDER_STATUS_W_TRAKCIE_REALIZACJI = AppConstans.ORDER_STATUS_W_TRAKCIE_REALIZACJI;
 	public loading: boolean = false;
 	public totalRecords: number;
 	public orders: any[] = [];
@@ -29,6 +33,7 @@ export class OrderComponent implements OnInit {
 	public findInputTextOnOrderViewPage: string = "";
 	public isCurrentPageCustomerEdit: boolean = false;
 	public isCurrentPageOrdersView: boolean = false;
+	public isCurrentPageOrdersViewForProduction: boolean = false;
 	public isCurrentPageOrdersViewRedirectedFromBasketStatitis: boolean = false;
 	public showAttachmentModal: boolean = false;
 	public showOrderPreviewModal: boolean = false;
@@ -36,6 +41,8 @@ export class OrderComponent implements OnInit {
 	public printDeliveryConfirmationPdFSettings: boolean = false;
 	public pdialogBasketProductsPrint: boolean = false;
 	public selectedToPrintOrder: Order = new Order();
+	public showImageFrame: boolean =false;
+	public imageToShow: any;
 	public selectedOrderToPrintBasketProducts: any;
 	public selectedToMenuOrder: number;
 	public selectedOrdersMultiselction: Order[] = [];
@@ -58,8 +65,8 @@ export class OrderComponent implements OnInit {
 	@ViewChild('dt') datatable: DataTable;
 	@ViewChild('information_extention') information_extention: OverlayPanel;
 
-	constructor(private activatedRoute: ActivatedRoute, private orderService: OrderService, private userService: UserService, private router: Router, private confirmationService: ConfirmationService,
-				private authenticationService: AuthenticationService, private fileSendService: FileSendService,
+	constructor(private basketService :BasketService,private activatedRoute: ActivatedRoute, private orderService: OrderService, private userService: UserService, private router: Router, public confirmationService: ConfirmationService,
+				public authenticationService: AuthenticationService, private fileSendService: FileSendService,
 				private  messageServiceExt: MessageServiceExt, private routingState: RoutingState, private spinerService: SpinerService) {
 		this.setCurentPageType();
 		this.setSearchOptions();
@@ -81,6 +88,7 @@ export class OrderComponent implements OnInit {
 		this.isCurrentPageCustomerEdit = this.routingState.getCurrentPage().substring(0, 9) == "/customer";
 		this.isCurrentPageOrdersView = this.routingState.getCurrentPage().substring(0, 11) == "/orders/all";
 		this.isCurrentPageOrdersViewRedirectedFromBasketStatitis = this.routingState.getCurrentPage().substring(0, 14) == "/orders/all;id";
+		this.isCurrentPageOrdersViewForProduction = this.routingState.getCurrentPage().substring(0, 18) == "/orders/production";
 	}
 
 	private setOrderData() {
@@ -88,6 +96,8 @@ export class OrderComponent implements OnInit {
 			this.performSetDataActionForCustomerEditPage();
 		} else if (this.isCurrentPageOrdersViewRedirectedFromBasketStatitis) {
 			this.performSetDataActionForOrderPageRedirectedFromStatistic();
+		} else if (this.isCurrentPageOrdersViewForProduction) {
+			this.performSetDataActionForOrderViewProduction();
 		} else if (this.isCurrentPageOrdersView) {
 			this.performSetDataActionForRegularOrderView();
 		}
@@ -101,6 +111,19 @@ export class OrderComponent implements OnInit {
 			}, error1 => {
 			}, () => {
 				this.calculateOrderProcessInPercentForStatusInProgress();
+			})
+	}
+
+
+	private performSetDataActionForOrderViewProduction() {
+		this.orderService.getOrdersDtoForProduction().subscribe(
+			(data: any) => {
+				this.orders = data;
+			}, error1 => {
+				this.spinerService.showSpinner = false;
+			}, () => {
+				this.calculateOrderProcessInPercentForStatusInProgress();
+				this.spinerService.showSpinner = false;
 			})
 	}
 
@@ -177,7 +200,9 @@ export class OrderComponent implements OnInit {
 		this.spinerService.showSpinner = true;
 		if (this.isCurrentPageCustomerEdit) {
 			this.orderService.getOrderByCustomer(this.currentCustomerOnCustomerEditPage).subscribe(data => this.orders = data);
-		} else {
+		}if(this.isCurrentPageOrdersViewForProduction){
+			this.performSetDataActionForOrderViewProduction();
+		}else {
 			this.orderService.getOrdersDto(0, 50, "", "orderDate", 1, [], []).subscribe((data: any) => {
 				this.orders = data.orderDtoList;
 				this.totalRecords = data.totalRowsOfRequest;
@@ -228,6 +253,7 @@ export class OrderComponent implements OnInit {
 	}
 
 	updateStateOnProduction(orderToChange, value,i:number){
+		console.log(orderToChange );
 		let orderLine = this.orders.find(order =>order.orderId == orderToChange.orderId);
 		if (orderLine != undefined) {
 			orderLine.orderItems[i].stateOnProduction = Number(value);
@@ -376,15 +402,33 @@ export class OrderComponent implements OnInit {
 			window.open(fileURL);
 		})
 	}
-
+ //TODO
 	changeOrderStatus(orderStatus: number) {
-		this.orderService.changeOrderStatus(this.selectedToMenuOrder, orderStatus).subscribe(data => {
-			this.messageServiceExt.addMessage('success', 'Status', 'Zmieniono status zamówienia');
-		}, error => {
-			this.messageServiceExt.addMessage('error', 'Błąd ', error._body);
-		});
-		this.refreshData();
+		if (this.authenticationService.isProdukcjaUser()) {
+			if (this.selectedOrderFromRow.orderStatus.orderStatusId == 1 || this.selectedOrderFromRow.orderStatus.orderStatusId == 4) {
+				this.orderService.changeOrderStatus(this.selectedToMenuOrder, orderStatus).subscribe(data => {
+					this.messageServiceExt.addMessage('success', 'Status', 'Zmieniono status zamówienia');
+				}, error => {
+					this.messageServiceExt.addMessage('error', 'Błąd ', error._body);
+				}, () => {
+					this.refreshData();
+				});
+
+			}else{
+				this.messageServiceExt.addMessage('error', 'Błąd ', 'Brak uprawnień');
+			}
+		} else {
+			this.orderService.changeOrderStatus(this.selectedToMenuOrder, orderStatus).subscribe(data => {
+				this.messageServiceExt.addMessage('success', 'Status', 'Zmieniono status zamówienia');
+			}, error => {
+				this.messageServiceExt.addMessage('error', 'Błąd ', error._body);
+			}, () => {
+				this.refreshData();
+			});
+		}
 	}
+
+
 
 	printPdf(id: number) {
 		this.orderService.getPdf(id).subscribe(res => {
@@ -440,6 +484,27 @@ export class OrderComponent implements OnInit {
 			return {'color': 'red'};
 		} else {
 			return {'color': 'black'};
+		}
+	}
+
+	showBacketImg(event, basketId: number) {
+		this.basketService.getBasketImg(basketId).subscribe(res => {
+			this.createImageFromBlob(res);
+		}, error => {
+		}, complete => {
+		});
+		this.showImageFrame = true;
+	}
+
+
+
+	private createImageFromBlob(image: Blob) {
+		let reader = new FileReader();
+		reader.addEventListener("load", () => {
+			this.imageToShow = reader.result;
+		}, false);
+		if (image) {
+			reader.readAsDataURL(image);
 		}
 	}
 
@@ -510,6 +575,15 @@ export class OrderComponent implements OnInit {
 		)
 	}
 
+	printProductListInBasketPdf(basketId: number){
+		this.basketService.getBasketPdf(basketId).subscribe(res=>{
+				var fileURL = URL.createObjectURL(res);
+				window.open(fileURL);
+
+			}
+		)
+	}
+
 	printConfirmationPdf() {
 		this.orderService.getConfirmationPdf(this.selectedToPrintOrder.orderId, this.selectedToPrintOrder.orderItems).subscribe(res => {
 				var fileURL = URL.createObjectURL(res);
@@ -543,7 +617,6 @@ export class OrderComponent implements OnInit {
 			value => {
 				null
 			}, error => {
-				this.messageServiceExt.addMessage('error', 'Błąd', "Status: " + error.status + ' ' + error.statusText);
 				this.refreshData();
 			}, () => {
 				this.refreshData();
@@ -560,39 +633,76 @@ export class OrderComponent implements OnInit {
 				command: () => this.assignOrdersToSpecifiedProduction(user.id)
 			})
 		});
-		this.items = [
-			{
-				label: 'Szybki podgląd zamówienia',
-				icon: 'fa fa-search',
-				command: () => this.showOrderPreview(event)
-			},
-			{
-				label: 'Zmień status ', icon: 'fa fa-share',
-				items: [
-					{label: 'nowe', icon: 'pi pi-fw pi-plus', command: () => this.changeOrderStatus(1)},
-					{label: 'przyjęte', icon: 'pi pi-fw pi-plus', command: () => this.changeOrderStatus(4)},
-					{label: 'skompletowane', icon: 'pi pi-fw pi-plus', command: () => this.changeOrderStatus(3)},
-					{label: 'wysłane', icon: 'pi pi-fw pi-plus', command: () => this.changeOrderStatus(2)},
-					{label: 'zrealizowane', icon: 'pi pi-fw pi-plus', command: () => this.changeOrderStatus(5)},
-				]
-			},
-			{label: 'Pokaż załącznik(i)', icon: 'fa fa-paperclip', command: () => this.showAttachment()},
-			{label: 'Wydrukuj', icon: 'fa fa-print', command: () => this.printMultiplePdf()},
-			{
-				label: 'Wydrukuj potwierdzenie',
-				icon: 'fa fa-file-pdf-o',
-				command: () => this.printMultipleDeliveryPdf()
-			},
-			{
-				label: 'Wydrukuj komplet ', icon: 'fa fa-window-restore', command: () => {
-					this.printMultipleDeliveryPdf();
-					this.printMultiplePdf();
-				}
-			},
-			{
-				label: 'Przydziel zamówienie do ', icon: 'fa fa-hand-paper-o',
-				items: tmpLabel
-			},
-		];
+
+
+		if(this.authenticationService.isProdukcjaUser()){
+			this.items = [
+				{
+					label: 'Szybki podgląd zamówienia',
+					icon: 'fa fa-search',
+					command: () => this.showOrderPreview(event)
+				},
+				{
+					label: 'Zmień status ', icon: 'fa fa-share',
+					items: [
+						{label: 'przyjęte', icon: 'pi pi-fw pi-plus', command: () => this.changeOrderStatus(4)},
+						{label: 'nowe', icon: 'pi pi-fw pi-plus', command: () => this.changeOrderStatus(1)},
+					]
+				},
+				{label: 'Pokaż załącznik(i)', icon: 'fa fa-paperclip', command: () => this.showAttachment()},
+				{label: 'Wydrukuj', icon: 'fa fa-print', command: () => this.printMultiplePdf()},
+				{
+					label: 'Wydrukuj potwierdzenie',
+					icon: 'fa fa-file-pdf-o',
+					command: () => this.printMultipleDeliveryPdf()
+				},
+				{
+					label: 'Wydrukuj komplet ', icon: 'fa fa-window-restore', command: () => {
+						this.printMultipleDeliveryPdf();
+						this.printMultiplePdf();
+					}
+				},
+			];
+
+		}else{
+			this.items = [
+				{
+					label: 'Szybki podgląd zamówienia',
+					icon: 'fa fa-search',
+					command: () => this.showOrderPreview(event)
+				},
+				{
+					label: 'Zmień status ', icon: 'fa fa-share',
+					items: [
+						{label: 'nowe', icon: 'pi pi-fw pi-plus', command: () => this.changeOrderStatus(1)},
+						{label: 'przyjęte', icon: 'pi pi-fw pi-plus', command: () => this.changeOrderStatus(4)},
+						{label: 'skompletowane', icon: 'pi pi-fw pi-plus', command: () => this.changeOrderStatus(3)},
+						{label: 'wysłane', icon: 'pi pi-fw pi-plus', command: () => this.changeOrderStatus(2)},
+						{label: 'zrealizowane', icon: 'pi pi-fw pi-plus', command: () => this.changeOrderStatus(5)},
+					]
+				},
+				{label: 'Pokaż załącznik(i)', icon: 'fa fa-paperclip', command: () => this.showAttachment()},
+				{label: 'Wydrukuj', icon: 'fa fa-print', command: () => this.printMultiplePdf()},
+				{
+					label: 'Wydrukuj potwierdzenie',
+					icon: 'fa fa-file-pdf-o',
+					command: () => this.printMultipleDeliveryPdf()
+				},
+				{
+					label: 'Wydrukuj komplet ', icon: 'fa fa-window-restore', command: () => {
+						this.printMultipleDeliveryPdf();
+						this.printMultiplePdf();
+					}
+				},
+				{
+					label: 'Przydziel zamówienie do ', icon: 'fa fa-hand-paper-o',
+					items: tmpLabel
+				},
+			];
+		}
+
+
+
+
 	}
 }

@@ -9,8 +9,8 @@ import {SuppliersComponent} from "./suppliers/suppliers.component";
 
 const routes: Routes = [
 	{path: '', component: ProductsComponent, pathMatch: 'full', canActivate: [AuthGuard]},
-	{path: 'products/delivery', component: ProductDeliveryComponent},
-	{path: 'products/setdelivery', component: ProductDeliveryComponent},
+	{path: 'products/delivery', component: ProductDeliveryComponent, canActivate: [AuthGuard]},
+	{path: 'products/setdelivery', component: ProductDeliveryComponent, canActivate: [AuthGuard]},
 	{path: 'product', component: ProductsComponent, canActivate: [AuthGuard]},
 	{path: 'product/add', component: ProductFormComponent, canActivate: [AuthGuard]},
 	{path: 'product/:id', component: ProductEditFormComponent, canActivate: [AuthGuard]},

@@ -120,6 +120,12 @@ export class OrderService {
                 response.json());
     }
 
+	getOrdersDtoForProduction( ): Observable<any[]>{
+		return this.http.get(this.baseUrl+`/orders/production`)
+			.map((response: Response) =>
+				response.json());
+	}
+
 
 	assignOrdersToSpecifiedProduction(ordersIds :number[], productionId: number): Observable<Response> {
 		return this.http.post(this.baseUrl + `/order/assign_production?ordersIds=${ordersIds}&&productionId=${productionId}`,null)

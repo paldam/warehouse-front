@@ -22,10 +22,10 @@
             </li>
 
 
-            <li routerLinkActive="active_main" >
+            <li  routerLinkActive="active_main" >
             <h3 [class.cursor_dis]="isWysylkaUser() || isProdukcjaUser()" class="tak"><span class="fa fa-newspaper-o"></span>Produkty</h3>
             <ul>
-                <li *ngIf="authenticationService.isAdmin() || authenticationService.isBiuroUser() || authenticationService.isMagazynUser()" ><a  [routerLink]="['/product/'] " routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Przeglądaj</a></li>
+                <li *ngIf="authenticationService.isAdmin() || authenticationService.isBiuroUser() || authenticationService.isMagazynUser() ||authenticationService.isProdukcjaUser()" ><a  [routerLink]="['/product/'] " routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Przeglądaj</a></li>
                 <li *ngIf="authenticationService.isAdmin() ||  authenticationService.isMagazynUser() " ><a [routerLink]="['/product/add'] " routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Dodaj</a></li>
                 <li *ngIf="authenticationService.isAdmin() || authenticationService.isMagazynUser()" ><a [routerLink]="['/products/delivery'] " routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Dostawa</a></li>
                 <li *ngIf="authenticationService.isAdmin() || authenticationService.isMagazynUser()" ><a [routerLink]="['products/setdelivery'] " routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Zamówienie produktów</a></li>
@@ -36,7 +36,7 @@
         </li>
 
 
-            <li routerLinkActive="active_main" >
+            <li *ngIf="!isProdukcjaUser() " routerLinkActive="active_main" >
                 <h3 [class.cursor_dis]="isProdukcjaUser() || isMagazynUser()" class="tak"><span class="fa fa-address-card-o"></span>Klienci</h3>
                 <ul>
                     <li *ngIf="isAdmin() || isBiuroUser() || isWysylkaUser()" ><a  [routerLink]="['/customer/list'] " routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Przeglądaj</a></li>
@@ -55,7 +55,7 @@
             </li>
 
 
-            <li  routerLinkActive="active_main">
+            <li *ngIf="!isProdukcjaUser() " routerLinkActive="active_main">
                 <h3 [class.cursor_dis]="isAdmin()" ><span class="fa fa-shopping-basket"></span>Kosze EX</h3>
                 <ul>
                     <li *ngIf="isAdmin()"><a [routerLink]="['/basketsext'] " routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Lista Koszy EX</a></li>
@@ -68,8 +68,9 @@
             <li routerLinkActive="active_main">
                 <h3 [class.cursor_dis]="isMagazynUser()" ><span class="fa fa-pencil"></span>Zamówienia</h3>
                 <ul>
+                    <li *ngIf="isProdukcjaUser()" ><a [routerLink]="['/orders/production']" routerLinkActive="active"[routerLinkActiveOptions]="{ exact: true }" >Lista zamówień</a></li>
                     <li *ngIf="isAdmin() || isBiuroUser()" ><a [routerLink]="['/orders/baskets']" routerLinkActive="active"[routerLinkActiveOptions]="{ exact: true }" >Stwórz zamówienie</a></li>
-                    <li *ngIf="isAdmin() || isBiuroUser() || isWysylkaUser() || isProdukcjaUser()"><a [routerLink]="['/orders/all']" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" >Lista zamówień</a></li>
+                    <li *ngIf="isAdmin() || isBiuroUser() || isWysylkaUser() "><a [routerLink]="['/orders/all']" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" >Lista zamówień</a></li>
                 </ul>
             </li>
 
@@ -86,7 +87,7 @@
                 <h3 [routerLink]="['/admin']"><span class="fa fa-user-circle-o"></span>Admin</h3>
             </li>
 
-            <li>
+            <li *ngIf="!isProdukcjaUser() ">
                 <h3 [class.cursor_dis]="isWysylkaUser() || isBiuroUser()" ><span class="fa fa-bar-chart"></span>Statystyki</h3>
                 <ul>
                     <li *ngIf="isMagazynOrProdukcjaOrAdmin()"><a [routerLink]="['/statistics/products']" routerLinkActive="active"[routerLinkActiveOptions]="{ exact: true }" >Statystka produktów</a></li>
