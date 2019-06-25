@@ -744,8 +744,7 @@ export class OrderComponent implements OnInit {
 					label: 'Zmień status ', icon: 'fa fa-share',
 					items: [
 						{label: 'nowe', icon: 'pi pi-fw pi-plus', command: () => this.changeOrderStatus(1)},
-						{label: 'przyjęte', icon: 'pi pi-fw pi-plus', command: () => this.changeOrderStatus(4)},
-						{label: 'skompletowane', icon: 'pi pi-fw pi-plus', command: () => this.changeOrderStatus(3)},
+						{label: 'w trakcie realizacji', icon: 'pi pi-fw pi-plus', command: () => this.changeOrderStatus(this.ORDER_STATUS_W_TRAKCIE_REALIZACJI)},
 						{label: 'wysłane', icon: 'pi pi-fw pi-plus', command: () => this.changeOrderStatus(2)},
 						{label: 'zrealizowane', icon: 'pi pi-fw pi-plus', command: () => this.changeOrderStatus(5)},
 					]
