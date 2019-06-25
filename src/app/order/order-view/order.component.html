@@ -29,7 +29,7 @@
 
     <p-dataTable #dt [value]="orders" [rows]="50" [paginator]="true" [globalFilter]="globalfilter"  [totalRecords]="totalRecords" selectionMode="multiple"
                  [loading]="loading" loadingIcon="fa-circle-o-notch" expandableRows="true" [(first)]="lastPaginationPageNumberOnOrderViewPage"  [(selection)]="selectedOrdersMultiselction"
-                 dataKey="orderId" [contextMenu]="cm" [paginator]="true" [pageLinks]="5" [rowsPerPageOptions]= paginatorValues [lazy]="isCurrentPageOrdersView"
+                 dataKey="orderId" [contextMenu]="cm" [paginator]="true" [pageLinks]="5" [rowsPerPageOptions]= paginatorValues [lazy]="false"
                  (onContextMenuSelect)="OnSelectRow($event)"
                  (onRowExpand)="rowExpand($event)"
                  (onPage)="hideActionExtention2($event)"
@@ -40,7 +40,8 @@
                  (onLazyLoad)="loadOrdersLazy($event)"
     >
 
-        <p-header>Lista Zamówień</p-header>
+
+        <p-header><i class="fa fa-1x fa-file-text excel-export" aria-hidden="true" (click)="menuExport.toggle($event)"></i>Lista Zamówień</p-header>
         <p-column expander="true" header="" styleClass="col-icon " [style]="{'width':'40px'}"></p-column>
 
 
@@ -177,8 +178,8 @@
                         <th >Zdjęcie</th>
                         <th >Skład kosza</th>
                         <th >Ilość koszy</th>
-                        <th >Produkcja</th>
                         <th >Magazyn</th>
+                        <th >Produkcja</th>
                         <th >Logistyka</th>
                     </tr>
                     </thead>
@@ -195,6 +196,13 @@
                                (click)="printProductListInBasketPdf(row.basket.basketId)"></i>
                         </td>
                         <td>{{row.quantity}}</td>
+
+                        <td>
+                            <input type="number"
+                                   [disabled]="isMagazynInputDisable(orders.orderStatus.orderStatusId)"
+                                   class="form-control" aria-describedby="helpId" placeholder="" min="0" [max]="row.quantity" [value]="row.stateOnWarehouse"
+                                   (change)="updateStateOnWarehouse(orders,$event.target.value,i)">
+                        </td>
                         <td>
                             <input type="number"
                                    [disabled]="isProductionInputDisable(orders.orderStatus.orderStatusId)"
@@ -202,12 +210,7 @@
                                    [max]="row.quantity" [value]="row.stateOnProduction"
                                    (change)="updateStateOnProduction(orders,$event.target.value,i);test($event)">
                         </td>
-                        <td>
-                            <input type="number"
-                                   [disabled]="isMagazynInputDisable(orders.orderStatus.orderStatusId)"
-                                   class="form-control" aria-describedby="helpId" placeholder="" min="0" [max]="row.quantity" [value]="row.stateOnWarehouse"
-                                   (change)="updateStateOnWarehouse(orders,$event.target.value,i)">
-                        </td>
+
                         <td>
                             <input [disabled]="isWysylkaInputDisable(orders.orderStatus.orderStatusId)"
                                    type="number"  class="form-control"
@@ -327,3 +330,5 @@
 <p-dialog  header="Kosz" [(visible)]="showImageFrame">
     <img [src]="imageToShow" [height]="700" [width]="700">
 </p-dialog>
+
+<p-menu #menuExport [popup]="true" [model]="exportItems"></p-menu>

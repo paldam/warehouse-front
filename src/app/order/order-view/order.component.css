@@ -118,6 +118,11 @@
     left: 835px;
     margin: 0px;
 }
+.excel-export{
+    position: absolute;
+    right: 6px;
+    top: 12px;
+}
 
 
 

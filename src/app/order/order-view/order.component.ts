@@ -17,6 +17,7 @@ import {BasketService} from "../../basket/basket.service";
 import {PageTypeFactory} from "../page-type-factory";
 import {OrderViewPageType} from "../order-view-page-type";
 import {OrderViewForProduction, RegularOrderView} from "../page-types";
+import * as XLSX from "xlsx";
 
 
 @Component({
@@ -54,6 +55,7 @@ export class OrderComponent implements OnInit {
 	public orderStatusList: SelectItem[] = [];
 	public ordersYears: SelectItem[] = [];
 	public items: MenuItem[];
+    public exportItems: MenuItem[];
 	public productionUserList: any[] = [];
 	public paginatorValues = AppConstans.PAGINATOR_VALUES;
 	public additionalInforamtionTmp: string = "";
@@ -97,6 +99,7 @@ export class OrderComponent implements OnInit {
 		this.getOrderStatusForDataTableFilter();
 		this.getOrderYearsForDataTableFilter();
 		this.getProductionUserForContextMenuSet();
+		this.setExportMenu();
 	}
 
 	@HostListener('window:resize', ['$event'])
@@ -124,6 +127,11 @@ export class OrderComponent implements OnInit {
 	}
 
 	private performSetDataActionForRegularOrderView() {
+
+		setTimeout(() => {
+			this.datatable.lazy = true;
+		}, 500);
+
 		this.orderService.getOrdersDto(0, 50, "", "orderDate", 1, [], []).subscribe(
 			(data: any) => {
 				this.orders = data.orderDtoList;
@@ -148,16 +156,21 @@ export class OrderComponent implements OnInit {
 	}
 
 	private performSetDataActionForOrderPageRedirectedFromStatistic() {
+
 		let basketIdTmp = this.activatedRoute.snapshot.paramMap.get('id');
 		let startDateTmp = this.activatedRoute.snapshot.paramMap.get('startDate');
 		let endDateTmp = this.activatedRoute.snapshot.paramMap.get('endDate');
-		this.orderService.getOrdersByBasketIdAndOrderDateRange(basketIdTmp, startDateTmp, endDateTmp).subscribe(data => {
-			this.orders = data;
-			this.ordersNotFiltered = data;
-		}, error => {
-		}, () => {
-			this.calculateOrderProcessInPercentForStatusInProgress();
-		})
+
+			this.orderService.getOrdersByBasketIdAndOrderDateRange(basketIdTmp, startDateTmp, endDateTmp).subscribe(data => {
+				this.orders = data;
+				this.ordersNotFiltered = data;
+			}, error => {
+
+			}, () => {
+				this.calculateOrderProcessInPercentForStatusInProgress();
+
+			})
+
 	}
 
 
@@ -270,9 +283,7 @@ export class OrderComponent implements OnInit {
 		});
 	}
 	
-	test(event){
-		console.log(event);
-	}
+	
 
 	updateStateOnProduction(orderToChange, value,i:number){
 		console.log(orderToChange );
@@ -368,6 +379,7 @@ export class OrderComponent implements OnInit {
 	}
 
 	loadOrdersLazy(event: LazyLoadEvent) {
+
 		this.loading = true;
 		let pageNumber = 0;
 		if (event.first) {
@@ -396,8 +408,11 @@ export class OrderComponent implements OnInit {
 	}
 
 	backToRegularOrderView() {
+		this.router.navigate(["/orders/all"]);
 		this.isCurrentPageOrdersViewRedirectedFromBasketStatitis = false;
-		this.refreshData();
+		this.isCurrentPageOrdersView = true;
+		this.setSearchOptions();
+		this.setOrderData();
 	}
 
 	backToBasketStatistic() {
@@ -693,6 +708,94 @@ export class OrderComponent implements OnInit {
 			});
 	}
 
+	generateXls() {
+		let filt: any[] = [];
+		if (!this.datatable.filteredValue) {
+			filt = this.datatable.value;
+		} else {
+			filt = this.datatable.filteredValue;
+		}
+		let dataToGenerateFile: any[] = [];
+		for (let i = 0; i < filt.length; i++) {
+			let zestawy = "";
+			let orderDateTmp = new Date(filt[i].orderDate);
+			for (let n = 0; n < filt[i].orderItems.length; n++) {
+				zestawy += filt[i].orderItems[n].basket.basketName;
+				zestawy += " szt. " + filt[i].orderItems[n].quantity + " | ";
+			}
+			dataToGenerateFile[i] = {
+				"Data Zamówienia": orderDateTmp.toLocaleDateString(),
+				"Numer FV": filt[i].orderFvNumber,
+				"Klient": filt[i].customer.name,
+				"Data dostawy": filt[i].deliveryDate,
+				"Typ Dostawy": filt[i].deliveryType.deliveryTypeName,
+				"Wartość zamówienia": filt[i].orderTotalAmount / 100,
+				"Wybrane zestawy": zestawy
+			}
+		}
+		const worksheet: XLSX.WorkSheet = XLSX.utils.json_to_sheet(dataToGenerateFile);
+		const workbook: XLSX.WorkBook = {Sheets: {'data': worksheet}, SheetNames: ['data']};
+		let today = new Date();
+		let date = today.getFullYear() + '' + (today.getMonth() + 1) + '' + today.getDate() + '_';
+		//let time = today.getHours() + "-" + today.getMinutes() + "-" + today.getSeconds();
+		let fileName = "Zestawienie_" + date + ".xls";
+		XLSX.writeFile(workbook, fileName, {bookType: 'xls', type: 'buffer'});
+	}
+
+	generateCustomerXls() {
+		let filt: any[] = [];
+		if (!this.datatable.filteredValue) {
+			filt = this.datatable.value;
+			console.log(filt);
+		} else {
+			filt = this.datatable.filteredValue;
+			console.log(filt);
+		}
+		let dataToGenerateFile: any[] = [];
+		for (let i = 0; i < filt.length; i++) {
+			let zestawy = "";
+			let orderDateTmp = new Date(filt[i].orderDate);
+			let address = "";
+			for (let n = 0; n < filt[i].orderItems.length; n++) {
+				zestawy += filt[i].orderItems[n].basket.basketName;
+				zestawy += " szt. " + filt[i].orderItems[n].quantity + " | ";
+			}
+			// address += filt[i].address.address + " " + filt[i].address.cityName + " " + filt[i].address.zipCode;
+			dataToGenerateFile[i] = {
+				"Firma": filt[i].customer.company.companyName,
+				"Nazwa Klienta": filt[i].customer.name,
+				"Telefon": filt[i].customer.phoneNumber,
+				"Email": filt[i].customer.email,
+				"Wartość zamówienia": filt[i].orderTotalAmount / 100,
+				"Data Zamówienia": orderDateTmp.toLocaleString(),
+				"Uwagi": filt[i].additionalInformation,
+				"Wybrane zestawy": zestawy
+			}
+		}
+		const worksheet: XLSX.WorkSheet = XLSX.utils.json_to_sheet(dataToGenerateFile);
+		const workbook: XLSX.WorkBook = {Sheets: {'data': worksheet}, SheetNames: ['data']};
+		let today = new Date();
+		let date = today.getFullYear() + '' + (today.getMonth() + 1) + '' + today.getDate() + '_';
+		//let time = today.getHours() + "-" + today.getMinutes() + "-" + today.getSeconds();
+		let fileName = "Zestawienie_" + date + ".xls";
+		XLSX.writeFile(workbook, fileName, {bookType: 'xls', type: 'buffer'});
+	}
+
+	private setExportMenu() {
+		this.exportItems = [
+			{
+				label: 'Export Zamówienia',
+				icon: 'fa fa-arrow-down',
+				command: () => this.generateXls()
+			},
+			{
+				label: 'Export Klienci',
+				icon: 'fa fa-arrow-down',
+				command: () => this.generateCustomerXls()
+			},
+		]
+	}
+
 	private setContextMenu() {
 		let tmpLabel = [];
 		this.productionUserList.forEach((user: User) => {
@@ -702,9 +805,7 @@ export class OrderComponent implements OnInit {
 				command: () => this.assignOrdersToSpecifiedProduction(user.id)
 			})
 		});
-
-
-		if(this.authenticationService.isProdukcjaUser()){
+		if (this.authenticationService.isProdukcjaUser()) {
 			this.items = [
 				{
 					label: 'Szybki podgląd zamówienia',
@@ -714,7 +815,11 @@ export class OrderComponent implements OnInit {
 				{
 					label: 'Zmień status ', icon: 'fa fa-share',
 					items: [
-						{label: 'w trakcie realizacji', icon: 'pi pi-fw pi-plus', command: () => this.changeOrderStatus(this.ORDER_STATUS_W_TRAKCIE_REALIZACJI)},
+						{
+							label: 'w trakcie realizacji',
+							icon: 'pi pi-fw pi-plus',
+							command: () => this.changeOrderStatus(this.ORDER_STATUS_W_TRAKCIE_REALIZACJI)
+						},
 						{label: 'nowe', icon: 'pi pi-fw pi-plus', command: () => this.changeOrderStatus(1)},
 					]
 				},
@@ -732,8 +837,7 @@ export class OrderComponent implements OnInit {
 					}
 				},
 			];
-
-		}else{
+		} else {
 			this.items = [
 				{
 					label: 'Szybki podgląd zamówienia',
@@ -744,7 +848,11 @@ export class OrderComponent implements OnInit {
 					label: 'Zmień status ', icon: 'fa fa-share',
 					items: [
 						{label: 'nowe', icon: 'pi pi-fw pi-plus', command: () => this.changeOrderStatus(1)},
-						{label: 'w trakcie realizacji', icon: 'pi pi-fw pi-plus', command: () => this.changeOrderStatus(this.ORDER_STATUS_W_TRAKCIE_REALIZACJI)},
+						{
+							label: 'w trakcie realizacji',
+							icon: 'pi pi-fw pi-plus',
+							command: () => this.changeOrderStatus(this.ORDER_STATUS_W_TRAKCIE_REALIZACJI)
+						},
 						{label: 'wysłane', icon: 'pi pi-fw pi-plus', command: () => this.changeOrderStatus(2)},
 						{label: 'zrealizowane', icon: 'pi pi-fw pi-plus', command: () => this.changeOrderStatus(5)},
 					]
@@ -768,9 +876,5 @@ export class OrderComponent implements OnInit {
 				},
 			];
 		}
-
-
-
-
 	}
 }

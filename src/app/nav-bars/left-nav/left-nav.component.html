@@ -70,7 +70,7 @@
                 <ul>
                     <li *ngIf="isProdukcjaUser()" ><a [routerLink]="['/orders/production']" routerLinkActive="active"[routerLinkActiveOptions]="{ exact: true }" >Lista zamówień</a></li>
                     <li *ngIf="isAdmin() || isBiuroUser()" ><a [routerLink]="['/orders/baskets']" routerLinkActive="active"[routerLinkActiveOptions]="{ exact: true }" >Stwórz zamówienie</a></li>
-                    <li ><a [routerLink]="['/orders/all']" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" >Lista zamówień</a></li>
+                    <li *ngIf="!isProdukcjaUser()"><a [routerLink]="['/orders/all']" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" >Lista zamówień</a></li>
                 </ul>
             </li>
 
@@ -93,7 +93,7 @@
                     <li *ngIf="isMagazynOrProdukcjaOrAdmin()"><a [routerLink]="['/statistics/products']" routerLinkActive="active"[routerLinkActiveOptions]="{ exact: true }" >Statystka produktów</a></li>
                     <li *ngIf="isMagazynOrProdukcjaOrAdmin()"><a [routerLink]="['/statistics/products2']" routerLinkActive="active"[routerLinkActiveOptions]="{ exact: true }" >Statystyka zużycia</a></li>
                     <li *ngIf="isMagazynOrProdukcjaOrAdmin()" ><a [routerLink]="['/statistics/basket']" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" >Statystyka koszy</a></li>
-                    <li *ngIf="isMagazynOrProdukcjaOrAdmin()" ><a [routerLink]="['/statistics/orderstats']" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" >Zamówienia  / Klienci</a></li>
+                    <!--<li *ngIf="isMagazynOrProdukcjaOrAdmin()" ><a [routerLink]="['/statistics/orderstats']" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" >Zamówienia  / Klienci</a></li>-->
 
                 </ul>
             </li>

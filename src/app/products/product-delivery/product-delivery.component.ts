@@ -54,38 +54,28 @@ export class ProductDeliveryComponent implements OnInit {
   ngOnInit() {
   }
 
+	selectSupplier(id: number) {
+		this.selectedSupplierId = id;
+		this.productsService.getProductsBySupplier(id).subscribe((data: any) => {
+			data.forEach(function (obj) {
+				obj.add = obj.tmpOrdered;
+			});
+			this.productsBySupplier = data;
+		})
+	}
 
-  selectSupplier(id: number){
+	updateStockRow(event: any) {
 
-    this.selectedSupplierId = id;
+        if(event.data.tmpOrdered < 0) {
+			event.data.tmpOrdered = 0;
+        }
 
-      this.productsService.getProductsBySupplier(id).subscribe((data : any)=>{
-
-          data.forEach(function(obj) { obj.add = obj.tmpOrdered; });
-
-        this.productsBySupplier = data;
-
-      } )
-
-
-
-  }
-  
-  updateStockRow(event: any){
-    this.productsService.saveProduct(event.data).subscribe(data =>{
-
-      this.messageServiceExt.addMessageWithTime('success', 'Status', 'Dokonano edycji stanu produktu',1000);
-
-
-    }, error => {
-
-      this.messageServiceExt.addMessage('error', 'Błąd', "Status: " + error.status + ' ' + error.statusText);
-
-
-
-    });
-
-  }
+		this.productsService.saveProduct(event.data).subscribe(data => {
+			this.messageServiceExt.addMessageWithTime('success', 'Status', 'Dokonano edycji stanu produktu', 1000);
+		}, error => {
+			this.messageServiceExt.addMessage('error', 'Błąd', "Status: " + error.status + ' ' + error.statusText);
+		});
+	}
 
   refreshData(){
 
