@@ -450,7 +450,7 @@ export class OrderStatsComponent implements OnInit {
             }
 
 
-            dataToGenerateFile[i] = {"Data Zamówienia":orderDateTmp.toLocaleDateString(), "Numer FV":filt[i].orderId,"Klient":filt[i].customer.company.companyName,"Data dostawy":filt[i].deliveryDate,"Typ Dostawy":filt[i].deliveryType.deliveryTypeName,"Wartość zamówienia":filt[i].orderTotalAmount/100,"Wybrane zestawy":zestawy}
+            dataToGenerateFile[i] = {"Data Zamówienia":orderDateTmp.toLocaleDateString(), "Numer FV":filt[i].orderFvNumber,"Klient":filt[i].customer.name,"Data dostawy":filt[i].deliveryDate,"Typ Dostawy":filt[i].deliveryType.deliveryTypeName,"Wartość zamówienia":filt[i].orderTotalAmount/100,"Wybrane zestawy":zestawy}
         }
 
 
@@ -470,8 +470,10 @@ export class OrderStatsComponent implements OnInit {
         let filt: any[] =[];
         if (!this.datatable.filteredValue ){
             filt = this.datatable.value;
+            console.log(filt);
         }else{
             filt = this.datatable.filteredValue;
+			console.log(filt);
         }
 
 
@@ -493,14 +495,13 @@ export class OrderStatsComponent implements OnInit {
 
 
 
-                address += filt[i].address.address + " " + filt[i].address.cityName + " " + filt[i].address.zipCode;
+               // address += filt[i].address.address + " " + filt[i].address.cityName + " " + filt[i].address.zipCode;
 
 
 
             dataToGenerateFile[i] = {
                 "Firma":filt[i].customer.company.companyName,
                 "Nazwa Klienta":filt[i].customer.name,
-                "Adres": address,
                 "Telefon":filt[i].customer.phoneNumber,
                 "Email":filt[i].customer.email,
                 "Wartość zamówienia":filt[i].orderTotalAmount/100,

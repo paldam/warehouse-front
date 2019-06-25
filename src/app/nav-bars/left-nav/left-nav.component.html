@@ -55,10 +55,10 @@
             </li>
 
 
-            <li *ngIf="!isProdukcjaUser() " routerLinkActive="active_main">
-                <h3 [class.cursor_dis]="isAdmin()" ><span class="fa fa-shopping-basket"></span>Kosze EX</h3>
+            <li  routerLinkActive="active_main">
+                <h3 [class.cursor_dis]="false" ><span class="fa fa-shopping-basket"></span>Kosze EX</h3>
                 <ul>
-                    <li *ngIf="isAdmin()"><a [routerLink]="['/basketsext'] " routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Lista Koszy EX</a></li>
+                    <li><a [routerLink]="['/basketsext'] " routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Lista Koszy EX</a></li>
                     <li *ngIf="isAdmin()" ><a [routerLink]="['/basketsext/add'] " routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Kreator Koszy EX</a></li>
 
                 </ul>
@@ -66,11 +66,11 @@
 
 
             <li routerLinkActive="active_main">
-                <h3 [class.cursor_dis]="isMagazynUser()" ><span class="fa fa-pencil"></span>Zamówienia</h3>
+                <h3 [class.cursor_dis]="false" ><span class="fa fa-pencil"></span>Zamówienia</h3>
                 <ul>
                     <li *ngIf="isProdukcjaUser()" ><a [routerLink]="['/orders/production']" routerLinkActive="active"[routerLinkActiveOptions]="{ exact: true }" >Lista zamówień</a></li>
                     <li *ngIf="isAdmin() || isBiuroUser()" ><a [routerLink]="['/orders/baskets']" routerLinkActive="active"[routerLinkActiveOptions]="{ exact: true }" >Stwórz zamówienie</a></li>
-                    <li *ngIf="isAdmin() || isBiuroUser() || isWysylkaUser() "><a [routerLink]="['/orders/all']" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" >Lista zamówień</a></li>
+                    <li ><a [routerLink]="['/orders/all']" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" >Lista zamówień</a></li>
                 </ul>
             </li>
 

@@ -82,7 +82,7 @@
         </ng-template>
       </p-column>
 
-      <p-column *ngIf="currentPageMode==2" field="lastNumberOfOrderedEditDate" styleClass="date_col" header="Modyfikacja2"  [sortable]="true" >
+      <p-column *ngIf="currentPageMode==2" field="lastNumberOfOrderedEditDate" styleClass="date_col" header="Modyfikacja"  [sortable]="true" >
 
         <ng-template let-row="rowData" pTemplate="body"  >
           {{row.lastNumberOfOrderedEditDate| date: 'dd/MM/yyyy HH:mm:ss'}}

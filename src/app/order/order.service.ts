@@ -212,8 +212,9 @@ export class OrderService {
 
 
 
-    getOrderBasketsProductsPdf(orderItems : any): any {
-        return this.http.post(this.baseUrl + `/order/pdf/aaa`,orderItems,{ responseType: ResponseContentType.Blob })
+    getOrderBasketsProductsPdf(orderItems : any, orderId:number): any {
+        console.log(orderId);
+        return this.http.post(this.baseUrl + `/order/pdf/aaa/${orderId}`,orderItems,{ responseType: ResponseContentType.Blob })
             .map(res => {
                 return new Blob([res.blob()], { type: 'application/pdf' })
             })

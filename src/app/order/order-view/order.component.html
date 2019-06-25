@@ -197,16 +197,21 @@
                         <td>{{row.quantity}}</td>
                         <td>
                             <input type="number"
-                                   [disabled]="orders.orderStatus.orderStatusId != ORDER_STATUS_W_TRAKCIE_REALIZACJI"
+                                   [disabled]="isProductionInputDisable(orders.orderStatus.orderStatusId)"
                                    class="form-control" aria-describedby="helpId" placeholder="" min="0"
                                    [max]="row.quantity" [value]="row.stateOnProduction"
                                    (change)="updateStateOnProduction(orders,$event.target.value,i);test($event)">
                         </td>
                         <td>
-                            <input type="number"  [disabled]="orders.orderStatus.orderStatusId != ORDER_STATUS_W_TRAKCIE_REALIZACJI" class="form-control" aria-describedby="helpId" placeholder="" min="0" [max]="row.quantity" [value]="row.stateOnWarehouse" (change)="updateStateOnWarehouse(orders,$event.target.value,i)">
+                            <input type="number"
+                                   [disabled]="isMagazynInputDisable(orders.orderStatus.orderStatusId)"
+                                   class="form-control" aria-describedby="helpId" placeholder="" min="0" [max]="row.quantity" [value]="row.stateOnWarehouse"
+                                   (change)="updateStateOnWarehouse(orders,$event.target.value,i)">
                         </td>
                         <td>
-                            <input type="number" [disabled]="orders.orderStatus.orderStatusId != ORDER_STATUS_W_TRAKCIE_REALIZACJI"  class="form-control"  aria-describedby="helpId" placeholder="" min="0" [max]="row.quantity" [value]="row.stateOnLogistics" (change)="updateStateOnLogistics(orders,$event.target.value,i)">
+                            <input [disabled]="isWysylkaInputDisable(orders.orderStatus.orderStatusId)"
+                                   type="number"  class="form-control"
+                                   aria-describedby="helpId" placeholder="" min="0" [max]="row.quantity" [value]="row.stateOnLogistics" (change)="updateStateOnLogistics(orders,$event.target.value,i)">
                         </td>
                     </tr>
                     </tbody>
@@ -313,8 +318,8 @@
         <i *ngIf="authenticationService.isAdmin()" class="fa fa-trash fa-2x edit_icon famargin2 action_extention_icon" aria-hidden="true" title="Usuń zamówienie" (click)="ShowConfirmModal(selectedOrderFromRow)"></i>
         <i  class="fa fa-print fa-2x famargin2 action_extention_icon " aria-hidden="true" title="Drukuj zamówienie" (click)="printPdf(selectedOrderFromRow.orderId)" ></i>
         <i  class="fa fa-file-pdf-o fa-2x  famargin2 action_extention_icon" aria-hidden="true" title="Drukuj potwierdzenie odbioru" (click)="showPrintOrderDeliveryConfirmationWindows(selectedOrderFromRow.orderId)" ></i>
-        <i  class="fa fa-file-text fa-2x famargin2 action_extention_icon" aria-hidden="true" title="Drukuj kompletna listę produktów zamówienia" (click)=" printProductListPdf(selectedOrderFromRow.orderId)" ></i>
-        <i  class="fa fa-file-text-o fa-2x fa_zero_margin action_extention_icon" aria-hidden="true" title="Drukuj dostosowana liste produktów zamówienia" (click)=" showPdialogBasketProductsPrint(selectedOrderFromRow.orderId)" ></i>
+        <i  class="fa fa-file-text fa-2x famargin2 action_extention_icon" aria-hidden="true" title="Drukuj liste produktow" (click)=" printProductListPdf(selectedOrderFromRow.orderId)" ></i>
+        <i  class="fa fa-file-text-o fa-2x fa_zero_margin action_extention_icon" aria-hidden="true" title="Drukuj sklad koszy" (click)=" showPdialogBasketProductsPrint(selectedOrderFromRow.orderId)" ></i>
     </div>
 
 </div>

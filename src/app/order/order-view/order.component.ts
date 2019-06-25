@@ -14,6 +14,9 @@ import {UserService} from "../../user.service";
 import {User} from "../../model/user.model";
 import {SpinerService} from "../../spiner.service";
 import {BasketService} from "../../basket/basket.service";
+import {PageTypeFactory} from "../page-type-factory";
+import {OrderViewPageType} from "../order-view-page-type";
+import {OrderViewForProduction, RegularOrderView} from "../page-types";
 
 
 @Component({
@@ -22,6 +25,8 @@ import {BasketService} from "../../basket/basket.service";
 	styleUrls: ['./order.component.css']
 })
 export class OrderComponent implements OnInit {
+
+	public pageType: OrderViewPageType;
 
 	public selectedOrderFromRow: Order = new Order();
 	public ORDER_STATUS_W_TRAKCIE_REALIZACJI = AppConstans.ORDER_STATUS_W_TRAKCIE_REALIZACJI;
@@ -68,6 +73,21 @@ export class OrderComponent implements OnInit {
 	constructor(private basketService :BasketService,private activatedRoute: ActivatedRoute, private orderService: OrderService, private userService: UserService, private router: Router, public confirmationService: ConfirmationService,
 				public authenticationService: AuthenticationService, private fileSendService: FileSendService,
 				private  messageServiceExt: MessageServiceExt, private routingState: RoutingState, private spinerService: SpinerService) {
+
+
+		// this.pageType = PageTypeFactory.createPageType(activatedRoute,routingState,orderService);
+		// console.log(this.pageType instanceof OrderViewForProduction);
+		//
+		// let f : any = this.pageType.getOrders();
+		//
+		//
+		// setTimeout(() => {
+		// 	console.log(f);
+		// }, 5000);
+
+
+
+
 		this.setCurentPageType();
 		this.setSearchOptions();
 		this.setOrderData();
@@ -140,6 +160,7 @@ export class OrderComponent implements OnInit {
 		})
 	}
 
+
 	private performSetDataActionForCustomerEditPage() {
 		this.orderService.getOrderByCustomer(this.activatedRoute.snapshot.params["id"]).subscribe(data => {
 				this.orders = data;
@@ -156,7 +177,7 @@ export class OrderComponent implements OnInit {
 	private calculateOrderProcessInPercentForStatusInProgress() {
 		setTimeout(() => {
 			this.orders.forEach(order => {
-				if (order.orderStatus.orderStatusId == 6) {
+				if (order.orderStatus.orderStatusId == this.ORDER_STATUS_W_TRAKCIE_REALIZACJI) {
 					let totalBasketItem = 0;
 					let totalComplete = 0;
 					order.orderItems.forEach(orderItems => {
@@ -198,6 +219,7 @@ export class OrderComponent implements OnInit {
 		this.action_extention.nativeElement.hidden = true;
 		this.getProductionUserForContextMenuSet();
 		this.spinerService.showSpinner = true;
+
 		if (this.isCurrentPageCustomerEdit) {
 			this.orderService.getOrderByCustomer(this.currentCustomerOnCustomerEditPage).subscribe(data => this.orders = data);
 		}if(this.isCurrentPageOrdersViewForProduction){
@@ -272,6 +294,40 @@ export class OrderComponent implements OnInit {
 		let orderLine = this.orders.find(order =>order.orderId == orderToChange.orderId);
 		if (orderLine != undefined) {
 			orderLine.orderItems[i].stateOnLogistics = Number(value);
+		}
+	}
+
+	isProductionInputDisable(orderStatusId: number): boolean {
+		if (orderStatusId != this.ORDER_STATUS_W_TRAKCIE_REALIZACJI){
+			return true;
+		}else{
+			if(this.authenticationService.isProdukcjaUser() || this.authenticationService.isAdmin()){
+				return false
+			}else {
+				return true;
+			}
+		}
+	}
+	isMagazynInputDisable(orderStatusId: number): boolean {
+		if (orderStatusId != this.ORDER_STATUS_W_TRAKCIE_REALIZACJI){
+			return true;
+		}else{
+			if(this.authenticationService.isMagazynUser() || this.authenticationService.isAdmin()){
+				return false
+			}else {
+				return true;
+			}
+		}
+	}
+	isWysylkaInputDisable(orderStatusId: number): boolean {
+		if (orderStatusId != this.ORDER_STATUS_W_TRAKCIE_REALIZACJI){
+			return true;
+		}else{
+			if(this.authenticationService.isWysylkaUser() || this.authenticationService.isAdmin()){
+				return false
+			}else {
+				return true;
+			}
 		}
 	}
 
@@ -404,8 +460,10 @@ export class OrderComponent implements OnInit {
 	}
  //TODO
 	changeOrderStatus(orderStatus: number) {
+		
+		console.log(orderStatus);
 		if (this.authenticationService.isProdukcjaUser()) {
-			if (this.selectedOrderFromRow.orderStatus.orderStatusId == 1 || this.selectedOrderFromRow.orderStatus.orderStatusId == 4) {
+			if (this.selectedOrderFromRow.orderStatus.orderStatusId == 1 || this.selectedOrderFromRow.orderStatus.orderStatusId == this.ORDER_STATUS_W_TRAKCIE_REALIZACJI) {
 				this.orderService.changeOrderStatus(this.selectedToMenuOrder, orderStatus).subscribe(data => {
 					this.messageServiceExt.addMessage('success', 'Status', 'Zmieniono status zamówienia');
 				}, error => {
@@ -428,6 +486,16 @@ export class OrderComponent implements OnInit {
 		}
 	}
 
+
+	changeOrderStatusToInProgress(order: any) {
+		this.orderService.changeOrderStatus(order.orderId, 6).subscribe(data => {
+			this.messageServiceExt.addMessage('success', 'Status', 'Zmieniono status zamówienia');
+		}, error => {
+			this.messageServiceExt.addMessage('error', 'Błąd ', error._body);
+		}, () => {
+			this.refreshData();
+		});
+	}
 
 
 	printPdf(id: number) {
@@ -553,8 +621,9 @@ export class OrderComponent implements OnInit {
 			})
 	}
 
-	printOrderBasketsProductsPdf() {
-		this.orderService.getOrderBasketsProductsPdf(this.selectedOrderToPrintBasketProducts.orderItems).subscribe(res => {
+	 printOrderBasketsProductsPdf() {
+		this.orderService.getOrderBasketsProductsPdf(this.selectedOrderToPrintBasketProducts.orderItems,this.selectedOrderToPrintBasketProducts.orderId).subscribe(res => {
+				this.changeOrderStatusToInProgress(this.selectedOrderToPrintBasketProducts);
 				var fileURL = URL.createObjectURL(res);
 				window.open(fileURL);
 				this.pdialogBasketProductsPrint = false;
@@ -645,7 +714,7 @@ export class OrderComponent implements OnInit {
 				{
 					label: 'Zmień status ', icon: 'fa fa-share',
 					items: [
-						{label: 'przyjęte', icon: 'pi pi-fw pi-plus', command: () => this.changeOrderStatus(4)},
+						{label: 'w trakcie realizacji', icon: 'pi pi-fw pi-plus', command: () => this.changeOrderStatus(this.ORDER_STATUS_W_TRAKCIE_REALIZACJI)},
 						{label: 'nowe', icon: 'pi pi-fw pi-plus', command: () => this.changeOrderStatus(1)},
 					]
 				},
