@@ -24,6 +24,7 @@
               <td>{{customer.phoneNumber}}</td>
               <td>{{customer.additionalInformation}}</td>
               <td><button *ngIf="isAdmin()" class="btn bg-primary"  (click)="showChangeCustomerDataWindow()" > Edytuj </button></td>
+              <td><button  class="btn bg-primary"  (click)="goBack()" > Cofnij </button></td>
           </tr>
         </tbody>
     </table>

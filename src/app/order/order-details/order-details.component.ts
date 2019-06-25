@@ -7,7 +7,7 @@ import {DeliveryType} from "../../model/delivery_type.model";
 import {Customer} from "../../model/customer.model";
 import {OrderStatus} from "../../model/OrderStatus";
 import {Product} from "../../model/product.model";
-import {Checkbox, ConfirmationService, FileUpload} from "primeng/primeng";
+import {Checkbox, ConfirmationService, DataTable, FileUpload} from "primeng/primeng";
 import {AuthenticationService} from "../../authentication.service";
 import {Basket} from "../../model/basket.model";
 import {BasketService} from "../../basket/basket.service";
@@ -73,6 +73,8 @@ export class OrderDetailsComponent implements OnInit {
       @ViewChild('formAdidtional') additionalForm :NgForm;
       @ViewChild(Checkbox) el:Checkbox;
       @ViewChild(FileUpload) fileUploadElement: FileUpload;
+	@ViewChild('globalfilter2') globalfilter2: ElementRef;
+	@ViewChild('dtCustomer') datatableCustomer: DataTable;
 
 
 
@@ -141,8 +143,8 @@ export class OrderDetailsComponent implements OnInit {
 		this.customer = new Customer();
 		this.clickSelectCustomerGuard = false;
 	}
-	cleanCompany(){
-		this.company = new Company();
+	cleanCompany() {
+		this.company ={companyId:0, companyName:"Klient indywidualny"};
 		this.clickSelectcomapnyGuard = false;
 	}
 
@@ -188,12 +190,9 @@ export class OrderDetailsComponent implements OnInit {
 
 	showCustomerList() {
 		this.customerService.getCustomers().subscribe(data=> this.customers = data);
+		this.globalfilter2.nativeElement.value = this.company.companyName;
 		this.customerPickDialogShow = true;
-		//this.storedCustomerMode = true;
-
-		this.customers.forEach(data => {
-			console.log(data)
-		})
+		this.datatableCustomer.filter(this.company.companyId,'company.companyId','equals');
 	}
 
 	showCompanyList() {

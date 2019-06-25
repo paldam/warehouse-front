@@ -20,7 +20,7 @@
         </div>
 
 
-        <i class="fa fa-refresh pull-right refresh_icon fa-2x" aria-hidden="true" (click)="refreshData()"></i>
+        <i [hidden]="isCurrentPageCustomerEdit || isCurrentPageOrdersViewRedirectedFromBasketStatitis" class="fa fa-refresh pull-right refresh_icon fa-2x" aria-hidden="true" (click)="refreshData()"></i>
 
 
     </div>
@@ -41,7 +41,7 @@
     >
 
 
-        <p-header><i class="fa fa-1x fa-file-text excel-export" aria-hidden="true" (click)="menuExport.toggle($event)"></i>Lista Zamówień</p-header>
+        <p-header><i *ngIf="this.isCurrentPageOrdersView" class="fa fa-1x fa-file-text excel-export" aria-hidden="true" (click)="menuExport.toggle($event)"></i>Lista Zamówień</p-header>
         <p-column expander="true" header="" styleClass="col-icon " [style]="{'width':'40px'}"></p-column>
 
 
@@ -150,7 +150,7 @@
         </p-column>
 
 
-        <p-column class="action_col"  field="orders" header="Akcja" [style]="{'width':'40px'}">
+        <p-column [hidden]="isCurrentPageCustomerEdit" class="action_col"  field="orders" header="Akcja" [style]="{'width':'40px'}">
         <ng-template let-order="rowData" let-i="rowIndex" pTemplate="body">
             <i id="action_extention_icon" class="fa fa-cog fa-2x " aria-hidden="true"  title="Edytuj zamówienie"   (click)="showActionExtention($event)"></i>
         </ng-template>
@@ -275,12 +275,15 @@
 
 
 
-<p-dialog *ngIf="isOrderToShowFetchComplete | async" header="Podgląd Zamówienia" closeOnEscape="false" modal="true" width="600" [(visible)]="showOrderPreviewModal"  >
+<p-dialog *ngIf="isOrderToShowFetchComplete | async" header="Podgląd Zamówienia" closeOnEscape="false" modal="true" width="1000" [(visible)]="showOrderPreviewModal"  >
 
 
    <app-order-preview [orderToShow]="selectedToPrintOrder"> </app-order-preview>
 
 </p-dialog>
+
+
+
 
 
 <p-dialog *ngIf="fileFilterLoaded | async" header="Podgląd załączników do zamówienia" closeOnEscape="false" modal="true" width="600" [(visible)]="showAttachmentModal"  >

@@ -110,7 +110,7 @@ export class CustomerEditComponent implements OnInit {
         return this.authenticationService.isAdmin();
     }
     goBack(){
-        this.router.navigateByUrl('/customer');
+        this.router.navigateByUrl('/customer/list');
     }
 
 

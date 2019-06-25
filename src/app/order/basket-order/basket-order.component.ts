@@ -9,7 +9,7 @@ import {Order} from '../../model/order.model';
 import {OrderService} from '../order.service';
 import {DeliveryType} from '../../model/delivery_type.model';
 import {OrderStatus} from "../../model/OrderStatus";
-import {ConfirmationService, FileUpload, Panel} from "primeng/primeng";
+import {ConfirmationService, DataTable, FileUpload, Panel} from "primeng/primeng";
 import {AuthenticationService, TOKEN, TOKEN_USER} from "../../authentication.service";
 import {ContextMenuModule, MenuItem, ContextMenu} from 'primeng/primeng';
 import {Router} from "@angular/router";
@@ -31,7 +31,7 @@ declare var $: any;
 })
 export class BasketOrderComponent implements OnInit {
 	public selectedCompanyToMarge: Company [] = [];
-	public company: Company = new Company();
+	public company: Company = {companyId:0, companyName:"Klient indywidualny"};
 	public companyToPersist: Company = new Company();
 	public customers: Customer[] = [];
 	public customer: Customer = new Customer();
@@ -72,6 +72,9 @@ export class BasketOrderComponent implements OnInit {
 	@ViewChild('zip_code') el: any;
 	@ViewChild('address2') storedCustomerAddressList: any;
 	@ViewChild('companyPickMode') selectPickcompany: ElementRef;
+	@ViewChild('globalfilter2') globalfilter2: ElementRef;
+	@ViewChild('dtCustomer') datatableCustomer: DataTable;
+
 	value: Date;
 	dateLang: any;
 
@@ -162,7 +165,7 @@ export class BasketOrderComponent implements OnInit {
 	}
 
 	cleanCompany() {
-		this.company = new Company();
+		this.company ={companyId:0, companyName:"Klient indywidualny"};
 		this.clickSelectcomapnyGuard = false;
 	}
 
@@ -215,11 +218,22 @@ export class BasketOrderComponent implements OnInit {
 	}
 
 	showCustomerList() {
+		this.globalfilter2.nativeElement.value = this.company.companyName;
 		this.customerPickDialogShow = true;
-		//this.storedCustomerMode = true;
-		this.customers.forEach(data => {
-			console.log(data)
-		})
+		this.datatableCustomer.filter(this.company.companyId,'company.companyId','equals');
+
+		//
+		// setTimeout(() => {
+		// 	this.companyNameToSearch = "Damian";
+		//
+		// }, 3000);
+		//
+		// setTimeout(() => {
+		// 	this.companyNameToSearch = "kamil";
+		//
+		// }, 1000);
+
+
 	}
 
 	showAddressesList() {

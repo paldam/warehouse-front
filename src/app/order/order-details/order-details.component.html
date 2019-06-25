@@ -11,6 +11,25 @@
 
 
               <div class="cont">
+                <p-panel  class="customerpanels" header="Firma">
+
+
+
+                  <i  class="fa fa-address-card-o fa-2x pickfromdb " (click)="showCompanyList()" aria-hidden="true"></i>
+                  <i  *ngIf="this.company.companyName && !this.customer.customerId"  class="fa fa-times fa-2x clean-company-icon2" aria-hidden="true" (click)="cleanCompany()"></i>
+                  <i class="fa fa-plus fa-2x add-company-icon" (click)="addCompanyShowPanel()" aria-hidden="true"></i>
+
+
+                  <div  class="form-group">
+                    <div class="input-group">
+                      <input type="text" name="organization" #organization="ngModel" class="form-control"  size="300" aria-describedby="organizationDesc"  [readonly]="true"  [(ngModel)]="company.companyName">
+                      <span class="input-group-addon" id="organizationDesc">Nazwa Firmy</span>
+                    </div>
+                  </div>
+                </p-panel>
+              </div>
+
+              <div class="cont">
 
                 <p-panel  class="customerpanels2"  header="Klient">
                   <i class="fa fa-address-card-o fa-2x pickfromdb " (click)="showCustomerList()" aria-hidden="true"></i>
@@ -51,24 +70,7 @@
                 </p-panel>
               </div>
 
-              <div class="cont">
-                <p-panel  class="customerpanels" header="Firma">
 
-
-
-                  <i  class="fa fa-address-card-o fa-2x pickfromdb " (click)="showCompanyList()" aria-hidden="true"></i>
-                  <i  *ngIf="this.company.companyName && !this.customer.customerId"  class="fa fa-times fa-2x clean-company-icon2" aria-hidden="true" (click)="cleanCompany()"></i>
-                  <i class="fa fa-plus fa-2x add-company-icon" (click)="addCompanyShowPanel()" aria-hidden="true"></i>
-
-
-                  <div  class="form-group">
-                    <div class="input-group">
-                      <input type="text" name="organization" #organization="ngModel" class="form-control"  size="300" aria-describedby="organizationDesc"  [readonly]="true"  [(ngModel)]="company.companyName">
-                      <span class="input-group-addon" id="organizationDesc">Nazwa Firmy</span>
-                    </div>
-                  </div>
-                </p-panel>
-              </div>
 
 
 
@@ -487,13 +489,14 @@
                 <span class="input-group-addon" id="basic-addon1">
                     <i class="fa fa-search" aria-hidden="true"></i>
                 </span>
-      <input #globalfilter2 type="text" class="form-control search_input" pInputText size="50" placeholder="Szukaj"aria-describedby="basic-addon1">
+        <input #globalfilter2 type="text" class="form-control search_input" (input)="dtCustomer.reset();dtCustomer.filter($event.target.value, 'whatever', 'contains')"  pInputText size="50" placeholder="Szukaj"aria-describedby="basic-addon1" >
 
     </div>
-    <p-dataTable [value]="customers" [rows]="10" [paginator]="true"  #dt (onRowDblclick)="pickCustomer($event.data)"
+    <p-dataTable [value]="customers" [rows]="10" [paginator]="true"  #dtCustomer (onRowDblclick)="pickCustomer($event.data)"
                  [loading]="loading" loadingIcon="fa-circle-o-notch" [globalFilter]="globalfilter2">
       <p-column field="name" header="Imię i Nazwisko" [sortable]="true" ></p-column>
       <p-column field="company.companyName" header="Firma" [sortable]="false"></p-column>
+        <p-column [hidden]="true" field="company.companyId" header="id" [sortable]="false"></p-column>
       <p-column field="email" header="Email" [sortable]="false"></p-column>
       <p-column field="phoneNumber" header="Telefon" [sortable]="false"></p-column>
 

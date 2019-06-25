@@ -72,6 +72,8 @@ export class OrderComponent implements OnInit {
 	@ViewChild('dt') datatable: DataTable;
 	@ViewChild('information_extention') information_extention: OverlayPanel;
 
+
+
 	constructor(private basketService :BasketService,private activatedRoute: ActivatedRoute, private orderService: OrderService, private userService: UserService, private router: Router, public confirmationService: ConfirmationService,
 				public authenticationService: AuthenticationService, private fileSendService: FileSendService,
 				private  messageServiceExt: MessageServiceExt, private routingState: RoutingState, private spinerService: SpinerService) {
@@ -309,6 +311,9 @@ export class OrderComponent implements OnInit {
 	}
 
 	isProductionInputDisable(orderStatusId: number): boolean {
+		if(this.isCurrentPageOrdersViewRedirectedFromBasketStatitis || this.isCurrentPageCustomerEdit){
+			return true;
+		}
 		if (orderStatusId != this.ORDER_STATUS_W_TRAKCIE_REALIZACJI){
 			return true;
 		}else{
@@ -320,7 +325,12 @@ export class OrderComponent implements OnInit {
 		}
 	}
 	isMagazynInputDisable(orderStatusId: number): boolean {
-		if (orderStatusId != this.ORDER_STATUS_W_TRAKCIE_REALIZACJI){
+
+		console.log(this.isCurrentPageOrdersView);
+		if(this.isCurrentPageOrdersViewRedirectedFromBasketStatitis || this.isCurrentPageCustomerEdit){
+			console.log("TTT");
+			return true;
+		}else if (orderStatusId != this.ORDER_STATUS_W_TRAKCIE_REALIZACJI){
 			return true;
 		}else{
 			if(this.authenticationService.isMagazynUser() || this.authenticationService.isAdmin()){
@@ -331,6 +341,9 @@ export class OrderComponent implements OnInit {
 		}
 	}
 	isWysylkaInputDisable(orderStatusId: number): boolean {
+		if(this.isCurrentPageOrdersViewRedirectedFromBasketStatitis || this.isCurrentPageCustomerEdit){
+			return true;
+		}
 		if (orderStatusId != this.ORDER_STATUS_W_TRAKCIE_REALIZACJI){
 			return true;
 		}else{

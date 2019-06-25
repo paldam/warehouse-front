@@ -167,10 +167,10 @@ select.ng-dirty.ng-valid { border: 1px solid #6bc502 }
 }
 
 .customerpanels .ui-panel {
-    margin-top: 30px;
+    margin-top: 60px;
 }
 .customerpanels2 .ui-panel {
-    margin-top: 60px;
+    margin-top: 30px;
 }
 
 .clean-button{
