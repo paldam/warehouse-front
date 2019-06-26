@@ -5,7 +5,24 @@
 
 
 
+
+
+
+
 <p-fieldset legend="Lista Koszy" [toggleable]="true">
+
+
+
+  <div class="row">
+    <div class="col-md-6">
+      <p-slider [(ngModel)]="rangeValues"[min]="0" [max]="5000" [step]="10"  [range]="true" (onChange)="onYearChange($event)"></p-slider>
+    </div>
+    <div class="col-md-6">
+      <input   class="form-control" name="" [(ngModel)]="rangeValues[0]"  >
+      <input  class="form-control" name="" [(ngModel)]="rangeValues[1]"  >
+    </div>
+  </div>
+
   <div class="input-group search_bar">
             <span class="input-group-addon" id="basic-addon1">
                  <i class="fa fa-search" aria-hidden="true"></i>
@@ -39,6 +56,11 @@
     <p-column field="basketType.basketTypeName" header="Typ kosza" [sortable]="true" [style]="{'width':'120px'}" ></p-column>
     <p-column field="season" header="Sezon" [sortable]="true" [style]="{'width':'120px'}"></p-column>
     <p-column field="basketTotalPrice"  header="Cena kosza "  [sortable]="true" [style]="{'width':'120px'}">
+
+      <ng-template  let-col pTemplate="filter"  >
+        <p-multiSelect [filter]="false" [showToggleAll]="false" [options]="orderStatusList" defaultLabel="Wszystkie" (onChange)="datatable.filter($event.value, col.field, 'in')"></p-multiSelect>
+      </ng-template>
+
       <ng-template let-row="rowData" pTemplate="body">
         {{row.basketTotalPrice/100| number : '1.2-2'}} zł.
       </ng-template>

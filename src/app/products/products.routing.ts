@@ -6,6 +6,7 @@ import {ProductFormComponent} from "./products-add-form/product-form.component";
 import {ProductEditFormComponent} from "./products-edit-form/product-edit-form.component";
 import {ProductsComponent} from "./product-view/products.component";
 import {SuppliersComponent} from "./suppliers/suppliers.component";
+import {ProductsCategoryComponent} from "./products-category/products-category.component";
 
 const routes: Routes = [
 	{path: '', component: ProductsComponent, pathMatch: 'full', canActivate: [AuthGuard]},
@@ -14,7 +15,8 @@ const routes: Routes = [
 	{path: 'product', component: ProductsComponent, canActivate: [AuthGuard]},
 	{path: 'product/add', component: ProductFormComponent, canActivate: [AuthGuard]},
 	{path: 'product/:id', component: ProductEditFormComponent, canActivate: [AuthGuard]},
-	{path: 'products/suppliers', component: SuppliersComponent}
+	{path: 'products/suppliers', component: SuppliersComponent},
+	{path: 'products/category', component: ProductsCategoryComponent}
 ];
 export const routing: ModuleWithProviders = RouterModule.forChild(routes);
 

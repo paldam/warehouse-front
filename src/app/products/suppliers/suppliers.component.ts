@@ -37,16 +37,16 @@ export class SuppliersComponent extends CoreDataTableViewComponent implements On
   ngOnInit() {
   }
 
-    refreshData() {
-        this.loading = true;
-        setTimeout(() => {
-            this.productsService.getSuppliers().subscribe(data=> this.suppliers = data);
-            this.loading = false;
-        }, 1000);
-    }
+	refreshData() {
+		this.loading = true;
+		setTimeout(() => {
+			this.productsService.getSuppliers().subscribe(data=> this.suppliers = data);
+			this.loading = false;
+		}, 1000);
+	}
 
 
-    editSupplier(supplier){
+	editSupplier(supplier){
 
       this.productsService.saveSupplier(supplier).subscribe(
           value => {

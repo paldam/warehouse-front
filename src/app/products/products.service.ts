@@ -48,6 +48,12 @@ export class ProductsService {
 
 
 
+	deleteProductType(id: number): Observable<Response>{
+		return this.http.delete(this.baseUrl+`/products/types/${id}`)
+	}
+
+
+
 
   changeStockEndResetOfProductsToDelivery(id: number , value: number): Observable<Response> {
 
@@ -119,15 +125,26 @@ export class ProductsService {
 
 
   getProductsTypes(): Observable<ProductType[]> {
-    return this.http.get(this.baseUrl+`/products/types`)
-        .map((response: Response) =>
-            response.json());
-  }
+		return this.http.get(this.baseUrl+`/products/types`)
+			.map((response: Response) =>
+				response.json());
+	}
+
+	getProductsSubTypes(): Observable<any[]> {
+		return this.http.get(this.baseUrl+`/products/sub_types`)
+			.map((response: Response) =>
+				response.json());
+	}
 
   saveProduct(product: Product): Observable<Response> {
     return this.http.post(this.baseUrl+`/products/`, product)
         //.map((response: Response) => response.json());
   }
+
+	saveProductType(productType: ProductType): Observable<Response> {
+		return this.http.post(this.baseUrl+`/products/types`, productType)
+		//.map((response: Response) => response.json());
+	}
 
   deleteProduct(id: number): Observable<Response>{
     return this.http.delete(this.baseUrl+`/products/${id}`)
