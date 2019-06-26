@@ -6,6 +6,7 @@ import {ProductType} from '../../model/product_type.model';
 import {ActivatedRoute, NavigationExtras, Router} from '@angular/router';
 import {Supplier} from "../../model/supplier.model";
 import {MessageServiceExt} from "../../messages/messageServiceExt";
+import {ProductSubType} from "../../model/product_sub_type";
 
 @Component({
     selector: 'product-edit-form',
@@ -19,7 +20,7 @@ export class ProductEditFormComponent implements OnInit {
     public productPrice : number ;
     public formSubmitted: boolean = false;
     public productSuppliers: Supplier[]=[];
-    public productTypes: ProductType[]=[];
+    public productSubTypes: ProductSubType[]=[];
 
     constructor(private productsService: ProductsService, private router: Router, activeRoute: ActivatedRoute,private messageServiceExt: MessageServiceExt) {
         productsService.getProduct(activeRoute.snapshot.params["id"]).subscribe(data =>{
@@ -28,7 +29,8 @@ export class ProductEditFormComponent implements OnInit {
         });
 
         productsService.getSuppliers().subscribe(data=> this.productSuppliers=data);
-        productsService.getProductsTypes().subscribe(data=> this.productTypes=data)
+       // productsService.getProductsSubTypes().subscribe(data=> this.productTypes=data)
+		productsService.getProductsSubTypes().subscribe(data=> this.productSubTypes=data)
     }
 
     ngOnInit() {
@@ -64,4 +66,10 @@ export class ProductEditFormComponent implements OnInit {
     compareProductType( optionOne : ProductType, optionTwo : ProductType) : boolean {
         return optionTwo && optionTwo ? optionOne.typeName === optionTwo.typeName :optionOne === optionTwo;
     }
+
+	compareProductSubType( optionOne : ProductSubType, optionTwo : ProductSubType) : boolean {
+		return optionTwo && optionTwo ? optionOne.subTypeName === optionTwo.subTypeName :optionOne === optionTwo;
+	}
+
+
 }

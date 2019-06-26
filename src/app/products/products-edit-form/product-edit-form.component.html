@@ -34,15 +34,18 @@
                 </ul>
             </div>
 
+
+
             <div class="form-group">
                 <small id="product_typeDesc" class="text-muted">Typ Produktu</small>
-                <select [compareWith]="compareProductType" class="form-control"  #product_type="ngModel" [(ngModel)]="product.productType" name="product_type"  required >
-                    <option *ngFor="let item of productTypes" [ngValue]="item"  >{{item.typeName}}</option>
+                <select [compareWith]="compareProductSubType" class="form-control"  #product_type="ngModel" [(ngModel)]="product.productSubType" name="product_type"  required >
+                    <option *ngFor="let item of productSubTypes" [ngValue]="item"  >{{item.subTypeName}} ({{item.productType.typeName}})</option>
                 </select>
                 <ul class="text-danger list-unstyled" *ngIf="product_type.dirty|| formSubmitted">
                     <li  *ngIf="product_type.errors?.required">Wybierz typ produktu z listy z listy</li>
                 </ul>
             </div>
+
 
 
             <div class="form-group">

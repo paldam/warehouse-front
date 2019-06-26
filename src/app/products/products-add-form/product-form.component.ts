@@ -7,6 +7,7 @@ import {ProductType} from '../../model/product_type.model';
 import {Router} from '@angular/router';
 import {Supplier} from "../../model/supplier.model";
 import {MessageServiceExt} from "../../messages/messageServiceExt";
+import {ProductSubType} from "../../model/product_sub_type";
 
 @Component({
     selector: 'product-form',
@@ -18,7 +19,7 @@ export class ProductFormComponent implements OnInit {
 
     public product: Product = new Product();
     public productSuppliers: Supplier[]=[];
-    public productTypes: ProductType[]=[];
+    public productSubTypes: ProductSubType[]=[];
     public productSupplierToAdd: Supplier = new Supplier();
     public formSubmitted: boolean = false;
     public formSupplierAddForm: boolean = false;
@@ -26,7 +27,11 @@ export class ProductFormComponent implements OnInit {
 
     constructor(private productsService: ProductsService, private router: Router,private messageServiceExt: MessageServiceExt) {
         productsService.getSuppliers().subscribe(data=> this.productSuppliers=data);
-        productsService.getProductsTypes().subscribe(data=> this.productTypes=data)
+		// productsService.getProductsTypes().subscribe(data=> this.productTypes=data)
+        productsService.getProductsSubTypes().subscribe(data=> this.productSubTypes=data)
+
+
+
     }
 
     ngOnInit() {
@@ -99,6 +104,12 @@ export class ProductFormComponent implements OnInit {
     compareProductType( optionOne : ProductType, optionTwo : ProductType) : boolean {
         return optionTwo && optionTwo ? optionOne.typeName === optionTwo.typeName :optionOne === optionTwo;
     }
+
+
+	compareProductSubType( optionOne : ProductSubType, optionTwo : ProductSubType) : boolean {
+		return optionTwo && optionTwo ? optionOne.subTypeName === optionTwo.subTypeName :optionOne === optionTwo;
+	}
+
 
     addSupplierWindowOn(){
         this.addSupplierWindow= true;

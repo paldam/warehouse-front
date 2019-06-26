@@ -1,5 +1,6 @@
 import {ProductType} from './product_type.model';
 import {Supplier} from "./supplier.model";
+import {ProductSubType} from "./product_sub_type";
 
 export class Product{
     constructor(
@@ -14,6 +15,7 @@ export class Product{
         public isArchival?: number,
         public supplier?: Supplier,
         public productType?: ProductType,
+        public productSubType?: ProductSubType,
         public lastStockEditDate? :Date
     ) {
     }

@@ -10,6 +10,7 @@ import {consoleTestResultsHandler} from "tslint/lib/test";
 import {AuthenticationService} from "../../authentication.service";
 import {AppConstans} from "../../constans";
 import {ProductType} from "../../model/product_type.model";
+import {ProductSubType} from "../../model/product_sub_type";
 
 
 @Component({
@@ -37,9 +38,9 @@ export class ProductsComponent implements OnInit {
               private router: Router, private confirmationService: ConfirmationService, private authenticationService: AuthenticationService) {
 
 	  productsService.getProducts().subscribe(data => this.products = data);
-	  productsService.getProductsTypes().subscribe((data: ProductType[]) => {
+	  productsService.getProductsSubTypes().subscribe((data: ProductSubType[]) => {
 		  data.forEach(value => {
-			  this.productsType.push({label: '' + value.typeName, value: value.typeName});
+			  this.productsType.push({label: '' + value.subTypeName + '('+ value.productType.typeName +')', value: value.subTypeName});
 
 		  })
 	  });

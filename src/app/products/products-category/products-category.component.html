@@ -1,0 +1,61 @@
+<div class="row">
+    <div class="col-lg-6">
+
+
+        <div class="products_box col-lg-9">
+            <div class="input-group search_bar">
+    <span class="input-group-addon" id="basic-addon1">
+                 <i class="fa fa-search" aria-hidden="true"></i>
+            </span>
+                <input #gb type="text" class="form-control search_input" pInputText size="50" placeholder="Szukaj"
+                       aria-describedby="basic-addon1">
+                <i class="fa fa-plus pull-right fa-2x" aria-hidden="true" (click)="addTypeShow()"></i>
+                <i class="fa fa-refresh pull-right refresh_icon fa-2x" aria-hidden="true" (click)="refreshData()"></i>
+            </div>
+
+            <p-dataTable [value]="mainCategoriesList" [rows]="20" [paginator]="true" #dt
+                         [loading]="loading" loadingIcon="fa-circle-o-notch" [editable]="true"
+                         (onEditComplete)="editMainCategory($event.data)">
+                <p-header>Lista Kategorii</p-header>
+
+
+                <p-column field="typeName" [editable]="true" styleClass="name_col" header="nazwa kategorii"
+                          [style]="{'width':'200px'}"></p-column>
+
+                <p-column header="Akcja" styleClass="action_col">
+                    <ng-template let-product="rowData" pTemplate="body" let-row="rowData" let-i="rowIndex"
+                                 pTemplate="rowexpansion">
+                        <i *ngIf="authenticationService.isAdmin() ||  authenticationService.isMagazynUser() "
+                           class="fa fa-trash fa-2x edit_icon" aria-hidden="true" title="Usuń dostawcę"
+                           (click)="deleteCategory(row)"></i>
+                    </ng-template>
+                </p-column>
+
+
+            </p-dataTable>
+
+
+        </div>
+        <p-confirmDialog header="Usuwanie Typu produktu" key="resetType" icon="fa fa-question-circle"
+                         width="425"></p-confirmDialog>
+
+
+    </div>
+</div>
+
+<p-dialog header="Dodaj typ produktu" modal="true" width="600" [(visible)]="addProductTypeDialogShow"
+          (onHide)="closeSupplierAddDialog()">
+
+
+    <div class="form-group">
+        <small id="nameDescript" class="text-muted">Nazwa</small>
+        <input type="text" #type_name name="type_name" class="form-control" [(ngModel)]="tmpTypeName"
+               #name="ngModel" aria-describedby="nameDescript" required>
+        <ul class="text-danger list-unstyled" *ngIf="name.dirty|| formSubmitted">
+            <li *ngIf="name.errors?.required">To pole nie może być puste</li>
+        </ul>
+    </div>
+
+    <button class="btn bg-primary " (click)="addProductsType()"> Zapisz</button>
+
+</p-dialog>

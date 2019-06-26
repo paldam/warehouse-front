@@ -27,13 +27,13 @@
         <p-column field="supplier.supplierName" styleClass="deliver_col" header="Dostawca"  [sortable]="true" ></p-column>
 
 
-        <p-column field="productType.typeName" styleClass="type_col" [filter]="true" header="Typ produktu" filterMatchMode="equals" [sortable]="true" >
+        <p-column field="productSubType.subTypeName" styleClass="type_col" [filter]="true" header="Typ produktu" filterMatchMode="equals" [sortable]="true" >
             <ng-template  let-col pTemplate="filter"  >
                 <p-multiSelect  [filter]="false" [showToggleAll]="false" [options]="productsType" defaultLabel="Wszystkie" (onChange)="dt.filter($event.value, col.field, 'in')"></p-multiSelect>
             </ng-template>
 
             <ng-template let-row="rowData" pTemplate="body"  >
-                <span> {{row.productType?.typeName}} </span>
+                <span> {{ row.productSubType?.subTypeName}} ({{row.productSubType?.productType?.typeName}}) </span>
             </ng-template>
         </p-column>
 
