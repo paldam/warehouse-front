@@ -18,7 +18,7 @@ import {PageTypeFactory} from "../page-type-factory";
 import {OrderViewPageType} from "../order-view-page-type";
 import {OrderViewForProduction, RegularOrderView} from "../page-types";
 import * as XLSX from "xlsx";
-
+import {BasketItems} from "../../model/basket_items.model";
 
 @Component({
 	selector: 'order',
@@ -26,9 +26,7 @@ import * as XLSX from "xlsx";
 	styleUrls: ['./order.component.css']
 })
 export class OrderComponent implements OnInit {
-
 	public pageType: OrderViewPageType;
-
 	public selectedOrderFromRow: Order = new Order();
 	public ORDER_STATUS_W_TRAKCIE_REALIZACJI = AppConstans.ORDER_STATUS_W_TRAKCIE_REALIZACJI;
 	public loading: boolean = false;
@@ -47,7 +45,7 @@ export class OrderComponent implements OnInit {
 	public printDeliveryConfirmationPdFSettings: boolean = false;
 	public pdialogBasketProductsPrint: boolean = false;
 	public selectedToPrintOrder: Order = new Order();
-	public showImageFrame: boolean =false;
+	public showImageFrame: boolean = false;
 	public imageToShow: any;
 	public selectedOrderToPrintBasketProducts: any;
 	public selectedToMenuOrder: number;
@@ -55,7 +53,7 @@ export class OrderComponent implements OnInit {
 	public orderStatusList: SelectItem[] = [];
 	public ordersYears: SelectItem[] = [];
 	public items: MenuItem[];
-    public exportItems: MenuItem[];
+	public exportItems: MenuItem[];
 	public productionUserList: any[] = [];
 	public paginatorValues = AppConstans.PAGINATOR_VALUES;
 	public additionalInforamtionTmp: string = "";
@@ -72,11 +70,11 @@ export class OrderComponent implements OnInit {
 	@ViewChild('dt') datatable: DataTable;
 	@ViewChild('information_extention') information_extention: OverlayPanel;
 
-
-
-	constructor(private basketService :BasketService,private activatedRoute: ActivatedRoute, private orderService: OrderService, private userService: UserService, private router: Router, public confirmationService: ConfirmationService,
+	constructor(private basketService: BasketService, private activatedRoute: ActivatedRoute, private orderService: OrderService, private userService: UserService, private router: Router, public confirmationService: ConfirmationService,
 				public authenticationService: AuthenticationService, private fileSendService: FileSendService,
 				private  messageServiceExt: MessageServiceExt, private routingState: RoutingState, private spinerService: SpinerService) {
+
+
 
 
 		// this.pageType = PageTypeFactory.createPageType(activatedRoute,routingState,orderService);
@@ -88,10 +86,6 @@ export class OrderComponent implements OnInit {
 		// setTimeout(() => {
 		// 	console.log(f);
 		// }, 5000);
-
-
-
-
 		this.setCurentPageType();
 		this.setSearchOptions();
 		this.setOrderData();
@@ -129,11 +123,9 @@ export class OrderComponent implements OnInit {
 	}
 
 	private performSetDataActionForRegularOrderView() {
-
 		setTimeout(() => {
 			this.datatable.lazy = true;
 		}, 500);
-
 		this.orderService.getOrdersDto(0, 50, "", "orderDate", 1, [], []).subscribe(
 			(data: any) => {
 				this.orders = data.orderDtoList;
@@ -143,7 +135,6 @@ export class OrderComponent implements OnInit {
 				this.calculateOrderProcessInPercentForStatusInProgress();
 			})
 	}
-
 
 	private performSetDataActionForOrderViewProduction() {
 		this.orderService.getOrdersDtoForProduction().subscribe(
@@ -158,23 +149,17 @@ export class OrderComponent implements OnInit {
 	}
 
 	private performSetDataActionForOrderPageRedirectedFromStatistic() {
-
 		let basketIdTmp = this.activatedRoute.snapshot.paramMap.get('id');
 		let startDateTmp = this.activatedRoute.snapshot.paramMap.get('startDate');
 		let endDateTmp = this.activatedRoute.snapshot.paramMap.get('endDate');
-
-			this.orderService.getOrdersByBasketIdAndOrderDateRange(basketIdTmp, startDateTmp, endDateTmp).subscribe(data => {
-				this.orders = data;
-				this.ordersNotFiltered = data;
-			}, error => {
-
-			}, () => {
-				this.calculateOrderProcessInPercentForStatusInProgress();
-
-			})
-
+		this.orderService.getOrdersByBasketIdAndOrderDateRange(basketIdTmp, startDateTmp, endDateTmp).subscribe(data => {
+			this.orders = data;
+			this.ordersNotFiltered = data;
+		}, error => {
+		}, () => {
+			this.calculateOrderProcessInPercentForStatusInProgress();
+		})
 	}
-
 
 	private performSetDataActionForCustomerEditPage() {
 		this.orderService.getOrderByCustomer(this.activatedRoute.snapshot.params["id"]).subscribe(data => {
@@ -234,12 +219,12 @@ export class OrderComponent implements OnInit {
 		this.action_extention.nativeElement.hidden = true;
 		this.getProductionUserForContextMenuSet();
 		this.spinerService.showSpinner = true;
-
 		if (this.isCurrentPageCustomerEdit) {
 			this.orderService.getOrderByCustomer(this.currentCustomerOnCustomerEditPage).subscribe(data => this.orders = data);
-		}if(this.isCurrentPageOrdersViewForProduction){
+		}
+		if (this.isCurrentPageOrdersViewForProduction) {
 			this.performSetDataActionForOrderViewProduction();
-		}else {
+		} else {
 			this.orderService.getOrdersDto(0, 50, "", "orderDate", 1, [], []).subscribe((data: any) => {
 				this.orders = data.orderDtoList;
 				this.totalRecords = data.totalRowsOfRequest;
@@ -278,78 +263,87 @@ export class OrderComponent implements OnInit {
 	updateOrderProgress(order: Order) {
 		this.orderService.changeOrderProgress(order.orderId, order.orderItems).subscribe(value => {
 		}, error => {
-
+			//TODO Pobiera z bazy order o danym id aby w przypadku erroru podmienic dane na stare.
+			let orderTmp: Order;
+			this.orderService.getOrder(order.orderId).subscribe(data => {
+				orderTmp = data;
+			}, error => {
+			}, () => {
+				let orderIndex = this.orders.findIndex(data => data.orderId == order.orderId);
+				if (orderIndex == -1) {
+				} else {
+					this.orders[orderIndex].orderItems = orderTmp.orderItems;
+				}
+			});
 		}, () => {
 			this.messageServiceExt.addMessage('success', 'Status', 'Zmieniono stan zamówienia');
 			this.refreshData();
 		});
 	}
-	
-	
 
-	updateStateOnProduction(orderToChange, value,i:number){
-		console.log(orderToChange );
-		let orderLine = this.orders.find(order =>order.orderId == orderToChange.orderId);
+	updateStateOnProduction(orderToChange, value, i: number) {
+		console.log(orderToChange);
+		let orderLine = this.orders.find(order => order.orderId == orderToChange.orderId);
 		if (orderLine != undefined) {
 			orderLine.orderItems[i].stateOnProduction = Number(value);
 		}
-
 	}
 
-	updateStateOnWarehouse(orderToChange, value,i:number){
-		let orderLine = this.orders.find(order =>order.orderId == orderToChange.orderId);
+	updateStateOnWarehouse(orderToChange, value, i: number) {
+		let orderLine = this.orders.find(order => order.orderId == orderToChange.orderId);
 		if (orderLine != undefined) {
 			orderLine.orderItems[i].stateOnWarehouse = Number(value);
 		}
 	}
 
-	updateStateOnLogistics(orderToChange, value,i:number){
-		let orderLine = this.orders.find(order =>order.orderId == orderToChange.orderId);
+	updateStateOnLogistics(orderToChange, value, i: number) {
+		let orderLine = this.orders.find(order => order.orderId == orderToChange.orderId);
 		if (orderLine != undefined) {
 			orderLine.orderItems[i].stateOnLogistics = Number(value);
 		}
 	}
 
 	isProductionInputDisable(orderStatusId: number): boolean {
-		if(this.isCurrentPageOrdersViewRedirectedFromBasketStatitis || this.isCurrentPageCustomerEdit){
+		if (this.isCurrentPageOrdersViewRedirectedFromBasketStatitis || this.isCurrentPageCustomerEdit) {
 			return true;
 		}
-		if (orderStatusId != this.ORDER_STATUS_W_TRAKCIE_REALIZACJI){
+		if (orderStatusId != this.ORDER_STATUS_W_TRAKCIE_REALIZACJI) {
 			return true;
-		}else{
-			if(this.authenticationService.isProdukcjaUser() || this.authenticationService.isAdmin()){
+		} else {
+			if (this.authenticationService.isProdukcjaUser() || this.authenticationService.isAdmin()) {
 				return false
-			}else {
+			} else {
 				return true;
 			}
 		}
 	}
-	isMagazynInputDisable(orderStatusId: number): boolean {
 
+	isMagazynInputDisable(orderStatusId: number): boolean {
 		console.log(this.isCurrentPageOrdersView);
-		if(this.isCurrentPageOrdersViewRedirectedFromBasketStatitis || this.isCurrentPageCustomerEdit){
+		if (this.isCurrentPageOrdersViewRedirectedFromBasketStatitis || this.isCurrentPageCustomerEdit) {
 			console.log("TTT");
 			return true;
-		}else if (orderStatusId != this.ORDER_STATUS_W_TRAKCIE_REALIZACJI){
+		} else if (orderStatusId != this.ORDER_STATUS_W_TRAKCIE_REALIZACJI) {
 			return true;
-		}else{
-			if(this.authenticationService.isMagazynUser() || this.authenticationService.isAdmin()){
+		} else {
+			if (this.authenticationService.isMagazynUser() || this.authenticationService.isAdmin()) {
 				return false
-			}else {
+			} else {
 				return true;
 			}
 		}
 	}
+
 	isWysylkaInputDisable(orderStatusId: number): boolean {
-		if(this.isCurrentPageOrdersViewRedirectedFromBasketStatitis || this.isCurrentPageCustomerEdit){
+		if (this.isCurrentPageOrdersViewRedirectedFromBasketStatitis || this.isCurrentPageCustomerEdit) {
 			return true;
 		}
-		if (orderStatusId != this.ORDER_STATUS_W_TRAKCIE_REALIZACJI){
+		if (orderStatusId != this.ORDER_STATUS_W_TRAKCIE_REALIZACJI) {
 			return true;
-		}else{
-			if(this.authenticationService.isWysylkaUser() || this.authenticationService.isAdmin()){
+		} else {
+			if (this.authenticationService.isWysylkaUser() || this.authenticationService.isAdmin()) {
 				return false
-			}else {
+			} else {
 				return true;
 			}
 		}
@@ -392,7 +386,6 @@ export class OrderComponent implements OnInit {
 	}
 
 	loadOrdersLazy(event: LazyLoadEvent) {
-
 		this.loading = true;
 		let pageNumber = 0;
 		if (event.first) {
@@ -486,9 +479,9 @@ export class OrderComponent implements OnInit {
 			window.open(fileURL);
 		})
 	}
- //TODO
+
+	//TODO
 	changeOrderStatus(orderStatus: number) {
-		
 		console.log(orderStatus);
 		if (this.authenticationService.isProdukcjaUser()) {
 			if (this.selectedOrderFromRow.orderStatus.orderStatusId == 1 || this.selectedOrderFromRow.orderStatus.orderStatusId == this.ORDER_STATUS_W_TRAKCIE_REALIZACJI) {
@@ -499,8 +492,7 @@ export class OrderComponent implements OnInit {
 				}, () => {
 					this.refreshData();
 				});
-
-			}else{
+			} else {
 				this.messageServiceExt.addMessage('error', 'Błąd ', 'Brak uprawnień');
 			}
 		} else {
@@ -508,12 +500,12 @@ export class OrderComponent implements OnInit {
 				this.messageServiceExt.addMessage('success', 'Status', 'Zmieniono status zamówienia');
 			}, error => {
 				this.messageServiceExt.addMessage('error', 'Błąd ', error._body);
+				console.log("ADADAS");
 			}, () => {
 				this.refreshData();
 			});
 		}
 	}
-
 
 	changeOrderStatusToInProgress(order: any) {
 		this.orderService.changeOrderStatus(order.orderId, 6).subscribe(data => {
@@ -524,7 +516,6 @@ export class OrderComponent implements OnInit {
 			this.refreshData();
 		});
 	}
-
 
 	printPdf(id: number) {
 		this.orderService.getPdf(id).subscribe(res => {
@@ -592,8 +583,6 @@ export class OrderComponent implements OnInit {
 		this.showImageFrame = true;
 	}
 
-
-
 	private createImageFromBlob(image: Blob) {
 		let reader = new FileReader();
 		reader.addEventListener("load", () => {
@@ -649,8 +638,8 @@ export class OrderComponent implements OnInit {
 			})
 	}
 
-	 printOrderBasketsProductsPdf() {
-		this.orderService.getOrderBasketsProductsPdf(this.selectedOrderToPrintBasketProducts.orderItems,this.selectedOrderToPrintBasketProducts.orderId).subscribe(res => {
+	printOrderBasketsProductsPdf() {
+		this.orderService.getOrderBasketsProductsPdf(this.selectedOrderToPrintBasketProducts.orderItems, this.selectedOrderToPrintBasketProducts.orderId).subscribe(res => {
 				this.changeOrderStatusToInProgress(this.selectedOrderToPrintBasketProducts);
 				var fileURL = URL.createObjectURL(res);
 				window.open(fileURL);
@@ -672,11 +661,10 @@ export class OrderComponent implements OnInit {
 		)
 	}
 
-	printProductListInBasketPdf(basketId: number){
-		this.basketService.getBasketPdf(basketId).subscribe(res=>{
+	printProductListInBasketPdf(basketId: number) {
+		this.basketService.getBasketPdf(basketId).subscribe(res => {
 				var fileURL = URL.createObjectURL(res);
 				window.open(fileURL);
-
 			}
 		)
 	}
@@ -850,7 +838,42 @@ export class OrderComponent implements OnInit {
 					}
 				},
 			];
-		} else {
+		}else if (this.authenticationService.isMagazynUser() || this.authenticationService.isWysylkaUser()) {
+			this.items = [
+				{
+					label: 'Szybki podgląd zamówienia',
+					icon: 'fa fa-search',
+					command: () => this.showOrderPreview(event)
+				},
+				// {
+				// 	label: 'Zmień status ', icon: 'fa fa-share',
+				// 	items: [
+				// 		{
+				// 			label: 'w trakcie realizacji',
+				// 			icon: 'pi pi-fw pi-plus',
+				// 			command: () => this.changeOrderStatus(this.ORDER_STATUS_W_TRAKCIE_REALIZACJI)
+				// 		},
+				// 		{label: 'nowe', icon: 'pi pi-fw pi-plus', command: () => this.changeOrderStatus(1)},
+				// 	]
+				// },
+				{label: 'Pokaż załącznik(i)', icon: 'fa fa-paperclip', command: () => this.showAttachment()},
+				{label: 'Wydrukuj', icon: 'fa fa-print', command: () => this.printMultiplePdf()},
+				{
+					label: 'Wydrukuj potwierdzenie',
+					icon: 'fa fa-file-pdf-o',
+					command: () => this.printMultipleDeliveryPdf()
+				},
+				{
+					label: 'Wydrukuj komplet ', icon: 'fa fa-window-restore', command: () => {
+						this.printMultipleDeliveryPdf();
+						this.printMultiplePdf();
+					}
+				},
+			];
+		}
+
+
+		else {
 			this.items = [
 				{
 					label: 'Szybki podgląd zamówienia',
@@ -866,8 +889,9 @@ export class OrderComponent implements OnInit {
 							icon: 'pi pi-fw pi-plus',
 							command: () => this.changeOrderStatus(this.ORDER_STATUS_W_TRAKCIE_REALIZACJI)
 						},
-						{label: 'wysłane', icon: 'pi pi-fw pi-plus', command: () => this.changeOrderStatus(2)},
-						{label: 'zrealizowane', icon: 'pi pi-fw pi-plus', command: () => this.changeOrderStatus(5)},
+						// {label: 'wysłane', icon: 'pi pi-fw pi-plus', command: () => this.changeOrderStatus(2)},
+						// {label: 'zrealizowane', icon: 'pi pi-fw pi-plus', command: () => this.changeOrderStatus(5)},
+						 {label: 'Anulowane', icon: 'pi pi-fw pi-plus', command: () => this.changeOrderStatus(99)},
 					]
 				},
 				{label: 'Pokaż załącznik(i)', icon: 'fa fa-paperclip', command: () => this.showAttachment()},

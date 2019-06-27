@@ -121,10 +121,15 @@ export class OrderDetailsComponent implements OnInit {
           this.orderStatus=data;
 
           let tmp = this.orderStatus[1];
-          this.orderStatus[1] = this.orderStatus[3]
+          this.orderStatus[1] = this.orderStatus[3];
+
           this.orderStatus[3] = tmp;
 
-      });
+      },error1 =>{
+//TODO magic number
+	  },() => {
+		  this.orderStatus= this.orderStatus.filter(value => (value.orderStatusId == 1 || value.orderStatusId == 6))
+	  } );
 
       this.orderService.getFileList(this.orderId).subscribe(data=>{
           this.fileList= data;

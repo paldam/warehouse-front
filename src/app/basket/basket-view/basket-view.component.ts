@@ -6,6 +6,9 @@ import {ConfirmationService, DataTable,OverlayPanel} from "primeng/primeng";
 import {BasketType} from "../../model/basket_type.model";
 import {AuthenticationService} from "../../authentication.service";
 import {AppConstans} from "../../constans";
+import {ProductSubType} from "../../model/product_sub_type";
+import {ProductsService} from "../../products/products.service";
+import {SpinerService} from "../../spiner.service";
 
 
 @Component({
@@ -14,7 +17,8 @@ import {AppConstans} from "../../constans";
 	styleUrls: ['./basket-view.component.css']
 })
 export class BasketComponent implements OnInit {
-	rangeValues: number[] = [20, 80];
+	public priceMin: number = 0;
+	public priceMax: number= 9999;
 	public baskets: Basket[] = [];
 	public loading: boolean;
 	public gb: any;
@@ -25,29 +29,40 @@ export class BasketComponent implements OnInit {
 	@ViewChild('op') overlayPanel: OverlayPanel;
 	@ViewChild('dt') datatable: DataTable;
 	public paginatorValues = AppConstans.PAGINATOR_VALUES;
+	public productSubType: ProductSubType[]=[];
+	public selectedCategories : number[]=[];
 
-	constructor(private basketService: BasketService, public router: Router, private confirmationService: ConfirmationService, private authenticationService: AuthenticationService) {
+	constructor(private spinerService :SpinerService ,private productsService :ProductsService, private basketService: BasketService, public router: Router, private confirmationService: ConfirmationService, private authenticationService: AuthenticationService) {
 		basketService.getBaskets().subscribe(data => this.baskets = data);
+		productsService.getProductsSubTypes().subscribe((data: ProductSubType[]) => {
+			data.forEach(value => {
+				this.productSubType = data;
+
+			})
+		});
 		this.url = router.url;
 	}
 
 	ngOnInit() {
 	}
 
-	onYearChange(event) {
-		if (this.yearTimeout) {
-			clearTimeout(this.yearTimeout);
-		}
-		this.yearTimeout = setTimeout(() => {
+	getBasketWithFilter(){
+		this.spinerService.showSpinner=true;
+		this.basketService.getBasketWithFilter(this.priceMin, this.priceMax,this.selectedCategories).subscribe(data =>{
+			this.baskets = data;
 
-			let rangeTmp = [];
-			 rangeTmp[0]= event.values[0]*100;
-			 rangeTmp[1]= event.values[1]*100;
-			console.log(event);
-			this.datatable.filter(100, 'basketTotalPrice', 'lte');
-			//this.datatable.filter(rangeTmp[1], 'basketTotalPrice', 'lt');
-		}, 250);
+		},error => {
+			this.spinerService.showSpinner=false;
+		},() => {
+			setTimeout(() => {
+				this.spinerService.showSpinner=false;    ;
+			}, 500);
+
+		})
 	}
+
+
+
 
 	refreshData() {
 		this.loading = true;

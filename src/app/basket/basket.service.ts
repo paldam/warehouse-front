@@ -48,6 +48,13 @@ export class BasketService {
 
     }
 
+	getBasketWithFilter(priceMin: number,priceMax: number, productsSubTypes: number[]) {
+		return this.http.get(this.baseUrl + `/basket/find/${priceMin}/${priceMax}/${productsSubTypes}`)
+			.map((response: Response) => response.json());
+	}
+
+
+
     getBasketImg(basketId: number): any {
         return this.http.get(this.baseUrl + `/basketimage/${basketId}`,{ responseType: ResponseContentType.Blob })
             .map(res => {
