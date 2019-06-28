@@ -35,11 +35,11 @@ export class ProductsCategoryComponent extends CoreDataTableViewComponent implem
 		super();
 		productsService.getProductsTypes().subscribe(data => {
 			this.mainCategoriesList = data;
-		})
+		});
 
 		this.productsService.getProductsSubTypes().subscribe(value => {
 			this.subCategoriesList = value;
-		})
+		});
 
 	}
 
@@ -64,6 +64,28 @@ export class ProductsCategoryComponent extends CoreDataTableViewComponent implem
 			message: 'Jesteś pewny że chcesz usunąć ten typ produktu ?',
 			accept: () => {
 				this.productsService.deleteProductType(category.typeId).subscribe(
+					data => {
+						this.messageServiceExt.addMessageWithTime('success', 'Status', 'Usunięto kategorię', 5000);
+						this.refreshData();
+					},
+					error => {
+						this.messageServiceExt.addMessageWithTime('error', 'Błąd', 'Nie można usunać tej kategori ', 5000);
+						this.refreshData()
+					}
+				)
+			},
+			reject: () => {
+			}
+		});
+	}
+
+
+	deleteSubCategory(category: ProductSubType) {
+		this.confirmationService.confirm({
+			key: "resetType",
+			message: 'Jesteś pewny że chcesz usunąć ten typ produktu ?',
+			accept: () => {
+				this.productsService.deleteSubProductType(category.subTypeId).subscribe(
 					data => {
 						this.messageServiceExt.addMessageWithTime('success', 'Status', 'Usunięto kategorię', 5000);
 						this.refreshData();

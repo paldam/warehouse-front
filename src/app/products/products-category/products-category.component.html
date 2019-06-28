@@ -57,7 +57,7 @@
                 <p-header>Lista podkategorii</p-header>
 
 
-                <p-column  [hidden]="true" field="typeName" styleClass="name_col" header="Nazwa kategorii"></p-column>
+                <p-column  [hidden]="true" field="subTypeName" styleClass="name_col" header="Nazwa kategorii"></p-column>
 
                 <p-column  styleClass="name_col" header="Nazwa podkategorii">
                     <ng-template let-subcategory="rowData" pTemplate="body" let-row="rowData" let-i="rowIndex" pTemplate="rowexpansion">
@@ -81,7 +81,9 @@
 
         </div>
         <p-confirmDialog header="Usuwanie Typu produktu" key="resetType" icon="fa fa-question-circle"
-                         width="425"></p-confirmDialog>
+                         width="425">
+        </p-confirmDialog>
+
     </div>
 
 

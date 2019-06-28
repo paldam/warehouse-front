@@ -53,7 +53,9 @@ export class ProductsService {
 		return this.http.delete(this.baseUrl+`/products/types/${id}`)
 	}
 
-
+	deleteSubProductType(id: number): Observable<Response>{
+		return this.http.delete(this.baseUrl+`/products/subtypes/${id}`)
+	}
 
 
   changeStockEndResetOfProductsToDelivery(id: number , value: number): Observable<Response> {
