@@ -797,6 +797,12 @@ export class OrderComponent implements OnInit {
 		]
 	}
 
+	changeRowPerPage(){
+
+		this.datatable.rows=5000;
+		this.datatable._filter();
+	}
+	
 	private setContextMenu() {
 		let tmpLabel = [];
 		this.productionUserList.forEach((user: User) => {

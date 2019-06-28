@@ -2,12 +2,12 @@
     <div class="col-lg-6">
 
 
-        <div class="products_box col-lg-9">
+        <div class="products_box col-lg-11">
             <div class="input-group search_bar">
     <span class="input-group-addon" id="basic-addon1">
                  <i class="fa fa-search" aria-hidden="true"></i>
             </span>
-                <input #gb type="text" class="form-control search_input" pInputText size="50" placeholder="Szukaj"
+                <input #gb1 type="text" class="form-control search_input" pInputText size="50" placeholder="Szukaj"
                        aria-describedby="basic-addon1">
                 <i class="fa fa-plus pull-right fa-2x" aria-hidden="true" (click)="addTypeShow()"></i>
                 <i class="fa fa-refresh pull-right refresh_icon fa-2x" aria-hidden="true" (click)="refreshData()"></i>
@@ -15,14 +15,13 @@
 
             <p-dataTable [value]="mainCategoriesList" [rows]="20" [paginator]="true" #dt
                          [loading]="loading" loadingIcon="fa-circle-o-notch" [editable]="true"
-                         (onEditComplete)="editMainCategory($event.data)">
-                <p-header>Lista Kategorii</p-header>
+                         (onEditComplete)="editMainCategory($event.data)" [globalFilter]="gb1" >
+                <p-header>Lista kategorii głównych</p-header>
 
 
-                <p-column field="typeName" [editable]="true" styleClass="name_col" header="nazwa kategorii"
-                          [style]="{'width':'200px'}"></p-column>
+                <p-column field="typeName" [editable]="true" styleClass="name_col" header="Nazwa kategorii"></p-column>
 
-                <p-column header="Akcja" styleClass="action_col">
+                <p-column header="Akcja" [style]="{'width':'100px', 'text-align': 'center'}">
                     <ng-template let-product="rowData" pTemplate="body" let-row="rowData" let-i="rowIndex"
                                  pTemplate="rowexpansion">
                         <i *ngIf="authenticationService.isAdmin() ||  authenticationService.isMagazynUser() "
@@ -31,20 +30,76 @@
                     </ng-template>
                 </p-column>
 
-
             </p-dataTable>
-
 
         </div>
         <p-confirmDialog header="Usuwanie Typu produktu" key="resetType" icon="fa fa-question-circle"
                          width="425"></p-confirmDialog>
-
-
     </div>
+
+    <div class="col-lg-6">
+
+
+        <div class="products_box col-lg-11">
+            <div class="input-group search_bar">
+    <span class="input-group-addon" id="basic-addon1">
+                 <i class="fa fa-search" aria-hidden="true"></i>
+            </span>
+                <input #gb2 type="text" class="form-control search_input" pInputText size="50" placeholder="Szukaj"
+                       aria-describedby="basic-addon1">
+                <i class="fa fa-plus pull-right fa-2x" aria-hidden="true" (click)="addSubTypeShow()"></i>
+                <i class="fa fa-refresh pull-right refresh_icon fa-2x" aria-hidden="true" (click)="refreshData()"></i>
+            </div>
+
+            <p-dataTable [value]="subCategoriesList" [rows]="20" [paginator]="true" #dt2
+                         [loading]="loading" loadingIcon="fa-circle-o-notch"  [globalFilter]="gb2">
+
+                <p-header>Lista podkategorii</p-header>
+
+
+                <p-column  [hidden]="true" field="typeName" styleClass="name_col" header="Nazwa kategorii"></p-column>
+
+                <p-column  styleClass="name_col" header="Nazwa podkategorii">
+                    <ng-template let-subcategory="rowData" pTemplate="body" let-row="rowData" let-i="rowIndex" pTemplate="rowexpansion">
+                         {{subcategory.subTypeName}} ({{subcategory.productType?.typeName}})
+                    </ng-template>
+                </p-column>
+
+                <p-column header="Akcja" [style]="{'width':'100px', 'text-align': 'center'}">
+                    <ng-template let-subcat="rowData" pTemplate="body" let-row="rowData" let-i="rowIndex"
+                                 pTemplate="rowexpansion" >
+                        <i  class="fa fa-pencil-square-o fa-2x " aria-hidden="true"  title="Edytuj podkategorie" (click)="goToEditPage(subcat)"></i>
+                        <i *ngIf="authenticationService.isAdmin() ||  authenticationService.isMagazynUser() "
+                           class="fa fa-trash fa-2x edit_icon" aria-hidden="true" title="Usuń dostawcę"
+                           (click)="deleteSubCategory(row)"></i>
+
+
+                    </ng-template>
+                </p-column>
+
+            </p-dataTable>
+
+        </div>
+        <p-confirmDialog header="Usuwanie Typu produktu" key="resetType" icon="fa fa-question-circle"
+                         width="425"></p-confirmDialog>
+    </div>
+
+
+
+
+
+
+
+
+
 </div>
 
+
+
+
+
 <p-dialog header="Dodaj typ produktu" modal="true" width="600" [(visible)]="addProductTypeDialogShow"
-          (onHide)="closeSupplierAddDialog()">
+                     (onHide)="closeSupplierAddDialog()">
 
 
     <div class="form-group">
@@ -58,4 +113,71 @@
 
     <button class="btn bg-primary " (click)="addProductsType()"> Zapisz</button>
 
+</p-dialog>
+
+
+<p-dialog header="Dodaj podtyp produktu" modal="true" width="600" [(visible)]="addProductSubTypeDialogShow"
+          (onHide)="closeSubAddDialog()">
+
+    <form id="subCatAddForm" novalidate #subCatAddForm="ngForm">
+
+        <div class="form-group">
+            <small id="nameDescript" class="text-muted">Nazwa</small>
+            <input type="text" #sub_type_name name="sub_type_name" class="form-control"
+                   [(ngModel)]="subCategory.subTypeName"
+                   #name="ngModel" aria-describedby="nameDescript" required>
+            <ul class="text-danger list-unstyled" *ngIf="name.dirty || formSubmitted2">
+                <li *ngIf="name.errors?.required">To pole nie może być puste</li>
+            </ul>
+        </div>
+
+        <div class="form-group">
+            <small id="product_typeDesc" class="text-muted">Kategoria główna</small>
+            <select #hd [compareWith]="compareProductType" class="form-control" #product_type="ngModel"
+                    [(ngModel)]="subCategory.productType" name="product_type" required>
+                <option *ngFor="let item of mainCategoriesList" [ngValue]="item">{{item.typeName}}</option>
+            </select>
+            <ul class="text-danger list-unstyled" *ngIf="product_type.dirty || formSubmitted2">
+                <li *ngIf="product_type.errors?.required">Wybierz główna kategorię do której ma należeć ta
+                    podkategoria
+                </li>
+            </ul>
+        </div>
+
+        <button class="btn bg-primary " (click)="addProductsSubType(subCatAddForm)"> Zapisz</button>
+    </form>
+</p-dialog>
+
+
+
+<p-dialog header="Edytuj Podkategorie" modal="true" width="600" [(visible)]="editProductSubTypeDialogShow"
+          (onHide)="closeSubEditDialog()">
+
+    <form id="subCatEditForm" novalidate #subCatEditForm="ngForm">
+
+        <div class="form-group">
+            <small id="nameDescript" class="text-muted">Nazwa</small>
+            <input type="text" #sub_type_name name="sub_type_name" class="form-control"
+                   [(ngModel)]="subCategoryToEdit.subTypeName"
+                   #name="ngModel" aria-describedby="nameDescript" required>
+            <ul class="text-danger list-unstyled" *ngIf="name.dirty || formSubmitted3">
+                <li *ngIf="name.errors?.required">To pole nie może być puste</li>
+            </ul>
+        </div>
+
+        <div class="form-group">
+            <small id="product_typeDesc" class="text-muted">Kategoria główna</small>
+            <select #hd [compareWith]="compareProductType" class="form-control" #product_type="ngModel"
+                    [(ngModel)]="subCategoryToEdit.productType" name="product_type" required>
+                <option *ngFor="let item of mainCategoriesList" [ngValue]="item">{{item.typeName}}</option>
+            </select>
+            <ul class="text-danger list-unstyled" *ngIf="product_type.dirty || formSubmitted3">
+                <li *ngIf="product_type.errors?.required">Wybierz główna kategorię do której ma należeć ta
+                    podkategoria
+                </li>
+            </ul>
+        </div>
+
+        <button class="btn bg-primary " (click)="editProductsSubType(subCatEditForm)"> Edytuj</button>
+    </form>
 </p-dialog>

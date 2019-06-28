@@ -30,8 +30,10 @@ export class LoginComponent implements OnInit {
           if (result === true) {
               if(this.authenticationService.isAdmin()){
                   this.router.navigate(['/orders/baskets']);
+              }else if(this.authenticationService.isProdukcjaUser()){
+                  this.router.navigate(['/orders/production']);
               }else{
-                  this.router.navigate(['/']);
+				  this.router.navigate(['/orders/all']);
               }
           } else {
             this.error = 'Błąd wewnętrzny';

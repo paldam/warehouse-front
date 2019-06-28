@@ -94,6 +94,15 @@ export class CustomerComponent implements OnInit {
     })
   }
 
+	goToEditPageFromDoubleclick(event) {
+
+		let pageTmp = 1;
+		localStorage.setItem('lastPaginationPageNumberOnCustomerViewPage', pageTmp.toString());
+		let textTmp = this.findInputTextOnCustomerViewPage;
+		localStorage.setItem('findInputTextOnCustomerViewPage', textTmp);
+		this.router.navigate(["/customer/",event.data.customerId]);
+	}
+  
     goToEditPage(index,id) {
 
         let pageTmp = ((index-1) / 20)+1;

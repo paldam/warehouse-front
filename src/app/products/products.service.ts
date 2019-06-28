@@ -6,6 +6,7 @@ import 'rxjs/add/operator/map';
 import {ProductType} from '../model/product_type.model';
 import {HttpService} from "../http-service";
 import {Supplier} from "../model/supplier.model";
+import {ProductSubType} from "../model/product_sub_type";
 
 @Injectable()
 export class ProductsService {
@@ -143,6 +144,11 @@ export class ProductsService {
 
 	saveProductType(productType: ProductType): Observable<Response> {
 		return this.http.post(this.baseUrl+`/products/types`, productType)
+		//.map((response: Response) => response.json());
+	}
+
+	saveProductSubType(productSubType: ProductSubType): Observable<Response> {
+		return this.http.post(this.baseUrl+`/products/subtypes`, productSubType)
 		//.map((response: Response) => response.json());
 	}
 
