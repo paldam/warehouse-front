@@ -29,7 +29,7 @@
                 <li *ngIf="authenticationService.isAdmin() ||  authenticationService.isMagazynUser() " ><a [routerLink]="['/product/add'] " routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Dodaj</a></li>
                 <li *ngIf="authenticationService.isAdmin() || authenticationService.isMagazynUser()" ><a [routerLink]="['/products/delivery'] " routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Dostawa</a></li>
                 <li *ngIf="authenticationService.isAdmin() || authenticationService.isMagazynUser()" ><a [routerLink]="['products/setdelivery'] " routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Zamówienie produktów</a></li>
-                <li *ngIf="authenticationService.isAdmin()" ><a [routerLink]="['products/suppliers'] " routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Dostawcy</a></li>
+                <li *ngIf="authenticationService.isAdmin() || authenticationService.isMagazynUser()" ><a [routerLink]="['products/suppliers'] " routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Dostawcy</a></li>
                 <li *ngIf="authenticationService.isAdmin()" ><a [routerLink]="['/products/category'] " routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Kategorie produktów</a></li>
 
 

@@ -82,7 +82,6 @@ export class ProductsCategoryComponent extends CoreDataTableViewComponent implem
 
 	deleteSubCategory(category: ProductSubType) {
 		this.confirmationService.confirm({
-			key: "resetType",
 			message: 'Jesteś pewny że chcesz usunąć ten typ produktu ?',
 			accept: () => {
 				this.productsService.deleteSubProductType(category.subTypeId).subscribe(

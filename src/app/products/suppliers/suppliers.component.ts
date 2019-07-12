@@ -6,6 +6,7 @@ import {CoreDataTableViewComponent} from "../../coreViewComponent";
 import {MessageServiceExt} from "../../messages/messageServiceExt";
 import {User} from "../../model/user.model";
 import {ConfirmationService} from "primeng/api";
+import {NgForm} from "@angular/forms";
 
 @Component({
   selector: 'app-suppliers',
@@ -17,6 +18,7 @@ export class SuppliersComponent extends CoreDataTableViewComponent implements On
   public suppliers : Supplier [] = [];
 
     public addSupplierDialogShow: boolean = false;
+    public supplierToCreate: Supplier = new Supplier();
     public tmpSupplierName: string;
     public formSubmitted: boolean = false;
     @ViewChild('supplier_name') formSupplierNameInputField: any;
@@ -37,6 +39,7 @@ export class SuppliersComponent extends CoreDataTableViewComponent implements On
   ngOnInit() {
   }
 
+
 	refreshData() {
 		this.loading = true;
 		setTimeout(() => {
@@ -50,7 +53,7 @@ export class SuppliersComponent extends CoreDataTableViewComponent implements On
 
       this.productsService.saveSupplier(supplier).subscribe(
           value => {
-            this.refreshData()
+            this.refreshData();
                 this.messageServiceExt.addMessageWithTime('success', 'Status', 'Dokonano edycji nazwy',5000);
           },
           error => {
@@ -69,25 +72,27 @@ export class SuppliersComponent extends CoreDataTableViewComponent implements On
 
 
 
-    addSupplier(){
+    addSupplier(form: NgForm){
 
       this.formSubmitted = true;
 
-      let tmpName : string = this.formSupplierNameInputField.nativeElement.value;
+      //let tmpName : string = this.formSupplierNameInputField.nativeElement.value;
 
-      if (tmpName.length > 0 ){
-          this.productsService.saveSupplier(new Supplier(null,this.tmpSupplierName)).subscribe(
+      if (this.supplierToCreate.supplierName.length > 0 ){
+          this.productsService.saveSupplier(this.supplierToCreate).subscribe(
               value => {
                   this.messageServiceExt.addMessageWithTime('success', 'Status', 'Dodano dostawcę',5000);
 
           },  error =>{
                   this.messageServiceExt.addMessageWithTime('error', 'Błąd', "Status: " + error._body + ' ',5000  );
-              } )
+              } );
 
           this.formSubmitted = false;
+          this.supplierToCreate = new Supplier();
           this.tmpSupplierName = "";
           this.addSupplierDialogShow = false;
           this.refreshData();
+          form.resetForm();
       }
 
 
