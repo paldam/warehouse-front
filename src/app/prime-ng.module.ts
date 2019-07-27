@@ -7,14 +7,14 @@ import {
 	ConfirmDialogModule, ContextMenuModule,
 	DataTableModule,
 	DialogModule, DropdownModule,
-	FieldsetModule, FileUploadModule, LightboxModule, ListboxModule, MenuModule, MultiSelectModule, OverlayPanelModule,
+	FieldsetModule, FileUploadModule, LightboxModule, MenuModule, MultiSelectModule, OverlayPanelModule,
 	PanelMenuModule, PanelModule, ProgressSpinnerModule, RadioButtonModule, SharedModule, SliderModule, SpinnerModule
 } from "primeng/primeng";
 import {FormsModule} from "@angular/forms";
 
 import {ToastModule} from "primeng/toast";
 import {TableModule} from "primeng/table";
-
+import {ListboxModule} from 'primeng/listbox';
 
 @NgModule({
 	declarations: [],

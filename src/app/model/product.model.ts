@@ -13,7 +13,7 @@ export class Product{
         public tmpStock?: number,
         public tmpOrdered?: number,
         public isArchival?: number,
-        public supplier?: Supplier,
+        public suppliers?: Supplier[],
         public productType?: ProductType,
         public productSubType?: ProductSubType,
         public lastStockEditDate? :Date

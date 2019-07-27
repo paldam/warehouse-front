@@ -20,14 +20,32 @@
     </div>
 
     <div class="form-group">
-        <small id="supplier_typeDesc" class="text-muted">Dostawca</small>
-        <select [compareWith]="compareSupplier" class="form-control"  #supplier="ngModel" [(ngModel)]="product.supplier" name="supplier"  required >
-            <option *ngFor="let item of productSuppliers"  [ngValue]="item"  >{{item.supplierName}}</option>
-        </select>
-        <ul class="text-danger list-unstyled" *ngIf="supplier.dirty|| formSubmitted">
-            <li  *ngIf="supplier.errors?.required">Wybierz dostawcę z listy</li>
-        </ul>
+        <p-listbox name="suppliers_list" [listStyle]="{'max-height':'250px'}" [options]="productSuppliers"
+                   [(ngModel)]="selectedSuppliersToAddEdit" multiple="multiple" checkbox="checkbox" filter="filter"
+                   optionLabel="supplierName" (onChange)="checkSupplierValid()">>
+            <p-header>
+                Dostawcy :
+            </p-header>
+        </p-listbox>
+
+        <p>Wybrani dostawcy: <span *ngFor="let c of selectedSuppliersToAddEdit" style="margin-right: 10px">{{c.supplierName}}</span>
+        </p>
+        <ul class="text-danger list-unstyled" *ngIf="supplierRequiredError">Wybierz przynajmniej jednego dostawcę</ul>
     </div>
+
+
+
+
+
+    <!--<div class="form-group">-->
+        <!--<small id="supplier_typeDesc" class="text-muted">Dostawca</small>-->
+        <!--<select [compareWith]="compareSupplier" class="form-control"  #supplier="ngModel" [(ngModel)]="product.supplier" name="supplier"  required >-->
+            <!--<option *ngFor="let item of productSuppliers"  [ngValue]="item"  >{{item.supplierName}}</option>-->
+        <!--</select>-->
+        <!--<ul class="text-danger list-unstyled" *ngIf="supplier.dirty|| formSubmitted">-->
+            <!--<li  *ngIf="supplier.errors?.required">Wybierz dostawcę z listy</li>-->
+        <!--</ul>-->
+    <!--</div>-->
 
     <div class="form-group">
         <small id="product_typeDesc" class="text-muted">Typ Produktu</small>

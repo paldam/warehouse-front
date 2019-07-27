@@ -48,6 +48,12 @@ export class Statistic2Component implements OnInit {
     this.endDate = today.toISOString().substring(0,10);
   }
 
+  
+  test(event, col){
+
+      console.log(event);
+	  console.log(col);
+  }
 
   submitOrderForm(form: NgForm) {
 
@@ -94,8 +100,15 @@ export class Statistic2Component implements OnInit {
 
 
         for (let i = 0; i < filt.length;i++) {
-            dataToGenerateFile[i] = {"Nazwa Produktu":filt[i].product_name, "Nazwa Dostawcy":filt[i].supplier.supplierName,"Ilość":filt[i].suma}
-        }
+			let tmpSupplierNameList = '';
+
+			for(let n = 0; n < filt[i].suppliers.length;n++){
+				tmpSupplierNameList = tmpSupplierNameList + filt[i].suppliers[n].supplierName + " | ";
+			}
+
+
+			dataToGenerateFile[i] = {"Nazwa Produktu":filt[i].product_name, "Nazwa Dostawcy":tmpSupplierNameList,"Ilość":filt[i].suma}
+		}
 
 
 

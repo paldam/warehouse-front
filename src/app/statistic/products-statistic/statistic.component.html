@@ -42,11 +42,13 @@
     </ng-template>
   </p-column>
   <p-column field="product_name"  header="Nazwa" [sortable]="true" ></p-column>
-  <p-column field="supplier.supplierName"  header="Dostawca" [sortable]="true"></p-column>
 
   <p-column field="supplier.supplierName" header="Dostawca" [filter]="true" filterMatchMode="equals">
     <ng-template pTemplate="filter" let-col>
       <p-dropdown [options]="suppliers" [style]="{'width':'100%'}" (onChange)="dt.filter($event.value,col.field,col.filterMatchMode)" styleClass="ui-column-filter"></p-dropdown>
+    </ng-template>
+    <ng-template  let-item="rowData"   pTemplate="body">
+      <tr *ngFor="let supplier of item.suppliers">  {{supplier.supplierName}}  </tr>
     </ng-template>
   </p-column>
   <p-column field="capacity"  header="Pojemność " [style]="{'width':'120px'}" ></p-column>

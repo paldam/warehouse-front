@@ -1,105 +1,111 @@
-
 <div class="order_summary col-12">
-  <p-fieldset   [legend]="legend" [toggleable]="true">
+    <p-fieldset [legend]="legend" [toggleable]="true">
 
 
-    <div class="form-group">
-      <small id="supplier_typeDesc" class="text-muted">Dostawca</small>
-      <select class="form-control"  #supplier="ngModel" [(ngModel)]="selectedSupplier" (change)="selectSupplier(selectedSupplier.supplierId)" name="supplier"  required >
-        <option *ngFor="let item of productSuppliers"  [ngValue]="item"  >{{item.supplierName}}</option>
-      </select>
-    </div>
+        <div class="form-group">
+            <small id="supplier_typeDesc" class="text-muted">Dostawca</small>
+            <select class="form-control" #supplier="ngModel" [(ngModel)]="selectedSupplier"
+                    (change)="selectSupplier(selectedSupplier.supplierId)" name="supplier" required>
+                <option *ngFor="let item of productSuppliers" [ngValue]="item">{{item.supplierName}}</option>
+            </select>
+        </div>
 
 
-
-    <div class="input-group search_bar">
+        <div class="input-group search_bar">
     <span class="input-group-addon" id="basic-addon1">
                  <i class="fa fa-search" aria-hidden="true"></i>
             </span>
-      <input #globalfilter type="text" (change)="dt.filter($event.target.value, 'contains')" class="form-control search_input" pInputText size="50" placeholder="Szukaj"aria-describedby="basic-addon1" [(ngModel)]="findInputtextOrder">
+            <input #globalfilter type="text" (change)="dt.filter($event.target.value, 'contains')"
+                   class="form-control search_input" pInputText size="50" placeholder="Szukaj"
+                   aria-describedby="basic-addon1" [(ngModel)]="findInputtextOrder">
 
-    </div>
-
-
-
-
-    <p-dataTable [value]="productsBySupplier" [rows]="500" [editable]="true" (onEditComplete)="updateStockRow($event)" [paginator]="true" [globalFilter]="globalfilter" #dt
-                 [loading]="loading" loadingIcon="fa-circle-o-notch" [rowStyleClass]="currentPageMode == 1 ? getRowStyle : getRowStyle2"  >
-      <!--sortField="lastStockEditDate" sortOrder="-1"-->
-      <p-header>Lista Produktów</p-header>
+        </div>
 
 
-      <p-column  header="lp."   [style]="{'width':'30px'}">
-        <ng-template let-row="rowData" let-i="rowIndex" pTemplate="rowexpansion">
-          {{i+1}}
-        </ng-template>
-      </p-column>
-
-      <p-column field="productName" styleClass="name_col" header="Nazwa" [sortable]="true"></p-column>
-      <p-column field="capacity" styleClass="capacity_col" header="Pojemność" [sortable]="true"></p-column>
-      <p-column field="supplier.supplierName" styleClass="deliver_col" header="Dostawca"  [sortable]="true" ></p-column>
-      <p-column field="price" styleClass="price_col" header="Cena"  [sortable]="true">
-        <ng-template let-row="rowData" pTemplate="body"  >
-          {{row.price /100 |number: '1.2-2'}} zł
-        </ng-template>
-      </p-column>
-
-      <p-column field="add"   styleClass="add_col" header="Dodaj"  [sortable]="true" >
-        <ng-template  let-row="rowData" pTemplate="body" type="number">
-                       <p-spinner   size="4"   [(ngModel)]="row.add" [min]="0"></p-spinner>
-          <i class="plusic fa fa-2x fa-plus-circle" aria-hidden="true" (click)="addToStockOrToOrder(row.id, row.add)"> </i>
-        </ng-template>
-
-      </p-column>
-      <p-column field="stock" styleClass="stock_col" header="Stan" [editable]=true [sortable]="true" >
-        <ng-template let-row="rowData" pTemplate="body">
-          {{row.stock}} szt.
-        </ng-template>
-      </p-column>
+        <p-dataTable [value]="productsBySupplier" [rows]="500" [editable]="true"
+                     (onEditComplete)="updateStockRow($event)" [paginator]="true" [globalFilter]="globalfilter" #dt
+                     [loading]="loading" loadingIcon="fa-circle-o-notch"
+                     [rowStyleClass]="currentPageMode == 1 ? getRowStyle : getRowStyle2">
+            <!--sortField="lastStockEditDate" sortOrder="-1"-->
+            <p-header>Lista Produktów</p-header>
 
 
-      <p-column *ngIf="currentPageMode==1" field="lastStockEditDate" styleClass="date_col" header="Modyfikacja"  [sortable]="true" >
+            <p-column header="lp." [style]="{'width':'30px'}">
+                <ng-template let-row="rowData" let-i="rowIndex" pTemplate="rowexpansion">
+                    {{i+1}}
+                </ng-template>
+            </p-column>
 
-        <ng-template let-row="rowData" pTemplate="body"  >
-          {{row.lastStockEditDate| date: 'dd/MM/yyyy HH:mm:ss'}}
-        </ng-template>
+            <p-column field="productName" styleClass="name_col" header="Nazwa" [sortable]="true"></p-column>
+            <p-column field="capacity" styleClass="capacity_col" header="Pojemność" [sortable]="true"></p-column>
 
-      </p-column>
-
-
-
-      <p-column *ngIf="currentPageMode==2" field="tmpStock" styleClass="capacity_col" header="Buffor" [sortable]="true">
-
-        <ng-template let-row="rowData" pTemplate="body">
-          {{row.tmpStock}} szt.
-        </ng-template>
-      </p-column>
+            <p-column field="suppliers" header="Dostawca" styleClass="deliver_col">
+                <ng-template let-item="rowData" pTemplate="body">
+                    <tr *ngFor="let supplier of item.suppliers"> {{supplier.supplierName}}</tr>
+                </ng-template>
+            </p-column>
 
 
+            <p-column field="price" styleClass="price_col" header="Cena" [sortable]="true">
+                <ng-template let-row="rowData" pTemplate="body">
+                    {{row.price /100 |number: '1.2-2'}} zł
+                </ng-template>
+            </p-column>
+
+            <p-column field="add" styleClass="add_col" header="Dodaj" [sortable]="true">
+                <ng-template let-row="rowData" pTemplate="body" type="number">
+                    <p-spinner size="4" [(ngModel)]="row.add" [min]="0"></p-spinner>
+                    <i class="plusic fa fa-2x fa-plus-circle" aria-hidden="true"
+                       (click)="addToStockOrToOrder(row.id, row.add)"> </i>
+                </ng-template>
+
+            </p-column>
+            <p-column field="stock" styleClass="stock_col" header="Stan" [editable]=true [sortable]="true">
+                <ng-template let-row="rowData" pTemplate="body">
+                    {{row.stock}} szt.
+                </ng-template>
+            </p-column>
 
 
+            <p-column *ngIf="currentPageMode==1" field="lastStockEditDate" styleClass="date_col" header="Modyfikacja"
+                      [sortable]="true">
 
-      <p-column  field="tmpOrdered" styleClass="capacity_col"  [editable]=true header="Liczba zamówionych" [sortable]="true">
+                <ng-template let-row="rowData" pTemplate="body">
+                    {{row.lastStockEditDate| date: 'dd/MM/yyyy HH:mm:ss'}}
+                </ng-template>
 
-        <ng-template let-row="rowData" pTemplate="body">
-          {{row.tmpOrdered}} szt.
-        </ng-template>
-      </p-column>
-
-
-
+            </p-column>
 
 
-      <p-column *ngIf="currentPageMode==2" field="lastNumberOfOrderedEditDate" styleClass="date_col" header="Modyfikacja"  [sortable]="true" >
+            <p-column *ngIf="currentPageMode==2" field="tmpStock" styleClass="capacity_col" header="Buffor"
+                      [sortable]="true">
 
-        <ng-template let-row="rowData" pTemplate="body"  >
-          {{row.lastNumberOfOrderedEditDate| date: 'dd/MM/yyyy HH:mm:ss'}}
-        </ng-template>
-
-      </p-column>
-
-    </p-dataTable>
+                <ng-template let-row="rowData" pTemplate="body">
+                    {{row.tmpStock}} szt.
+                </ng-template>
+            </p-column>
 
 
-  </p-fieldset>
+            <p-column field="tmpOrdered" styleClass="capacity_col" [editable]=true header="Liczba zamówionych"
+                      [sortable]="true">
+
+                <ng-template let-row="rowData" pTemplate="body">
+                    {{row.tmpOrdered}} szt.
+                </ng-template>
+            </p-column>
+
+
+            <p-column *ngIf="currentPageMode==2" field="lastNumberOfOrderedEditDate" styleClass="date_col"
+                      header="Modyfikacja" [sortable]="true">
+
+                <ng-template let-row="rowData" pTemplate="body">
+                    {{row.lastNumberOfOrderedEditDate| date: 'dd/MM/yyyy HH:mm:ss'}}
+                </ng-template>
+
+            </p-column>
+
+        </p-dataTable>
+
+
+    </p-fieldset>
 </div>

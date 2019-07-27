@@ -21,11 +21,14 @@ export class ProductEditFormComponent implements OnInit {
     public formSubmitted: boolean = false;
     public productSuppliers: Supplier[]=[];
     public productSubTypes: ProductSubType[]=[];
+	public selectedSuppliersToAddEdit: Supplier[]=[];
+	public supplierRequiredError : boolean = false;
 
-    constructor(private productsService: ProductsService, private router: Router, activeRoute: ActivatedRoute,private messageServiceExt: MessageServiceExt) {
+	constructor(private productsService: ProductsService, private router: Router, activeRoute: ActivatedRoute,private messageServiceExt: MessageServiceExt) {
         productsService.getProduct(activeRoute.snapshot.params["id"]).subscribe(data =>{
             this.product = data;
             this.productPrice = data.price/100;
+            this.selectedSuppliersToAddEdit = data.suppliers;
         });
 
         productsService.getSuppliers().subscribe(data=> this.productSuppliers=data);
@@ -40,12 +43,16 @@ export class ProductEditFormComponent implements OnInit {
 
     submitForm(form: NgForm) {
         this.formSubmitted = true;
+		this.checkSupplierValid();
 
-        if (form.valid) {
+        if (form.valid && this.selectedSuppliersToAddEdit.length > 0) {
+			this.product.suppliers = this.selectedSuppliersToAddEdit;
             this.product.price= this.productPrice*100;
             this.productsService.saveProduct(this.product).subscribe(
                 order => {
+
                     this.product = new Product();
+					this.selectedSuppliersToAddEdit = [];
                     form.reset();
                     this.formSubmitted = false;
 
@@ -71,5 +78,8 @@ export class ProductEditFormComponent implements OnInit {
 		return optionTwo && optionTwo ? optionOne.subTypeName === optionTwo.subTypeName :optionOne === optionTwo;
 	}
 
+	checkSupplierValid(){
+		this.supplierRequiredError = this.selectedSuppliersToAddEdit.length == 0;
+    }
 
 }

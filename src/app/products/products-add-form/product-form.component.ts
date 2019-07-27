@@ -24,6 +24,8 @@ export class ProductFormComponent implements OnInit {
     public formSubmitted: boolean = false;
     public formSupplierAddForm: boolean = false;
     public addSupplierWindow: boolean = false;
+    public selectedSuppliersToAddEdit: Supplier[]=[];
+	public supplierRequiredError : boolean = false;
 
     constructor(private productsService: ProductsService, private router: Router,private messageServiceExt: MessageServiceExt) {
         productsService.getSuppliers().subscribe(data=> this.productSuppliers=data);
@@ -35,20 +37,25 @@ export class ProductFormComponent implements OnInit {
     }
 
     ngOnInit() {
+        
+        
+
     }
 
 
 
     submitForm(form: NgForm) {
         this.formSubmitted = true;
-
+		this.checkSupplierValid();
         console.log(this.formSubmitted);
         console.log(form.valid);
 
-        if (form.valid) {
+        if (form.valid && this.selectedSuppliersToAddEdit.length > 0) {
+            this.product.suppliers = this.selectedSuppliersToAddEdit;
             this.product.price *= 100;
             this.product.isArchival = 0;
             this.product.tmpStock = 0;
+            console.log(this.product);
 
             if (this.product.stock == null) {
                 this.product.stock = 0;
@@ -57,6 +64,7 @@ export class ProductFormComponent implements OnInit {
             this.productsService.saveProduct(this.product).subscribe(
                 order => {
                     this.product = new Product();
+                    this.selectedSuppliersToAddEdit = [];
                     form.reset();
                     this.formSubmitted = false;
                     this.messageServiceExt.addMessage('success', 'Status', 'Poprawnie dodano produkt do bazy');
@@ -114,4 +122,8 @@ export class ProductFormComponent implements OnInit {
     addSupplierWindowOn(){
         this.addSupplierWindow= true;
     }
+
+	checkSupplierValid(){
+		this.supplierRequiredError = this.selectedSuppliersToAddEdit.length == 0;
+	}
 }
