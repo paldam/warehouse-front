@@ -108,14 +108,14 @@
 
 
 .d-table-wrapper{
-    width: 800px ;
+    width: 1000px ;
     position: relative;
 }
 
 .change-state-btn{
     position: absolute;
     top: 0px;
-    left: 835px;
+    left: 1050px;
     margin: 0px;
 }
 .excel-export{

@@ -29,7 +29,8 @@
 
     <p-dataTable #dt [value]="orders" [rows]="50" [paginator]="true" [globalFilter]="globalfilter"  [totalRecords]="totalRecords" selectionMode="multiple"
                  [loading]="loading" loadingIcon="fa-circle-o-notch" expandableRows="true" [(first)]="lastPaginationPageNumberOnOrderViewPage"  [(selection)]="selectedOrdersMultiselction"
-                 dataKey="orderId" [contextMenu]="cm" [paginator]="true" [pageLinks]="5" [rowsPerPageOptions]= paginatorValues [lazy]="false"
+                 dataKey="orderId" [contextMenu]="cm"
+                 rowExpandMode = single [paginator]="true" [pageLinks]="5" [rowsPerPageOptions]= paginatorValues [lazy]="false"
                  (onContextMenuSelect)="OnSelectRow($event)"
                  (onRowExpand)="rowExpand($event)"
                  (onPage)="hideActionExtention2($event)"
@@ -164,10 +165,10 @@
             <div class="d-table-wrapper">
                 <table class="d-table">
                     <colgroup>
-                        <col span="1" style="width: 40%;">
-                        <col span="1" style="width: 10%;">
-                        <col span="1" style="width: 10%;">
-                        <col span="1" style="width: 10%;">
+                        <col span="1" style="width: 25%;">
+                        <col span="1" style="width: 5%;">
+                        <col span="1" style="width: 5%;">
+                        <col span="1" style="width: 15%;">
                         <col span="1" style="width: 10%;">
                         <col span="1" style="width: 10%;">
                         <col span="1" style="width: 10%;">
@@ -177,7 +178,7 @@
                         <th >Nazwa kosza</th>
                         <th >Zdjęcie</th>
                         <th >Skład kosza</th>
-                        <th >Ilość koszy</th>
+                        <th >Ilość koszy </th>
                         <th >Magazyn</th>
                         <th >Produkcja</th>
                         <th >Logistyka</th>
@@ -195,14 +196,38 @@
                             <i class="fa fa-file-pdf-o fa-2x " aria-hidden="true" title="Drukuj skład kosza ze zdjęciem"
                                (click)="printProductListInBasketPdf(row.basket.basketId)"></i>
                         </td>
-                        <td>{{row.quantity}}</td>
 
-                        <td>
-                            <input type="number"
-                                   [disabled]="isMagazynInputDisable(orders.orderStatus.orderStatusId)"
-                                   class="form-control" aria-describedby="helpId" placeholder="" min="0" [max]="row.quantity" [value]="row.stateOnWarehouse"
-                                   (change)="updateStateOnWarehouse(orders,$event.target.value,i)">
+
+                        <td *ngIf="authenticationService.isMagazynUser()">
+                            <i *ngIf="!isMagazynInputDisable(orders.orderStatus.orderStatusId)" class="fa fa-pencil" aria-hidden="true" (click)="showEditCurrentOrderStateDialog()"></i>
+                            {{ row.stateOnWarehouse}} / {{row.quantity}}
                         </td>
+                        <!--<td *ngIf="isProductionInputDisable(orders.orderStatus.orderStatusId)">{{row.quantity}} / {{ row.stateOnProduction}} </td>-->
+                        <!--<td *ngIf="isWysylkaInputDisable(orders.orderStatus.orderStatusId)">{{row.quantity}} / {{ row.stateOnLogistics}} </td>-->
+                        <!--<td>-->
+                            <!--<input type="number"-->
+                                   <!--[disabled]="isMagazynInputDisable(orders.orderStatus.orderStatusId)"-->
+                                   <!--class="form-control" aria-describedby="helpId" placeholder="" min="0" [max]="row.quantity" [value]="row.stateOnWarehouse"-->
+                                   <!--(change)="updateStateOnWarehouse(orders,$event.target.value,i)">-->
+                        <!--</td>-->
+                        <td>
+                            <input *ngIf="!authenticationService.isMagazynUser() || isMagazynInputDisable(orders.orderStatus.orderStatusId)" type="number"
+                                   [disabled]="isMagazynInputDisable(orders.orderStatus.orderStatusId)"
+                                   class="form-control" aria-describedby="helpId" placeholder="" min="0"
+                                   [max]="row.quantity" [value]="row.stateOnWarehouse"
+                                   (change)="updateStateOnWarehouse(orders,$event.target.value,i)">
+
+                            <div *ngIf="!isMagazynInputDisable(orders.orderStatus.orderStatusId)">
+                                <p-spinner size="1" [(ngModel)]="row.add" [min]="0"></p-spinner>
+                                <i class="plusic fa fa-2x fa-plus-circle" aria-hidden="true"
+                                   (click)="addToStockOrToOrder(row.id, row.add)"> </i>
+                            </div>
+
+
+                        </td>
+
+
+
                         <td>
                             <input type="number"
                                    [disabled]="isProductionInputDisable(orders.orderStatus.orderStatusId)"
@@ -216,6 +241,14 @@
                                    type="number"  class="form-control"
                                    aria-describedby="helpId" placeholder="" min="0" [max]="row.quantity" [value]="row.stateOnLogistics" (change)="updateStateOnLogistics(orders,$event.target.value,i)">
                         </td>
+
+                        <p-dialog header="Title" [(visible)]="editCurrentOrderStateDialog">
+
+                            <input  type="number" [disabled]="isMagazynInputDisable(orders.orderStatus.orderStatusId)" class="form-control" aria-describedby="helpId" placeholder="" min="0"
+                                    [max]="row.quantity" [value]="row.stateOnWarehouse"
+                                    (change)="updateStateOnWarehouse(orders,$event.target.value,i)">
+                        </p-dialog>
+
                     </tr>
                     </tbody>
                 </table>
@@ -315,7 +348,6 @@
 <p-overlayPanel #information_extention  >
     {{additionalInforamtionTmp}}
 </p-overlayPanel>
-
 
 
 <div #action_extention  [hidden]="true" class="action_extention" [style.top.px]="actionExtentionPositionTop" [style.left.px]="actionExtentionPositionLeft">

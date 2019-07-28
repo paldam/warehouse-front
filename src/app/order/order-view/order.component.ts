@@ -55,6 +55,7 @@ export class OrderComponent implements OnInit {
 	public items: MenuItem[];
 	public exportItems: MenuItem[];
 	public productionUserList: any[] = [];
+	public editCurrentOrderStateDialog: boolean = false;
 	public paginatorValues = AppConstans.PAGINATOR_VALUES;
 	public additionalInforamtionTmp: string = "";
 	public fileFilterLoaded: Promise<boolean>;
@@ -89,6 +90,10 @@ export class OrderComponent implements OnInit {
 		this.setCurentPageType();
 		this.setSearchOptions();
 		this.setOrderData();
+	}
+	
+	test(){
+		console.log("Edycja");
 	}
 
 	ngOnInit() {
@@ -411,6 +416,10 @@ export class OrderComponent implements OnInit {
 				this.loading = false;
 				this.calculateOrderProcessInPercentForStatusInProgress();
 			})
+	}
+	showEditCurrentOrderStateDialog(){
+		this.editCurrentOrderStateDialog = true;
+
 	}
 
 	backToRegularOrderView() {
