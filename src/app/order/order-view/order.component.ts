@@ -149,8 +149,12 @@ export class OrderComponent implements OnInit {
 			}, error1 => {
 				this.spinerService.showSpinner = false;
 			}, () => {
+				this.expandRowAfterRefresh();
 				this.calculateOrderProcessInPercentForStatusInProgress();
-				this.spinerService.showSpinner = false;
+				setTimeout(() => {
+					this.spinerService.showSpinner = false;
+				}, 1000);
+
 			})
 	}
 
@@ -584,9 +588,46 @@ export class OrderComponent implements OnInit {
 
 
 
-	updateSpecyfiedOrderItemProgressOnWarehouse(orderItemId: number, newStateValueOnWarehouse: number){
+	updateSpecifiedOrderItemProgressOnWarehouse(orderItemId: number, newStateValueOnWarehouse: number){
 
-		this.orderService.changeSpecyfiedOrderItemProgressOnWarehouse(orderItemId,newStateValueOnWarehouse).subscribe(data =>{
+		this.orderService.changeSpecifiedOrderItemProgressOnWarehouse(orderItemId,newStateValueOnWarehouse).subscribe(data =>{
+			this.messageServiceExt.addMessage('success', 'Status', 'Zmieniono ilość gotowych koszy');
+		},error => {
+		},() => {
+			this.editCurrentOrderStateDialog = false;
+			this.orderItemRowToEditState = new OrderItem();
+			this.refreshData();
+		} )
+	}
+	updateSpecifiedOrderItemProgressOnProduction(orderItemId: number, newStateValueOnWarehouse: number){
+
+		this.orderService.changeSpecifiedOrderItemProgressOnProduction(orderItemId,newStateValueOnWarehouse).subscribe(data =>{
+			this.messageServiceExt.addMessage('success', 'Status', 'Zmieniono ilość gotowych koszy');
+		},error => {
+		},() => {
+			this.editCurrentOrderStateDialog = false;
+			this.orderItemRowToEditState = new OrderItem();
+			this.refreshData();
+		} )
+	}
+	updateSpecifiedOrderItemProgressOnLogistics(orderItemId: number, newStateValueOnWarehouse: number){
+
+		this.orderService.changeSpecifiedOrderItemProgressOnLogistics(orderItemId,newStateValueOnWarehouse).subscribe(data =>{
+			this.messageServiceExt.addMessage('success', 'Status', 'Zmieniono ilość gotowych koszy');
+		},error => {
+		},() => {
+			this.editCurrentOrderStateDialog = false;
+			this.orderItemRowToEditState = new OrderItem();
+			this.refreshData();
+		} )
+	}
+
+
+	updateSpecifiedOrderItemProgressOnWarehouseByAddValue(orderItemId: number, newStateValueToAddOnWarehouse: number){
+
+
+
+		this.orderService.changeSpecifiedOrderItemProgressOnWarehouseByAddValue(orderItemId,newStateValueToAddOnWarehouse).subscribe(data =>{
 			this.messageServiceExt.addMessage('success', 'Status', 'Zmieniono ilość gotowych koszy');
 		},error => {
 		},() => {
@@ -596,6 +637,37 @@ export class OrderComponent implements OnInit {
 		} )
 
 	}
+
+	updateSpecifiedOrderItemProgressOnProductionByAddValue(orderItemId: number, newStateValueToAddOnWarehouse: number){
+
+
+
+		this.orderService.changeSpecifiedOrderItemProgressOnProductionByAddValue(orderItemId,newStateValueToAddOnWarehouse).subscribe(data =>{
+			this.messageServiceExt.addMessage('success', 'Status', 'Zmieniono ilość gotowych koszy');
+		},error => {
+		},() => {
+			this.editCurrentOrderStateDialog = false;
+			this.orderItemRowToEditState = new OrderItem();
+			this.refreshData();
+		} )
+
+	}
+
+	updateSpecifiedOrderItemProgressOnLogisticsByAddValue(orderItemId: number, newStateValueToAddOnLogistics: number){
+
+
+
+		this.orderService.changeSpecifiedOrderItemProgressOnLogisticsByAddValue(orderItemId,newStateValueToAddOnLogistics).subscribe(data =>{
+			this.messageServiceExt.addMessage('success', 'Status', 'Zmieniono ilość gotowych koszy');
+		},error => {
+		},() => {
+			this.editCurrentOrderStateDialog = false;
+			this.orderItemRowToEditState = new OrderItem();
+			this.refreshData();
+		} )
+
+	}
+
 
 	 private expandRowAfterRefresh(){
 

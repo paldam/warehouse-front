@@ -137,12 +137,44 @@
 
 .edit-state-input-btn{
     margin: 0;
-    margin-left: 70px;
+    margin-left: 200px;
+}
+
+.plusic{
+    position: relative;
+    left: 11px;
+    top: 5px;
+}
+
+.add-value-cell{
+    text-align: center;
+
+}
+
+.total-ready-basket{
+    color: #6bc502;
+    font-size: 15px;
+    font-weight: bold;
+}
+
+.inp-state{
+    max-width: 70%;
+    text-align: center;
 }
 
 
 
+.inp-state-td{
+    text-align: center;
+}
 
+.form-control {
+    display: unset;
+}
+
+.d-table tr {
+    height: 50px;
+}
 
 
 

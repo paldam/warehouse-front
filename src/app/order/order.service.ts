@@ -209,8 +209,26 @@ export class OrderService {
 
     }
 
-	changeSpecyfiedOrderItemProgressOnWarehouse(orderItemId: number, newStateValueOnWarehouse: number) {
+	changeSpecifiedOrderItemProgressOnWarehouse(orderItemId: number, newStateValueOnWarehouse: number) {
 		return this.http.get(this.baseUrl+`/order/orderitem/progress/warehouse/${orderItemId}/${newStateValueOnWarehouse}`)
+	}
+	changeSpecifiedOrderItemProgressOnProduction(orderItemId: number, newStateValueOnProduction: number) {
+		return this.http.get(this.baseUrl+`/order/orderitem/progress/production/${orderItemId}/${newStateValueOnProduction}`)
+	}
+	changeSpecifiedOrderItemProgressOnLogistics(orderItemId: number, newStateValueOnLogistics: number) {
+		return this.http.get(this.baseUrl+`/order/orderitem/progress/logistics/${orderItemId}/${newStateValueOnLogistics}`)
+	}
+
+
+
+	changeSpecifiedOrderItemProgressOnWarehouseByAddValue(orderItemId: number, newStateValueToAddOnWarehouse: number) {
+		return this.http.get(this.baseUrl+`/order/orderitem/progress/warehouse/addvalue/${orderItemId}/${newStateValueToAddOnWarehouse}`)
+	}
+	changeSpecifiedOrderItemProgressOnProductionByAddValue(orderItemId: number, newStateValueToAddOnProduction: number) {
+		return this.http.get(this.baseUrl+`/order/orderitem/progress/production/addvalue/${orderItemId}/${newStateValueToAddOnProduction}`)
+	}
+	changeSpecifiedOrderItemProgressOnLogisticsByAddValue(orderItemId: number, newStateValueToAddOnLogistics: number) {
+		return this.http.get(this.baseUrl+`/order/orderitem/progress/logistics/addvalue/${orderItemId}/${newStateValueToAddOnLogistics}`)
 	}
 
 

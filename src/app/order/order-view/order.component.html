@@ -161,25 +161,25 @@
 
 
 
-        <ng-template let-orders pTemplate="rowexpansion">
+        <ng-template *ngIf="!authenticationService.isAdmin()" let-orders pTemplate="rowexpansion">
             <p>Pozycje zamówienia</p>
             <div class="d-table-wrapper">
                 <table class="d-table">
                     <colgroup>
                         <col span="1" style="width: 25%;">
                         <col span="1" style="width: 5%;">
-                        <col span="1" style="width: 5%;">
+                        <col span="1" style="width: 10%;">
                         <col span="1" style="width: 15%;">
-                        <col span="1" style="width: 10%;">
-                        <col span="1" style="width: 10%;">
-                        <col span="1" style="width: 10%;">
+                        <col span="1" style="width: 8%;">
+                        <col span="1" style="width: 8%;">
+                        <col span="1" style="width: 8%;">
                     </colgroup>
                     <thead>
                     <tr >
                         <th >Nazwa kosza</th>
                         <th >Zdjęcie</th>
                         <th >Skład kosza</th>
-                        <th >Ilość koszy </th>
+                        <th >Kosze gotowe / Do zrobienia </th>
                         <th >Magazyn</th>
                         <th >Produkcja</th>
                         <th >Logistyka</th>
@@ -201,27 +201,61 @@
 
                         <td *ngIf="authenticationService.isMagazynUser()">
                             <i *ngIf="!isMagazynInputDisable(orders.orderStatus.orderStatusId)" class="fa fa-pencil" aria-hidden="true" (click)="showEditCurrentOrderStateDialog(orders,row)"></i>
-                            {{ row.stateOnWarehouse}} / {{row.quantity}}
+                            <span class="total-ready-basket">{{ row.stateOnWarehouse}}</span> / {{row.quantity}}
                         </td>
-                        <!--<td *ngIf="isProductionInputDisable(orders.orderStatus.orderStatusId)">{{row.quantity}} / {{ row.stateOnProduction}} </td>-->
-                        <!--<td *ngIf="isWysylkaInputDisable(orders.orderStatus.orderStatusId)">{{row.quantity}} / {{ row.stateOnLogistics}} </td>-->
-                        <!--<td>-->
-                            <!--<input type="number"-->
-                                   <!--[disabled]="isMagazynInputDisable(orders.orderStatus.orderStatusId)"-->
-                                   <!--class="form-control" aria-describedby="helpId" placeholder="" min="0" [max]="row.quantity" [value]="row.stateOnWarehouse"-->
-                                   <!--(change)="updateStateOnWarehouse(orders,$event.target.value,i)">-->
-                        <!--</td>-->
-                        <td>
+                        <td *ngIf="authenticationService.isProdukcjaUser()">
+                            <i *ngIf="!isProductionInputDisable(orders.orderStatus.orderStatusId)" class="fa fa-pencil" aria-hidden="true" (click)="showEditCurrentOrderStateDialog(orders,row)"></i>
+                            <span class="total-ready-basket"> {{ row.stateOnProduction}} </span> / {{row.quantity}}
+                        </td>
+                        <td *ngIf="authenticationService.isWysylkaUser()">
+                            <i *ngIf="!isWysylkaInputDisable(orders.orderStatus.orderStatusId)" class="fa fa-pencil" aria-hidden="true" (click)="showEditCurrentOrderStateDialog(orders,row)"></i>
+                            <span class="total-ready-basket"> {{ row.stateOnLogistics}} </span> / {{row.quantity}}
+                        </td>
+
+
+                        <td class="add-value-cell">
                             <input *ngIf="!authenticationService.isMagazynUser() || isMagazynInputDisable(orders.orderStatus.orderStatusId)" type="number"
                                    [disabled]="isMagazynInputDisable(orders.orderStatus.orderStatusId)"
-                                   class="form-control" aria-describedby="helpId" placeholder="" min="0"
+                                   class="form-control inp-state" aria-describedby="helpId" placeholder="" min="0"
                                    [max]="row.quantity" [value]="row.stateOnWarehouse"
                                    (change)="updateStateOnWarehouse(orders,$event.target.value,i)">
 
                             <div *ngIf="!isMagazynInputDisable(orders.orderStatus.orderStatusId)">
-                                <p-spinner size="1" [(ngModel)]="row.add" [min]="0"></p-spinner>
-                                <i class="plusic fa fa-2x fa-plus-circle" aria-hidden="true"
-                                   (click)="addToStockOrToOrder(row.id, row.add)"> </i>
+                                <p-spinner size="1" [(ngModel)]="row.addTmp" [min]="0" [max]="row.quantity"></p-spinner>
+                                <i   class="plusic fa fa-2x fa-plus-circle" aria-hidden="true"
+                                   (click)="updateSpecifiedOrderItemProgressOnWarehouseByAddValue(row.orderItemId,row.addTmp)"> </i>
+                            </div>
+
+
+                        </td>
+
+                        <td class="add-value-cell">
+                            <input *ngIf="!authenticationService.isProdukcjaUser() || isProductionInputDisable(orders.orderStatus.orderStatusId)" type="number"
+                                   [disabled]="isProductionInputDisable(orders.orderStatus.orderStatusId)"
+                                   class="form-control inp-state" aria-describedby="helpId" placeholder="" min="0"
+                                   [max]="row.quantity" [value]="row.stateOnProduction"
+                                   (change)="updateStateOnProduction(orders,$event.target.value,i)">
+
+                            <div *ngIf="!isProductionInputDisable(orders.orderStatus.orderStatusId)">
+                                <p-spinner size="1" [(ngModel)]="row.addTmp" [min]="0" [max]="row.quantity"></p-spinner>
+                                <i   class="plusic fa fa-2x fa-plus-circle" aria-hidden="true"
+                                    (click)="updateSpecifiedOrderItemProgressOnProductionByAddValue(row.orderItemId,row.addTmp)"> </i>
+                            </div>
+
+
+                        </td>
+
+                        <td class="add-value-cell">
+                            <input *ngIf="!authenticationService.isWysylkaUser() || isWysylkaInputDisable(orders.orderStatus.orderStatusId)" type="number"
+                                   [disabled]="isWysylkaInputDisable(orders.orderStatus.orderStatusId)"
+                                   class="form-control inp-state" aria-describedby="helpId" placeholder="" min="0"
+                                   [max]="row.quantity" [value]="row.stateOnLogistics"
+                                   (change)="updateStateOnLogistics(orders,$event.target.value,i)">
+
+                            <div *ngIf="!isWysylkaInputDisable(orders.orderStatus.orderStatusId)">
+                                <p-spinner size="1" [(ngModel)]="row.addTmp" [min]="0" [max]="row.quantity"></p-spinner>
+                                <i   class="plusic fa fa-2x fa-plus-circle" aria-hidden="true"
+                                    (click)="updateSpecifiedOrderItemProgressOnLogisticsByAddValue(row.orderItemId,row.addTmp)"> </i>
                             </div>
 
 
@@ -229,6 +263,59 @@
 
 
 
+
+                    </tr>
+                    </tbody>
+                </table>
+
+            </div>
+
+        </ng-template>
+
+        <ng-template *ngIf="authenticationService.isAdmin()" let-orders pTemplate="rowexpansion">
+            <p>Pozycje zamówienia</p>
+            <div class="d-table-wrapper">
+                <table class="d-table">
+                    <colgroup>
+                        <col span="1" style="width: 40%;">
+                        <col span="1" style="width: 10%;">
+                        <col span="1" style="width: 10%;">
+                        <col span="1" style="width: 10%;">
+                        <col span="1" style="width: 10%;">
+                        <col span="1" style="width: 10%;">
+                        <col span="1" style="width: 10%;">
+                    </colgroup>
+                    <thead>
+                    <tr >
+                        <th >Nazwa kosza</th>
+                        <th >Zdjęcie</th>
+                        <th >Skład kosza</th>
+                        <th >Ilość koszy</th>
+                        <th >Magazyn</th>
+                        <th >Produkcja</th>
+                        <th >Logistyka</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr  *ngFor="let row of orders.orderItems; index as i">
+                        <td >{{row.basket.basketName}}</td>
+
+                        <td>
+                            <i class="fa fa-picture-o fa-2x" aria-hidden="true" title="Pokaż zdjęcie kosza"
+                               (click)=" showBacketImg($event,row.basket.basketId)"></i>
+                        </td>
+                        <td>
+                            <i class="fa fa-file-pdf-o fa-2x " aria-hidden="true" title="Drukuj skład kosza ze zdjęciem"
+                               (click)="printProductListInBasketPdf(row.basket.basketId)"></i>
+                        </td>
+                        <td>{{row.quantity}}</td>
+
+                        <td>
+                            <input type="number"
+                                   [disabled]="isMagazynInputDisable(orders.orderStatus.orderStatusId)"
+                                   class="form-control" aria-describedby="helpId" placeholder="" min="0" [max]="row.quantity" [value]="row.stateOnWarehouse"
+                                   (change)="updateStateOnWarehouse(orders,$event.target.value,i)">
+                        </td>
                         <td>
                             <input type="number"
                                    [disabled]="isProductionInputDisable(orders.orderStatus.orderStatusId)"
@@ -242,9 +329,6 @@
                                    type="number"  class="form-control"
                                    aria-describedby="helpId" placeholder="" min="0" [max]="row.quantity" [value]="row.stateOnLogistics" (change)="updateStateOnLogistics(orders,$event.target.value,i)">
                         </td>
-
-
-
                     </tr>
                     </tbody>
                 </table>
@@ -253,7 +337,15 @@
             </div>
 
 
+
+
         </ng-template>
+
+
+
+
+
+
     </p-dataTable>
 </div>
 
@@ -362,17 +454,22 @@
 
 <p-menu #menuExport [popup]="true" [model]="exportItems"></p-menu>
 
-<p-dialog header="Całkowita liczba gotowych koszy:" [(visible)]="editCurrentOrderStateDialog" [modal]="true">
+
+
+<p-dialog header="Całkowita liczba gotowych koszy:" [(visible)]="editCurrentOrderStateDialog" [modal]="true" [width]="400">
 
     <div>
         <p class="basket_name">{{this.orderItemRowToEditState.basket?.basketName}}</p>
     </div>
     <div class="row">
-        <input  class="edit-state-input" type="number"   aria-describedby="helpId" placeholder="" min="0"
-                [max]="this.orderItemRowToEditState.quantity" [value]="this.orderItemRowToEditState.stateOnWarehouse" [(ngModel)]="this.orderItemRowToEditState.stateOnWarehouse">
+        <input  *ngIf="authenticationService.isMagazynUser()" class="edit-state-input" type="number"   aria-describedby="helpId" placeholder="" min="0" [max]="this.orderItemRowToEditState.quantity" [value]="this.orderItemRowToEditState.stateOnWarehouse" [(ngModel)]="this.orderItemRowToEditState.stateOnWarehouse">
+        <input  *ngIf="authenticationService.isProdukcjaUser()" class="edit-state-input" type="number"   aria-describedby="helpId" placeholder="" min="0" [max]="this.orderItemRowToEditState.quantity" [value]="this.orderItemRowToEditState.stateOnProduction" [(ngModel)]="this.orderItemRowToEditState.stateOnProduction">
+        <input *ngIf="authenticationService.isWysylkaUser()"  class="edit-state-input" type="number"   aria-describedby="helpId" placeholder="" min="0" [max]="this.orderItemRowToEditState.quantity" [value]="this.orderItemRowToEditState.stateOnLogistics" [(ngModel)]="this.orderItemRowToEditState.stateOnLogistics">
 
-        <button class="btn bg-primary edit-state-input-btn " (click)="updateSpecyfiedOrderItemProgressOnWarehouse(this.orderItemRowToEditState.orderItemId,this.orderItemRowToEditState.stateOnWarehouse)" >Aktualizuj</button>
-
+        <button *ngIf="authenticationService.isMagazynUser()" class="btn bg-primary edit-state-input-btn " (click)="updateSpecifiedOrderItemProgressOnWarehouse(this.orderItemRowToEditState.orderItemId,this.orderItemRowToEditState.stateOnWarehouse)" >Aktualizuj</button>
+        <button *ngIf="authenticationService.isProdukcjaUser()" class="btn bg-primary edit-state-input-btn " (click)="updateSpecifiedOrderItemProgressOnProduction(this.orderItemRowToEditState.orderItemId,this.orderItemRowToEditState.stateOnProduction)" >Aktualizuj</button>
+        <button *ngIf="authenticationService.isWysylkaUser()" class="btn bg-primary edit-state-input-btn " (click)="updateSpecifiedOrderItemProgressOnLogistics(this.orderItemRowToEditState.orderItemId,this.orderItemRowToEditState.stateOnLogistics)" >Aktualizuj</button>
     </div>
 
 </p-dialog>
+
