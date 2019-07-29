@@ -209,7 +209,9 @@ export class OrderService {
 
     }
 
-
+	changeSpecyfiedOrderItemProgressOnWarehouse(orderItemId: number, newStateValueOnWarehouse: number) {
+		return this.http.get(this.baseUrl+`/order/orderitem/progress/warehouse/${orderItemId}/${newStateValueOnWarehouse}`)
+	}
 
 
     getOrderBasketsProductsPdf(orderItems : any, orderId:number): any {

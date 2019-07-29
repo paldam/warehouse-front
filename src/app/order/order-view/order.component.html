@@ -28,11 +28,12 @@
 
 
     <p-dataTable #dt [value]="orders" [rows]="50" [paginator]="true" [globalFilter]="globalfilter"  [totalRecords]="totalRecords" selectionMode="multiple"
-                 [loading]="loading" loadingIcon="fa-circle-o-notch" expandableRows="true" [(first)]="lastPaginationPageNumberOnOrderViewPage"  [(selection)]="selectedOrdersMultiselction"
+                 [loading]="loading" loadingIcon="fa-circle-o-notch" expandableRows="true"   [(first)]="lastPaginationPageNumberOnOrderViewPage"  [(selection)]="selectedOrdersMultiselction"
                  dataKey="orderId" [contextMenu]="cm"
                  rowExpandMode = single [paginator]="true" [pageLinks]="5" [rowsPerPageOptions]= paginatorValues [lazy]="false"
                  (onContextMenuSelect)="OnSelectRow($event)"
                  (onRowExpand)="rowExpand($event)"
+                 (onRowCollapse)="onRowCollapse($event)"
                  (onPage)="hideActionExtention2($event)"
                  (onSort)="hideActionExtention2($event)"
                  (onFilter)="hideActionExtention2($event)"
@@ -185,7 +186,7 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <tr  *ngFor="let row of orders.orderItems; index as i">
+                    <tr  *ngFor="let row of orders.orderItems; index as i;">
                         <td >{{row.basket.basketName}}</td>
 
                         <td>
@@ -199,7 +200,7 @@
 
 
                         <td *ngIf="authenticationService.isMagazynUser()">
-                            <i *ngIf="!isMagazynInputDisable(orders.orderStatus.orderStatusId)" class="fa fa-pencil" aria-hidden="true" (click)="showEditCurrentOrderStateDialog()"></i>
+                            <i *ngIf="!isMagazynInputDisable(orders.orderStatus.orderStatusId)" class="fa fa-pencil" aria-hidden="true" (click)="showEditCurrentOrderStateDialog(orders,row)"></i>
                             {{ row.stateOnWarehouse}} / {{row.quantity}}
                         </td>
                         <!--<td *ngIf="isProductionInputDisable(orders.orderStatus.orderStatusId)">{{row.quantity}} / {{ row.stateOnProduction}} </td>-->
@@ -242,12 +243,7 @@
                                    aria-describedby="helpId" placeholder="" min="0" [max]="row.quantity" [value]="row.stateOnLogistics" (change)="updateStateOnLogistics(orders,$event.target.value,i)">
                         </td>
 
-                        <p-dialog header="Title" [(visible)]="editCurrentOrderStateDialog">
 
-                            <input  type="number" [disabled]="isMagazynInputDisable(orders.orderStatus.orderStatusId)" class="form-control" aria-describedby="helpId" placeholder="" min="0"
-                                    [max]="row.quantity" [value]="row.stateOnWarehouse"
-                                    (change)="updateStateOnWarehouse(orders,$event.target.value,i)">
-                        </p-dialog>
 
                     </tr>
                     </tbody>
@@ -255,8 +251,6 @@
                 <button class="btn bg-primary change-state-btn" (click)="updateOrderProgress(orders)" >Aktualizuj</button>
 
             </div>
-
-
 
 
         </ng-template>
@@ -367,3 +361,18 @@
 </p-dialog>
 
 <p-menu #menuExport [popup]="true" [model]="exportItems"></p-menu>
+
+<p-dialog header="Całkowita liczba gotowych koszy:" [(visible)]="editCurrentOrderStateDialog" [modal]="true">
+
+    <div>
+        <p class="basket_name">{{this.orderItemRowToEditState.basket?.basketName}}</p>
+    </div>
+    <div class="row">
+        <input  class="edit-state-input" type="number"   aria-describedby="helpId" placeholder="" min="0"
+                [max]="this.orderItemRowToEditState.quantity" [value]="this.orderItemRowToEditState.stateOnWarehouse" [(ngModel)]="this.orderItemRowToEditState.stateOnWarehouse">
+
+        <button class="btn bg-primary edit-state-input-btn " (click)="updateSpecyfiedOrderItemProgressOnWarehouse(this.orderItemRowToEditState.orderItemId,this.orderItemRowToEditState.stateOnWarehouse)" >Aktualizuj</button>
+
+    </div>
+
+</p-dialog>

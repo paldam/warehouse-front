@@ -19,6 +19,7 @@ import {OrderViewPageType} from "../order-view-page-type";
 import {OrderViewForProduction, RegularOrderView} from "../page-types";
 import * as XLSX from "xlsx";
 import {BasketItems} from "../../model/basket_items.model";
+import {OrderItem} from "../../model/order_item";
 
 @Component({
 	selector: 'order',
@@ -56,6 +57,7 @@ export class OrderComponent implements OnInit {
 	public exportItems: MenuItem[];
 	public productionUserList: any[] = [];
 	public editCurrentOrderStateDialog: boolean = false;
+	public orderItemRowToEditState: OrderItem = new OrderItem();
 	public paginatorValues = AppConstans.PAGINATOR_VALUES;
 	public additionalInforamtionTmp: string = "";
 	public fileFilterLoaded: Promise<boolean>;
@@ -64,6 +66,7 @@ export class OrderComponent implements OnInit {
 	public selectedOrderFileList: File[] = [];
 	public actionExtentionPositionTop: number = 0;
 	public actionExtentionPositionLeft: number = 0;
+	public expandedRowOrderId : number =0;
 	@ViewChild('onlyWithAttach') el: ElementRef;
 	@ViewChild('action_extention') action_extention: ElementRef;
 	@ViewChild('statusFilter') statusFilterEl: Dropdown;
@@ -92,9 +95,7 @@ export class OrderComponent implements OnInit {
 		this.setOrderData();
 	}
 	
-	test(){
-		console.log("Edycja");
-	}
+
 
 	ngOnInit() {
 		this.getOrderStatusForDataTableFilter();
@@ -218,34 +219,7 @@ export class OrderComponent implements OnInit {
 		}, () => this.setContextMenu());
 	}
 
-	refreshData() {
-		let paginationPageTmp = this.datatable.first;
-		this.lastPaginationPageNumberOnOrderViewPage = 0;
-		this.action_extention.nativeElement.hidden = true;
-		this.getProductionUserForContextMenuSet();
-		this.spinerService.showSpinner = true;
-		if (this.isCurrentPageCustomerEdit) {
-			this.orderService.getOrderByCustomer(this.currentCustomerOnCustomerEditPage).subscribe(data => this.orders = data);
-		}
-		if (this.isCurrentPageOrdersViewForProduction) {
-			this.performSetDataActionForOrderViewProduction();
-		} else {
-			this.orderService.getOrdersDto(0, 50, "", "orderDate", 1, [], []).subscribe((data: any) => {
-				this.orders = data.orderDtoList;
-				this.totalRecords = data.totalRowsOfRequest;
-			}, error => {
-				this.spinerService.showSpinner = false;
-			}, () => {
-				setTimeout(() => {
-					this.lastPaginationPageNumberOnOrderViewPage = paginationPageTmp;
-				}, 50);
-				setTimeout(() => {
-					this.spinerService.showSpinner = false;
-				}, 1000);
-				this.calculateOrderProcessInPercentForStatusInProgress();
-			});
-		}
-	}
+
 
 	setSearchOptions() {
 		let previousUrlTmp = this.routingState.getPreviousUrl();
@@ -258,7 +232,7 @@ export class OrderComponent implements OnInit {
 			if (localStorage.getItem('lastPaginationPageNumberOnOrderViewPage')) {
 				let tmplastVisitedPage = parseInt(localStorage.getItem('lastPaginationPageNumberOnOrderViewPage'));
 				this.lastPaginationPageNumberOnOrderViewPage = (tmplastVisitedPage - 1) * 50;
-				console.log(this.lastPaginationPageNumberOnOrderViewPage);
+
 			} else {
 				this.lastPaginationPageNumberOnOrderViewPage = 0;
 			}
@@ -287,7 +261,6 @@ export class OrderComponent implements OnInit {
 	}
 
 	updateStateOnProduction(orderToChange, value, i: number) {
-		console.log(orderToChange);
 		let orderLine = this.orders.find(order => order.orderId == orderToChange.orderId);
 		if (orderLine != undefined) {
 			orderLine.orderItems[i].stateOnProduction = Number(value);
@@ -324,9 +297,9 @@ export class OrderComponent implements OnInit {
 	}
 
 	isMagazynInputDisable(orderStatusId: number): boolean {
-		console.log(this.isCurrentPageOrdersView);
+
 		if (this.isCurrentPageOrdersViewRedirectedFromBasketStatitis || this.isCurrentPageCustomerEdit) {
-			console.log("TTT");
+
 			return true;
 		} else if (orderStatusId != this.ORDER_STATUS_W_TRAKCIE_REALIZACJI) {
 			return true;
@@ -390,34 +363,17 @@ export class OrderComponent implements OnInit {
 		this.showOrderPreviewModal = true;
 	}
 
-	loadOrdersLazy(event: LazyLoadEvent) {
-		this.loading = true;
-		let pageNumber = 0;
-		if (event.first) {
-			pageNumber = event.first / event.rows;
-		}
-		let sortField = event.sortField;
-		let orderStatusFilterList: any[] = [];
-		let orderDataFilterList: any[] = [];
-		if (sortField == undefined) {
-			sortField = "orderDate";
-		}
-		if (event.filters != undefined && event.filters["orderStatus.orderStatusName"] != undefined) {
-			orderStatusFilterList = event.filters["orderStatus.orderStatusName"].value;
-		}
-		if (event.filters != undefined && event.filters["orderDate"] != undefined) {
-			orderDataFilterList = event.filters["orderDate"].value;
-		}
-		this.orderService.getOrdersDto(pageNumber, event.rows, event.globalFilter, sortField, event.sortOrder, orderStatusFilterList, orderDataFilterList).subscribe((data: any) => {
-				this.orders = data.orderDtoList;
-				this.totalRecords = data.totalRowsOfRequest;
-			}, null
-			, () => {
-				this.loading = false;
-				this.calculateOrderProcessInPercentForStatusInProgress();
-			})
-	}
-	showEditCurrentOrderStateDialog(){
+
+
+	showEditCurrentOrderStateDialog(o : Order,row){
+		
+		this.orderItemRowToEditState = row;
+
+
+		let index = this.orders.findIndex(data => data.orderId == o.orderId);
+		
+
+		//this.orderItemRowToEditState = row;
 		this.editCurrentOrderStateDialog = true;
 
 	}
@@ -491,7 +447,6 @@ export class OrderComponent implements OnInit {
 
 	//TODO
 	changeOrderStatus(orderStatus: number) {
-		console.log(orderStatus);
 		if (this.authenticationService.isProdukcjaUser()) {
 			if (this.selectedOrderFromRow.orderStatus.orderStatusId == 1 || this.selectedOrderFromRow.orderStatus.orderStatusId == this.ORDER_STATUS_W_TRAKCIE_REALIZACJI) {
 				this.orderService.changeOrderStatus(this.selectedToMenuOrder, orderStatus).subscribe(data => {
@@ -509,7 +464,6 @@ export class OrderComponent implements OnInit {
 				this.messageServiceExt.addMessage('success', 'Status', 'Zmieniono status zamówienia');
 			}, error => {
 				this.messageServiceExt.addMessage('error', 'Błąd ', error._body);
-				console.log("ADADAS");
 			}, () => {
 				this.refreshData();
 			});
@@ -525,6 +479,138 @@ export class OrderComponent implements OnInit {
 			this.refreshData();
 		});
 	}
+
+	refreshData() {
+		let paginationPageTmp = this.datatable.first;
+		this.lastPaginationPageNumberOnOrderViewPage = 0;
+		this.action_extention.nativeElement.hidden = true;
+		this.getProductionUserForContextMenuSet();
+		this.spinerService.showSpinner = true;
+		if (this.isCurrentPageCustomerEdit) {
+			this.orderService.getOrderByCustomer(this.currentCustomerOnCustomerEditPage).subscribe(data => this.orders = data);
+		}
+		if (this.isCurrentPageOrdersViewForProduction) {
+			this.performSetDataActionForOrderViewProduction();
+		} else {
+			this.orderService.getOrdersDto(0, 50, "", "orderDate", 1, [], []).subscribe((data: any) => {
+				this.orders = data.orderDtoList;
+				this.totalRecords = data.totalRowsOfRequest;
+			}, error => {
+				this.spinerService.showSpinner = false;
+			}, () => {
+
+				setTimeout(() => {
+
+					this.lastPaginationPageNumberOnOrderViewPage = paginationPageTmp;
+				}, 50);
+
+				this.expandRowAfterRefresh();
+
+
+
+				setTimeout(() => {
+					this.spinerService.showSpinner = false;
+				}, 1000);
+				this.calculateOrderProcessInPercentForStatusInProgress();
+			});
+		}
+	}
+
+	loadOrdersLazy(event: LazyLoadEvent) {
+
+		this.loading = true;
+		let pageNumber = 0;
+		if (event.first) {
+			pageNumber = event.first / event.rows;
+		}
+		let sortField = event.sortField;
+		let orderStatusFilterList: any[] = [];
+		let orderDataFilterList: any[] = [];
+		if (sortField == undefined) {
+			sortField = "orderDate";
+		}
+		if (event.filters != undefined && event.filters["orderStatus.orderStatusName"] != undefined) {
+			orderStatusFilterList = event.filters["orderStatus.orderStatusName"].value;
+		}
+		if (event.filters != undefined && event.filters["orderDate"] != undefined) {
+			orderDataFilterList = event.filters["orderDate"].value;
+		}
+		this.orderService.getOrdersDto(pageNumber, event.rows, event.globalFilter, sortField, event.sortOrder, orderStatusFilterList, orderDataFilterList).subscribe((data: any) => {
+				this.orders = data.orderDtoList;
+				this.totalRecords = data.totalRowsOfRequest;
+			}, null
+			, () => {
+				this.loading = false;
+				this.calculateOrderProcessInPercentForStatusInProgress();
+
+				if(this.expandedRowOrderId != 0){
+					this.expandRowAfterRefresh();
+				}
+
+
+
+			})
+	}
+
+	rowExpand(event) {
+
+
+		if (event.data){
+			this.expandedRowOrderId = event.data.orderId;
+
+			let index;
+			let dataTmp;
+
+			this.orderService.getOrder(event.data.orderId).subscribe(data => {
+				index = this.orders.findIndex((value: Order) => {
+					return value.orderId == event.data.orderId;
+				});
+				dataTmp = data;
+			});
+		}
+	}
+
+
+		onRowCollapse(event){
+			console.log("RowCollapse");
+			if(this.datatable.first==0 ){
+				this.expandedRowOrderId =0;
+			}
+
+		}
+
+
+
+
+
+
+	updateSpecyfiedOrderItemProgressOnWarehouse(orderItemId: number, newStateValueOnWarehouse: number){
+
+		this.orderService.changeSpecyfiedOrderItemProgressOnWarehouse(orderItemId,newStateValueOnWarehouse).subscribe(data =>{
+			this.messageServiceExt.addMessage('success', 'Status', 'Zmieniono ilość gotowych koszy');
+		},error => {
+		},() => {
+			this.editCurrentOrderStateDialog = false;
+			this.orderItemRowToEditState = new OrderItem();
+			this.refreshData();
+		} )
+
+	}
+
+	 private expandRowAfterRefresh(){
+
+		 console.log("expandRowAfterRefresh");
+
+		let index = this.orders.findIndex(value => value.orderId == this.expandedRowOrderId);
+
+			 if(this.expandedRowOrderId != 0 ){
+			this.datatable.toggleRow(this.orders[index]);
+		}
+
+
+
+	}
+
 
 	printPdf(id: number) {
 		this.orderService.getPdf(id).subscribe(res => {
@@ -617,15 +703,7 @@ export class OrderComponent implements OnInit {
 		}
 	}
 
-	rowExpand(event) {
-		let index;
-		this.orderService.getOrder(event.data.orderId).subscribe(data => {
-			index = this.orders.findIndex((value: Order) => {
-				return value.orderId == event.data.orderId;
-			});
-			this.orders[index].orderItems = data.orderItems;
-		});
-	}
+
 
 	showPrintOrderDeliveryConfirmationWindows(orderId: number) {
 		this.printDeliveryConfirmationPdFSettings = true;
@@ -756,10 +834,10 @@ export class OrderComponent implements OnInit {
 		let filt: any[] = [];
 		if (!this.datatable.filteredValue) {
 			filt = this.datatable.value;
-			console.log(filt);
+
 		} else {
 			filt = this.datatable.filteredValue;
-			console.log(filt);
+
 		}
 		let dataToGenerateFile: any[] = [];
 		for (let i = 0; i < filt.length; i++) {
