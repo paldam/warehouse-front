@@ -1,4 +1,4 @@
-import {Component, ElementRef, HostListener, OnInit, ViewChild} from '@angular/core';
+ import{Component, ElementRef, HostListener, OnInit, ViewChild} from '@angular/core';
 import {Order} from '../../model/order.model';
 import {OrderService} from '../order.service';
 import {ActivatedRoute, Router} from "@angular/router";
@@ -20,6 +20,8 @@ import {OrderViewForProduction, RegularOrderView} from "../page-types";
 import * as XLSX from "xlsx";
 import {BasketItems} from "../../model/basket_items.model";
 import {OrderItem} from "../../model/order_item";
+ import { interval } from 'rxjs';
+ import { map } from 'rxjs/operators'
 
 @Component({
 	selector: 'order',
@@ -67,6 +69,9 @@ export class OrderComponent implements OnInit {
 	public actionExtentionPositionTop: number = 0;
 	public actionExtentionPositionLeft: number = 0;
 	public expandedRowOrderId : number =0;
+	public autoRefreshInfo: boolean = false;
+	public autoRefreshTimerInSec: number ;
+	public autoRefreshStopWatch: boolean = false;
 	@ViewChild('onlyWithAttach') el: ElementRef;
 	@ViewChild('action_extention') action_extention: ElementRef;
 	@ViewChild('statusFilter') statusFilterEl: Dropdown;
@@ -78,21 +83,10 @@ export class OrderComponent implements OnInit {
 				public authenticationService: AuthenticationService, private fileSendService: FileSendService,
 				private  messageServiceExt: MessageServiceExt, private routingState: RoutingState, private spinerService: SpinerService) {
 
-
-
-
-		// this.pageType = PageTypeFactory.createPageType(activatedRoute,routingState,orderService);
-		// console.log(this.pageType instanceof OrderViewForProduction);
-		//
-		// let f : any = this.pageType.getOrders();
-		//
-		//
-		// setTimeout(() => {
-		// 	console.log(f);
-		// }, 5000);
 		this.setCurentPageType();
 		this.setSearchOptions();
 		this.setOrderData();
+
 	}
 	
 
@@ -102,6 +96,8 @@ export class OrderComponent implements OnInit {
 		this.getOrderYearsForDataTableFilter();
 		this.getProductionUserForContextMenuSet();
 		this.setExportMenu();
+		this.setAutoRefresh(0.1);
+
 	}
 
 	@HostListener('window:resize', ['$event'])
@@ -367,19 +363,44 @@ export class OrderComponent implements OnInit {
 		this.showOrderPreviewModal = true;
 	}
 
-
-
-	showEditCurrentOrderStateDialog(o : Order,row){
-		
+	showEditCurrentOrderStateDialog(o: Order, row) {
 		this.orderItemRowToEditState = row;
-
-
 		let index = this.orders.findIndex(data => data.orderId == o.orderId);
-		
-
 		//this.orderItemRowToEditState = row;
 		this.editCurrentOrderStateDialog = true;
+	}
 
+	hideAutoRefreshInfo() {
+		this.autoRefreshInfo = false;
+	}
+
+	autoRefreshCountDown() {
+		this.autoRefreshStopWatch = false;
+		this.autoRefreshTimerInSec = 5;
+		const subscription = interval(1000).subscribe(x => {
+			this.autoRefreshTimerInSec -= 1;
+		});
+		setTimeout(() => {
+			subscription.unsubscribe();
+			this.autoRefreshInfo = false;
+			if (this.autoRefreshStopWatch == false) {
+				this.refreshData();
+			}
+		}, 5000);
+	}
+
+	stopAutoRefresh() {
+		this.autoRefreshStopWatch = true;
+	}
+
+	setAutoRefresh(setTimeOutInMinute :number){
+
+		let timeOut = setTimeOutInMinute * 1000 *60;
+
+		interval(timeOut).subscribe(x => {
+			this.autoRefreshInfo = true;
+			this.autoRefreshCountDown();
+		});
 	}
 
 	backToRegularOrderView() {

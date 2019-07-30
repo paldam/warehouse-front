@@ -473,3 +473,8 @@
 
 </p-dialog>
 
+<p-dialog  header="Informacja" [(visible)]="autoRefreshInfo" [width]="300" height="150">
+    <p>Nastąpi odświeżenie za {{autoRefreshTimerInSec}} sekund ; </p>
+
+    <button class="bg-primary btn-cancel-refresh" (click)="stopAutoRefresh();hideAutoRefreshInfo()">Nie odświeżaj</button>
+</p-dialog>
