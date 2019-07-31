@@ -5,8 +5,29 @@
     <i id="menu_slide_icon" class="fa fa-arrow-left fa-2x slide_nav" aria-hidden="true" (click)="slideChildLeftNavbar()"></i>
     <img class="basket_img" src="/assets/images/basket.png" height="45" width="45">
 
+    <a *ngIf="authenticationService.isLoggedIn()" class="notification">
+        <i (click)="showNotificationModalF()" class=" ica fa fa-envelope-open-o fa-3x" aria-hidden="true"></i>
+        <span [class]="getBadgeStyle()">{{notificationsTotal}}</span>
 
+    </a>
 
 </div>
+
+
+<p-dialog  header="Powiadomienia" closeOnEscape="false" modal="true" width="1000" [(visible)]="showNotificationModal"  (onShow)="checkNumberOfNotifications()" >
+
+    <p-dataTable #dt [value]="notifications" [rows]="50" [paginator]="true" >
+
+        <p-column field="notificationDate" header="Data"  [style]="{'width':'200px'}">
+            <ng-template let-row="rowData" pTemplate="body"  >
+                {{row.notificationDate| date: 'dd/MM/yyyy HH:mm:ss'}}
+            </ng-template>
+        </p-column>
+
+    </p-dataTable>
+
+
+
+</p-dialog>
 
 

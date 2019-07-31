@@ -87,6 +87,8 @@ export class OrderComponent implements OnInit {
 		this.setSearchOptions();
 		this.setOrderData();
 
+
+
 	}
 	
 
@@ -96,7 +98,8 @@ export class OrderComponent implements OnInit {
 		this.getOrderYearsForDataTableFilter();
 		this.getProductionUserForContextMenuSet();
 		this.setExportMenu();
-		this.setAutoRefresh(0.1);
+		this.setAutoRefresh(10);
+
 
 	}
 
@@ -195,6 +198,8 @@ export class OrderComponent implements OnInit {
 			});
 		}, 800);
 	}
+
+
 
 	private getOrderStatusForDataTableFilter() {
 		this.orderService.getOrderStatus().subscribe(data => {
@@ -1087,6 +1092,7 @@ export class OrderComponent implements OnInit {
 					icon: 'fa fa-file-pdf-o',
 					command: () => this.printMultipleDeliveryPdf()
 				},
+				{label: 'Duplikuj zamówienie', icon: 'fa fa-clone', command: () => this.router.navigate(["/orders/copy/" +this.selectedOrderFromRow.orderId])},
 				{
 					label: 'Wydrukuj komplet ', icon: 'fa fa-window-restore', command: () => {
 						this.printMultipleDeliveryPdf();

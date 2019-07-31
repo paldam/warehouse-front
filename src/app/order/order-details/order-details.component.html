@@ -1,5 +1,6 @@
 <div class="order_summary col-12">
-  <p-fieldset [legend]="'Szczegóły zamówienia nr '+ order.orderFvNumber" [toggleable]="true">
+  <p-fieldset  [legend]="getTitleForMainFieldset(order.orderFvNumber)" [toggleable]="true">
+
     <div class="row">
       <div class="customer_data_form col-md-6">
         <p-panel header="Dane osoby zamawiającej">
@@ -169,7 +170,7 @@
 
 
 
-            <div class="form-group">
+            <div *ngIf="isEditOrderType()" class="form-group">
               <div class="form-group">
                 <small id="order_date_Desc" class="text-muted">Data złożenia zamówienia</small>
                 <input type="text" name="order_date" class="form-control"  size="300" aria-describedby="order_date_Desc" [readonly]="isFormReadOnly() && !authenticationService.isAdmin() && !authenticationService.isBiuroUser()" [value]="order.orderDate| date: 'dd/MM/yyyy HH:mm:ss'"  >
@@ -177,16 +178,21 @@
             </div>
 
 
-            <div class="form-group">
+            <div *ngIf="isEditOrderType()" class="form-group">
               <small id="statusDesc" class="text-muted">Status zamówienia</small>
-              <select [compareWith]="compareOrderStatus" class="form-control"  [(ngModel)]="order.orderStatus" name="status"  required >
-                <option *ngFor="let item of orderStatus"  [ngValue]="item"  >{{item.orderStatusName}}</option>
-              </select>
+              <input type="text" name="order_status" class="form-control"  size="300" aria-describedby="order_status_Desc" [readonly]="true" [value]="order.orderStatus?.orderStatusName"  >
+
             </div>
 
+            <!--<div class="form-group">-->
+              <!--<small id="statusDesc" class="text-muted">Status zamówienia</small>-->
+              <!--<select [compareWith]="compareOrderStatus" class="form-control"  [(ngModel)]="order.orderStatus" name="status"  required >-->
+                <!--<option *ngFor="let item of orderStatus"  [ngValue]="item"  >{{item.orderStatusName}}</option>-->
+              <!--</select>-->
+            <!--</div>-->
 
 
-            <div class="form-group">
+            <div *ngIf="isEditOrderType()" class="form-group">
               <div class="form-group">
                 <small id="total_Desc" class="text-muted">Wartość zamówienia</small>
                 <input type="text" name="total" class="form-control"  size="300" aria-describedby="total_Desc" [readonly]="isFormReadOnly()" [(ngModel)]="totalAmount"  >
@@ -298,7 +304,8 @@
 
 
           </form>
-          <button class="btn bg-primary " (click)="editOrderForm()"  >Edytuj zamówienie</button>
+          <button *ngIf="isCopyOfExistingOrder()"class="btn bg-primary " (click)="editOrderForm()"  >Stwórz zamówienie </button>
+          <button *ngIf="isEditOrderType()" class="btn bg-primary " (click)="editOrderForm()"  >Edytuj zamówienie</button>
           <button class="btn bg-primary " (click)="cancelEdit()"  >Anuluj </button>
           <div *ngIf="orderItems.length<1 && formSubmitted" class="alert alert-danger" role="alert">
             <strong>Błąd. Zamówienie nie może być puste</strong>

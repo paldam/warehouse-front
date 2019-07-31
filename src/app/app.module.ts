@@ -26,6 +26,7 @@ import {SpinerService} from "./spiner.service";
 import {PrimeNgModule} from "./prime-ng.module";
 import {MapsComponent} from "./maps/maps.component";
 import {FileSendComponent} from "./file-send/file-send.component";
+import {NotificationsService} from "./nav-bars/top-nav/notification.service";
 
 export function httpExt(backend: XHRBackend, options: RequestOptions, router: Router, messageService: MessageService,messageServiceExt: MessageServiceExt) {
 	return new HttpService(backend, options, router, messageService,messageServiceExt );
@@ -47,7 +48,7 @@ export function httpExt(backend: XHRBackend, options: RequestOptions, router: Ro
 		provide: HttpService, useFactory: (httpExt), deps: [XHRBackend, RequestOptions, Router, MessageService, MessageServiceExt]
 	},
 		CalendarSetingsComponent, MessageServiceExt, RoutingState, SpinerService, MessageService, FileSendService, MapService,
-		ConfirmationService, AuthGuard, AdminGuard, AdminOrSuperUserGuard, AuthenticationService, UserService],
+		ConfirmationService, AuthGuard, AdminGuard, AdminOrSuperUserGuard, AuthenticationService, UserService,NotificationsService],
 	bootstrap: [
 		AppComponent
 	]

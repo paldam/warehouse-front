@@ -29,6 +29,12 @@ export class OrderService {
         return this.http.post(this.baseUrl + `/orders/`, order)
         .map((response: Response) => response.json());
     }
+
+	saveOrderFromCopy(order: Order,originOrderIdCopy: number): Observable<Order> {
+		return this.http.post(this.baseUrl + `/order/copy/${originOrderIdCopy}`, order)
+			.map((response: Response) => response.json());
+	}
+
     getDeliveryTypes() :Observable<DeliveryType[]>{
         return this.http.get(this.baseUrl+`/delivery/types`)
             .map((response: Response) =>

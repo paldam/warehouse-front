@@ -29,3 +29,70 @@ p{
     top: 2px;
 }
 
+
+.notification {
+
+    color: white;
+    text-decoration: none;
+
+    position: absolute;
+    right: 80px;
+    top: 8px;
+    display: inline-block;
+    border-radius: 2px;
+    z-index: 9999;
+}
+
+.notification:hover {
+
+}
+
+
+.notification .badge {
+    visibility: hidden;
+     position: absolute;
+     top: 0px;
+     right: -10px;
+     padding: 4px 11px;
+     border-radius: 50%;
+     background:#f80943;
+     color: white;
+     font-size: 13px;
+ }
+
+.notification .badge1 {
+    position: absolute;
+    top: 0px;
+    right: -10px;
+    padding: 4px 11px;
+    border-radius: 50%;
+    background:#f80943;
+    color: white;
+    font-size: 13px;
+}
+
+
+
+
+
+.notification .badge2 {
+    position: absolute;
+    top: 0px;
+    right: -10px;
+    padding: 5px 7px;
+    border-radius: 50%;
+    background: red;
+    color: white;
+    font-size: 13px;
+}
+
+.ica {
+    color: black;
+}
+
+.ica:hover {
+    color: blue;
+}
+
+
+

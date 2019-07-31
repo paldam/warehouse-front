@@ -13,6 +13,7 @@ import {Event} from '@angular/router';
 export class AppComponent {
 	title = 'app';
 
+
 	constructor(routingState: RoutingState, public spinerService: SpinerService, public router: Router) {
 		routingState.loadRouting();
 		this.router.events.subscribe((event: Event) => {
@@ -35,5 +36,9 @@ export class AppComponent {
 				}
 			}
 		});
+
+
 	}
+
+
 }
