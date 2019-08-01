@@ -83,8 +83,6 @@ export class OrderDetailsComponent implements OnInit {
 		this.originOrderIdCopy = activeRoute.snapshot.params["id"];
 
 
-		this.setDataForOrderEdit();
-
 		if (this.isCopyOfExistingOrder()){
 			this.setDataForCopyOfOrder();
 		}else{
@@ -111,7 +109,24 @@ export class OrderDetailsComponent implements OnInit {
 		this.orderService.getCompany().subscribe(data => this.companyList = data);
 	}
 
+	ngOnInit() {
+		this.items = [
+			{
+				label: 'Dodaj kosz',
+				icon: 'fa fa-plus',
+				command: (event) => this.addBasketToOrder(this.selectedBasketOnContextMenu)
+			},
+		];
+
+
+		if (this.isCopyOfExistingOrder()) {
+			this.fileUploadElement.url = null;
+		}
+
+	}
+
 	private setDataForOrderEdit() {
+
 		this.orderService.getOrder(this.orderId).subscribe(res => {
 			this.orderAddress = res.address;
 			this.company = res.customer.company;
@@ -135,18 +150,26 @@ export class OrderDetailsComponent implements OnInit {
 	};
 
 	private setDataForCopyOfOrder() {
+
+
+		this.order.orderId = null;
+		this.order.orderStatus = new OrderStatus(1);
+		this.order.orderDate = null;
+		this.order.orderFvNumber = null;
+		this.order.orderItems = [];
+		this.orderItems = [];
+		this.totalAmount = 0;
+		this.order.cod /= 0;
+		//this.fileUploadElement.url = null;
+		this.filtersLoaded = Promise.resolve(true);
+
 		this.orderService.getOrder(this.orderId).subscribe(res => {
 			this.orderAddress = res.address;
 			this.company = res.customer.company;
-			this.order = res;
-			this.order.orderId = null;
-			this.order.orderFvNumber = null;
+			this.order.deliveryType = res.deliveryType;
+			this.order.deliveryDate = res.deliveryDate;
+			this.order.additionalInformation = res.additionalInformation;
 			this.customer = res.customer;
-			this.totalAmount = 0;
-			this.order.cod /= 0;
-			this.recalculate();
-			this.fileUploadElement.url = null;
-			this.filtersLoaded = Promise.resolve(true);
 			this.weekOfYear = res.weekOfYear;
 			if (res.additionalSale == 1) {
 				this.el.checked = true;
@@ -155,13 +178,10 @@ export class OrderDetailsComponent implements OnInit {
 				this.el.checked = false;
 				this.checkedAdditionalSale = false;
 			}
-		},error1 => {
+		},error => {
 
 		},() => {
-			this.order.orderStatus = new OrderStatus(1);
-			this.order.orderDate = null;
-			this.order.orderItems = [];
-			this.orderItems = [];
+
 		});
 
 	}
@@ -272,15 +292,7 @@ export class OrderDetailsComponent implements OnInit {
 		}
 	}
 
-	ngOnInit() {
-		this.items = [
-			{
-				label: 'Dodaj kosz',
-				icon: 'fa fa-plus',
-				command: (event) => this.addBasketToOrder(this.selectedBasketOnContextMenu)
-			},
-		];
-	}
+
 
 	contextMenuSelected(event) {
 		this.selectedBasketOnContextMenu = event.data;
@@ -366,7 +378,7 @@ export class OrderDetailsComponent implements OnInit {
 					this.fileUploadElement.upload();
 					setTimeout(() => {
 						this.router.navigateByUrl('/orders/all');
-						this.messageServiceExt.addMessageWithTime('success', 'Status', 'Dokonano edycji zamówienia', 5000);
+						this.messageServiceExt.addMessageWithTime('success', 'Informacja:', 'Dodano zamówienie na podstawie wzoru', 5000);
 						this.originOrderIdCopy = null;
 					}, 400);
 				}, error => {

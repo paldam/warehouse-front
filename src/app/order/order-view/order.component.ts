@@ -22,6 +22,7 @@ import {BasketItems} from "../../model/basket_items.model";
 import {OrderItem} from "../../model/order_item";
  import { interval } from 'rxjs';
  import { map } from 'rxjs/operators'
+ import {NotificationsService} from "../../nav-bars/top-nav/notification.service";
 
 @Component({
 	selector: 'order',
@@ -81,11 +82,13 @@ export class OrderComponent implements OnInit {
 
 	constructor(private basketService: BasketService, private activatedRoute: ActivatedRoute, private orderService: OrderService, private userService: UserService, private router: Router, public confirmationService: ConfirmationService,
 				public authenticationService: AuthenticationService, private fileSendService: FileSendService,
-				private  messageServiceExt: MessageServiceExt, private routingState: RoutingState, private spinerService: SpinerService) {
+				private  messageServiceExt: MessageServiceExt, private routingState: RoutingState, private spinerService: SpinerService, public notificationsService :NotificationsService) {
 
 		this.setCurentPageType();
 		this.setSearchOptions();
 		this.setOrderData();
+		this.setNewOrderEventSource();
+
 
 
 
@@ -99,6 +102,7 @@ export class OrderComponent implements OnInit {
 		this.getProductionUserForContextMenuSet();
 		this.setExportMenu();
 		this.setAutoRefresh(10);
+		this.notificationsService.checkNumberOfNotifications();
 
 
 	}
@@ -197,6 +201,24 @@ export class OrderComponent implements OnInit {
 				}
 			});
 		}, 800);
+	}
+
+	setNewOrderEventSource() {
+		let source = new EventSource('http://localhost:8080/new_order_notification',);
+		source.addEventListener('message', message => {
+
+
+			this.refreshData();
+			console.log("raz");
+			console.log(message);
+
+			if( this.authenticationService.isMagazynUser() ||this.authenticationService.isWysylkaUser() ){
+				this.messageServiceExt.addMessageWithTime('success', 'Informacja', 'Dodano nowe zamówienie(a)',15000);
+			}
+
+
+
+		});
 	}
 
 
@@ -511,6 +533,7 @@ export class OrderComponent implements OnInit {
 	}
 
 	refreshData() {
+		this.notificationsService.checkNumberOfNotifications();
 		let paginationPageTmp = this.datatable.first;
 		this.lastPaginationPageNumberOnOrderViewPage = 0;
 		this.action_extention.nativeElement.hidden = true;

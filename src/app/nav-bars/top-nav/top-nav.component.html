@@ -6,23 +6,25 @@
     <img class="basket_img" src="/assets/images/basket.png" height="45" width="45">
 
     <a *ngIf="authenticationService.isLoggedIn()" class="notification">
-        <i (click)="showNotificationModalF()" class=" ica fa fa-envelope-open-o fa-3x" aria-hidden="true"></i>
-        <span [class]="getBadgeStyle()">{{notificationsTotal}}</span>
+        <i (click)="notificationsService.showNotificationModalF()" class=" ica fa fa-envelope-open-o fa-3x" aria-hidden="true"></i>
+        <span [class]="getBadgeStyle()">{{notificationsService.notificationsTotal}}</span>
 
     </a>
 
 </div>
 
 
-<p-dialog  header="Powiadomienia" closeOnEscape="false" modal="true" width="1000" [(visible)]="showNotificationModal"  (onShow)="checkNumberOfNotifications()" >
+<p-dialog  header="Powiadomienia" closeOnEscape="false" modal="true" width="1000" [(visible)]="notificationsService.showNotificationModal"  (onShow)="notificationsService.checkNumberOfNotifications()" >
 
-    <p-dataTable #dt [value]="notifications" [rows]="50" [paginator]="true" >
+    <p-dataTable #dt [value]="notificationsService.notifications" [rows]="50" [paginator]="true" >
 
         <p-column field="notificationDate" header="Data"  [style]="{'width':'200px'}">
             <ng-template let-row="rowData" pTemplate="body"  >
                 {{row.notificationDate| date: 'dd/MM/yyyy HH:mm:ss'}}
             </ng-template>
         </p-column>
+
+        <p-column field="notificationText" header="Data"  [style]="{'width':'200px'}"></p-column>
 
     </p-dataTable>
 
