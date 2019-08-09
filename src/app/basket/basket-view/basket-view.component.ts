@@ -2,13 +2,14 @@ import {Component, ElementRef, OnInit, ViewChild, ViewEncapsulation} from '@angu
 import {BasketService} from "../basket.service";
 import {Router} from "@angular/router";
 import {Basket} from "../../model/basket.model";
-import {ConfirmationService, DataTable,OverlayPanel} from "primeng/primeng";
+import {ConfirmationService, DataTable, OverlayPanel, SelectItem} from "primeng/primeng";
 import {BasketType} from "../../model/basket_type.model";
 import {AuthenticationService} from "../../authentication.service";
 import {AppConstans} from "../../constans";
 import {ProductSubType} from "../../model/product_sub_type";
 import {ProductsService} from "../../products/products.service";
 import {SpinerService} from "../../spiner.service";
+import {getPluralCategory} from "@angular/common/src/i18n/localization";
 
 
 @Component({
@@ -29,14 +30,16 @@ export class BasketComponent implements OnInit {
 	@ViewChild('op') overlayPanel: OverlayPanel;
 	@ViewChild('dt') datatable: DataTable;
 	public paginatorValues = AppConstans.PAGINATOR_VALUES;
-	public productSubType: ProductSubType[]=[];
-	public selectedCategories : number[]=[];
+	public productSubType: SelectItem[]=[];
+	public selectedCategories : any[]=[];
+	public selectedCategoriesIds : number[]=[];
 
 	constructor(private spinerService :SpinerService ,private productsService :ProductsService, private basketService: BasketService, public router: Router, private confirmationService: ConfirmationService, private authenticationService: AuthenticationService) {
 		basketService.getBaskets().subscribe(data => this.baskets = data);
 		productsService.getProductsSubTypes().subscribe((data: ProductSubType[]) => {
 			data.forEach(value => {
-				this.productSubType = data;
+				this.productSubType.push({value: value , label: value.subTypeName + " (" + value.productType.typeName + " )"});
+
 
 			})
 		});
@@ -48,12 +51,20 @@ export class BasketComponent implements OnInit {
 
 	getBasketWithFilter(){
 		this.spinerService.showSpinner=true;
-		this.basketService.getBasketWithFilter(this.priceMin, this.priceMax,this.selectedCategories).subscribe(data =>{
+
+		this.selectedCategories.forEach(value => {
+			this.selectedCategoriesIds.push(value.subTypeId);
+		});
+
+
+		this.basketService.getBasketWithFilter(this.priceMin, this.priceMax,this.selectedCategoriesIds).subscribe(data =>{
 			this.baskets = data;
+
 
 		},error => {
 			this.spinerService.showSpinner=false;
 		},() => {
+			this.selectedCategoriesIds =[];
 			setTimeout(() => {
 				this.spinerService.showSpinner=false;    ;
 			}, 500);

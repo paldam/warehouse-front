@@ -7,37 +7,50 @@
 <p-fieldset legend="Lista Koszy" [toggleable]="true">
 
 
-
-
-
-<div class="row">
-
-        <div class="ui-inputgroup pric">
-          <span class="ui-inputgroup-addon"> Cena od </span>
-          <input type="text" [(ngModel)]="priceMin" pInputText placeholder="Cena od">
-        </div>
-
-
-
-        <div class="ui-inputgroup pric">
-          <span class="ui-inputgroup-addon"> Cena do </span>
-          <input type="text" [(ngModel)]="priceMax" pInputText placeholder="Cena do">
-        </div>
-
-  </div>
-
   <div class="row">
 
-    <div *ngFor="let categories of productSubType" >
-      <p-checkbox class="bic" name="group2" [value]="categories.subTypeId" [label]="categories.subTypeName+' ('+categories.productType.typeName+')'" [(ngModel)]="selectedCategories" [inputId]="categories.subTypeId"></p-checkbox>
+    <div class="ui-inputgroup pric">
+      <span class="ui-inputgroup-addon"> Cena od </span>
+      <input type="text" [(ngModel)]="priceMin" pInputText placeholder="Cena od">
+    </div>
+
+
+    <div class="ui-inputgroup pric">
+      <span class="ui-inputgroup-addon"> Cena do </span>
+      <input type="text" [(ngModel)]="priceMax" pInputText placeholder="Cena do">
     </div>
 
   </div>
 
 
 
-        <button  class="btnclic btn bg-primary"  (click)="getBasketWithFilter()" > Szukaj </button>
-        <button  class="btnclic btn bg-primary"  (click)="refreshData()" > Reset </button>
+  <p-panel header="Wybierz typy produktów:">
+    <div class="row ">
+      <div class="col-xl-3">
+
+        <p-multiSelect defaultLabel="Wszystkie" [options]="productSubType" [(ngModel)]="selectedCategories"
+                       [panelStyle]="{minWidth:'300px'}" scrollHeight="500px"></p-multiSelect>
+
+      </div>
+
+      <div class="col-xl-9">
+        <p *ngIf="selectedCategories.length > 0"> Wybrane kategorie : </p>
+
+          <span class="span_gap" *ngFor="let cat of selectedCategories">{{cat.subTypeName}}</span>
+
+      </div>
+    </div>
+
+
+  </p-panel>
+
+
+
+
+
+
+  <button class="btnclic btn bg-primary" (click)="getBasketWithFilter()"> Szukaj</button>
+  <button class="btnclic btn bg-primary" (click)="refreshData()"> Reset</button>
 
 
 

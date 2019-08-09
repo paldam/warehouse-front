@@ -45,3 +45,18 @@ i{
     margin: 30px 20px 20px 0px;
 
 }
+.type_picker{
+    width: 400px;
+}
+
+.type_picker_list{
+    margin-left: 30px;
+}
+
+.inr {
+    padding-left: 10px;
+}
+
+.span_gap{
+    padding-right: 20px;
+}
