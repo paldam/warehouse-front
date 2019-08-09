@@ -43,7 +43,11 @@
     >
 
 
-        <p-header><i *ngIf="this.isCurrentPageOrdersView" class="fa fa-1x fa-file-text excel-export" aria-hidden="true" (click)="menuExport.toggle($event);changeRowPerPage()"></i>Lista Zamówień</p-header>
+        <p-header>
+            <i *ngIf="this.isCurrentPageOrdersView" class="fa fa-1x fa-file-text excel-export" aria-hidden="true" (click)="menuExport.toggle($event);changeRowPerPage()"></i>
+            <i *ngIf="authenticationService.isAdmin()" class="fa fa-1x fa-print print-today-order-icon" aria-hidden="true" (click)="printAllTotayPdf()"></i>
+            Lista Zamówień
+        </p-header>
         <p-column expander="true" header="" styleClass="col-icon " [style]="{'width':'40px'}"></p-column>
 
 

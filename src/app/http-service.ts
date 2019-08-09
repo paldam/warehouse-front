@@ -41,13 +41,14 @@ export class HttpService extends Http {
     private catchAuthError (self: HttpService) {
         // we have to pass HttpService's own instance here as `self`
         return (res: Response) => {
-            
-            console.log("TTTTTTTTT");
+
 
 			if (res.status === 400) {
 
 				this.messageServiceExt.addMessage('error', 'Błąd ', "Status: " + res.status + ' ' + res.text());
+				console.log(res);
 			}
+
             if (res.status === 401) {
                 // if not authenticated
                 this.router.navigateByUrl('/login');

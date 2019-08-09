@@ -741,6 +741,21 @@ export class OrderComponent implements OnInit {
 		)
 	}
 
+	printAllTotayPdf() {
+		this.orderService.getAllTodayPdf().subscribe(res => {
+				var fileURL = URL.createObjectURL(res);
+				window.open(fileURL);
+
+			},error =>{
+
+			this.messageServiceExt.addMessage('error', 'Status', 'Brak zamówień z tego dnia');
+			}
+		)
+	}
+
+
+
+
 	notAllowedStyle(): string {
 		if (!this.authenticationService.isAdmin()) {
 			return "not_allowed";

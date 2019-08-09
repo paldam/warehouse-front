@@ -207,6 +207,17 @@ export class OrderService {
 
 }
 
+
+	getAllTodayPdf(): Observable<any> {
+
+		return this.http.get(this.baseUrl + `/order/pdf/alltoday`,{ responseType: ResponseContentType.Blob })
+			.map(res => {
+				return new Blob([res.blob()], { type: 'application/pdf' })
+			})
+
+	}
+
+
     getProductListPdf(id: number): any {
         return this.http.get(this.baseUrl + `/order/pdf/product_to_collect/${id}`,{ responseType: ResponseContentType.Blob })
             .map(res => {
@@ -214,6 +225,8 @@ export class OrderService {
             })
 
     }
+
+
 
 	changeSpecifiedOrderItemProgressOnWarehouse(orderItemId: number, newStateValueOnWarehouse: number) {
 		return this.http.get(this.baseUrl+`/order/orderitem/progress/warehouse/${orderItemId}/${newStateValueOnWarehouse}`)
