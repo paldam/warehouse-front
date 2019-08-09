@@ -43,18 +43,39 @@
   </p-column>
   <p-column field="product_name"  header="Nazwa" [sortable]="true" ></p-column>
 
-  <p-column field="supplier.supplierName" header="Dostawca" [filter]="true" filterMatchMode="equals">
+
+
+  <p-column field="suppliers" header="Dostawca" [filter]="true" filterMatchMode="inCollection">
     <ng-template pTemplate="filter" let-col>
-      <p-dropdown [options]="suppliers" [style]="{'width':'100%'}" (onChange)="dt.filter($event.value,col.field,col.filterMatchMode)" styleClass="ui-column-filter"></p-dropdown>
+      <p-dropdown [options]="suppliers" placeholder="Wszyscy"  [style]="{'width':'100%'}" (onChange)="dt.filter($event.value,col.field,col.filterMatchMode)" styleClass="ui-column-filter"></p-dropdown>
     </ng-template>
     <ng-template  let-item="rowData"   pTemplate="body">
       <tr *ngFor="let supplier of item.suppliers">  {{supplier.supplierName}}  </tr>
     </ng-template>
   </p-column>
+
+
+
+
+
+  <p-column field="productSubType.subTypeName" styleClass="type_col"  [filter]="true" header="Typ produktu"  [sortable]="true" >
+    <ng-template  let-col pTemplate="filter"  >
+      <p-multiSelect  styleClass="ui-column-filter" [showToggleAll]="true" [options]="productsType" defaultLabel="Wszystkie" (onChange)="dt.filter($event.value, col.field, 'in')"></p-multiSelect>
+    </ng-template>
+
+    <ng-template let-row="rowData" pTemplate="body"  >
+      <span> {{ row.productSubType?.subTypeName}} ({{row.productSubType?.productType?.typeName}}) </span>
+    </ng-template>
+  </p-column>
+
+
+
+
   <p-column field="capacity"  header="Pojemność " [style]="{'width':'120px'}" ></p-column>
 
   <p-column field="stock"  header="Stan Magazynu" [style]="{'width':'120px'}" ></p-column>
   <p-column field="suma"  header="Potrzebna ilość" [sortable]="true" [style]="{'width':'120px'}" ></p-column>
   <p-column  field="tmpOrdered" styleClass="capacity_col" header="Liczba zamówionych" [sortable]="true"></p-column>
+  <p-column field="suppliersConcatString" hidden="true" ></p-column>
 
 </p-dataTable>

@@ -6,6 +6,8 @@ import {SelectItem} from "primeng/api";
 import * as XLSX from "xlsx";
 import {DataTable} from "primeng/primeng";
 import {AppConstans} from "../../constans";
+import {ProductSubType} from "../../model/product_sub_type";
+import {Supplier} from "../../model/supplier.model";
 declare var $ :any;
 
 @Component({
@@ -24,6 +26,7 @@ export class Statistic2Component implements OnInit {
   public loading: boolean= false;
   public suppliers: SelectItem[] = [];
   public dateError: boolean = false;
+	public productsType: SelectItem[] = [];
   @ViewChild('dt') el:DataTable;
     public paginatorValues = AppConstans.PAGINATOR_VALUES;
     @ViewChild('sortByOrderDate') sortByOrderDateCheckBox :ElementRef;
@@ -36,64 +39,81 @@ export class Statistic2Component implements OnInit {
       data.forEach(data => {
         this.suppliers.push({label: data.supplierName, value: data.supplierName});
       })
-    })
+    });
+	  productSerive.getProductsSubTypes().subscribe((data: ProductSubType[]) => {
+		  data.forEach(value => {
+			  this.productsType.push({label: '' + value.subTypeName + '('+ value.productType.typeName +')', value: value.subTypeName});
+		  })
+	  });
   }
 
+	ngOnInit() {
+		this.dateLang = this.calendarSetingsComponent.dateLang;
+		let today = new Date();
+		this.startDate = today.toISOString().substring(0, 10);
+		this.endDate = today.toISOString().substring(0, 10);
+		this.setCustomSupplierFilterToDataTable();
+	}
 
-  ngOnInit() {
-    this.dateLang = this.calendarSetingsComponent.dateLang;
+	private setCustomSupplierFilterToDataTable() {
+		this.el.filterConstraints['inCollection'] = function inCollection(value: Supplier[], filter: any): boolean {
+			if (filter === undefined || filter === null) {
+				return true;
+			}
+			if (value === undefined || value === null || value.length === 0) {
+				return false;
+			}
+			for (let i = 0; i < value.length; i++) {
+				if (value[i].supplierName.toLowerCase() === filter.toLowerCase()) {
+					return true;
+				}
+			}
+			return false;
+		};
 
-    let today = new Date();
-    this.startDate = today.toISOString().substring(0,10);
-    this.endDate = today.toISOString().substring(0,10);
-  }
-
-  
-  test(event, col){
-
-      console.log(event);
-	  console.log(col);
-  }
-
-  submitOrderForm(form: NgForm) {
-
-      this.formSubmitted = true;
-
-      if(this.startDate > this.endDate) {
-        this.dateError = true;
-      }else {
-
-          if (this.sortByOrderDateCheckBox.nativeElement.checked) {
-
-                this.productSerive.getProductsToOrderWithoutDeletedByOrderDate(this.startDate, this.endDate )
-                  .subscribe(data => {
-                      this.productsToOrder = data;
-                  })
-          }else{
+	}
 
 
-              this.productSerive.getProductsToOrderWithoutDeletedByDeliveryDate(this.startDate, this.endDate )
-                  .subscribe(data => {
-                      this.productsToOrder = data;
-                  })
+	submitOrderForm(form: NgForm) {
+		this.formSubmitted = true;
+		if (this.startDate > this.endDate) {
+			this.dateError = true;
+		} else {
+			if (this.sortByOrderDateCheckBox.nativeElement.checked) {
+				this.productSerive.getProductsToOrderWithoutDeletedByOrderDate(this.startDate, this.endDate)
+					.subscribe(data => {
+						this.productsToOrder = data;
+						this.setAdditionalColumnWithConcatSupplierString();
+					})
+			} else {
+				this.productSerive.getProductsToOrderWithoutDeletedByDeliveryDate(this.startDate, this.endDate)
+					.subscribe(data => {
+						this.productsToOrder = data;
+						this.setAdditionalColumnWithConcatSupplierString();
+					})
+			}
+		}
+	}
 
-          }
-      }
+	private setAdditionalColumnWithConcatSupplierString() {
+		this.productsToOrder.forEach(product => {
+			let suppliersConcatString = '';
 
+			product.suppliers.forEach((supplier: Supplier) => {
+				suppliersConcatString = suppliersConcatString +" " +supplier.supplierName;
+			});
 
+			product.suppliersConcatString = suppliersConcatString;
+		})
+	}
 
-
-
-    }
-
-
-    generateXls(){
-          let filt: any[] =[];
-      if (!this.el.filteredValue ){
-        filt = this.el.value;
-      }else{
-        filt = this.el.filteredValue;
-      }
+	generateXls() {
+		let filt: any[] = [];
+		if (!this.el.filteredValue) {
+			filt = this.el.value;
+		} else {
+			filt = this.el.filteredValue;
+		}
 
 
         let dataToGenerateFile: any[]=[];
