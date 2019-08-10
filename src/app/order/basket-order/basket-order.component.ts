@@ -204,6 +204,14 @@ export class BasketOrderComponent implements OnInit {
 	pickCompany(event) {
 		this.companyPickDialogShow = false;
 		this.company = event;
+
+
+
+
+		if (this.company.wasCombined ==1) {
+			this.messageServiceExt.addMessage('success', 'Uwaga', 'Wybrana firma była scalana w przeszłości');
+		}
+
 		this.clickSelectcomapnyGuard = true;
 	}
 

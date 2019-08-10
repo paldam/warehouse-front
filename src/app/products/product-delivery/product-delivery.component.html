@@ -2,14 +2,14 @@
     <p-fieldset [legend]="legend" [toggleable]="true">
 
 
+
         <div class="form-group">
             <small id="supplier_typeDesc" class="text-muted">Dostawca</small>
-            <select class="form-control" #supplier="ngModel" [(ngModel)]="selectedSupplier"
-                    (change)="selectSupplier(selectedSupplier.supplierId)" name="supplier" required>
+            <select  class="form-control" #supplier="ngModel" [(ngModel)]="selectedSupplier"
+                     (ngModelChange)="filterTableBySupplier($event.supplierId)" name="supplier" required>
                 <option *ngFor="let item of productSuppliers" [ngValue]="item">{{item.supplierName}}</option>
             </select>
         </div>
-
 
         <div class="input-group search_bar">
     <span class="input-group-addon" id="basic-addon1">
@@ -22,7 +22,7 @@
         </div>
 
 
-        <p-dataTable [value]="productsBySupplier" [rows]="500" [editable]="true"
+        <p-dataTable [value]="products" [rows]="500" [editable]="true"
                      (onEditComplete)="updateStockRow($event)" [paginator]="true" [globalFilter]="globalfilter" #dt
                      [loading]="loading" loadingIcon="fa-circle-o-notch"
                      [rowStyleClass]="currentPageMode == 1 ? getRowStyle : getRowStyle2">

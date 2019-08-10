@@ -5,6 +5,7 @@ import {Product} from "../../model/product.model";
 import {MessageServiceExt} from "../../messages/messageServiceExt";
 import {Router} from "@angular/router";
 import {DataTable} from "primeng/primeng";
+import {SpinerService} from "../../spiner.service";
 
 @Component({
   selector: 'app-product-delivery',
@@ -19,6 +20,7 @@ export class ProductDeliveryComponent implements OnInit {
   public productSuppliers: Supplier[]=[];
   public dd: any[]=[];
   public productsBySupplier: any[]=[] ;
+  public products: any[]=[] ;
   public loading: boolean;
   public stock: number;
   public selectedSupplierId: number;
@@ -27,10 +29,11 @@ export class ProductDeliveryComponent implements OnInit {
   public currentPageMode: number;
     public findInputtextOrder : any ;
     @ViewChild('globalfilter') el: ElementRef;
+	@ViewChild('dt') dataTable: DataTable;
 
 
 
-    constructor(private productsService: ProductsService, private  messageServiceExt: MessageServiceExt, public router :Router) {
+    constructor(private productsService: ProductsService,private spinerService: SpinerService , messageServiceExt: MessageServiceExt, public router :Router) {
 
     if (router.url == '/products/delivery') {
       this.legend = "Dostawa produktów";
@@ -42,17 +45,47 @@ export class ProductDeliveryComponent implements OnInit {
           this.currentPageMode=2;
 
       }
-      console.log(this.router.url);
-    productsService.getSuppliers().subscribe(data=> this.productSuppliers = data);
 
-       setTimeout(() => {
-           console.log(this.productsBySupplier); ;
-       }, 5000 );
+    productsService.getSuppliers().subscribe(data=>{
+		this.productSuppliers = data;
+    },error1 => {
+
+    },() => {
+        this.productSuppliers.unshift(new Supplier(-99,'WSZYSCY DOSTAWCY',null,null,null,null,null))
+    });
+
+    this.productsService.getProducts().subscribe(data => this.products = data);
+
 
   }
 
   ngOnInit() {
+	  this.setCustomSupplierFilterToDataTable();
   }
+
+	private setCustomSupplierFilterToDataTable() {
+		this.dataTable.filterConstraints['inCollection'] = function inCollection(value: Supplier[], filter: any): boolean {
+			if (filter === undefined || filter === null) {
+				return true;
+			}
+			if (value === undefined || value === null || value.length === 0) {
+				return false;
+			}
+
+			if(filter == -99){
+			    return true;
+            }
+
+			for (let i = 0; i < value.length; i++) {
+				if (value[i].supplierId == filter) {
+					return true;
+				}
+			}
+			return false;
+		};
+	}
+  
+
 
 	selectSupplier(id: number) {
 		this.selectedSupplierId = id;
@@ -63,6 +96,18 @@ export class ProductDeliveryComponent implements OnInit {
 			this.productsBySupplier = data;
 		})
 	}
+
+	filterTableBySupplier(supplierId: number){
+
+		this.spinerService.showSpinner = true;
+		setTimeout(() => {
+			this.dataTable.filter(supplierId,'suppliers','inCollection');
+		}, 100);
+		setTimeout(() => {
+			this.spinerService.showSpinner = false;
+		}, 1500);
+
+    }
 
 	updateStockRow(event: any) {
 
@@ -77,23 +122,25 @@ export class ProductDeliveryComponent implements OnInit {
 		});
 	}
 
-  refreshData(){
+  refreshData() {
 
+        this.spinerService.showSpinner=true;
 
-    this.productsService.getProductsBySupplier( this.selectedSupplierId).subscribe((data : any)=>{
-
-      data.forEach(function(obj) { obj.add = obj.tmpOrdered; });
-
-      this.productsBySupplier = data;
-    } )
+	  this.productsService.getProducts().subscribe(data =>{
+		  this.products = data
+      },error1 => {
+		  this.spinerService.showSpinner=false;
+      },() => {
+		  this.spinerService.showSpinner=false;
+      } );
   }
 
 
   addToStockOrToOrder(id: number, add: number){
 
-
+console.log("111");
       if (this.currentPageMode==1) {
-
+		  console.log("22");
           this.productsService.changeStockEndResetOfProductsToDelivery(id,add).subscribe(data=>{
               this.refreshData();
               //this.findInputTextOnOrderViewPage ='';
@@ -103,7 +150,7 @@ export class ProductDeliveryComponent implements OnInit {
 
 
       }if (this.currentPageMode==2){
-
+		  console.log("333");
           this.productsService.addNumberOfProductsDelivery(id,add).subscribe(data=>{
 
               this.refreshData();
