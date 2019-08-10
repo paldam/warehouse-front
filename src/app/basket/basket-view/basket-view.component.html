@@ -87,7 +87,7 @@
 
     <p-column field="basketName" header="Nazwa kosza" [sortable]="true"></p-column>
     <p-column field="basketType.basketTypeName" header="Typ kosza" [sortable]="true" [style]="{'width':'120px'}" ></p-column>
-    <p-column field="season" header="Sezon" [sortable]="true" [style]="{'width':'120px'}"></p-column>
+    <p-column field="season" header="Sezon" [sortable]="true" [filter]="true" filterPlaceholder="Szukaj" [style]="{'width':'120px'}"></p-column>
     <p-column field="basketTotalPrice"  header="Cena kosza "  [sortable]="true" [style]="{'width':'120px'}">
 
       <ng-template  let-col pTemplate="filter"  >

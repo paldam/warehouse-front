@@ -147,6 +147,8 @@
                   </div>
 
 
+
+
                 </p-panel>
               </div>
 
@@ -261,6 +263,13 @@
               <div class="form-group">
                 <small id="additional_informationDesc" class="text-muted">Dodatkowe informacje</small>
                 <textarea class="form-control" name="additional_information" id="additional_information" rows="3" [readonly]="!authenticationService.isAdmin() && !authenticationService.isBiuroUser()" [(ngModel)]="order.additionalInformation" ></textarea>
+              </div>
+            </div>
+
+            <div *ngIf="isTextToCardVisible" class="form-group">
+              <div class="form-group">
+                <small id="text_to_cardDesc" class="text-muted">Tekst na kartkę</small>
+                <textarea class="form-control"  name="text_to_card" id="text_to_card"  size="1000" rows="1" [(ngModel)]="order.textToCard"></textarea>
               </div>
             </div>
 

@@ -91,6 +91,13 @@
                       [readonly]="true" [(ngModel)]="orderToShow.additionalInformation"></textarea>
         </div>
 
+        <div class="form-group">
+            <div class="form-group">
+                <small id="text_to_cardDesc" class="text-muted">Tekst na kartkę</small>
+                <textarea  [readonly]="true" class="form-control" name="text_to_card" id="text_to_card"  size="1000" rows="1" [(ngModel)]="orderToShow.textToCard"></textarea>
+            </div>
+        </div>
+
 
         <p-panel header="Zawartość zamówienia">
             <table>

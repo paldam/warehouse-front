@@ -33,7 +33,7 @@ export class ProductDeliveryComponent implements OnInit {
 
 
 
-    constructor(private productsService: ProductsService,private spinerService: SpinerService , messageServiceExt: MessageServiceExt, public router :Router) {
+    constructor(private productsService: ProductsService,private spinerService: SpinerService , private messageServiceExt: MessageServiceExt, public router :Router) {
 
     if (router.url == '/products/delivery') {
       this.legend = "Dostawa produktów";

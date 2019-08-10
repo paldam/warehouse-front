@@ -123,6 +123,11 @@
 
 
             <div class="form-group">
+                <small id="text_cardDesc"   class="text-muted">Tekst na kartkę</small>
+                <textarea [ngClass]="(orderStateBeforeChange.textToCard === orderStateAfterChange.textToCard) ? 'redcolor3': 'redcolor' " class="form-control " name="additional_information" id="text_card" rows="3" [readonly]="true" [(ngModel)]="orderStateBeforeChange.textToCard" ></textarea>
+            </div>
+
+            <div class="form-group">
                 <p>
                     <p-checkbox  name="additionalSaleCheckbox" binary="true" (disabled)="true" [(ngModel)]="additionalSaleCheckbox"></p-checkbox>
                     <span [ngClass]="(additionalSaleCheckbox == additionalSaleCheckboxForAfterOrderPanel) ? '': 'redcolor2' ">dosprzedaż</span>
@@ -281,6 +286,11 @@
             <div class="form-group">
               <small id="additional_informationDesc" class="text-muted">Dodatkowe informacje</small>
               <textarea [ngClass]="(orderStateBeforeChange.additionalInformation === orderStateAfterChange.additionalInformation) ? 'redcolor3': 'redcolor' " class="form-control " name="additional_information" id="additional_information"  rows="3" [readonly]="true" [(ngModel)]="orderStateAfterChange.additionalInformation" ></textarea>
+            </div>
+
+            <div class="form-group">
+                <small id="text_cardDesc"   class="text-muted">Tekst na kartkę</small>
+                <textarea [ngClass]="(orderStateBeforeChange.textToCard === orderStateAfterChange.textToCard) ? 'redcolor3': 'redcolor' " class="form-control " name="additional_information" id="text_card" rows="3" [readonly]="true" [(ngModel)]="orderStateAfterChange.textToCard" ></textarea>
             </div>
 
 

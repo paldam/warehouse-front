@@ -15,6 +15,7 @@ export class Order{
         public deliveryType?: DeliveryType,
         public weekOfYear? : number,
         public additionalInformation?: string,
+		public textToCard?: string,
         public deliveryDate?: Date,
         public orderStatus? : OrderStatus,
         public orderTotalAmount? : number,

@@ -25,7 +25,10 @@
                 </ng-template>
 
             </p-column>
-            <p-column field="season" header="Sezon" [sortable]="true" ></p-column>
+
+            <p-column field="season" header="Sezon" [sortable]="true" [filter]="true" filterPlaceholder="Szukaj" [style]="{'width':'120px'}"></p-column>
+
+
             <ng-template let-basket pTemplate="rowexpansion">
                 <div class="basket_products_info">
                     Zawartość kosza:  {{basket.basketName}}
@@ -355,7 +358,12 @@
                             </div>
 
 
-
+                                <div *ngIf="isTextToCardVisible" class="form-group">
+                                    <div class="form-group">
+                                        <small id="text_to_cardDesc" class="text-muted">Tekst na kartkę</small>
+                                        <textarea class="form-control" name="text_to_card" id="text_to_card"  size="1000" rows="1" [(ngModel)]="order.textToCard"></textarea>
+                                    </div>
+                                </div>
 
 
 

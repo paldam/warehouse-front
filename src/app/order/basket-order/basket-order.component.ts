@@ -19,6 +19,7 @@ import {Company} from "../../model/company.model";
 import {StringUtils} from "../../string-utils";
 import {Supplier} from "../../model/supplier.model";
 import {SpinerService} from "../../spiner.service";
+import {AppConstans} from "../../constans";
 
 declare var jquery: any;
 declare var $: any;
@@ -31,7 +32,7 @@ declare var $: any;
 })
 export class BasketOrderComponent implements OnInit {
 	public selectedCompanyToMarge: Company [] = [];
-	public company: Company = {companyId:0, companyName:"Klient indywidualny"};
+	public company: Company = {companyId: 0, companyName: "Klient indywidualny"};
 	public companyToPersist: Company = new Company();
 	public customers: Customer[] = [];
 	public customer: Customer = new Customer();
@@ -66,6 +67,7 @@ export class BasketOrderComponent implements OnInit {
 	public weekOfYear: number;
 	public isDeliveryDateValid: boolean = true;
 	public isDeliveryWeekDateValid: boolean = true;
+	public isTextToCardVisible: boolean = false;
 	public selectedBasketOnContextMenu: Basket = new Basket();
 	@ViewChild('choseCompanyPanel') choseCompanyPanel: Panel;
 	@ViewChild(FileUpload) fileUploadElement: FileUpload;
@@ -74,7 +76,6 @@ export class BasketOrderComponent implements OnInit {
 	@ViewChild('companyPickMode') selectPickcompany: ElementRef;
 	@ViewChild('globalfilter2') globalfilter2: ElementRef;
 	@ViewChild('dtCustomer') datatableCustomer: DataTable;
-
 	value: Date;
 	dateLang: any;
 
@@ -129,6 +130,13 @@ export class BasketOrderComponent implements OnInit {
 	}
 
 	addBasketToOrder(basket: Basket) {
+		if (basket.basketId == 206) {
+			this.messageServiceExt.addMessageWithTime('success', 'Uwaga', 'Dodano do zamówienia grawer, pamiętaj o wgraniu plików', 25000);
+		} //todo
+		if (basket.basketId == 187 || basket.basketId == 188) {
+			this.isTextToCardVisible = true;
+			this.messageServiceExt.addMessageWithTime('success', 'Uwaga', 'Dodano do zamówienia kartkę, pamiętaj o wpisaniu tekstu', 25000);
+		} //todo
 		let line = this.orderItems.find(data => data.basket.basketId == basket.basketId);
 		if (line == undefined) {
 			this.orderItems.push(new OrderItem(basket, 1))
@@ -140,6 +148,9 @@ export class BasketOrderComponent implements OnInit {
 	}
 
 	updateQuantity(basketLine: OrderItem, quantity: number) {
+		if (quantity == 0) {
+			this.deleteProductLine(basketLine.basket.basketId);
+		}
 		let line = this.orderItems.find(line => line.basket.basketId == basketLine.basket.basketId);
 		if (line != undefined) {
 			line.quantity = Number(quantity);
@@ -160,12 +171,23 @@ export class BasketOrderComponent implements OnInit {
 		let index = this.orderItems.findIndex(data => data.basket.basketId == id);
 		if (index > -1) {
 			this.orderItems.splice(index, 1);
+			this.deactiveTextToCardIfNoCardInOrder(id);
 		}
 		this.recalculate();
 	}
 
+	private deactiveTextToCardIfNoCardInOrder(basketId: number) { //todo magic
+		if (basketId == 187 || basketId == 188) {
+			let isAnyCardInOrder = this.orderItems.find(data => data.basket.basketId == 187 || data.basket.basketId == 188);
+			if (!isAnyCardInOrder) {
+				this.isTextToCardVisible = false;
+				this.order.textToCard = null;
+			}
+		}
+	}
+
 	cleanCompany() {
-		this.company ={companyId:0, companyName:"Klient indywidualny"};
+		this.company = {companyId: 0, companyName: "Klient indywidualny"};
 		this.clickSelectcomapnyGuard = false;
 	}
 
@@ -204,14 +226,9 @@ export class BasketOrderComponent implements OnInit {
 	pickCompany(event) {
 		this.companyPickDialogShow = false;
 		this.company = event;
-
-
-
-
-		if (this.company.wasCombined ==1) {
+		if (this.company.wasCombined == 1) {
 			this.messageServiceExt.addMessage('success', 'Uwaga', 'Wybrana firma była scalana w przeszłości');
 		}
-
 		this.clickSelectcomapnyGuard = true;
 	}
 
@@ -228,8 +245,7 @@ export class BasketOrderComponent implements OnInit {
 	showCustomerList() {
 		this.globalfilter2.nativeElement.value = this.company.companyName;
 		this.customerPickDialogShow = true;
-		this.datatableCustomer.filter(this.company.companyId,'company.companyId','equals');
-
+		this.datatableCustomer.filter(this.company.companyId, 'company.companyId', 'equals');
 		//
 		// setTimeout(() => {
 		// 	this.companyNameToSearch = "Damian";
@@ -240,8 +256,6 @@ export class BasketOrderComponent implements OnInit {
 		// 	this.companyNameToSearch = "kamil";
 		//
 		// }, 1000);
-
-
 	}
 
 	showAddressesList() {
@@ -391,10 +405,8 @@ export class BasketOrderComponent implements OnInit {
 		this.order.additionalSale = 0;
 		this.order.customer = this.customer;
 		if (StringUtils.isBlank(this.company.companyName)) {
-			console.log("1");
 			this.order.customer.company = {companyId: 0, companyName: "Klient indywidualny"}
 		} else {
-			console.log("2");
 			this.order.customer.company = this.company;
 		}
 		this.order.address = this.orderAddress;
@@ -403,10 +415,10 @@ export class BasketOrderComponent implements OnInit {
 		} else {
 			this.order.cod = 0;
 		}
+		this.autoAddTicketsToOrder();
 		this.order.orderStatus = new OrderStatus(1);
 		this.order.userName = localStorage.getItem(TOKEN_USER);
 		this.order.weekOfYear = this.getWeekNumber(this.weekOfYearTmp);
-		console.log(this.order);
 	}
 
 	cleanAfterSave(form: NgForm, formAdidtional: NgForm) {
@@ -421,6 +433,33 @@ export class BasketOrderComponent implements OnInit {
 		this.cleanAddress();
 		this.cleanCompany();
 		this.cleanCustomer()
+	}
+
+	private autoAddTicketsToOrder() {
+		if (this.order.deliveryType.deliveryTypeId == AppConstans.DELIVERY_TYPE_PACZKA_KURIER_ID) {//todo magic
+			this.removeAllTicketsFromOrderIfExist();
+			let totalBasketNumberOfOrder = 0;
+			this.order.orderItems.forEach(orderItemLine => {
+				if (!this.isProductKartkaOrGrawer(orderItemLine.basket.basketId)) {
+					totalBasketNumberOfOrder += orderItemLine.quantity;
+				}
+			});
+			this.order.orderItems.push(new OrderItem(new Basket(326), totalBasketNumberOfOrder, null, 0, 0, 0));
+			if (totalBasketNumberOfOrder > 0) {
+				this.messageServiceExt.addMessage('success', 'Informacja', 'Dodano automatycznie ' + totalBasketNumberOfOrder + ' bilecik(ów) ');
+			}
+		}
+	}
+
+	private isProductKartkaOrGrawer(basketId: number): boolean {
+		return basketId == AppConstans.BASKET_GRAWER_ID || basketId == AppConstans.BASKET_KARTKA_BEZ_LOGO_ID || basketId == AppConstans.BASKET_KARTKA_Z_LOGO_ID
+	}
+
+	private removeAllTicketsFromOrderIfExist() {
+		let indexOfTicketInOrderLine = this.orderItems.findIndex(data => data.basket.basketId == 326);
+		if (indexOfTicketInOrderLine > -1) {
+			this.orderItems.splice(indexOfTicketInOrderLine, 1);
+		}
 	}
 
 	printPdf() {
