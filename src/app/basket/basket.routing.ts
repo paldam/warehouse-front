@@ -6,12 +6,14 @@ import {BasketExtAddComponentComponent} from "./basket-ext-add-component/basket-
 import {BasketExtComponentComponent} from "./basket-ext-component/basket-ext-component.component";
 import {BasketComponent} from "./basket-view/basket-view.component";
 import {GiftBasketEditComponent} from "./basket-edit/gift-basket-edit.component";
+import {BasketsInAdvanceComponent} from "./baskets-in-advance/baskets-in-advance.component";
 
 const routes: Routes = [
 	{path: 'basket/:basketId', component: GiftBasketEditComponent, canActivate: [AuthGuard]},
 	{path: 'baskets/add', component: ProductPickerComponent, canActivate: [AuthGuard]},
 	{path: 'basketsext/add', component: BasketExtAddComponentComponent, canActivate: [AuthGuard]},
 	{path: 'basketsext', component: BasketExtComponentComponent, canActivate: [AuthGuard]},
+	{path: 'baskets/inadvance', component: BasketsInAdvanceComponent, canActivate: [AuthGuard]},
 	{path: 'baskets', component: BasketComponent, canActivate: [AuthGuard]},
 
 ];

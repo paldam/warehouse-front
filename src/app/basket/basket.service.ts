@@ -4,6 +4,7 @@ import {Observable} from 'rxjs/Observable';
 import {Basket} from '../model/basket.model';
 import {BasketType} from '../model/basket_type.model';
 import {HttpService} from "../http-service";
+import {OrderItem} from "../model/order_item";
 
 @Injectable()
 export class BasketService {
@@ -22,14 +23,23 @@ export class BasketService {
 
     }
 
-
     saveBasketWithoutImg(basket: Basket): Observable<Response> {
         return this.http.post(this.baseUrl+`/basketswithoutimage/`, basket)
             .map((response: Response) => response.json());
 
     }
 
+	addBasketsToStock(orderItems: OrderItem[]): Observable<Response> {
+		return this.http.post(this.baseUrl+`/baskets/stockadd`, orderItems)
+			.map((response: Response) => response.json());
 
+	}
+
+	saveNewStockOfBasket(basketId: number, newValue : number): Observable<Response> {
+		return this.http.get(this.baseUrl+`/baskets/stockadd/${basketId}/${newValue}`)
+			.map((response: Response) => response.json());
+
+	}
 
     saveBasketWithImg(basket: Basket,fileToUpload: File): Observable<Response> {
 

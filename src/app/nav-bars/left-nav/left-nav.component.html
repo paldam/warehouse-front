@@ -52,6 +52,8 @@
                 <ul>
                     <li *ngIf="isAdmin() || isBiuroUser() || isProdukcjaUser()  "><a [routerLink]="['/baskets'] " routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Lista Koszy</a></li>
                     <li *ngIf="isAdmin() || isBiuroUser()" ><a [routerLink]="['/baskets/add'] " routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Kreator Koszy</a></li>
+                    <li *ngIf="isAdmin() || isProdukcjaUser()" ><a [routerLink]="['baskets/inadvance'] " routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Dodaj kosze na stan</a></li>
+
 
                 </ul>
             </li>

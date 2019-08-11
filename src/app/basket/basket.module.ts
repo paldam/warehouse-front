@@ -12,9 +12,10 @@ import {BasketService} from "./basket.service";
 import {BasketExtService} from "./basket-ext.service";
 import {ProductsComponent} from "../products/product-view/products.component";
 import {ProductsModule} from "../products/products.module";
+import { BasketsInAdvanceComponent } from './baskets-in-advance/baskets-in-advance.component';
 
 @NgModule({
-	declarations: [ProductPickerComponent,GiftBasketEditComponent,BasketExtAddComponentComponent,BasketExtComponentComponent,GiftBasketComponent,BasketComponent],
+	declarations: [ProductPickerComponent,GiftBasketEditComponent,BasketExtAddComponentComponent,BasketExtComponentComponent,GiftBasketComponent,BasketComponent, BasketsInAdvanceComponent],
 	imports: [routing,CommonModule,PrimeNgModule,ProductsModule],
 	providers: [BasketService,BasketExtService]
 })

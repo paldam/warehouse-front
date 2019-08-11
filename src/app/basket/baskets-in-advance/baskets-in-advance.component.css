@@ -1,0 +1,12 @@
+.btnil{
+    position: absolute;
+    right: 48px;
+    bottom: 20px;
+
+}
+
+.d-table-wrapper{
+    width: 500px ;
+    position: relative;
+    padding-bottom: 60px;
+}
