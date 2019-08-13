@@ -401,6 +401,9 @@ export class BasketOrderComponent implements OnInit {
 			if (!value.stateOnProduction) {
 				value.stateOnProduction = 0;
 			}
+
+			value.quantityFromSurplus =0;
+
 		});
 		this.order.additionalSale = 0;
 		this.order.customer = this.customer;
@@ -444,7 +447,7 @@ export class BasketOrderComponent implements OnInit {
 					totalBasketNumberOfOrder += orderItemLine.quantity;
 				}
 			});
-			this.order.orderItems.push(new OrderItem(new Basket(326), totalBasketNumberOfOrder, null, 0, 0, 0));
+			this.order.orderItems.push(new OrderItem(new Basket(326), totalBasketNumberOfOrder, null, 0, 0, 0,0));
 			if (totalBasketNumberOfOrder > 0) {
 				this.messageServiceExt.addMessage('success', 'Informacja', 'Dodano automatycznie ' + totalBasketNumberOfOrder + ' bilecik(ów) ');
 			}

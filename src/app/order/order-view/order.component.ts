@@ -308,7 +308,10 @@ export class OrderComponent implements OnInit {
 		}
 	}
 
-	isProductionInputDisable(orderStatusId: number): boolean {
+	isProductionInputDisable(orderStatusId: number, quantityFromSurplus: number): boolean {
+		if(quantityFromSurplus > 0 ) {
+			return true;
+		}
 		if (this.isCurrentPageOrdersViewRedirectedFromBasketStatitis || this.isCurrentPageCustomerEdit) {
 			return true;
 		}
@@ -323,7 +326,12 @@ export class OrderComponent implements OnInit {
 		}
 	}
 
-	isMagazynInputDisable(orderStatusId: number): boolean {
+	isMagazynInputDisable(orderStatusId: number, quantityFromSurplus: number): boolean {
+
+		if(quantityFromSurplus > 0 ) {
+			return true;
+		}
+
 
 		if (this.isCurrentPageOrdersViewRedirectedFromBasketStatitis || this.isCurrentPageCustomerEdit) {
 
@@ -642,6 +650,8 @@ export class OrderComponent implements OnInit {
 		this.orderService.changeSpecifiedOrderItemProgressOnWarehouse(orderItemId,newStateValueOnWarehouse).subscribe(data =>{
 			this.messageServiceExt.addMessage('success', 'Status', 'Zmieniono ilość gotowych koszy');
 		},error => {
+			this.editCurrentOrderStateDialog = false;
+			this.refreshData();
 		},() => {
 			this.editCurrentOrderStateDialog = false;
 			this.orderItemRowToEditState = new OrderItem();
@@ -653,6 +663,8 @@ export class OrderComponent implements OnInit {
 		this.orderService.changeSpecifiedOrderItemProgressOnProduction(orderItemId,newStateValueOnWarehouse).subscribe(data =>{
 			this.messageServiceExt.addMessage('success', 'Status', 'Zmieniono ilość gotowych koszy');
 		},error => {
+			this.editCurrentOrderStateDialog = false;
+			this.refreshData();
 		},() => {
 			this.editCurrentOrderStateDialog = false;
 			this.orderItemRowToEditState = new OrderItem();
@@ -664,6 +676,8 @@ export class OrderComponent implements OnInit {
 		this.orderService.changeSpecifiedOrderItemProgressOnLogistics(orderItemId,newStateValueOnWarehouse).subscribe(data =>{
 			this.messageServiceExt.addMessage('success', 'Status', 'Zmieniono ilość gotowych koszy');
 		},error => {
+			this.editCurrentOrderStateDialog = false;
+			this.refreshData();
 		},() => {
 			this.editCurrentOrderStateDialog = false;
 			this.orderItemRowToEditState = new OrderItem();
