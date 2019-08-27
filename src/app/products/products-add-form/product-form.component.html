@@ -20,7 +20,7 @@
     </div>
 
     <div class="form-group">
-        <p-listbox name="suppliers_list" [listStyle]="{'max-height':'250px'}" [options]="productSuppliers"
+        <p-listbox name="suppliers_list" [style]="{ 'width':'400px'}" [listStyle]="{'max-height':'100px', 'width':'390px'}" [options]="productSuppliers"
                    [(ngModel)]="selectedSuppliersToAddEdit" multiple="multiple" checkbox="checkbox" filter="filter"
                    optionLabel="supplierName" (onChange)="checkSupplierValid()">>
             <p-header>
@@ -33,28 +33,19 @@
         <ul class="text-danger list-unstyled" *ngIf="supplierRequiredError">Wybierz przynajmniej jednego dostawcę</ul>
     </div>
 
-
-
-
-
-    <!--<div class="form-group">-->
-        <!--<small id="supplier_typeDesc" class="text-muted">Dostawca</small>-->
-        <!--<select [compareWith]="compareSupplier" class="form-control"  #supplier="ngModel" [(ngModel)]="product.supplier" name="supplier"  required >-->
-            <!--<option *ngFor="let item of productSuppliers"  [ngValue]="item"  >{{item.supplierName}}</option>-->
-        <!--</select>-->
-        <!--<ul class="text-danger list-unstyled" *ngIf="supplier.dirty|| formSubmitted">-->
-            <!--<li  *ngIf="supplier.errors?.required">Wybierz dostawcę z listy</li>-->
-        <!--</ul>-->
-    <!--</div>-->
-
     <div class="form-group">
         <small id="product_typeDesc" class="text-muted">Typ Produktu</small>
-        <select [compareWith]="compareProductSubType" class="form-control"  #product_type="ngModel" [(ngModel)]="product.productSubType" name="product_type"  required >
-            <option *ngFor="let item of productSubTypes" [ngValue]="item"  >{{item.subTypeName}} ({{item.productType.typeName}})</option>
-        </select>
-        <ul class="text-danger list-unstyled" *ngIf="product_type.dirty|| formSubmitted">
-            <li  *ngIf="product_type.errors?.required">Wybierz typ produktu z listy z listy</li>
-        </ul>
+
+
+        <p-listbox name="type_list" [style]="{ 'width':'400px'}" [listStyle]="{'max-height':'100px', 'width':'390px'}"
+                   [options]="productSubTypesSelectItems"
+                   [(ngModel)]="product.productSubType" [filter]="true">
+
+            <p-header>
+                Typ Produktu:
+            </p-header>
+        </p-listbox>
+
     </div>
 
     <div class="form-group">

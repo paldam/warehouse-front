@@ -15,6 +15,8 @@ export class AppComponent {
 
 
 	constructor(routingState: RoutingState, public spinerService: SpinerService, public router: Router) {
+
+
 		routingState.loadRouting();
 		this.router.events.subscribe((event: Event) => {
 			switch (true) {

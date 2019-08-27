@@ -8,6 +8,7 @@ import {Router} from '@angular/router';
 import {Supplier} from "../../model/supplier.model";
 import {MessageServiceExt} from "../../messages/messageServiceExt";
 import {ProductSubType} from "../../model/product_sub_type";
+import {SelectItem} from "primeng/api";
 
 @Component({
     selector: 'product-form',
@@ -20,6 +21,7 @@ export class ProductFormComponent implements OnInit {
     public product: Product = new Product();
     public productSuppliers: Supplier[]=[];
     public productSubTypes: ProductSubType[]=[];
+	public productSubTypesSelectItems: SelectItem[]=[];
     public productSupplierToAdd: Supplier = new Supplier();
     public formSubmitted: boolean = false;
     public formSupplierAddForm: boolean = false;
@@ -30,7 +32,13 @@ export class ProductFormComponent implements OnInit {
     constructor(private productsService: ProductsService, private router: Router,private messageServiceExt: MessageServiceExt) {
         productsService.getSuppliers().subscribe(data=> this.productSuppliers=data);
 		// productsService.getProductsTypes().subscribe(data=> this.productTypes=data)
-        productsService.getProductsSubTypes().subscribe(data=> this.productSubTypes=data)
+        productsService.getProductsSubTypes().subscribe(data=> {
+            this.productSubTypes=data;
+
+            this.productSubTypes.forEach(value => {
+                this.productSubTypesSelectItems.push({label: value.subTypeName + " (" + value.productType.typeName + ")", value: value} )
+            })
+		})
 
 
 
@@ -50,7 +58,7 @@ export class ProductFormComponent implements OnInit {
         console.log(this.formSubmitted);
         console.log(form.valid);
 
-        if (form.valid && this.selectedSuppliersToAddEdit.length > 0) {
+        if (form.valid && this.selectedSuppliersToAddEdit.length > 0 && this.product.productSubType) {
             this.product.suppliers = this.selectedSuppliersToAddEdit;
             this.product.price *= 100;
             this.product.isArchival = 0;

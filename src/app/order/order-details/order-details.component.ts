@@ -173,6 +173,7 @@ export class OrderDetailsComponent implements OnInit {
 			this.orderAddress = res.address;
 			this.company = res.customer.company;
 			this.order.deliveryType = res.deliveryType;
+			this.order.productionUser = res.productionUser;
 			this.order.deliveryDate = res.deliveryDate;
 			this.order.additionalInformation = res.additionalInformation;
 			this.customer = res.customer;
@@ -190,15 +191,15 @@ export class OrderDetailsComponent implements OnInit {
 		});
 	}
 
-	private isCopyOfExistingOrder(): boolean {
+	isCopyOfExistingOrder(): boolean {
 		return this.routingState.getCurrentPage().substring(0, 12) == "/orders/copy";
 	};
 
-	private isEditOrderType(): boolean {
+	 isEditOrderType(): boolean {
 		return !this.isCopyOfExistingOrder();
 	};
 
-	private getTitleForMainFieldset(fv: string): string {
+	public getTitleForMainFieldset(fv: string): string {
 		if (this.isCopyOfExistingOrder()) {
 			return "Duplikat zamówienia ";
 		} else {
@@ -408,21 +409,26 @@ export class OrderDetailsComponent implements OnInit {
 	}
 
 	addBasketToOrder(basket: Basket) {
-		if (basket.basketId == 206) {
-			this.messageServiceExt.addMessageWithTime('success', 'Uwaga', 'Dodano do zamówienia grawer, pamiętaj o wgraniu plików', 25000);
-		} //todo
-		if (basket.basketId == 187 || basket.basketId == 188) {
-			this.isTextToCardVisible = true;
-			this.messageServiceExt.addMessageWithTime('success', 'Uwaga', 'Dodano do zamówienia kartkę, pamiętaj o wpisaniu tekstu', 25000);
-		} //todo
-		let line = this.orderItems.find(data => data.basket.basketId == basket.basketId);
-		if (line == undefined) {
-			this.orderItems.push(new OrderItem(basket, 1))
-		} else {
-			line.quantity = line.quantity + 1;
+
+		if(this.order.orderStatus.orderStatusId == AppConstans.ORDER_STATUS_W_TRAKCIE_REALIZACJI ) {
+			this.messageServiceExt.addMessageWithTime('error', 'Uwaga', 'Zamówienie w trakcie realizacji, brak możliwości edycji pozycji zamówienia', 25000);
+		}else{
+
+			if (basket.basketId == 206) {
+				this.messageServiceExt.addMessageWithTime('success', 'Uwaga', 'Dodano do zamówienia grawer, pamiętaj o wgraniu plików', 25000);
+			} //todo
+			if (basket.basketId == 187 || basket.basketId == 188) {
+				this.isTextToCardVisible = true;
+				this.messageServiceExt.addMessageWithTime('success', 'Uwaga', 'Dodano do zamówienia kartkę, pamiętaj o wpisaniu tekstu', 25000);
+			} //todo
+			let line = this.orderItems.find(data => data.basket.basketId == basket.basketId);
+			if (line == undefined) {
+				this.orderItems.push(new OrderItem(basket, 1))
+			} else {
+				line.quantity = line.quantity + 1;
+			}
+			this.recalculate();
 		}
-		this.recalculate();
-		// this.recalculateTotalPlusMarkUp();
 	}
 
 	updateQuantity(basketLine: OrderItem, quantity: number) {

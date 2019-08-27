@@ -23,7 +23,7 @@ export class NotificationsService {
 
 	public constructor(private http: HttpService) {
 		this.baseUrl = `${this.protocol}://${location.hostname}:${this.port}`;
-		this.setEventSource();
+		//this.setEventSource();
 		this.checkNumberOfNotifications();
 
 		this.getNotifications().subscribe(data => {

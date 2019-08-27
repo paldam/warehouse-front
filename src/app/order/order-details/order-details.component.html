@@ -354,8 +354,8 @@
             <td scope="row">{{orderItems.basket.basketName}}</td>
             <td><input type="number" class="form-control" name="" id="" aria-describedby="helpId" placeholder="" min="0"
                        [value]="orderItems.quantity" (change)="updateQuantity(orderItems,$event.target.value)"
-                       [readonly]="!authenticationService.isAdmin() && !authenticationService.isBiuroUser()"></td>
-            <td class="col_delete"><i class="fa fa-trash" aria-hidden="true"
+                       [readonly]="(!authenticationService.isAdmin() && !authenticationService.isBiuroUser()) || order.orderStatus.orderStatusId == 6"></td>
+            <td *ngIf="order.orderStatus.orderStatusId != 6" class="col_delete"><i  class="fa fa-trash" aria-hidden="true"
                                       (click)="deleteProductLine(orderItems.basket.basketId)"></i></td>
           </tr>
           </tbody>

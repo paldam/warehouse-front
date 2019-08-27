@@ -1,34 +1,39 @@
 import {filter, pairwise} from "rxjs/operators";
 import {NavigationEnd, Router, RoutesRecognized} from "@angular/router";
 import {Injectable} from "@angular/core";
+import {ServerSideEventsService} from "./server-side-events-service";
 
 @Injectable()
 export class RoutingState {
-    private history = [];
+	private history = [];
 
-    constructor(
-        private router: Router
-    ) {}
+	constructor(
+		private router: Router, private serverSideEventsService: ServerSideEventsService
+	) {
+	}
 
-    public loadRouting(): void {
-        this.router.events
-            .pipe(filter(event => event instanceof NavigationEnd))
-            .subscribe(({urlAfterRedirects}: NavigationEnd) => {
-                this.history = [...this.history, urlAfterRedirects];
-            });
-    }
-    public getHistory(): string[] {
-        return this.history;
-    }
+	public loadRouting(): void {
+		this.router.events
+			.pipe(filter(event => event instanceof NavigationEnd))
+			.subscribe(({urlAfterRedirects}: NavigationEnd) => {
+				this.history = [...this.history, urlAfterRedirects];
 
-    public getPreviousUrl(): string {
-        return this.history[this.history.length - 1] || '/index';
-    }
+			});
+	}
 
-    public getCurrentPage(): string{
+	public getHistory(): string[] {
+		return this.history;
+	}
 
-        return this.router.url
-    }
+	public getPreviousUrl(): string {
+		return this.history[this.history.length - 1] || '/index';
+	}
+
+	public getCurrentPage(): string {
+		return this.router.url
+	}
+
+
 
 }
 

@@ -7,6 +7,7 @@ import {ActivatedRoute, NavigationExtras, Router} from '@angular/router';
 import {Supplier} from "../../model/supplier.model";
 import {MessageServiceExt} from "../../messages/messageServiceExt";
 import {ProductSubType} from "../../model/product_sub_type";
+import {SelectItem} from "primeng/api";
 
 @Component({
     selector: 'product-edit-form',
@@ -21,6 +22,7 @@ export class ProductEditFormComponent implements OnInit {
     public formSubmitted: boolean = false;
     public productSuppliers: Supplier[]=[];
     public productSubTypes: ProductSubType[]=[];
+	public productSubTypesSelectItems: SelectItem[]=[];
 	public selectedSuppliersToAddEdit: Supplier[]=[];
 	public supplierRequiredError : boolean = false;
 
@@ -33,7 +35,13 @@ export class ProductEditFormComponent implements OnInit {
 
         productsService.getSuppliers().subscribe(data=> this.productSuppliers=data);
        // productsService.getProductsSubTypes().subscribe(data=> this.productTypes=data)
-		productsService.getProductsSubTypes().subscribe(data=> this.productSubTypes=data)
+		productsService.getProductsSubTypes().subscribe(data=> {
+			this.productSubTypes=data;
+
+			this.productSubTypes.forEach(value => {
+				this.productSubTypesSelectItems.push({label: value.subTypeName + " (" + value.productType.typeName + ")", value: value} )
+			})
+		})
     }
 
     ngOnInit() {
@@ -45,7 +53,7 @@ export class ProductEditFormComponent implements OnInit {
         this.formSubmitted = true;
 		this.checkSupplierValid();
 
-        if (form.valid && this.selectedSuppliersToAddEdit.length > 0) {
+        if (form.valid && this.selectedSuppliersToAddEdit.length > 0 && this.product.productSubType) {
 			this.product.suppliers = this.selectedSuppliersToAddEdit;
             this.product.price= this.productPrice*100;
             this.productsService.saveProduct(this.product).subscribe(

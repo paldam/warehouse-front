@@ -1,113 +1,6 @@
 
-<div class="basketList">
-    <p-fieldset legend="Lista dostępnych koszy" [toggleable]="true">
-
-        <div class="input-group search_bar">
-            <span class="input-group-addon" id="basic-addon1">
-                 <i class="fa fa-search" aria-hidden="true"></i>
-            </span>
-            <input #gb type="text" class="form-control search_input" pInputText size="50" placeholder="Szukaj"aria-describedby="basic-addon1">
-        </div>
-
-        <p-dataTable [value]="baskets" [rows]="10" [paginator]="true" [globalFilter]="gb" #dt
-                     [loading]="loading" loadingIcon="fa-circle-o-notch" expandableRows="true" (onRowDblclick)="addBasketToOrder($event.data)" (onContextMenuSelect)="contextMenuSelected($event)"   [contextMenu]="cm"(onContextMenuSelect)="contextMenuSelected($event)"   [contextMenu]="cm">
-            <p-column expander="true" header="Zawartość" styleClass="col-icon" [style]="{'width':'70px'}"></p-column>
-            <p-column  header="lp."  [style]="{'width':'70px'}">
-                <ng-template let-i="rowIndex" pTemplate="rowexpansion">
-                    {{i+1}}
-                </ng-template>
-            </p-column>
-            <p-column field="basketName" header="Nazwa kosza" [sortable]="true"></p-column>
-            <p-column field="basketType.basketTypeName" header="Typ kosza" [sortable]="true" ></p-column>
-            <p-column field="basketTotalPrice"  header="Cena kosza "  [sortable]="true" >
-                <ng-template let-row="rowData" pTemplate="body">
-                    {{row.basketTotalPrice/100| number : '1.2-2'}} zł.
-                </ng-template>
-
-            </p-column>
-
-            <p-column field="season" header="Sezon" [sortable]="true" [filter]="true" filterPlaceholder="Szukaj" [style]="{'width':'120px'}"></p-column>
-            <p-column field="stock" header="Stan" [sortable]="true" [style]="{'width':'120px'}"></p-column>
-
-            <ng-template let-basket pTemplate="rowexpansion">
-                <div class="basket_products_info">
-                    Zawartość kosza:  {{basket.basketName}}
-                    <table class="product_tab" >
-                        <thead>
-                        <tr class="product_tab_row">
-                            <th>Nazwa Produktu</th>
-                            <th>Pojemność</th>
-                            <th>Cena zakupu</th>
-                            <th>Ilość</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr class="product_tab_row" *ngFor="let i of basket.basketItems">
-                            <td>{{i.product.productName}}</td>
-                            <td>{{i.product.capacity}}</td>
-                            <td>{{i.product.price/100}} zł</td>
-                            <td>{{i.quantity}} szt.</td>
-                        </tr>
-                        </tbody>
-                    </table>
-
-                </div>
-
-            </ng-template>
-
-        </p-dataTable>
-
-    </p-fieldset>
-</div>
-
-<div class="row">
-    <div class="picked_products_list col-xl-6 ">
-            <p-fieldset legend="Pozycje zamówienia" [toggleable]="true">
-                <div class="d-table-wrapper">
-                    <table class="d-table" *ngIf="isBasketLinesEmpty()==false">
-                        <colgroup>
-                            <col span="1" style="width: 70%;">
-                            <col span="1" style="width: 25%;">
-                            <col span="1" style="width: 5%;">
-
-                        </colgroup>
-                        <thead>
-                        <tr>
-                            <th>Nazwa kosza</th>
-                            <th >Ilość</th>
-                            <th>Usuń</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr *ngFor="let orderItems of orderItems">
-                            <td scope="row">{{orderItems.basket.basketName}}</td>
-                            <td><input type="number" class="form-control" name="" id="" aria-describedby="helpId"
-                                       placeholder="" min="0" [value]="orderItems.quantity"
-                                       (change)="updateQuantity(orderItems,$event.target.value)"></td>
-                            <td ><i class="fa fa-trash" aria-hidden="true"
-                                                      (click)="deleteProductLine(orderItems.basket.basketId)"></i></td>
-                        </tr>
-                        </tbody>
-                    </table>
-                </div>
-                <p *ngIf="isBasketLinesEmpty()==true">Brak pozycji w zamówieniu</p>
-            </p-fieldset>
-    </div>
-
-    <div #basketsummary class="basket_summary col-xl-6">
-        <p-fieldset legend="Podsumowanie koszyka" [toggleable]="true">
-            <div class="row">
-                <div class="col-lg-5">
-                    <p class="tot">Kwota zamówienia: {{total/100| number : '1.2-2'}} zł</p>
-                    <!--<p class="total">Cena z marżą: {{totalPlusMarkUp/100| number : '1.2-2'}} zł</p>-->
-
-                </div>
 
 
-            </div>
-        </p-fieldset>
-    </div>
-</div>
 
 
     <div class="order_summary col-12">
@@ -400,6 +293,116 @@
         </p-fieldset>
     </div>
 
+    <div class="row">
+        <div class="picked_products_list col-xl-6 ">
+            <p-fieldset legend="Pozycje zamówienia" [toggleable]="true">
+                <div class="d-table-wrapper">
+                    <table class="d-table" *ngIf="isBasketLinesEmpty()==false">
+                        <colgroup>
+                            <col span="1" style="width: 70%;">
+                            <col span="1" style="width: 25%;">
+                            <col span="1" style="width: 5%;">
+
+                        </colgroup>
+                        <thead>
+                        <tr>
+                            <th>Nazwa kosza</th>
+                            <th >Ilość</th>
+                            <th>Usuń</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr *ngFor="let orderItems of orderItems">
+                            <td scope="row">{{orderItems.basket.basketName}}</td>
+                            <td><input type="number" class="form-control" name="" id="" aria-describedby="helpId"
+                                       placeholder="" min="0" [value]="orderItems.quantity"
+                                       (change)="updateQuantity(orderItems,$event.target.value)"></td>
+                            <td ><i class="fa fa-trash" aria-hidden="true"
+                                    (click)="deleteProductLine(orderItems.basket.basketId)"></i></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <p *ngIf="isBasketLinesEmpty()==true">Brak pozycji w zamówieniu</p>
+            </p-fieldset>
+        </div>
+
+        <div #basketsummary class="basket_summary col-xl-6">
+            <p-fieldset legend="Podsumowanie koszyka" [toggleable]="true">
+                <div class="row">
+                    <div class="col-lg-5">
+                        <p class="tot">Kwota zamówienia: {{total/100| number : '1.2-2'}} zł</p>
+                        <!--<p class="total">Cena z marżą: {{totalPlusMarkUp/100| number : '1.2-2'}} zł</p>-->
+
+                    </div>
+
+
+                </div>
+            </p-fieldset>
+        </div>
+    </div>
+
+
+<div class="basketList">
+    <p-fieldset legend="Lista dostępnych koszy" [toggleable]="true">
+
+        <div class="input-group search_bar">
+            <span class="input-group-addon" id="basic-addon1">
+                 <i class="fa fa-search" aria-hidden="true"></i>
+            </span>
+            <input #gb type="text" class="form-control search_input" pInputText size="50" placeholder="Szukaj"aria-describedby="basic-addon1">
+        </div>
+
+        <p-dataTable [value]="baskets" [rows]="10" [paginator]="true" [globalFilter]="gb" #dt
+                     [loading]="loading" loadingIcon="fa-circle-o-notch" expandableRows="true" (onRowDblclick)="addBasketToOrder($event.data)" (onContextMenuSelect)="contextMenuSelected($event)"   [contextMenu]="cm"(onContextMenuSelect)="contextMenuSelected($event)"   [contextMenu]="cm">
+            <p-column expander="true" header="Zawartość" styleClass="col-icon" [style]="{'width':'70px'}"></p-column>
+            <p-column  header="lp."  [style]="{'width':'70px'}">
+                <ng-template let-i="rowIndex" pTemplate="rowexpansion">
+                    {{i+1}}
+                </ng-template>
+            </p-column>
+            <p-column field="basketName" header="Nazwa kosza" [sortable]="true"></p-column>
+            <p-column field="basketType.basketTypeName" header="Typ kosza" [sortable]="true" ></p-column>
+            <p-column field="basketTotalPrice"  header="Cena kosza "  [sortable]="true" >
+                <ng-template let-row="rowData" pTemplate="body">
+                    {{row.basketTotalPrice/100| number : '1.2-2'}} zł.
+                </ng-template>
+
+            </p-column>
+
+            <p-column field="season" header="Sezon" [sortable]="true" [filter]="true" filterPlaceholder="Szukaj" [style]="{'width':'120px'}"></p-column>
+            <p-column field="stock" header="Stan" [sortable]="true" [style]="{'width':'120px'}"></p-column>
+
+            <ng-template let-basket pTemplate="rowexpansion">
+                <div class="basket_products_info">
+                    Zawartość kosza:  {{basket.basketName}}
+                    <table class="product_tab" >
+                        <thead>
+                        <tr class="product_tab_row">
+                            <th>Nazwa Produktu</th>
+                            <th>Pojemność</th>
+                            <th>Cena zakupu</th>
+                            <th>Ilość</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr class="product_tab_row" *ngFor="let i of basket.basketItems">
+                            <td>{{i.product.productName}}</td>
+                            <td>{{i.product.capacity}}</td>
+                            <td>{{i.product.price/100}} zł</td>
+                            <td>{{i.quantity}} szt.</td>
+                        </tr>
+                        </tbody>
+                    </table>
+
+                </div>
+
+            </ng-template>
+
+        </p-dataTable>
+
+    </p-fieldset>
+</div>
 
 
 <p-dialog [(visible)]="confirmDialogShow" modal="true" >

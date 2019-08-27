@@ -19,7 +19,7 @@ declare var $: any;
 export class NavComponent implements OnInit {
 
 
-	constructor(public notificationsService: NotificationsService , private authenticationService :AuthenticationService) {
+	constructor(public notificationsService: NotificationsService , public authenticationService :AuthenticationService) {
 
 
 

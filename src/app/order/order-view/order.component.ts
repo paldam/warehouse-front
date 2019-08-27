@@ -1,4 +1,4 @@
- import{Component, ElementRef, HostListener, OnInit, ViewChild} from '@angular/core';
+ import {Component, ElementRef, HostListener, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {Order} from '../../model/order.model';
 import {OrderService} from '../order.service';
 import {ActivatedRoute, Router} from "@angular/router";
@@ -23,13 +23,14 @@ import {OrderItem} from "../../model/order_item";
  import { interval } from 'rxjs';
  import { map } from 'rxjs/operators'
  import {NotificationsService} from "../../nav-bars/top-nav/notification.service";
+ import {ServerSideEventsService} from "../../server-side-events-service";
 
 @Component({
 	selector: 'order',
 	templateUrl: './order.component.html',
 	styleUrls: ['./order.component.css']
 })
-export class OrderComponent implements OnInit {
+export class OrderComponent implements OnInit, OnDestroy {
 	public pageType: OrderViewPageType;
 	public selectedOrderFromRow: Order = new Order();
 	public ORDER_STATUS_W_TRAKCIE_REALIZACJI = AppConstans.ORDER_STATUS_W_TRAKCIE_REALIZACJI;
@@ -81,20 +82,18 @@ export class OrderComponent implements OnInit {
 	@ViewChild('information_extention') information_extention: OverlayPanel;
 
 	constructor(private basketService: BasketService, private activatedRoute: ActivatedRoute, private orderService: OrderService, private userService: UserService, private router: Router, public confirmationService: ConfirmationService,
-				public authenticationService: AuthenticationService, private fileSendService: FileSendService,
-				private  messageServiceExt: MessageServiceExt, private routingState: RoutingState, private spinerService: SpinerService, public notificationsService :NotificationsService) {
-
+				public authenticationService: AuthenticationService, private fileSendService: FileSendService, private serverSideEventsService :ServerSideEventsService,
+				private  messageServiceExt: MessageServiceExt, private routingState: RoutingState, private spinerService: SpinerService, public notificationsService: NotificationsService) {
 		this.setCurentPageType();
 		this.setSearchOptions();
 		this.setOrderData();
 		this.setNewOrderEventSource();
-
-
-
-
 	}
-	
 
+	ngOnDestroy() {
+		this.serverSideEventsService.newOrderEventSource.close();
+		console.log("adasd");
+	}
 
 	ngOnInit() {
 		this.getOrderStatusForDataTableFilter();
@@ -111,6 +110,8 @@ export class OrderComponent implements OnInit {
 	onWindowResize(event) {
 		this.action_extention.nativeElement.hidden = true;
 	}
+
+
 
 	private setCurentPageType() {
 		this.isCurrentPageCustomerEdit = this.routingState.getCurrentPage().substring(0, 9) == "/customer";
@@ -204,21 +205,20 @@ export class OrderComponent implements OnInit {
 	}
 
 	setNewOrderEventSource() {
-		let source = new EventSource('http://localhost:8080/new_order_notification',);
-		source.addEventListener('message', message => {
-
-
+		this.serverSideEventsService.renew();
+		this.serverSideEventsService.newOrderEventSource.addEventListener('message', message  => {
 			this.refreshData();
-			console.log("raz");
-			console.log(message);
 
-			if( this.authenticationService.isMagazynUser() ||this.authenticationService.isWysylkaUser() ){
+			if( this.authenticationService.isMagazynUser() ||this.authenticationService.isWysylkaUser() || message.data == this.authenticationService.getCurrentUser() ){
+				this.refreshData();
 				this.messageServiceExt.addMessageWithTime('success', 'Informacja', 'Dodano nowe zamówienie(a)',15000);
 			}
 
-
-
 		});
+
+
+
+
 	}
 
 
@@ -689,45 +689,52 @@ export class OrderComponent implements OnInit {
 	updateSpecifiedOrderItemProgressOnWarehouseByAddValue(orderItemId: number, newStateValueToAddOnWarehouse: number){
 
 
+		if(newStateValueToAddOnWarehouse){
+			this.orderService.changeSpecifiedOrderItemProgressOnWarehouseByAddValue(orderItemId,newStateValueToAddOnWarehouse).subscribe(data =>{
+				this.messageServiceExt.addMessage('success', 'Status', 'Zmieniono ilość gotowych koszy');
+			},error => {
+			},() => {
+				this.editCurrentOrderStateDialog = false;
+				this.orderItemRowToEditState = new OrderItem();
+				this.refreshData();
+			} )
+		}
 
-		this.orderService.changeSpecifiedOrderItemProgressOnWarehouseByAddValue(orderItemId,newStateValueToAddOnWarehouse).subscribe(data =>{
-			this.messageServiceExt.addMessage('success', 'Status', 'Zmieniono ilość gotowych koszy');
-		},error => {
-		},() => {
-			this.editCurrentOrderStateDialog = false;
-			this.orderItemRowToEditState = new OrderItem();
-			this.refreshData();
-		} )
+
+
 
 	}
 
 	updateSpecifiedOrderItemProgressOnProductionByAddValue(orderItemId: number, newStateValueToAddOnWarehouse: number){
 
 
-
-		this.orderService.changeSpecifiedOrderItemProgressOnProductionByAddValue(orderItemId,newStateValueToAddOnWarehouse).subscribe(data =>{
-			this.messageServiceExt.addMessage('success', 'Status', 'Zmieniono ilość gotowych koszy');
-		},error => {
-		},() => {
-			this.editCurrentOrderStateDialog = false;
-			this.orderItemRowToEditState = new OrderItem();
-			this.refreshData();
-		} )
-
+		if(newStateValueToAddOnWarehouse) {
+			this.orderService.changeSpecifiedOrderItemProgressOnProductionByAddValue(orderItemId, newStateValueToAddOnWarehouse).subscribe(data => {
+				this.messageServiceExt.addMessage('success', 'Status', 'Zmieniono ilość gotowych koszy');
+			}, error => {
+			}, () => {
+				this.editCurrentOrderStateDialog = false;
+				this.orderItemRowToEditState = new OrderItem();
+				this.refreshData();
+			})
+		}
 	}
 
 	updateSpecifiedOrderItemProgressOnLogisticsByAddValue(orderItemId: number, newStateValueToAddOnLogistics: number){
 
+		if(newStateValueToAddOnLogistics) {
+			this.orderService.changeSpecifiedOrderItemProgressOnLogisticsByAddValue(orderItemId,newStateValueToAddOnLogistics).subscribe(data =>{
+				this.messageServiceExt.addMessage('success', 'Status', 'Zmieniono ilość gotowych koszy');
+			},error => {
+			},() => {
+				this.editCurrentOrderStateDialog = false;
+				this.orderItemRowToEditState = new OrderItem();
+				this.refreshData();
+			} )
+		}
 
 
-		this.orderService.changeSpecifiedOrderItemProgressOnLogisticsByAddValue(orderItemId,newStateValueToAddOnLogistics).subscribe(data =>{
-			this.messageServiceExt.addMessage('success', 'Status', 'Zmieniono ilość gotowych koszy');
-		},error => {
-		},() => {
-			this.editCurrentOrderStateDialog = false;
-			this.orderItemRowToEditState = new OrderItem();
-			this.refreshData();
-		} )
+
 
 	}
 

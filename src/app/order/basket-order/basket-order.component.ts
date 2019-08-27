@@ -20,6 +20,7 @@ import {StringUtils} from "../../string-utils";
 import {Supplier} from "../../model/supplier.model";
 import {SpinerService} from "../../spiner.service";
 import {AppConstans} from "../../constans";
+import {interval} from "rxjs";
 
 declare var jquery: any;
 declare var $: any;
@@ -106,9 +107,7 @@ export class BasketOrderComponent implements OnInit {
 			},
 		];
 		this.customer.company = null;
-		setTimeout(() => {
-			console.log(this.choseCompanyPanel);
-		}, 2000);
+		this.setBasketsListAutoRefresh();
 	}
 
 	ngAfterViewInit(): void {
@@ -128,8 +127,9 @@ export class BasketOrderComponent implements OnInit {
 	contextMenuSelected(event) {
 		this.selectedBasketOnContextMenu = event.data;
 	}
-
+//todo
 	addBasketToOrder(basket: Basket) {
+
 		if (basket.basketId == 206) {
 			this.messageServiceExt.addMessageWithTime('success', 'Uwaga', 'Dodano do zamówienia grawer, pamiętaj o wgraniu plików', 25000);
 		} //todo
@@ -144,7 +144,7 @@ export class BasketOrderComponent implements OnInit {
 			line.quantity = line.quantity + 1;
 		}
 		this.recalculate();
-		// this.recalculateTotalPlusMarkUp();
+
 	}
 
 	updateQuantity(basketLine: OrderItem, quantity: number) {
@@ -165,6 +165,12 @@ export class BasketOrderComponent implements OnInit {
 		} else {
 			return false
 		}
+	}
+
+	private setBasketsListAutoRefresh(){
+		interval(20000).subscribe(x => {
+			this.basketService.getBaskets().subscribe(data => this.baskets = data);
+		});
 	}
 
 	deleteProductLine(id: number) {

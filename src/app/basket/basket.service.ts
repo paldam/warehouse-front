@@ -86,6 +86,11 @@ export class BasketService {
             .map((response: Response) => response.json());
     }
 
+	getBasketsDto(): Observable<Basket[]> {
+		return this.http.get(this.baseUrl+`/basketsdto/`)
+			.map((response: Response) => response.json());
+	}
+
     getBasketsWithDeleted(): Observable<Basket[]> {
         return this.http.get(this.baseUrl+`/basketswithdeleted/`)
             .map((response: Response) => response.json());
