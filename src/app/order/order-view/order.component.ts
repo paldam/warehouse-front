@@ -20,7 +20,7 @@ import {OrderViewForProduction, RegularOrderView} from "../page-types";
 import * as XLSX from "xlsx";
 import {BasketItems} from "../../model/basket_items.model";
 import {OrderItem} from "../../model/order_item";
- import { interval } from 'rxjs';
+ import {interval, Subscription} from 'rxjs';
  import { map } from 'rxjs/operators'
  import {NotificationsService} from "../../nav-bars/top-nav/notification.service";
  import {ServerSideEventsService} from "../../server-side-events-service";
@@ -74,6 +74,7 @@ export class OrderComponent implements OnInit, OnDestroy {
 	public autoRefreshInfo: boolean = false;
 	public autoRefreshTimerInSec: number ;
 	public autoRefreshStopWatch: boolean = false;
+	public intervalsubscription: Subscription;
 	@ViewChild('onlyWithAttach') el: ElementRef;
 	@ViewChild('action_extention') action_extention: ElementRef;
 	@ViewChild('statusFilter') statusFilterEl: Dropdown;
@@ -92,7 +93,7 @@ export class OrderComponent implements OnInit, OnDestroy {
 
 	ngOnDestroy() {
 		this.serverSideEventsService.newOrderEventSource.close();
-		console.log("adasd");
+		this.intervalsubscription.unsubscribe();
 	}
 
 	ngOnInit() {
@@ -432,7 +433,7 @@ export class OrderComponent implements OnInit, OnDestroy {
 
 		let timeOut = setTimeOutInMinute * 1000 *60;
 
-		interval(timeOut).subscribe(x => {
+		this.intervalsubscription = interval(timeOut).subscribe(x => {
 			this.autoRefreshInfo = true;
 			this.autoRefreshCountDown();
 		});
@@ -778,7 +779,7 @@ export class OrderComponent implements OnInit, OnDestroy {
 
 
 	notAllowedStyle(): string {
-		if (!this.authenticationService.isAdmin()) {
+		if (!(this.authenticationService.isAdmin() || this.authenticationService.isBiuroUser())) {
 			return "not_allowed";
 		}
 	}
@@ -884,7 +885,12 @@ export class OrderComponent implements OnInit, OnDestroy {
 
 	printOrderBasketsProductsPdf() {
 		this.orderService.getOrderBasketsProductsPdf(this.selectedOrderToPrintBasketProducts.orderItems, this.selectedOrderToPrintBasketProducts.orderId).subscribe(res => {
+
+			if(this.authenticationService.isAdmin() || this.authenticationService.isProdukcjaUser()){
 				this.changeOrderStatusToInProgress(this.selectedOrderToPrintBasketProducts);
+			}
+
+
 				var fileURL = URL.createObjectURL(res);
 				window.open(fileURL);
 				this.pdialogBasketProductsPrint = false;
@@ -1088,7 +1094,7 @@ export class OrderComponent implements OnInit, OnDestroy {
 					}
 				},
 			];
-		}else if (this.authenticationService.isMagazynUser() || this.authenticationService.isWysylkaUser()) {
+		}else if (this.authenticationService.isMagazynUser() || this.authenticationService.isWysylkaUser()|| this.authenticationService.isBiuroUser()) {
 			this.items = [
 				{
 					label: 'Szybki podgląd zamówienia',

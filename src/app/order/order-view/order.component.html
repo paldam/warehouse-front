@@ -202,7 +202,13 @@
                                (click)="printProductListInBasketPdf(row.basket.basketId)"></i>
                         </td>
 
+                        <td *ngIf="authenticationService.isBiuroUser()">
+                            <span *ngIf="row.quantityFromSurplus > 0"><i class="fa fa-exclamation surplus total-ready-basket" aria-hidden="true" > Kosze z nadwyżki</i></span>
+                            <!--<span *ngIf="row.quantityFromSurplus == 0" class="total-ready-basket" >{{ row.stateOnWarehouse}} </span>-->
+                            <span *ngIf="row.quantityFromSurplus > 0" class="total-ready-basket surplus" > {{row.quantityFromSurplus}}</span>
+                            <span> / {{row.quantity}} </span>
 
+                        </td>
                         <td *ngIf="authenticationService.isMagazynUser()">
                             <i *ngIf="!isMagazynInputDisable(orders.orderStatus.orderStatusId,row.quantityFromSurplus)" class="fa fa-pencil"  aria-hidden="true" (click)="showEditCurrentOrderStateDialog(orders,row)"></i>
 
@@ -326,7 +332,7 @@
 
 
                             <span *ngIf="row.quantityFromSurplus > 0"><i class="fa fa-exclamation surplus total-ready-basket" aria-hidden="true" > Kosze z nadwyżki</i></span>
-                            <span *ngIf="row.quantityFromSurplus == 0" class="total-ready-basket" >{{ row.stateOnWarehouse}} </span>
+                            <!--<span *ngIf="row.quantityFromSurplus == 0" class="total-ready-basket" >{{ row.stateOnWarehouse}} </span>-->
                             <span *ngIf="row.quantityFromSurplus > 0" class="total-ready-basket surplus" > {{row.quantityFromSurplus}}</span>
                             <span> / {{row.quantity}} </span>
 

@@ -1,4 +1,4 @@
-import {Component, ElementRef, OnInit, ViewChild, ViewEncapsulation} from '@angular/core';
+import {Component, ElementRef, OnDestroy, OnInit, ViewChild, ViewEncapsulation} from '@angular/core';
 import {Basket} from '../../model/basket.model';
 import {OrderItem} from '../../model/order_item';
 import {BasketService} from '../../basket/basket.service';
@@ -20,7 +20,7 @@ import {StringUtils} from "../../string-utils";
 import {Supplier} from "../../model/supplier.model";
 import {SpinerService} from "../../spiner.service";
 import {AppConstans} from "../../constans";
-import {interval} from "rxjs";
+import {interval, Subscription} from "rxjs";
 
 declare var jquery: any;
 declare var $: any;
@@ -31,7 +31,7 @@ declare var $: any;
 	styleUrls: ['./basket-order.component.css'],
 	encapsulation: ViewEncapsulation.None
 })
-export class BasketOrderComponent implements OnInit {
+export class BasketOrderComponent implements OnInit, OnDestroy {
 	public selectedCompanyToMarge: Company [] = [];
 	public company: Company = {companyId: 0, companyName: "Klient indywidualny"};
 	public companyToPersist: Company = new Company();
@@ -71,6 +71,7 @@ export class BasketOrderComponent implements OnInit {
 	public isTextToCardVisible: boolean = false;
 	public selectedBasketOnContextMenu: Basket = new Basket();
 	@ViewChild('choseCompanyPanel') choseCompanyPanel: Panel;
+	public intervalsubscription: Subscription;
 	@ViewChild(FileUpload) fileUploadElement: FileUpload;
 	@ViewChild('zip_code') el: any;
 	@ViewChild('address2') storedCustomerAddressList: any;
@@ -108,6 +109,10 @@ export class BasketOrderComponent implements OnInit {
 		];
 		this.customer.company = null;
 		this.setBasketsListAutoRefresh();
+	}
+
+	ngOnDestroy(){
+		this.intervalsubscription.unsubscribe();
 	}
 
 	ngAfterViewInit(): void {
@@ -168,9 +173,10 @@ export class BasketOrderComponent implements OnInit {
 	}
 
 	private setBasketsListAutoRefresh(){
-		interval(20000).subscribe(x => {
+		this.intervalsubscription = interval(20000).subscribe(x => {
 			this.basketService.getBaskets().subscribe(data => this.baskets = data);
 		});
+
 	}
 
 	deleteProductLine(id: number) {
