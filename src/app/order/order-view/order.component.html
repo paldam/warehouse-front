@@ -469,7 +469,7 @@
 <div #action_extention  [hidden]="true" class="action_extention" [style.top.px]="actionExtentionPositionTop" [style.left.px]="actionExtentionPositionLeft">
     <div class="cont2">
         <i [ngClass]="notAllowedStyle()" class="fa fa-pencil-square-o fa-2x famargin2 action_extention_icon" aria-hidden="true"  title="Edytuj zamówienie" (click)="goToEditPage(selectedOrderFromRow.orderId)"></i>
-        <i *ngIf="authenticationService.isAdmin()" class="fa fa-trash fa-2x edit_icon famargin2 action_extention_icon" aria-hidden="true" title="Usuń zamówienie" (click)="ShowConfirmModal(selectedOrderFromRow)"></i>
+        <i *ngIf="authenticationService.isAdmin()" class="fa fa-trash fa-2x edit_icon famargin2 action_extention_icon" aria-hidden="true" title="Usuń zamówienie" (click)="showDeleteOrderPanel(selectedOrderFromRow)"></i>
         <i  class="fa fa-print fa-2x famargin2 action_extention_icon " aria-hidden="true" title="Drukuj zamówienie" (click)="printPdf(selectedOrderFromRow.orderId)" ></i>
         <i  class="fa fa-file-pdf-o fa-2x  famargin2 action_extention_icon" aria-hidden="true" title="Drukuj potwierdzenie odbioru" (click)="showPrintOrderDeliveryConfirmationWindows(selectedOrderFromRow.orderId)" ></i>
         <i  class="fa fa-file-text fa-2x famargin2 action_extention_icon" aria-hidden="true" title="Drukuj liste produktow" (click)=" printProductListPdf(selectedOrderFromRow.orderId)" ></i>
@@ -508,3 +508,43 @@
 
     <button class="bg-primary btn-cancel-refresh" (click)="stopAutoRefresh();hideAutoRefreshInfo()">Nie odświeżaj</button>
 </p-dialog>
+
+
+<p-dialog *ngIf="orderToDelete?.orderItems" header="Anuluj zamówienie / przywróć stan koszy" [(visible)]="deleteOrderPanelVisi" [width]="900"  [modal]="true">
+    <table class="d-table">
+        <colgroup>
+            <col span="1" style="width: 55%;">
+            <col span="1" style="width: 15%;">
+            <col span="1" style="width: 15%;">
+            <col span="1" style="width: 15%;">
+
+        </colgroup>
+        <thead>
+        <tr >
+            <th >Nazwa kosza</th>
+            <th >Suma koszy</th>
+            <th >W produktach</th>
+            <th >W koszach</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr *ngFor="let oi of orderToDelete.orderItems">
+            <td >{{oi.basket.basketName}}</td>
+            <td >
+                {{oi.quantity}}
+            </td>
+            <td >
+                <input type="number" class="form-control inp-state" aria-describedby="helpId" placeholder="" min="0" [max]="oi.quantity" [value]="oi.stateOnWarehouse" [(ngModel)]="oi.stateOnWarehouse">
+            </td>
+            <td >
+                <input type="number" class="form-control inp-state" aria-describedby="helpId" placeholder="" min="0" [max]="oi.quantity" [value]="oi.stateOnProduction" [(ngModel)]="oi.stateOnProduction">
+            </td>
+
+        </tr>
+
+        </tbody>
+    </table>
+
+    <button class="btn bg-primary pull-right" (click)="cancelOrder(orderToDelete)">Anuluj zamówienie</button>
+</p-dialog>
+

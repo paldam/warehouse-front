@@ -74,7 +74,9 @@ export class OrderComponent implements OnInit, OnDestroy {
 	public autoRefreshInfo: boolean = false;
 	public autoRefreshTimerInSec: number ;
 	public autoRefreshStopWatch: boolean = false;
+	public deleteOrderPanelVisi: boolean = false;
 	public intervalsubscription: Subscription;
+	public orderToDelete: Order;
 	@ViewChild('onlyWithAttach') el: ElementRef;
 	@ViewChild('action_extention') action_extention: ElementRef;
 	@ViewChild('statusFilter') statusFilterEl: Dropdown;
@@ -775,6 +777,35 @@ export class OrderComponent implements OnInit, OnDestroy {
 		)
 	}
 
+	showDeleteOrderPanel(order: Order) {
+		this.deleteOrderPanelVisi = true;
+		this.orderService.getOrder(order.orderId).subscribe(order => {
+				this.orderToDelete = order;
+			}, error1 => {
+			}, () => {
+			this.orderToDelete.orderItems.forEach(oi =>{
+				oi.stateOnWarehouse= oi.stateOnWarehouse - oi.stateOnProduction;
+			} )
+			}
+		);
+	}
+
+
+	cancelOrder(order: Order){
+
+		this.orderService.cancelOrder(order).subscribe(value => {
+
+		},error1 => {
+			this.messageServiceExt.addMessage('error', 'Status', 'Błąd');
+			this.deleteOrderPanelVisi = false;
+
+		},() => {
+			this.deleteOrderPanelVisi = false;
+			this.messageServiceExt.addMessage('success', 'Status', 'Anulowano zamówienie');
+			this.refreshData();
+		})
+	}
+
 
 
 
@@ -1147,7 +1178,7 @@ export class OrderComponent implements OnInit, OnDestroy {
 						},
 						// {label: 'wysłane', icon: 'pi pi-fw pi-plus', command: () => this.changeOrderStatus(2)},
 						// {label: 'zrealizowane', icon: 'pi pi-fw pi-plus', command: () => this.changeOrderStatus(5)},
-						 {label: 'Anulowane', icon: 'pi pi-fw pi-plus', command: () => this.changeOrderStatus(99)},
+						 {label: 'Anulowane', icon: 'pi pi-fw pi-plus', command: () => this.showDeleteOrderPanel(this.selectedOrderFromRow)},
 					]
 				},
 				{label: 'Pokaż załącznik(i)', icon: 'fa fa-paperclip', command: () => this.showAttachment()},

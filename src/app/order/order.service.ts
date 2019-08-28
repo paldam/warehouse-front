@@ -327,6 +327,10 @@ export class OrderService {
 
     }
 
+    cancelOrder(order : Order): Observable<Response> {
+		return this.http.post(this.baseUrl+`/order/cancel`,order)
+
+	}
 
 
 
