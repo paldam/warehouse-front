@@ -24,6 +24,7 @@ import {OrderItem} from "../../model/order_item";
  import { map } from 'rxjs/operators'
  import {NotificationsService} from "../../nav-bars/top-nav/notification.service";
  import {ServerSideEventsService} from "../../server-side-events-service";
+ import {Notification} from "../../model/notification";
 
 @Component({
 	selector: 'order',
@@ -77,6 +78,9 @@ export class OrderComponent implements OnInit, OnDestroy {
 	public deleteOrderPanelVisi: boolean = false;
 	public intervalsubscription: Subscription;
 	public orderToDelete: Order;
+	public showNotificationModal: boolean = false;
+	public notifications: Notification[] = [];
+	public notificationsTotal: number = 0;
 	@ViewChild('onlyWithAttach') el: ElementRef;
 	@ViewChild('action_extention') action_extention: ElementRef;
 	@ViewChild('statusFilter') statusFilterEl: Dropdown;
@@ -90,11 +94,17 @@ export class OrderComponent implements OnInit, OnDestroy {
 		this.setCurentPageType();
 		this.setSearchOptions();
 		this.setOrderData();
-		this.setNewOrderEventSource();
+		this.setEventSources();
 	}
+
+
+
+	
+
 
 	ngOnDestroy() {
 		this.serverSideEventsService.newOrderEventSource.close();
+		this.serverSideEventsService.orderCopyEventSource.close();
 		this.intervalsubscription.unsubscribe();
 	}
 
@@ -105,6 +115,8 @@ export class OrderComponent implements OnInit, OnDestroy {
 		this.setExportMenu();
 		this.setAutoRefresh(10);
 		this.notificationsService.checkNumberOfNotifications();
+
+
 
 
 	}
@@ -207,14 +219,30 @@ export class OrderComponent implements OnInit, OnDestroy {
 		}, 800);
 	}
 
-	setNewOrderEventSource() {
+	setEventSources() {
 		this.serverSideEventsService.renew();
-		this.serverSideEventsService.newOrderEventSource.addEventListener('message', message  => {
+		this.serverSideEventsService.newOrderEventSource.addEventListener('message', (message :any ) => {
 			this.refreshData();
 
 			if( this.authenticationService.isMagazynUser() ||this.authenticationService.isWysylkaUser() || message.data == this.authenticationService.getCurrentUser() ){
 				this.refreshData();
 				this.messageServiceExt.addMessageWithTime('success', 'Informacja', 'Dodano nowe zamówienie(a)',15000);
+			}
+
+		});
+
+
+		this.serverSideEventsService.renewOrderCopy();
+
+		this.serverSideEventsService.orderCopyEventSource.addEventListener('message', (message :any ) => {
+			
+
+			
+			
+			if( this.authenticationService.isProdukcjaUser() ||this.authenticationService.isMagazynUser() ||this.authenticationService.isWysylkaUser() || message.data == this.authenticationService.getCurrentUser() ){
+
+
+				this.notificationsService.checkNumberOfNotifications();
 			}
 
 		});
@@ -543,6 +571,17 @@ export class OrderComponent implements OnInit, OnDestroy {
 		});
 	}
 
+	getBadgeStyle(): string {
+		if (this.notificationsService.notificationsTotal == 0) {
+			return "badge"
+		} else if (this.notificationsService.notificationsTotal <= 9) {
+			return "badge1";
+		} else if (this.notificationsService.notificationsTotal > 9)
+			return "badge2";
+	}
+
+
+
 	refreshData() {
 		this.notificationsService.checkNumberOfNotifications();
 		let paginationPageTmp = this.datatable.first;
@@ -744,7 +783,6 @@ export class OrderComponent implements OnInit, OnDestroy {
 
 	 private expandRowAfterRefresh(){
 
-		 console.log("expandRowAfterRefresh");
 
 		let index = this.orders.findIndex(value => value.orderId == this.expandedRowOrderId);
 
@@ -756,6 +794,41 @@ export class OrderComponent implements OnInit, OnDestroy {
 
 	}
 
+	openRow(op: number, notifyId: number) {
+
+		this.notificationsService.showNotificationModal = false;
+
+		let index = this.orders.findIndex(value => value.orderId == op);
+				this.datatable.toggleRow(this.orders[index]);
+
+		this.orderService.markNotifyAsReaded(notifyId).subscribe(value => {
+
+		},error1 => {
+			this.notificationsService.checkNumberOfNotifications();
+		},() => {
+				this.notificationsService.checkNumberOfNotifications();
+
+		});
+
+
+
+	}
+
+
+	markReadedAll() {
+
+		this.orderService.markNotifyAsReaded(0).subscribe(value => {
+
+		},error1 => {
+			this.notificationsService.showNotificationModal = false;
+			this.notificationsService.checkNumberOfNotifications();
+		},() => {
+			this.notificationsService.showNotificationModal = false;
+			this.notificationsService.checkNumberOfNotifications();
+
+		});
+
+	}
 
 	printPdf(id: number) {
 		this.orderService.getPdf(id).subscribe(res => {
@@ -973,6 +1046,13 @@ export class OrderComponent implements OnInit, OnDestroy {
 		this.additionalInforamtionTmp = additonalInformationText;
 		this.information_extention.toggle(event);
 	}
+	lookupRowStyleClass(rowData: Notification): string {
+
+		return rowData.wasRead ? '' : 'notification-bold';
+
+
+
+	}
 
 	assignOrdersToSpecifiedProduction(productionId: number) {
 		let orderIds = [];
@@ -1125,7 +1205,7 @@ export class OrderComponent implements OnInit, OnDestroy {
 					}
 				},
 			];
-		}else if (this.authenticationService.isMagazynUser() || this.authenticationService.isWysylkaUser()|| this.authenticationService.isBiuroUser()) {
+		}else if (this.authenticationService.isMagazynUser() || this.authenticationService.isWysylkaUser()) {
 			this.items = [
 				{
 					label: 'Szybki podgląd zamówienia',
@@ -1150,6 +1230,40 @@ export class OrderComponent implements OnInit, OnDestroy {
 					icon: 'fa fa-file-pdf-o',
 					command: () => this.printMultipleDeliveryPdf()
 				},
+				{
+					label: 'Wydrukuj komplet ', icon: 'fa fa-window-restore', command: () => {
+						this.printMultipleDeliveryPdf();
+						this.printMultiplePdf();
+					}
+				},
+			];
+		}else if (this.authenticationService.isBiuroUser()) {
+			this.items = [
+				{
+					label: 'Szybki podgląd zamówienia',
+					icon: 'fa fa-search',
+					command: () => this.showOrderPreview(event)
+				},
+				// {
+				// 	label: 'Zmień status ', icon: 'fa fa-share',
+				// 	items: [
+				// 		{
+				// 			label: 'w trakcie realizacji',
+				// 			icon: 'pi pi-fw pi-plus',
+				// 			command: () => this.changeOrderStatus(this.ORDER_STATUS_W_TRAKCIE_REALIZACJI)
+				// 		},
+				// 		{label: 'nowe', icon: 'pi pi-fw pi-plus', command: () => this.changeOrderStatus(1)},
+				// 	]
+				// },
+				{label: 'Pokaż załącznik(i)', icon: 'fa fa-paperclip', command: () => this.showAttachment()},
+				{label: 'Wydrukuj', icon: 'fa fa-print', command: () => this.printMultiplePdf()},
+				{
+					label: 'Wydrukuj potwierdzenie',
+					icon: 'fa fa-file-pdf-o',
+					command: () => this.printMultipleDeliveryPdf()
+				},
+				{label: 'Duplikuj zamówienie', icon: 'fa fa-clone', command: () => this.router.navigate(["/orders/copy/" +this.selectedOrderFromRow.orderId])},
+
 				{
 					label: 'Wydrukuj komplet ', icon: 'fa fa-window-restore', command: () => {
 						this.printMultipleDeliveryPdf();

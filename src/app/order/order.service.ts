@@ -132,6 +132,13 @@ export class OrderService {
 				response.json());
 	}
 
+	markNotifyAsReaded(id: number): Observable<any[]>{
+		return this.http.get(this.baseUrl+`/notifications/markasreaded/${id}`)
+			.map((response: Response) =>
+				response.json());
+	}
+
+
 
 	assignOrdersToSpecifiedProduction(ordersIds :number[], productionId: number): Observable<Response> {
 		return this.http.post(this.baseUrl + `/order/assign_production?ordersIds=${ordersIds}&&productionId=${productionId}`,null)

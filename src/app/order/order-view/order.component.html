@@ -1,4 +1,13 @@
 
+<div *ngIf="authenticationService.isMagazynUser() ||authenticationService.isWysylkaUser() ||authenticationService.isProdukcjaUser()  " class="asd">
+    <a *ngIf="authenticationService.isLoggedIn()" class="notification">
+        <i (click)="notificationsService.showNotificationModalF()" class=" ica fa fa-envelope-open-o fa-3x" aria-hidden="true"></i>
+        <span [class]="getBadgeStyle()">{{notificationsService.notificationsTotal}}</span>
+
+    </a>
+</div>
+
+
 <button  *ngIf="this.isCurrentPageOrdersViewRedirectedFromBasketStatitis" (click)="backToRegularOrderView()" class="btn bg-primary" type="button"> Czyść </button>
 <button *ngIf="this.isCurrentPageOrdersViewRedirectedFromBasketStatitis" (click)="backToBasketStatistic()" class="btn bg-primary" type="button"> Powrót do statystyki koszy koszy </button>
 <div class="products_box">
@@ -510,8 +519,8 @@
 </p-dialog>
 
 
-<p-dialog *ngIf="orderToDelete?.orderItems" header="Anuluj zamówienie / przywróć stan koszy" [(visible)]="deleteOrderPanelVisi" [width]="900"  [modal]="true">
-    <table class="d-table">
+<p-dialog *ngIf="orderToDelete?.orderItems" header="Anuluj zamówienie / przywróć stan koszy" [(visible)]="deleteOrderPanelVisi" [width]="800"  [modal]="true">
+    <table class="d-table d-2">
         <colgroup>
             <col span="1" style="width: 55%;">
             <col span="1" style="width: 15%;">
@@ -548,3 +557,32 @@
     <button class="btn bg-primary pull-right" (click)="cancelOrder(orderToDelete)">Anuluj zamówienie</button>
 </p-dialog>
 
+
+
+<p-dialog  header="Powiadomienia" closeOnEscape="false" modal="true" width="1000" [(visible)]="notificationsService.showNotificationModal"  (onShow)="notificationsService.checkNumberOfNotifications()" >
+
+
+    <button class="btn all_ra" (click)="markReadedAll()">Przeczytano wszystkie</button>
+
+    <p-dataTable #dt [value]="notificationsService.notifications" [rows]="50" [paginator]="true" [rowStyleClass]="lookupRowStyleClass"> >
+
+
+
+        <p-column field="notificationDate" header="Data"  [style]="{'width':'200px'}">
+            <ng-template let-row="rowData" pTemplate="body"  >
+                {{row.notificationDate| date: 'dd/MM/yyyy HH:mm:ss'}}
+            </ng-template>
+        </p-column>
+
+        <p-column field="notificationText" header="Powiadomienie"  [style]="{'width':'500px'}"></p-column>
+        <p-column  header="Idź"  [style]="{'width':'130px','text-align':'center'}">
+            <ng-template let-row="rowData" pTemplate="body"   >
+                <button (click)="openRow(row.notiOrderContext,row.orderId)">Idz -></button>
+            </ng-template>
+        </p-column>
+
+
+    </p-dataTable>
+
+
+</p-dialog>

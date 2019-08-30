@@ -10,6 +10,7 @@ import {ProductSubType} from "../../model/product_sub_type";
 import {ProductsService} from "../../products/products.service";
 import {SpinerService} from "../../spiner.service";
 import {getPluralCategory} from "@angular/common/src/i18n/localization";
+import {MessageServiceExt} from "../../messages/messageServiceExt";
 
 
 @Component({
@@ -34,7 +35,7 @@ export class BasketComponent implements OnInit {
 	public selectedCategories : any[]=[];
 	public selectedCategoriesIds : number[]=[];
 
-	constructor(private spinerService :SpinerService ,private productsService :ProductsService, private basketService: BasketService, public router: Router, private confirmationService: ConfirmationService, private authenticationService: AuthenticationService) {
+	constructor(private messageServiceExt: MessageServiceExt,private spinerService :SpinerService ,private productsService :ProductsService, private basketService: BasketService, public router: Router, private confirmationService: ConfirmationService, public authenticationService: AuthenticationService) {
 		basketService.getBaskets().subscribe(data => this.baskets = data);
 		productsService.getProductsSubTypes().subscribe((data: ProductSubType[]) => {
 			data.forEach(value => {
@@ -76,11 +77,33 @@ export class BasketComponent implements OnInit {
 
 
 	refreshData() {
+
+		this.basketService.getBaskets().subscribe(data => {
+			this.baskets = data
+		}, error => {
+			this.spinerService.showSpinner = false;
+		}, () => {
+			this.spinerService.showSpinner = false;
+		});
+
 		this.loading = true;
 		setTimeout(() => {
 			this.clickOnlyDeletedBasketChceckBox();
 			this.loading = false;
 		}, 1000);
+	}
+
+	editBasketStock(basket: Basket) {
+		this.spinerService.showSpinner = true;
+		this.basketService.saveNewStockOfBasket(basket.basketId, basket.stock).subscribe(
+			value => {
+				this.refreshData();
+				this.messageServiceExt.addMessageWithTime('success', 'Status', 'Dokonano edycji stanu magazynowego koszy', 5000);
+			},
+			error => {
+				this.messageServiceExt.addMessageWithTime('error', 'Błąd', "Status: " + error._body + ' ', 5000);
+			}
+		)
 	}
 
 	ShowConfirmModal(basket: Basket) {

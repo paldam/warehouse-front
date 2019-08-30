@@ -24,6 +24,10 @@ body .ui-datatable .ui-datatable-data tr.ui-datatable-odd {
   background-color:#eaeaea;
 }
 
+body .ui-datatable .ui-datatable-data tr.notification-bold {
+  font-weight: bold;
+}
+
 .ui-datatable tbody > tr.ui-widget-content.ui-state-highlight {
   background-color: #d6f2c2;
   color:black;
