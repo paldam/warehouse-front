@@ -71,6 +71,12 @@ export class BasketService {
 				response.json());
 	}
 
+	getBasketsPage(page : number, size : number, text: string, sortField:string , sortingDirection: number, onlyArchival:boolean ,basketSeasonFilter : any[]): Observable<any[]>{
+		return this.http.get(this.baseUrl+`/basketpage?page=${page}&size=${size}&searchtext=${text}&orderBy=${sortField}&sortingDirection=${sortingDirection}&onlyArchival=${onlyArchival}&basketSeasonFilter=${basketSeasonFilter}`)
+			.map((response: Response) =>
+				response.json());
+	}
+
 
     getBasketImg(basketId: number): any {
         return this.http.get(this.baseUrl + `/basketimage/${basketId}`,{ responseType: ResponseContentType.Blob })

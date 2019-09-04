@@ -61,21 +61,22 @@
     <input #gb type="text" class="dd form-control search_input" pInputText size="50" placeholder="Szukaj"
            aria-describedby="basic-addon1">
 
-    <div class="onlyDeleted form-check">
-      <label class="form-check-label">
-        <input #onlyDeleted type="checkbox" class="form-check-input" name=""
-               (click)="clickOnlyDeletedBasketChceckBox()">
-        Tylko archiwalne
-      </label>
-    </div>
+    <!--<div class="onlyDeleted form-check">-->
+      <!--<label class="form-check-label">-->
+        <!--<input #onlyDeleted type="checkbox" class="form-check-input" name=""-->
+               <!--(click)="clickOnlyDeletedBasketChceckBox()">-->
+        <!--Tylko archiwalne-->
+      <!--</label>-->
+    <!--</div>-->
 
     <i class="fa fa-refresh pull-right refresh_icon fa-2x" aria-hidden="true" (click)="refreshData()"></i>
 
   </div>
 
-  <p-dataTable [value]="baskets" [rows]="50" [paginator]="true" [globalFilter]="gb" #dt
+  <p-dataTable [value]="baskets" [rows]="20" [paginator]="true" [globalFilter]="gb" #dt
                [loading]="loading" loadingIcon="fa-circle-o-notch" expandableRows="true" [paginator]="true" [pageLinks]="5" [rowsPerPageOptions]= paginatorValues
-               (onRowDblclick)="router.navigateByUrl('/basket/' + $event.data.basketId)" [editable]="this.authenticationService.isAdmin()" (onEditComplete)="editBasketStock($event.data)" >
+               (onRowDblclick)="router.navigateByUrl('/basket/' + $event.data.basketId)" [editable]="this.authenticationService.isAdmin()" (onEditComplete)="editBasketStock($event.data)"
+               [lazy]="true" (onLazyLoad)="loadBasketsLazy($event)" [totalRecords]="totalRecords"  >
     <p-column expander="true" header="Zawartość" styleClass="col-icon " [style]="{'width':'70px'}"></p-column>
 
     <p-column  header="lp."   [style]="{'width':'70px'}">
@@ -85,18 +86,20 @@
     </p-column>
 
 
-    <p-column field="basketName" header="Nazwa kosza" [sortable]="false"></p-column>
+    <p-column field="basketName" header="Nazwa kosza" [sortable]="true"></p-column>
     <p-column field="basketType.basketTypeName" header="Typ kosza" [sortable]="false" [style]="{'width':'120px'}" ></p-column>
 
 
-    <p-column field="basketSezon.basketSezonName" header="Sezon" [style]="{'width':'150px', 'text-align':'center'}" [filter]="true" filterMatchMode="equals" [sortable]="true" >
+    <p-column field="basketSezon.basketSezonName" header="Sezon" [style]="{'width':'150px', 'text-align':'center'}"
+              [filter]="true" filterMatchMode="equals" [sortable]="false">
 
-      <ng-template  let-col pTemplate="filter"  >
-        <p-multiSelect [filter]="false" [showToggleAll]="false" [options]="basketSeasonList" defaultLabel="Wszystkie" (onChange)="find($event,col.field);datatable.filter($event.value, col.field, 'in')"></p-multiSelect>
+      <ng-template let-col pTemplate="filter">
+        <p-multiSelect [filter]="false" [showToggleAll]="false" [options]="basketSeasonList" defaultLabel="Wszystkie"
+                       (onChange)="datatable.filter($event.value, col.field, 'in')"></p-multiSelect>
       </ng-template>
 
-      <ng-template let-row="rowData" pTemplate="body"  >
-          {{row.basketSezon.basketSezonName}}
+      <ng-template let-row="rowData" pTemplate="body">
+        {{row.basketSezon.basketSezonName}}
       </ng-template>
 
     </p-column>

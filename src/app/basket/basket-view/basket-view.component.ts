@@ -2,7 +2,7 @@ import {Component, ElementRef, OnInit, ViewChild, ViewEncapsulation} from '@angu
 import {BasketService} from "../basket.service";
 import {Router} from "@angular/router";
 import {Basket} from "../../model/basket.model";
-import {ConfirmationService, DataTable, OverlayPanel, SelectItem} from "primeng/primeng";
+import {ConfirmationService, DataTable, LazyLoadEvent, OverlayPanel, SelectItem} from "primeng/primeng";
 import {BasketType} from "../../model/basket_type.model";
 import {AuthenticationService} from "../../authentication.service";
 import {AppConstans} from "../../constans";
@@ -26,6 +26,7 @@ export class BasketComponent implements OnInit {
 	public gb: any;
 	public url: string = '';
 	public imageToShow: any;
+	public totalRecords: number;
 	public showImageFrame: boolean = false;
 	@ViewChild('onlyDeleted') el: ElementRef;
 	@ViewChild('op') overlayPanel: OverlayPanel;
@@ -37,7 +38,11 @@ export class BasketComponent implements OnInit {
 	public basketSeasonList: SelectItem[] = [];
 
 	constructor(private messageServiceExt: MessageServiceExt,private spinerService :SpinerService ,private productsService :ProductsService, private basketService: BasketService, public router: Router, private confirmationService: ConfirmationService, public authenticationService: AuthenticationService) {
-		basketService.getBaskets().subscribe(data => this.baskets = data);
+		basketService.getBasketsPage(1,20,"","basketName",-1,false,[]).subscribe((data :any) => {
+			this.baskets = data.basketsList;
+			this.totalRecords = data.totalRowsOfRequest;
+		});
+
 		this.getBasketSeasonForDataTableFilter();
 		productsService.getProductsSubTypes().subscribe((data: ProductSubType[]) => {
 			data.forEach(value => {
@@ -77,13 +82,6 @@ export class BasketComponent implements OnInit {
 
 
 
-find(event, col){
-
-		console.log(event.value);
-	console.log(col);
-
-}
-
 	editBasketStock(basket: Basket) {
 		this.spinerService.showSpinner = true;
 		this.basketService.saveNewStockOfBasket(basket.basketId, basket.stock).subscribe(
@@ -95,6 +93,38 @@ find(event, col){
 				this.messageServiceExt.addMessageWithTime('error', 'Błąd', "Status: " + error._body + ' ', 5000);
 			}
 		)
+	}
+
+	loadBasketsLazy(event: LazyLoadEvent) {
+		
+console.log(event);
+
+		this.loading = true;
+		let pageNumber = 0;
+		if (event.first) {
+			pageNumber = event.first / event.rows;
+		}
+		let sortField = event.sortField;
+
+		if (sortField == undefined) {
+			sortField = "basketName";
+		}
+
+		let basketSeasonList: any[] = [];
+		if (event.filters != undefined && event.filters["basketSezon.basketSezonName"] != undefined) {
+			basketSeasonList= event.filters["basketSezon.basketSezonName"].value;
+		}
+
+
+
+
+		this.basketService.getBasketsPage(pageNumber,event.rows,event.globalFilter,sortField,event.sortOrder,false,basketSeasonList).subscribe((data: any) => {
+				this.baskets = data.basketsList;
+				this.totalRecords = data.totalRowsOfRequest;
+			}, null
+			, () => {
+				this.loading = false;
+			})
 	}
 
 	ShowConfirmModal(basket: Basket) {
@@ -148,10 +178,13 @@ find(event, col){
 
 
 	clickOnlyDeletedBasketChceckBox() {
+		
+		console.log(this.datatable);
+
 		if (this.el.nativeElement.checked) {
-			this.basketService.getDeletedBaskets().subscribe(data => this.baskets = data);
+			this.basketService.getBasketsPage(1,50,"","basketName",1,true,[]).subscribe((data :any) => this.baskets = data.basketsList);
 		} else {
-			this.basketService.getBaskets().subscribe(data => this.baskets = data);
+			this.basketService.getBasketsPage(1,50,"","basketName",1,false,[]).subscribe((data :any) => this.baskets = data.basketsList);
 		}
 	}
 
@@ -167,7 +200,7 @@ find(event, col){
 	private getBasketSeasonForDataTableFilter() {
 		this.basketService.getBasketSeason().subscribe(data => {
 			data.forEach(value => {
-				this.basketSeasonList.push({label: '' + value.basketSezonName, value: value.basketSezonName});
+				this.basketSeasonList.push({label: '' + value.basketSezonName, value: value.basketSezonId});
 			});
 		});
 	}
