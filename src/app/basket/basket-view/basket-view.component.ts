@@ -76,22 +76,6 @@ export class BasketComponent implements OnInit {
 
 
 
-	refreshData() {
-
-		this.basketService.getBaskets().subscribe(data => {
-			this.baskets = data
-		}, error => {
-			this.spinerService.showSpinner = false;
-		}, () => {
-			this.spinerService.showSpinner = false;
-		});
-
-		this.loading = true;
-		setTimeout(() => {
-			this.clickOnlyDeletedBasketChceckBox();
-			this.loading = false;
-		}, 1000);
-	}
 
 	editBasketStock(basket: Basket) {
 		this.spinerService.showSpinner = true;
@@ -135,6 +119,26 @@ export class BasketComponent implements OnInit {
 			});
 		}
 	}
+
+
+	refreshData() {
+
+		// this.basketService.getBaskets().subscribe(data => {
+		// 	this.baskets = data
+		// }, error => {
+		// 	this.spinerService.showSpinner = false;
+		// }, () => {
+		// 	this.spinerService.showSpinner = false;
+		// });
+
+		this.loading = true;
+		setTimeout(() => {
+			this.clickOnlyDeletedBasketChceckBox();
+			this.loading = false;
+		}, 1000);
+	}
+
+
 
 	clickOnlyDeletedBasketChceckBox() {
 		if (this.el.nativeElement.checked) {
