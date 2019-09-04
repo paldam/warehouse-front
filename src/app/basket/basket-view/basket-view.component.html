@@ -87,7 +87,25 @@
 
     <p-column field="basketName" header="Nazwa kosza" [sortable]="false"></p-column>
     <p-column field="basketType.basketTypeName" header="Typ kosza" [sortable]="false" [style]="{'width':'120px'}" ></p-column>
-    <p-column field="season" header="Sezon" [sortable]="true" [filter]="true" filterPlaceholder="Szukaj" [style]="{'width':'120px'}"></p-column>
+
+
+    <p-column field="basketSezon.basketSezonName" header="Sezon" [style]="{'width':'150px', 'text-align':'center'}" [filter]="true" filterMatchMode="equals" [sortable]="true" >
+
+      <ng-template  let-col pTemplate="filter"  >
+        <p-multiSelect [filter]="false" [showToggleAll]="false" [options]="basketSeasonList" defaultLabel="Wszystkie" (onChange)="find($event,col.field);datatable.filter($event.value, col.field, 'in')"></p-multiSelect>
+      </ng-template>
+
+      <ng-template let-row="rowData" pTemplate="body"  >
+          {{row.basketSezon.basketSezonName}}
+      </ng-template>
+
+    </p-column>
+
+
+
+
+
+
     <p-column field="stock" header="Stan"  [editable]="true" [sortable]="true" [style]="{'width':'120px'}"></p-column>
 
     <p-column field="basketTotalPrice"  header="Cena kosza "  [sortable]="true" [style]="{'width':'120px'}">

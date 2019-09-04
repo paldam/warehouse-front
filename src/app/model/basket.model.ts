@@ -1,5 +1,6 @@
 import {BasketType} from './basket_type.model';
 import {BasketItems} from './basket_items.model';
+import {BasketSeason} from "./basket_season.model";
 
 export class Basket {
 	constructor(
@@ -12,7 +13,8 @@ export class Basket {
 		public isAlcoholic?: number,
 		public isAvailable?: number,
 		public isBasketImg?: number,
-		public stock?: number
+		public stock?: number,
+		public basketSeason?: BasketSeason,
 	) {
 	}
 }

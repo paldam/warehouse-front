@@ -5,6 +5,8 @@ import {Basket} from '../model/basket.model';
 import {BasketType} from '../model/basket_type.model';
 import {HttpService} from "../http-service";
 import {OrderItem} from "../model/order_item";
+import {OrderStatus} from "../model/OrderStatus";
+import {BasketSeason} from "../model/basket_season.model";
 
 @Injectable()
 export class BasketService {
@@ -63,6 +65,11 @@ export class BasketService {
 			.map((response: Response) => response.json());
 	}
 
+	getBasketSeason() :Observable<BasketSeason[]>{
+		return this.http.get(this.baseUrl+`/baskets_seasons`)
+			.map((response: Response) =>
+				response.json());
+	}
 
 
     getBasketImg(basketId: number): any {
