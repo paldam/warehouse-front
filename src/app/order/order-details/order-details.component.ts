@@ -142,7 +142,7 @@ export class OrderDetailsComponent implements OnInit {
 			this.totalAmount = res.orderTotalAmount / 100;
 			this.order.cod /= 100;
 			this.recalculate();
-			this.fileUploadElement.url = "http://www.kosze.ovh:8080/uploadfiles?orderId=" + this.orderId;
+			this.fileUploadElement.url = "http://www.kosze.waw.pl:8080/uploadfiles?orderId=" + this.orderId;
 			this.filtersLoaded = Promise.resolve(true);
 			this.weekOfYear = res.weekOfYear;
 			if (res.additionalSale == 1) {
@@ -349,7 +349,7 @@ export class OrderDetailsComponent implements OnInit {
 			});
 			if (this.isEditOrderType()) {
 				this.orderService.saveOrder(this.order).subscribe(data => {
-					this.fileUploadElement.url = "http://www.kosze.ovh:8080/uploadfiles?orderId=" + this.orderId;  // PrimeNg fileUpload component
+					this.fileUploadElement.url = "http://www.kosze.waw.pl:8080/uploadfiles?orderId=" + this.orderId;  // PrimeNg fileUpload component
 					this.fileUploadElement.upload();
 					setTimeout(() => {
 						this.router.navigateByUrl('/orders/all');
@@ -367,7 +367,7 @@ export class OrderDetailsComponent implements OnInit {
 					orderItem.stateOnLogistics = 0;
 				});
 				this.orderService.saveOrderFromCopy(this.order, this.originOrderIdCopy).subscribe(data => {
-					this.fileUploadElement.url = "http://www.kosze.ovh:8080/uploadfiles?orderId=" + this.orderId;  // PrimeNg fileUpload component
+					this.fileUploadElement.url = "http://www.kosze.waw.pl:8080/uploadfiles?orderId=" + this.orderId;  // PrimeNg fileUpload component
 					this.fileUploadElement.upload();
 					setTimeout(() => {
 						this.router.navigateByUrl('/orders/all');

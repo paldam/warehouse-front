@@ -8,8 +8,9 @@ import {ProductsService} from "../../products/products.service";
 import {Product} from "../../model/product.model";
 import {BasketItems} from "../../model/basket_items.model";
 import {NgForm} from '@angular/forms';
-import {FileUpload} from "primeng/primeng";
+import {FileUpload, SelectItem} from "primeng/primeng";
 import {MessageServiceExt} from "../../messages/messageServiceExt";
+import {BasketSeason} from "../../model/basket_season.model";
 
 @Component({
 	selector: 'app-gift-basket-edit',
@@ -29,15 +30,26 @@ export class GiftBasketEditComponent implements OnInit {
 	public productTmp: Product[] = [];
 	public fileToUpload: File = null;
 	public basketImege: any = null;
+	public basketSeasonSelectItemList: SelectItem[]=[];
+	public basketSeasonList: BasketSeason[]=[];
 	@ViewChild(FileUpload) fileUploadElement: FileUpload;
 
 	constructor(private productsService: ProductsService, private basketService: BasketService, private router: Router, activeRoute: ActivatedRoute, private messageServiceExt: MessageServiceExt) {
 
 		basketService.getBasket(activeRoute.snapshot.params["basketId"]).subscribe(data => {
 
+			console.log(data);
 			this.basket = data;
 			this.basketItems = data.basketItems;
 			this.basket.basketTotalPrice /= 100;
+		});
+
+		this.basketService.getBasketSeason().subscribe(data=> {
+			this.basketSeasonList = data;
+			this.basketSeasonList.forEach(value => {
+				this.basketSeasonSelectItemList.push({label: value.basketSezonName , value: value})
+			})
+
 		});
 
 		basketService.getBasketsTypes().subscribe(data => {
@@ -154,6 +166,9 @@ export class GiftBasketEditComponent implements OnInit {
 		this.formSubmitted = true;
 
 		if (this.isFormValid(form)) {
+			if(!this.basket.basketSezon){
+				this.basket.basketSezon = new BasketSeason(0) //todo
+			}
 			this.basket.basketItems = this.basketItems;
 			this.basket.basketTotalPrice *= 100;
 
@@ -194,6 +209,7 @@ export class GiftBasketEditComponent implements OnInit {
 	}
 
 	private performActionForBasketWhitoutNewImgAndImgInDb(form: NgForm) {
+
 		this.basketService.addBasket(this.basket).subscribe(data => {
 			},
 			error => {

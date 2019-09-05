@@ -7,8 +7,9 @@ import {BasketType} from '../../model/basket_type.model';
 import {BasketService} from '../basket.service';
 import {NgForm} from '@angular/forms';
 import {GiftBasketComponent} from '../basket-helper-list/gift-baskets.component';
-import {FileUpload} from "primeng/primeng";
+import {FileUpload, SelectItem} from "primeng/primeng";
 import {MessageServiceExt} from "../../messages/messageServiceExt";
+import {BasketSeason} from "../../model/basket_season.model";
 
 
 @Component({
@@ -31,6 +32,8 @@ export class ProductPickerComponent implements OnInit{
     public fileToUpload: File = null;
     public loading: boolean;
     public basketPatterPickDialogShow: boolean = false;
+	public basketSeasonSelectItemList: SelectItem[]=[];
+	public basketSeasonList: BasketSeason[]=[];
     public filtersLoaded: Promise<boolean>;
     public basketFile: any;
     @ViewChild(GiftBasketComponent) giftBasketComponent : GiftBasketComponent;
@@ -38,6 +41,17 @@ export class ProductPickerComponent implements OnInit{
 
     constructor(private productsService : ProductsService, private basketService :BasketService,private messageServiceExt: MessageServiceExt) {
         productsService.getProducts().subscribe(data=> this.products = data);
+
+
+        this.basketService.getBasketSeason().subscribe(data=> {
+            this.basketSeasonList = data;
+            this.basketSeasonList.forEach(value => {
+                this.basketSeasonSelectItemList.push({label: value.basketSezonName , value: value})
+            })
+
+		});
+
+
         basketService.getBasketsTypes().subscribe(data=>{
             this.basketTypes = data;
             this.basketTypes = this.basketTypes
@@ -46,6 +60,8 @@ export class ProductPickerComponent implements OnInit{
                 .filter(value => {return value.basketTypeId != 100 ;});
             this.filtersLoaded = Promise.resolve(true);
         });
+
+
 
     }
 
@@ -124,6 +140,11 @@ export class ProductPickerComponent implements OnInit{
             this.basket.basketTotalPrice *= 100;
             this.basket.isAlcoholic = 0;
             this.basket.isAvailable = 0;
+
+
+            if(!this.basket.basketSezon){
+				this.basket.basketSezon = new BasketSeason(0) //todo
+			}
 
 
 

@@ -85,10 +85,17 @@
                                 </ul>
                             </div>
 
-                            <div class="input-group">
-                                <input type="text" name="basketSeason" #basketSeason="ngModel" class="form-control"
-                                       size="50" aria-describedby="nameDesc" [(ngModel)]="basket.season">
-                                <span class="input-group-addon" id="nameDesc">Sezon</span>
+                            <div class="form-group">
+                                <small id="product_typeDesc" class="text-muted">Sezon</small>
+
+
+                                <p-listbox name="type_list" [style]="{ 'width':'400px'}" [listStyle]="{'max-height':'100px', 'width':'390px'}"
+                                           [options]="basketSeasonSelectItemList"
+                                           [(ngModel)]="basket.basketSezon" [filter]="true">
+
+
+                                </p-listbox>
+
                             </div>
 
 

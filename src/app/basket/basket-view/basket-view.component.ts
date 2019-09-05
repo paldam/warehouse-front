@@ -9,7 +9,6 @@ import {AppConstans} from "../../constans";
 import {ProductSubType} from "../../model/product_sub_type";
 import {ProductsService} from "../../products/products.service";
 import {SpinerService} from "../../spiner.service";
-import {getPluralCategory} from "@angular/common/src/i18n/localization";
 import {MessageServiceExt} from "../../messages/messageServiceExt";
 
 
@@ -58,6 +57,10 @@ export class BasketComponent implements OnInit {
 	}
 
 	getBasketWithFilter(){
+		this.datatable.lazy = false;
+
+
+
 		this.spinerService.showSpinner=true;
 
 		this.selectedCategories.forEach(value => {
@@ -86,18 +89,20 @@ export class BasketComponent implements OnInit {
 		this.spinerService.showSpinner = true;
 		this.basketService.saveNewStockOfBasket(basket.basketId, basket.stock).subscribe(
 			value => {
-				this.refreshData();
 				this.messageServiceExt.addMessageWithTime('success', 'Status', 'Dokonano edycji stanu magazynowego koszy', 5000);
+
 			},
 			error => {
 				this.messageServiceExt.addMessageWithTime('error', 'Błąd', "Status: " + error._body + ' ', 5000);
+				this.spinerService.showSpinner = false;
+			},() => {
+				this.spinerService.showSpinner = false;
 			}
 		)
 	}
 
 	loadBasketsLazy(event: LazyLoadEvent) {
-		
-console.log(event);
+
 
 		this.loading = true;
 		let pageNumber = 0;
@@ -159,6 +164,8 @@ console.log(event);
 
 
 	refreshData() {
+		this.datatable.lazy = true;
+
 
 		// this.basketService.getBaskets().subscribe(data => {
 		// 	this.baskets = data
@@ -178,14 +185,31 @@ console.log(event);
 
 
 	clickOnlyDeletedBasketChceckBox() {
-		
-		console.log(this.datatable);
+
 
 		if (this.el.nativeElement.checked) {
-			this.basketService.getBasketsPage(1,50,"","basketName",1,true,[]).subscribe((data :any) => this.baskets = data.basketsList);
+			this.basketService.getBasketsPage(1,20,"","basketName",-1,true,[]).subscribe((data :any) => {
+				this.baskets = data.basketsList;
+				this.totalRecords = data.totalRowsOfRequest;
+
+				setTimeout(() => {
+					this.datatable.totalRecords = data.totalRowsOfRequest;
+				}, 500);
+
+			});
 		} else {
-			this.basketService.getBasketsPage(1,50,"","basketName",1,false,[]).subscribe((data :any) => this.baskets = data.basketsList);
+			this.basketService.getBasketsPage(1,20,"","basketName",-1,false,[]).subscribe((data :any) => {
+				this.baskets = data.basketsList;
+				this.totalRecords = data.totalRowsOfRequest;
+				setTimeout(() => {
+					this.datatable.totalRecords = data.totalRowsOfRequest;
+				}, 500);
+			});
 		}
+
+		;
+
+
 	}
 
 	showBacketImg(event, basketId: number) {

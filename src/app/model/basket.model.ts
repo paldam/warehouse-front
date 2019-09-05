@@ -14,7 +14,7 @@ export class Basket {
 		public isAvailable?: number,
 		public isBasketImg?: number,
 		public stock?: number,
-		public basketSeason?: BasketSeason,
+		public basketSezon?: BasketSeason,
 	) {
 	}
 }

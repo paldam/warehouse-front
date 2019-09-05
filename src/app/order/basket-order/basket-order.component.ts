@@ -9,7 +9,7 @@ import {Order} from '../../model/order.model';
 import {OrderService} from '../order.service';
 import {DeliveryType} from '../../model/delivery_type.model';
 import {OrderStatus} from "../../model/OrderStatus";
-import {ConfirmationService, DataTable, FileUpload, Panel} from "primeng/primeng";
+import {ConfirmationService, DataTable, FileUpload, LazyLoadEvent, Panel, SelectItem} from "primeng/primeng";
 import {AuthenticationService, TOKEN, TOKEN_USER} from "../../authentication.service";
 import {ContextMenuModule, MenuItem, ContextMenu} from 'primeng/primeng';
 import {Router} from "@angular/router";
@@ -49,6 +49,7 @@ export class BasketOrderComponent implements OnInit, OnDestroy {
 	public formCompanyMargeForm: boolean = false;
 	public addAddressDialogShow: boolean = false;
 	public clickSelectcomapnyGuard: boolean = false;
+	public totalRecords: number;
 	public clickSelectCustomerGuard: boolean = false;
 	public deliveryTypes: DeliveryType[] = [];
 	public deliveryType: DeliveryType = new DeliveryType();
@@ -66,6 +67,7 @@ export class BasketOrderComponent implements OnInit, OnDestroy {
 	public pickCityByZipCodeWindow: boolean = false;
 	public weekOfYearTmp: Date;
 	public weekOfYear: number;
+	public basketSeasonList: SelectItem[] = [];
 	public isDeliveryDateValid: boolean = true;
 	public isDeliveryWeekDateValid: boolean = true;
 	public isTextToCardVisible: boolean = false;
@@ -78,15 +80,21 @@ export class BasketOrderComponent implements OnInit, OnDestroy {
 	@ViewChild('companyPickMode') selectPickcompany: ElementRef;
 	@ViewChild('globalfilter2') globalfilter2: ElementRef;
 	@ViewChild('dtCustomer') datatableCustomer: DataTable;
+	@ViewChild('dt') datatable: DataTable;
+
 	value: Date;
 	dateLang: any;
 
 	constructor(private router: Router, private basketService: BasketService, private spinerService: SpinerService, private  customerService: CustomerService,
 				private orderService: OrderService, private messageServiceExt: MessageServiceExt, private confirmationService: ConfirmationService, private authenticationService: AuthenticationService) {
-		basketService.getBaskets().subscribe(data => this.baskets = data);
 		customerService.getCustomers().subscribe(data => this.customers = data);
 		orderService.getCompany().subscribe(data => this.companyList = data);
 		orderService.getDeliveryTypes().subscribe(data => this.deliveryTypes = data);
+		this.getBasketSeasonForDataTableFilter();
+		basketService.getBasketsPage(1,20,"","basketName",-1,false,[]).subscribe((data :any) => {
+			this.baskets = data.basketsList;
+			this.totalRecords = data.totalRowsOfRequest;
+		});
 	}
 
 	ngOnInit() {
@@ -108,11 +116,11 @@ export class BasketOrderComponent implements OnInit, OnDestroy {
 			},
 		];
 		this.customer.company = null;
-		this.setBasketsListAutoRefresh();
+		//this.setBasketsListAutoRefresh();
 	}
 
 	ngOnDestroy(){
-		this.intervalsubscription.unsubscribe();
+		//this.intervalsubscription.unsubscribe();
 	}
 
 	ngAfterViewInit(): void {
@@ -125,8 +133,12 @@ export class BasketOrderComponent implements OnInit, OnDestroy {
 		})
 	}
 
-	test() {
-		console.log(this.selectedCompanyToMarge);
+	private getBasketSeasonForDataTableFilter() {
+		this.basketService.getBasketSeason().subscribe(data => {
+			data.forEach(value => {
+				this.basketSeasonList.push({label: '' + value.basketSezonName, value: value.basketSezonId});
+			});
+		});
 	}
 
 	contextMenuSelected(event) {
@@ -151,6 +163,38 @@ export class BasketOrderComponent implements OnInit, OnDestroy {
 		this.recalculate();
 
 	}
+
+	loadBasketsLazy(event: LazyLoadEvent) {
+
+
+		this.loading = true;
+		let pageNumber = 0;
+		if (event.first) {
+			pageNumber = event.first / event.rows;
+		}
+		let sortField = event.sortField;
+
+		if (sortField == undefined) {
+			sortField = "basketName";
+		}
+
+		let basketSeasonList: any[] = [];
+		if (event.filters != undefined && event.filters["basketSezon.basketSezonName"] != undefined) {
+			basketSeasonList= event.filters["basketSezon.basketSezonName"].value;
+		}
+
+
+
+
+		this.basketService.getBasketsPage(pageNumber,event.rows,event.globalFilter,sortField,event.sortOrder,false,basketSeasonList).subscribe((data: any) => {
+				this.baskets = data.basketsList;
+				this.totalRecords = data.totalRowsOfRequest;
+			}, null
+			, () => {
+				this.loading = false;
+			})
+	}
+
 
 	updateQuantity(basketLine: OrderItem, quantity: number) {
 		if (quantity == 0) {
@@ -379,7 +423,7 @@ export class BasketOrderComponent implements OnInit, OnDestroy {
 			this.orderService.saveOrder(this.order).subscribe(
 				data => {
 					this.generatedOrderId = data.orderId;
-					this.fileUploadElement.url = "http://www.kosze.ovh:8080/uploadfiles?orderId=" + data.orderId;
+					this.fileUploadElement.url = "http://www.kosze.waw.pl:8080/uploadfiles?orderId=" + data.orderId;
 					this.fileUploadElement.upload();
 					console.log(this.order);
 				},
