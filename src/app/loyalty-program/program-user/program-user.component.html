@@ -1,0 +1,77 @@
+
+<button class="btn btn-primary" (click)="showAddUserModal= true">Dodaj</button>
+
+<div  class="products_box">
+  <div class="input-group search_bar">
+    <span class="input-group-addon" id="basic-addon1">
+                 <i class="fa fa-search" aria-hidden="true"></i>
+            </span>
+    <input #gb type="text" class="form-control search_input" pInputText size="50" placeholder="Szukaj"aria-describedby="basic-addon1" >
+
+    <i class="fa fa-refresh pull-right refresh_icon fa-2x" aria-hidden="true" (click)="refreshData()"></i>
+  </div>
+
+  <p-dataTable [value]="programUsers" [rows]="50" [paginator]="true" [globalFilter]="gb" #dt
+               [loading]="loading" loadingIcon="fa-circle-o-notch"     [paginator]="true" [pageLinks]="5" [rowsPerPageOptions]= paginatorValues  >
+    <p-header>Użytkownicy programu lojalnościowego</p-header>
+
+
+    <p-column  header="lp."   [style]="{'width':'50px','text-align': 'center'}">
+      <ng-template let-row="rowData" let-i="rowIndex" pTemplate="rowexpansion">
+        {{i+1}}
+      </ng-template>
+    </p-column>
+
+    <p-column field="login" styleClass="name_col" header="Nazwa" [sortable]="true"></p-column>
+
+
+
+
+
+    <p-column field="points" styleClass="price_col" header="Cena"  [sortable]="true">
+      <ng-template let-row="rowData" pTemplate="body"  >
+        {{row.points }} pkt.
+      </ng-template>
+    </p-column>
+
+
+
+    <p-column  header="Akcja" styleClass="action_col">
+      <ng-template let-product="rowData" pTemplate="body" let-row="rowData" let-i="rowIndex" pTemplate="rowexpansion">
+        <!--<i *ngIf="authenticationService.isAdmin()" class="fa fa-pencil-square-o fa-2x" aria-hidden="true"  title="Edytuj produkt" (click)=""></i>-->
+        <!--<i *ngIf="authenticationService.isAdmin()" class="fa fa-trash fa-2x edit_icon" aria-hidden="true" title="Usuń produkt"  (click)=""></i>-->
+      </ng-template>
+    </p-column>
+
+
+  </p-dataTable>
+
+</div>
+
+
+
+<p-dialog  header="Dodaj użytkownika programu lojalnościowego" [contentStyle]="{'height': '450px'}" closeOnEscape="false" modal="true" width="600" height="520" [(visible)]="showAddUserModal"  >
+
+    <form id="addForm" novalidate #form="ngForm">
+
+      <div class="form-group">
+        <small id="nameDescript" class="text-muted">Login </small>
+        <input type="text" #login name="login" [(ngModel)]="userToAdd.login" #login="ngModel" class="form-control"  aria-describedby="nameDescript"  required >
+
+      </div>
+
+
+      <!--<div class="form-group">-->
+        <!--<small id="contactPersonDescript" class="text-muted">Email </small>-->
+        <!--<input type="text" #contact_person name="supplier_name" [(ngModel)]="userToAdd.e" #login="ngModel" class="form-control"   aria-describedby="contactPersonDescript"   >-->
+      <!--</div>-->
+
+
+
+      <button class="btn bg-primary " (click)="addUser(form)"> Zapisz</button>
+    </form>
+
+
+  </p-dialog>
+
+

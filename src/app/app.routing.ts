@@ -12,6 +12,7 @@ const routes: Routes = [
 	{path: '', loadChildren: './basket/basket.module#BasketModule', canActivate: [AuthGuard]},
 	{path: '', loadChildren: './notes/notes.module#NotesModule', canActivate: [AuthGuard]},
 	{path: '', loadChildren: './statistic/statistic.module#StatisticModule', canActivate: [AuthGuard]},
+	{path: '', loadChildren: './loyalty-program/program.module#ProgramModule', canActivate: [AuthGuard]},
 	{path: 'login', component: LoginComponent},
 	{path: 'admin', loadChildren: './admin/admin.module#AdminModule', canActivate: [AuthGuard]},
 	{path: 'maps', component: MapsComponent, canActivate: [AuthGuard]},

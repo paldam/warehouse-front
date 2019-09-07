@@ -86,6 +86,13 @@
                 <h3 [routerLink]="['/notes']"><span class="fa fa-window-restore"></span>Notatki</h3>
             </li>
 
+            <li routerLinkActive="active_main">
+                <h3 ><span class="fa fa-pencil"></span>Program lojalnościowy</h3>
+                <ul>
+                    <li *ngIf="isAdmin()" ><a [routerLink]="['/program/user']" routerLinkActive="active"[routerLinkActiveOptions]="{ exact: true }" >Użytkownicy</a></li>
+
+                </ul>
+            </li>
 
             <li *ngIf="isAdmin()">
                 <h3 [routerLink]="['/admin']"><span class="fa fa-user-circle-o"></span>Admin</h3>

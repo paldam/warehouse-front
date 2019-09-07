@@ -23,6 +23,12 @@ export class UserService {
                 response.json());
     }
 
+	getProgramUsers(): Observable<User[]> {
+		return this.http.get(this.baseUrl+`/program_users`)
+			.map((response: Response) =>
+				response.json());
+	}
+
     getAuthorities(): Observable<Authorities[]> {
         return this.http.get(this.baseUrl+`/users/authorities`)
             .map((response: Response) =>
@@ -39,6 +45,12 @@ export class UserService {
         return this.http.post(this.baseUrl+`/users/`, user)
         //.map((response: Response) => response.json());
     }
+
+	saveProgramUser(user: User): Observable<Response> {
+		return this.http.post(this.baseUrl+`/program_users/`, user)
+		//.map((response: Response) => response.json());
+	}
+
     public updateUser(user: User): Observable<Response> {
         return this.http.put(this.baseUrl+`/users/`, user)
         //.map((response: Response) => response.json());
