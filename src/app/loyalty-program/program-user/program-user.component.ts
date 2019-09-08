@@ -43,14 +43,16 @@ export class ProgramUserComponent implements OnInit {
 			this.userService.saveProgramUser(this.userToAdd).subscribe(
 				value => {
 					this.messageServiceExt.addMessageWithTime('success', 'Status', 'Dodano użytkownika', 5000);
+					this.showAddUserModal = false;
+					this.userToAdd = new User();
+					form.resetForm();
+					this.refreshData();
+					this.formSubmitted = false;
 				}, error => {
 					this.messageServiceExt.addMessageWithTime('error', 'Błąd', "Status: " + error._body + ' ', 5000);
 				});
-			this.formSubmitted = false;
-			this.userToAdd = new User();
-			this.showAddUserModal = false;
-			this.refreshData();
-			form.resetForm();
+
+
 		}
 	}
 }

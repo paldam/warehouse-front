@@ -22,8 +22,9 @@
       </ng-template>
     </p-column>
 
-    <p-column field="login" styleClass="name_col" header="Nazwa" [sortable]="true"></p-column>
-
+    <p-column field="login" styleClass="name_col" header="login" [sortable]="true"></p-column>
+    <p-column field="name" styleClass="name_col" header="name" [sortable]="true"></p-column>
+    <p-column field="email" styleClass="name_col" header="email" [sortable]="true"></p-column>
 
 
 
@@ -61,10 +62,15 @@
       </div>
 
 
-      <!--<div class="form-group">-->
-        <!--<small id="contactPersonDescript" class="text-muted">Email </small>-->
-        <!--<input type="text" #contact_person name="supplier_name" [(ngModel)]="userToAdd.e" #login="ngModel" class="form-control"   aria-describedby="contactPersonDescript"   >-->
-      <!--</div>-->
+      <div class="form-group">
+        <small id="PersonDescript" class="text-muted">Imię i nazwisko </small>
+        <input type="text" #name name="name" [(ngModel)]="userToAdd.name" #name="ngModel" class="form-control"   aria-describedby="emailDescript"   >
+      </div>
+
+      <div class="form-group">
+        <small id="contactPersonDescript" class="text-muted">Email </small>
+        <input type="text" #email name="email" [(ngModel)]="userToAdd.email" #login="ngModel" class="form-control"   aria-describedby="emailDescript"   >
+      </div>
 
 
 

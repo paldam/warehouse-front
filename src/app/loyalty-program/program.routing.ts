@@ -4,8 +4,10 @@ import {AuthGuard} from "../guard/auth.guard";
 
 import {ModuleWithProviders} from "@angular/core";
 import {ProgramUserComponent} from "./program-user/program-user.component";
+import {PrizeOrderComponent} from "./prize-order/prize-order.component";
 
 const routes: Routes = [
-	{path: 'program/user', component: ProgramUserComponent, canActivate: [AuthGuard]}
+	{path: 'program/user', component: ProgramUserComponent, canActivate: [AuthGuard]},
+	{path: 'program/orders', component: PrizeOrderComponent, canActivate: [AuthGuard]}
 ];
 export const routing: ModuleWithProviders = RouterModule.forChild(routes);

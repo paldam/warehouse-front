@@ -90,6 +90,8 @@
                 <h3 ><span class="fa fa-pencil"></span>Program lojalnościowy</h3>
                 <ul>
                     <li *ngIf="isAdmin()" ><a [routerLink]="['/program/user']" routerLinkActive="active"[routerLinkActiveOptions]="{ exact: true }" >Użytkownicy</a></li>
+                    <li *ngIf="isAdmin()" ><a [routerLink]="['/program/orders']" routerLinkActive="active"[routerLinkActiveOptions]="{ exact: true }" >Zamówienia</a></li>
+
 
                 </ul>
             </li>

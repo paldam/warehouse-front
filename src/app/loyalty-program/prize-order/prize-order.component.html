@@ -1,0 +1,138 @@
+
+<div  class="products_box">
+  <div class="input-group search_bar">
+    <span class="input-group-addon" id="basic-addon1">
+                 <i class="fa fa-search" aria-hidden="true"></i>
+            </span>
+    <input #gb type="text" class="form-control search_input" pInputText size="50" placeholder="Szukaj"aria-describedby="basic-addon1" >
+
+    <i class="fa fa-refresh pull-right refresh_icon fa-2x" aria-hidden="true" (click)="refreshData()"></i>
+  </div>
+
+  <p-dataTable [value]="orders" [rows]="50" [paginator]="true" [globalFilter]="gb" #dt
+               [loading]="loading" loadingIcon="fa-circle-o-notch" [contextMenu]="cm"  [paginator]="true" [pageLinks]="5" [rowsPerPageOptions]= paginatorValues
+               (onRowDblclick)="showOrderPreview($event)"
+               (onRowClick)="getOrderFromRow($event)"
+              (onContextMenuSelect)="OnSelectRow($event)">
+    <p-header>Zamówienia w</p-header>
+
+
+    <p-column  header="lp."   [style]="{'width':'50px','text-align': 'center'}">
+      <ng-template let-row="rowData" let-i="rowIndex" pTemplate="rowexpansion">
+        {{i+1}}
+      </ng-template>
+    </p-column>
+
+
+
+    <p-column field="orderDate" styleClass="name_col" header="login" [sortable]="true">
+      <ng-template let-row="rowData" pTemplate="body"  >
+        {{row.orderDate| date: 'dd/MM/yyyy HH:mm:ss'}}
+      </ng-template>
+
+    </p-column>
+
+
+    <p-column field="orderTotalAmount" styleClass="name_col" header="punkty" [sortable]="true">
+      <ng-template let-row="rowData" pTemplate="body"  >
+        {{row.orderTotalAmount}} pkt.
+      </ng-template>
+    </p-column>
+
+    <p-column field="address" styleClass="name_col" header="adres" [sortable]="true"></p-column>
+
+    <p-column field="prizeOrderStatus.orderStatusName" styleClass="name_col" header="status" [sortable]="true"></p-column>
+    <p-column field="user.login" styleClass="name_col" header="login" [sortable]="true"></p-column>
+    <p-column field="email" styleClass="name_col" header="email" [sortable]="true"></p-column>
+
+
+    <!--<p-column  header="Akcja" styleClass="action_col">-->
+      <!--<ng-template let-product="rowData" pTemplate="body" let-row="rowData" let-i="rowIndex" pTemplate="rowexpansion">-->
+        <!--&lt;!&ndash;<i *ngIf="authenticationService.isAdmin()" class="fa fa-pencil-square-o fa-2x" aria-hidden="true"  title="Edytuj produkt" (click)=""></i>&ndash;&gt;-->
+        <!--&lt;!&ndash;<i *ngIf="authenticationService.isAdmin()" class="fa fa-trash fa-2x edit_icon" aria-hidden="true" title="Usuń produkt"  (click)=""></i>&ndash;&gt;-->
+      <!--</ng-template>-->
+    <!--</p-column>-->
+
+
+  </p-dataTable>
+
+</div>
+
+
+<p-dialog *ngIf="isOrderToShowFetchComplete | async" header="Podgląd Zamówienia" closeOnEscape="false" modal="true" width="1000" [(visible)]="showOrderPreviewModal"  >
+
+
+  <p-panel header="Zamówienie">
+    <div class="row">
+      <div class="col-md-6">
+
+
+
+
+
+        <div class="form-group">
+          <small id="fv_numbereDescript" class="text-muted">login</small>
+          <input type="text" name="fv_number" #fv_number="ngModel" class="form-control" [readonly]="true"
+                 aria-describedby="delivery_dateDesc" [(ngModel)]="selectedToPrintOrder?.user.login">
+        </div>
+
+
+        <div class="form-group">
+          <div class="form-group">
+            <small id="order_date_Desc" class="text-muted">Data złożenia zamówienia</small>
+            <input name="order_date" class="form-control" size="300" aria-describedby="order_date_Desc"
+                   [readonly]="true" [value]="selectedToPrintOrder.orderDate| date: 'dd/MM/yyyy HH:mm:ss'">
+          </div>
+        </div>
+
+
+        <div class="form-group">
+          <small id="statusDesc" class="text-muted">Status zamówienia</small>
+          <input type="text" class="form-control" [(ngModel)]="selectedToPrintOrder.prizeOrderStatus.orderStatusName"
+                 name="status" [readonly]="true">
+
+        </div>
+
+
+        <div class="form-group">
+          <small id="total_Desc" class="text-muted">Wartość zamówienia</small>
+          <input type="text" name="total" class="form-control" size="300" aria-describedby="total_Desc"
+                 [readonly]="true" [(ngModel)]="selectedToPrintOrder.orderTotalAmount">
+        </div>
+
+
+
+
+
+
+
+        <p-panel header="Zawartość zamówienia">
+          <table>
+            <thead>
+            <tr>
+              <th>nazwa kosza</th>
+              <th class="col_quantity">ilość</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let orderItems of selectedToPrintOrder.prizeOrderItems">
+              <td scope="row">{{orderItems.prize.name}}</td>
+              <td><input type="number" class="form-control" name="" id="" aria-describedby="helpId"
+                         placeholder="" min="0" [value]="orderItems.quantity" [readonly]="true"></td>
+            </tr>
+            </tbody>
+          </table>
+        </p-panel>
+
+
+
+      </div>
+    </div>
+  </p-panel>
+
+</p-dialog>
+
+<p-contextMenu #cm [model]="menuItems"> </p-contextMenu>
+
+
+
