@@ -6,10 +6,11 @@ import {routing} from "./program.routing";
 import {UserService} from "../user.service";
 import { PrizeOrderComponent } from './prize-order/prize-order.component';
 import {PrizeService} from "./prize.service";
+import { PrizeComponent } from './prize/prize.component';
 
 
 @NgModule({
-	declarations: [ProgramUserComponent, PrizeOrderComponent],
+	declarations: [ProgramUserComponent, PrizeOrderComponent, PrizeComponent],
 	imports: [routing ,CommonModule,PrimeNgModule],
 	providers: [UserService,PrizeService]
 })

@@ -133,7 +133,7 @@ export class BasketExtAddComponentComponent implements OnInit {
 
   }
   pickBasket(basket : Basket) {
-    basket.basketItems.map(data=> data.basketItemsId = null)
+    basket.basketItems.map(data=> data.basketItemsId = null);
     this.basketItems = basket.basketItems;
     this.basketPatterPickDialogShow= false;
   }

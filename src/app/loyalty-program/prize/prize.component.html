@@ -1,0 +1,82 @@
+<button class="btn btn-primary" (click)="showAddPrizeModal= true">Dodaj</button>
+
+
+<p-dataTable [value]="prizeList" [rows]="50" [paginator]="true" [globalFilter]="gb" #dt
+             [loading]="loading" loadingIcon="fa-circle-o-notch"     [paginator]="true" [pageLinks]="5" [rowsPerPageOptions]= paginatorValues  >
+  <p-header>Nagrody</p-header>
+
+
+  <p-column  header="lp."   [style]="{'width':'50px','text-align': 'center'}">
+    <ng-template let-row="rowData" let-i="rowIndex" pTemplate="rowexpansion">
+      {{i+1}}
+    </ng-template>
+  </p-column>
+
+  <p-column field="name" styleClass="name_col" header="Nazwa" [sortable]="true"></p-column>
+  <p-column field="description" styleClass="name_col" header="Opis" [sortable]="true"></p-column>
+
+
+  <p-column field="pkt" styleClass="price_col" header="Punkty"  [sortable]="true">
+    <ng-template let-row="rowData" pTemplate="body"  >
+      {{row.pkt }} pkt.
+    </ng-template>
+  </p-column>
+
+  <p-column field="isAvailable" styleClass="name_col" header="Dostępność" [sortable]="true"></p-column>
+
+
+
+
+</p-dataTable>
+
+<p-dialog  header="Dodaj nagrodę" [contentStyle]="{'height': '450px'}" closeOnEscape="false" modal="true" width="600" height="520" [(visible)]="showAddPrizeModal"  >
+
+  <form id="prizeForm" novalidate #prizeForm="ngForm">
+
+    <div class="form-group">
+      <small id="nameDescript" class="text-muted">Nazwa</small>
+      <input type="text" #login name="login" [(ngModel)]="prizeToAdd.name" #name="ngModel" class="form-control"  aria-describedby="nameDescript"  required >
+
+    </div>
+
+    <div class="form-group">
+      <small id="descDescript" class="text-muted">Opis</small>
+      <input type="text" #login name="login" [(ngModel)]="prizeToAdd.description" #desc="ngModel" class="form-control"  aria-describedby="nameDescript"  required >
+
+    </div>
+
+    <div class="form-group">
+      <small id="pktDescript" class="text-muted">pkt</small>
+      <input type="text" #login name="login" [(ngModel)]="prizeToAdd.pkt" #desc="ngModel" class="form-control"  aria-describedby="pktDescript"  required >
+
+    </div>
+
+    <div class="form-group">
+      <label class="form-control-label" for="field_logo">Wgraj zdjęcie kosza (plik .jpg rozdzielczość kwadratow)</label>
+      <div>
+        <div *ngIf="prizeImgExt.prizeToAddImg" class="form-text text-danger clearfix">
+          <a class="pull-left" (click)="openFile(prizeImgExt.prizeToAddImgContentType, prizeImgExt.prizeToAddImg)">open</a><br>
+          <span class="pull-left">{{prizeImgExt.prizeToAddImgContentType}}, {{byteSize(prizeImgExt.prizeToAddImg)}}</span>
+          <button type="button" (click)="prizeImgExt.prizeToAddImg=null;prizeImgExt.prizeToAddImgContentType=null"
+                  class="btn btn-secondary btn-xs pull-right">
+            <i class="fa fa-trash" aria-hidden="true"></i>
+          </button>
+        </div>
+        <input type="file" id="file_logo" (change)="setFileData($event, prizeImgExt, 'prizeToAddImg', false)"/>
+      </div>
+      <input type="hidden" class="form-control" name="logo" id="field_logo" #logo="ngModel"
+             [(ngModel)]="prizeImgExt.prizeToAddImg" required/>
+      <!--<input type="hidden" class="form-control" name="logoContentType" id="field_logoContentType"-->
+      <!--[(ngModel)]="basket.basketImgContentType" />-->
+      <ul class="text-danger list-unstyled" *ngIf="formSubmitted">
+        <li  *ngIf="logo.errors?.required">To pole nie może być puste</li>
+      </ul>
+    </div>
+
+
+
+    <button class="btn bg-primary " (click)="savePrize(prizeForm)"> Zapisz</button>
+  </form>
+
+
+</p-dialog>
