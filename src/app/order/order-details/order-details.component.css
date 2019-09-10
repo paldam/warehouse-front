@@ -28,6 +28,9 @@ select.ng-dirty.ng-valid { border: 1px solid #6bc502 }
 button i {
     padding-right: 10px;
 }
+.customerpanels3 .ui-panel {
+    margin-top: 20px;
+}
 
 /*.ui-fieldset-legend{*/
     /*font-size: 25px;*/

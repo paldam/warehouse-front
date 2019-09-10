@@ -145,6 +145,11 @@ export class OrderService {
 
 	}
 
+	markAsReadyToProgram(ordersIds :number[],): Observable<Response> {
+		return this.http.post(this.baseUrl + `/order/mark_for_program?ordersIds=${ordersIds}`,null)
+
+	}
+
 	changeOrderStatus(orderId: number, statusId: number): Observable<Response>{
 		return this.http.post(this.baseUrl+`/order/status/${orderId}/${statusId}`,null)
 

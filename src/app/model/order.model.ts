@@ -23,7 +23,10 @@ export class Order{
         public address?: Address,
         public additionalSale?: number,
         public contactPerson?: string,
-        public productionUser?: User
+        public productionUser?: User,
+		public loyaltyUser?: User,
+		public allreadyComputedPoints? : boolean
+
     ){
 
     }

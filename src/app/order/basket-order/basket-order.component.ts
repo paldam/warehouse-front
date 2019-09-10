@@ -21,6 +21,8 @@ import {Supplier} from "../../model/supplier.model";
 import {SpinerService} from "../../spiner.service";
 import {AppConstans} from "../../constans";
 import {interval, Subscription} from "rxjs";
+import {UserService} from "../../user.service";
+import {User} from "../../model/user.model";
 
 declare var jquery: any;
 declare var $: any;
@@ -61,10 +63,12 @@ export class BasketOrderComponent implements OnInit, OnDestroy {
 	public customerPickDialogShow: boolean = false;
 	public companyPickDialogShow: boolean = false;
 	public mergeCompanyPanelShow: boolean = false;
+	public loyaltyProgramUserPanelShow: boolean = false;
 	public generatedOrderId: number = null; //id too print PDF
 	public items: MenuItem[];
 	public tmpCityList: any[] = [];
 	public pickCityByZipCodeWindow: boolean = false;
+	public programUsers: User []=[];
 	public weekOfYearTmp: Date;
 	public weekOfYear: number;
 	public basketSeasonList: SelectItem[] = [];
@@ -86,7 +90,7 @@ export class BasketOrderComponent implements OnInit, OnDestroy {
 	dateLang: any;
 
 	constructor(private router: Router, private basketService: BasketService, private spinerService: SpinerService, private  customerService: CustomerService,
-				private orderService: OrderService, private messageServiceExt: MessageServiceExt, private confirmationService: ConfirmationService, private authenticationService: AuthenticationService) {
+				private orderService: OrderService,private userService :UserService, private messageServiceExt: MessageServiceExt, private confirmationService: ConfirmationService, private authenticationService: AuthenticationService) {
 		customerService.getCustomers().subscribe(data => this.customers = data);
 		orderService.getCompany().subscribe(data => this.companyList = data);
 		orderService.getDeliveryTypes().subscribe(data => this.deliveryTypes = data);
@@ -215,7 +219,25 @@ export class BasketOrderComponent implements OnInit, OnDestroy {
 			return false
 		}
 	}
+	cleanLoyaltyUser(){
+		this.order.loyaltyUser = null;
+	}
 
+	pickLoyaltyUser(user){
+
+		this.order.loyaltyUser = user;
+		this.loyaltyProgramUserPanelShow = false;
+	}
+
+	prepereLoyaltyUserPanel(){
+
+		this.loyaltyProgramUserPanelShow = true;
+
+		this.userService.getProgramUsers().subscribe(data =>{
+			this.programUsers = data;
+		} )
+
+	}
 	private setBasketsListAutoRefresh(){
 		this.intervalsubscription = interval(20000).subscribe(x => {
 			this.basketService.getBaskets().subscribe(data => this.baskets = data);

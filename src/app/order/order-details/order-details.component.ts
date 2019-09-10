@@ -24,6 +24,8 @@ import {StringUtils} from "../../string-utils";
 import {SpinerService} from "../../spiner.service";
 import {RoutingState} from "../../routing-stage";
 import {AppConstans} from "../../constans";
+import {User} from "../../model/user.model";
+import {UserService} from "../../user.service";
 
 @Component({
 	selector: 'order-details',
@@ -34,6 +36,7 @@ import {AppConstans} from "../../constans";
 export class OrderDetailsComponent implements OnInit {
 	private static SECOND_IN_MILLIS: number = 1000;
 	public order: Order = new Order();
+	public programUsers: User []=[];
 	public originOrderIdCopy = null;
 	public orderItems: OrderItem[] = [];
 	public deliveryTypes: DeliveryType[] = [];
@@ -53,6 +56,7 @@ export class OrderDetailsComponent implements OnInit {
 	public companyPickDialogShow: boolean = false;
 	public clickSelectcomapnyGuard: boolean = false;
 	public clickSelectCustomerGuard: boolean = true;
+	public loyaltyProgramUserPanelShow: boolean = false;
 	public customers: Customer[] = [];
 	public customerPickDialogShow: boolean = false;
 	public fileList: File[] = [];
@@ -80,7 +84,7 @@ export class OrderDetailsComponent implements OnInit {
 	public orderAddress: Address = new Address();
 
 	constructor(private confirmationService: ConfirmationService, private fileSendService: FileSendService,
-				private basketService: BasketService, private orderService: OrderService, activeRoute: ActivatedRoute,
+				private basketService: BasketService,private userService :UserService, private orderService: OrderService, activeRoute: ActivatedRoute,
 				private  router: Router, private routingState: RoutingState, private spinerService: SpinerService, public authenticationService: AuthenticationService, private customerService: CustomerService, private messageServiceExt: MessageServiceExt) {
 		this.orderId = activeRoute.snapshot.params["id"];
 		this.originOrderIdCopy = activeRoute.snapshot.params["id"];
@@ -505,6 +509,25 @@ export class OrderDetailsComponent implements OnInit {
 		this.fileSendService.deleteFile(id).subscribe(res => {
 			this.refreshFileList();
 		})
+	}
+	cleanLoyaltyUser(){
+		this.order.loyaltyUser = null;
+	}
+
+	pickLoyaltyUser(user){
+
+		this.order.loyaltyUser = user;
+		this.loyaltyProgramUserPanelShow = false;
+	}
+
+	prepereLoyaltyUserPanel(){
+
+		this.loyaltyProgramUserPanelShow = true;
+
+		this.userService.getProgramUsers().subscribe(data =>{
+			this.programUsers = data;
+		} )
+
 	}
 
 	cleanAddress() {

@@ -536,6 +536,17 @@ export class OrderComponent implements OnInit, OnDestroy {
 		})
 	}
 
+	markAsReadyForLoyaltyProgram() {
+		let selectedOrdersIds: number[] = [];
+		this.selectedOrdersMultiselction.forEach(order => {
+			selectedOrdersIds.push(order.orderId);
+		})
+		this.orderService.getMultipleConfirmationPdf(selectedOrdersIds).subscribe(res => {
+			var fileURL = URL.createObjectURL(res);
+			window.open(fileURL);
+		})
+	}
+
 	//TODO
 	changeOrderStatus(orderStatus: number) {
 		if (this.authenticationService.isProdukcjaUser()) {
@@ -1054,6 +1065,25 @@ export class OrderComponent implements OnInit, OnDestroy {
 
 	}
 
+
+	markAsReadyToProgram() {
+		let orderIds = [];
+		this.selectedOrdersMultiselction.forEach(order => {
+			orderIds.push(order.orderId);
+		});
+		this.orderService.markAsReadyToProgram(orderIds).subscribe(
+			value => {
+				null
+			}, error => {
+				this.refreshData();
+			}, () => {
+				this.refreshData();
+				this.messageServiceExt.addMessage('success', 'Status', 'Przydzielono produkcję do zamówienia');
+			});
+	}
+
+
+
 	assignOrdersToSpecifiedProduction(productionId: number) {
 		let orderIds = [];
 		this.selectedOrdersMultiselction.forEach(order => {
@@ -1313,6 +1343,10 @@ export class OrderComponent implements OnInit, OnDestroy {
 					label: 'Przydziel zamówienie do ', icon: 'fa fa-hand-paper-o',
 					items: tmpLabel
 				},
+				// {
+				// 	label: 'Gotowe do programu loyalnosciowego ', icon: 'fa fa-hand-paper-o',
+				// 	icon: 'fa fa-search',  command: () => this.markAsReadyToProgram(),
+				// },
 			];
 		}
 	}

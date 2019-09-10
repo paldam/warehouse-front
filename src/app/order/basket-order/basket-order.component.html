@@ -18,6 +18,7 @@
                         <form id="OrderForm" novalidate #form="ngForm" (submit)="submitOrderForm(form,formAdidtional)">
 
 
+
                             <div class="cont">
                                 <p-panel  class="customerpanels" header="Firma">
 
@@ -76,6 +77,8 @@
                                     </div>
                                     </p-panel>
                             </div>
+
+
 
 
 
@@ -156,7 +159,30 @@
                     </p-panel>
                             </div>
 
-                    </form>
+
+                            <!--<button class="btn bg-primary" (click)="prepereLoyaltyUserPanel()" >Wybierz klienta programu loyalnościowego</button>-->
+                            <!--<span *ngIf="order.loyaltyUser">{{order.loyaltyUser.login}} {{order.loyaltyUser.email}}</span>-->
+
+                            <div class="cont">
+                                <p-panel  class="customerpanels3" header="Klient Programu Loyalnościowego">
+
+                                    <i  class="fa fa-address-card-o fa-2x pickfromdb " title="Wybierz firmę z bazy" (click)="prepereLoyaltyUserPanel()" aria-hidden="true"></i>
+                                    <i  *ngIf="this.company.companyName && !this.customer.customerId" title="Wyszczyć" class="fa fa-times fa-2x clean-company-icon2" aria-hidden="true" (click)="cleanLoyaltyUser()"></i>
+
+                                    <div  class="form-group">
+                                        <div class="input-group">
+                                            <input type="text" name="organization"  class="form-control"  [value]="order.loyaltyUser!=null ?  order.loyaltyUser?.login + ' | ' + order.loyaltyUser?.email : ''"  size="300" aria-describedby="organizationDesc"  [readonly]="true"   >
+                                            <span class="input-group-addon" id="organizationDesc">Klient</span>
+                                        </div>
+
+                                    </div>
+                                </p-panel>
+                            </div>
+
+
+
+
+                        </form>
                     </div>
                 </p-panel>
 
@@ -275,6 +301,12 @@
 
                                     </p-fileUpload>
                                 </div>
+
+
+
+
+
+
 
 
 
@@ -592,5 +624,24 @@
 
     </div>
 </p-dialog>
+
+
+    <p-dialog  header="Wybierz klienta programu loyalnościowego" closeOnEscape="false" modal="true" width="900" [(visible)]="loyaltyProgramUserPanelShow"  >
+        <div class="input-group search_bar">
+                <span class="input-group-addon" id="basic-addon1">
+                    <i class="fa fa-search" aria-hidden="true"></i>
+                </span>
+            <input #globalfilter4 type="text" class="form-control search_input"   pInputText size="50" placeholder="Szukaj"aria-describedby="basic-addon1">
+
+
+        </div>
+
+        <p-dataTable [value]="programUsers" [rows]="10" [paginator]="true"  #dt (onRowDblclick)="pickLoyaltyUser($event.data)"
+                     [loading]="loading" loadingIcon="fa-circle-o-notch" [globalFilter]="globalfilter4">
+            <p-column field="login" header="Login" [sortable]="true" [style]="{'width':'200px'}"></p-column>
+            <p-column field="name" header="Imię i nazwisko" [sortable]="true"  [style]="{'width':'200px'}"></p-column>
+            <p-column  field="email" header="email"  [style]="{'width':'200px'}"></p-column>
+        </p-dataTable>
+    </p-dialog>
 
 

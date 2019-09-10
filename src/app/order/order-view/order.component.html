@@ -63,8 +63,6 @@
         <p-column field="orderFvNumber" header="Numer FV"  [style]="{'width':'90px'}"></p-column>
 
 
-
-
         <p-column field="orderDate" header="Data zamówienia" [style]="{'width':'140px', 'text-align':'center'}" [sortable]="true" [filter]="this.isCurrentPageOrdersView" filterMatchMode="equals">
 
             <ng-template *ngIf="this.isCurrentPageOrdersView" let-col pTemplate="filter"  >
