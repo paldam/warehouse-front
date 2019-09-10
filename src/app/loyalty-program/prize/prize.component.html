@@ -1,8 +1,10 @@
 <button class="btn btn-primary" (click)="showAddPrizeModal= true">Dodaj</button>
 
 
-<p-dataTable [value]="prizeList" [rows]="50" [paginator]="true" [globalFilter]="gb" #dt
-             [loading]="loading" loadingIcon="fa-circle-o-notch"     [paginator]="true" [pageLinks]="5" [rowsPerPageOptions]= paginatorValues  >
+<p-dataTable [value]="prizeList" [rows]="20" [paginator]="true" [globalFilter]="gb" #dt
+             [loading]="loading" loadingIcon="fa-circle-o-notch"     [paginator]="true" [pageLinks]="5"
+             [rowsPerPageOptions]= paginatorValues [contextMenu]="cm"  (onRowClick)="getPrizeFromRow($event)"
+             (onContextMenuSelect)="getPrizeFromRow($event)" [editable]="true" (onEditComplete)="editPrize($event.data)"  >
   <p-header>Nagrody</p-header>
 
 
@@ -12,17 +14,32 @@
     </ng-template>
   </p-column>
 
-  <p-column field="name" styleClass="name_col" header="Nazwa" [sortable]="true"></p-column>
-  <p-column field="description" styleClass="name_col" header="Opis" [sortable]="true"></p-column>
+  <p-column field="name" [editable]="true" styleClass="name_col" header="Nazwa" [sortable]="true"></p-column>
+  <p-column field="description"[editable]="true"  styleClass="name_col" header="Opis" [sortable]="true"></p-column>
 
 
-  <p-column field="pkt" styleClass="price_col" header="Punkty"  [sortable]="true">
+  <p-column field="pkt"  [editable]="true" [style]="{'width':'90px','text-align': 'center'}" header="Punkty"  [sortable]="true">
     <ng-template let-row="rowData" pTemplate="body"  >
       {{row.pkt }} pkt.
     </ng-template>
   </p-column>
 
-  <p-column field="isAvailable" styleClass="name_col" header="Dostępność" [sortable]="true"></p-column>
+  <p-column field="available"  header="Dostępność"  [sortable]="true" [style]="{'width':'90px','text-align': 'center'}">>
+    <ng-template let-row="rowData" pTemplate="body">
+      <img *ngIf="row.available == true" class="state_img" src="/assets/images/yes.png" height="30" width="30">
+      <img *ngIf="row.available == false" class="state_img" src="/assets/images/no.png" height="30" width="30">
+
+    </ng-template>
+  </p-column>
+
+  <p-column  header="Zdjęcie"   [style]="{'width':'120px','text-align': 'center'}">
+    <ng-template let-row="rowData" pTemplate="body"  >
+      <img class="basket_icon" src="http://www.kosze.waw.pl/images/prizes/{{row.id}}.jpg" height="100" width="100" >
+    </ng-template>
+  </p-column>
+
+
+
 
 
 
@@ -52,25 +69,20 @@
     </div>
 
     <div class="form-group">
-      <label class="form-control-label" for="field_logo">Wgraj zdjęcie kosza (plik .jpg rozdzielczość kwadratow)</label>
-      <div>
-        <div *ngIf="prizeImgExt.prizeToAddImg" class="form-text text-danger clearfix">
-          <a class="pull-left" (click)="openFile(prizeImgExt.prizeToAddImgContentType, prizeImgExt.prizeToAddImg)">open</a><br>
-          <span class="pull-left">{{prizeImgExt.prizeToAddImgContentType}}, {{byteSize(prizeImgExt.prizeToAddImg)}}</span>
-          <button type="button" (click)="prizeImgExt.prizeToAddImg=null;prizeImgExt.prizeToAddImgContentType=null"
-                  class="btn btn-secondary btn-xs pull-right">
-            <i class="fa fa-trash" aria-hidden="true"></i>
-          </button>
-        </div>
-        <input type="file" id="file_logo" (change)="setFileData($event, prizeImgExt, 'prizeToAddImg', false)"/>
-      </div>
-      <input type="hidden" class="form-control" name="logo" id="field_logo" #logo="ngModel"
-             [(ngModel)]="prizeImgExt.prizeToAddImg" required/>
-      <!--<input type="hidden" class="form-control" name="logoContentType" id="field_logoContentType"-->
-      <!--[(ngModel)]="basket.basketImgContentType" />-->
-      <ul class="text-danger list-unstyled" *ngIf="formSubmitted">
-        <li  *ngIf="logo.errors?.required">To pole nie może być puste</li>
-      </ul>
+      <small id="add_file" class="text-muted">Wgraj zdjęcie </small>
+      <p-fileUpload name="files" accept=".jpg"
+                    invalidFileTypeMessageSummary="Niedozwolony typ pliku"
+                    invalidFileTypeMessageDetail="Dozwolone sa tylko pliki .jpg"
+                    maxFileSize="250000" [showUploadButton]="false"
+                    (onRemove)="enableUploadButton()" (onError)="enableUploadButton()"
+                    (onClear)="enableUploadButton()"
+                    invalidFileSizeMessageSummary="{0} - plik jest za duży"
+                    invalidFileSizeMessageDetail="rozmiar pliku może wynosić maksymalnie {0}"
+                    chooseLabel="Wybierz zdjęcie" uploadLabel="Wgraj" cancelLabel="Anuluj"
+                    (onSelect)="handleFileInput($event)">
+
+
+      </p-fileUpload>
     </div>
 
 
@@ -80,3 +92,34 @@
 
 
 </p-dialog>
+
+
+<p-dialog  header="Zmień zdjęcie" [contentStyle]="{'height': '450px'}" closeOnEscape="false" modal="true" width="600" height="520" [(visible)]="showChangeImgModal"  >
+
+  <form id="editImgForm" novalidate #editImgForm="ngForm">
+    <div class="form-group">
+      <small id="add_file2" class="text-muted">Wgraj zdjęcie </small>
+      <p-fileUpload #fileupl name="fileupl" accept=".jpg"
+                    invalidFileTypeMessageSummary="Niedozwolony typ pliku"
+                    invalidFileTypeMessageDetail="Dozwolone sa tylko pliki .jpg"
+                    maxFileSize="250000" [showUploadButton]="false"
+                    (onRemove)="enableUploadButton()" (onError)="enableUploadButton()"
+                    (onClear)="enableUploadButton()"
+                    invalidFileSizeMessageSummary="{0} - plik jest za duży"
+                    invalidFileSizeMessageDetail="rozmiar pliku może wynosić maksymalnie {0}"
+                    chooseLabel="Wybierz zdjęcie" uploadLabel="Wgraj" cancelLabel="Anuluj"
+                    (onSelect)="handleFileInputForAddImg($event)">
+
+
+      </p-fileUpload>
+    </div>
+
+
+
+    <button class="btn bg-primary " (click)="editPrizeImg(editImgForm)"> Zapisz</button>
+  </form>
+
+
+</p-dialog>
+
+<p-contextMenu #cm [model]="menuItems"> </p-contextMenu>

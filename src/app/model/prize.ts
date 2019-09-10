@@ -4,8 +4,7 @@ export class Prize {
         public name?: string,
         public description?: string,
         public pkt?: number,
-        public isAvailable?: boolean,
-        public imageLink?: string,
+        public available?: boolean
 
     ){
     }

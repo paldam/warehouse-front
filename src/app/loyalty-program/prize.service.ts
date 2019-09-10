@@ -7,6 +7,7 @@ import {Injectable} from "@angular/core";
 import {Order} from "../model/order.model";
 import {Prize} from "../model/prize";
 import {BasketExt} from "../model/BasketExt";
+import {Supplier} from "../model/supplier.model";
 
 @Injectable()
 export class PrizeService {
@@ -33,21 +34,29 @@ export class PrizeService {
 		return this.http.post(this.baseUrl + `/prize/order/status/${orderId}/${statusId}`, null)
 	}
 
+	changePrizeStatus(prizeId: number, isAve: boolean): Observable<Response> {
+		return this.http.post(this.baseUrl + `/prize/status/${prizeId}/${isAve}`, null)
+	}
+
 	getPrize() {
 		return this.http.get<Prize[]>(this.baseUrl + `/prize/prizelist`)
 			.map((response: Response) =>
 				response.json());
 	}
 
-	savePrize(prize: Prize, imgToUpload: any): Observable<Response> {
-		var parts = [
-			new Blob([imgToUpload], {type: 'image/jpeg'}),
-			' Same way as you do with blob',
-			new Uint16Array([33])
-		];
-		let f: File = new File(parts, "sds");
+	savePrizeNoImg(prize: Prize): Observable<Response> {
+		return this.http.post(this.baseUrl+`/prize/add/noimg`, prize)
+		//.map((response: Response) => response.json());
+	}
+
+	savePrize(prize: Prize, imgToUpload: File): Observable<Response> {
+
 		const formData: FormData = new FormData();
-		formData.append('prizeimage', f);
+		formData.append('prizeimage', imgToUpload, imgToUpload.name);
+
+
+		console.log(prize);
+		
 		const blobOverrides = new Blob([JSON.stringify(prize)], {
 			type: 'application/json',
 		});
@@ -55,4 +64,20 @@ export class PrizeService {
 		return this.http.post(this.baseUrl + `/prize/add`, formData)
 			.map((response: Response) => response.json());
 	}
+
+	editPrize(prize: Prize, imgToUpload: File): Observable<Response> {
+
+		const formData: FormData = new FormData();
+		formData.append('prizeimage', imgToUpload, imgToUpload.name);
+
+
+
+		const blobOverrides = new Blob([JSON.stringify(prize)], {
+			type: 'application/json',
+		});
+		formData.append('prizeobject', blobOverrides);
+		return this.http.post(this.baseUrl + `/prize/editimage`, formData)
+			.map((response: Response) => response.json());
+	}
+
 }
