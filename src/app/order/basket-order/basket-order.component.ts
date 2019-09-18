@@ -120,11 +120,11 @@ export class BasketOrderComponent implements OnInit, OnDestroy {
 			},
 		];
 		this.customer.company = null;
-		//this.setBasketsListAutoRefresh();
+		this.setBasketsListAutoRefresh();
 	}
 
 	ngOnDestroy(){
-		//this.intervalsubscription.unsubscribe();
+		this.intervalsubscription.unsubscribe();
 	}
 
 	ngAfterViewInit(): void {

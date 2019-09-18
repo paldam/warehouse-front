@@ -27,8 +27,10 @@
         <!--<p-column field="supplier.supplierName" styleClass="deliver_col" header="Dostawca"  [sortable]="true" ></p-column>-->
 
 
-
-    <p-column field="suppliers" header="Dostawca" styleClass="deliver_col" >
+    <p-column field="suppliers" header="Dostawca" [filter]="true" filterMatchMode="inCollection" [style]="{'width':'220px'}">
+        <ng-template pTemplate="filter" let-col>
+            <p-dropdown [filter]="true" [options]="suppliers" placeholder="Wszyscy"  [style]="{'width':'100%'}" (onChange)="dataTable.filter($event.value,col.field,col.filterMatchMode)" styleClass="ui-column-filter"></p-dropdown>
+        </ng-template>
         <ng-template  let-item="rowData"   pTemplate="body">
             <tr *ngFor="let supplier of item.suppliers">  {{supplier.supplierName}}  </tr>
         </ng-template>
@@ -37,9 +39,10 @@
 
 
 
-        <p-column field="productSubType.subTypeName" styleClass="type_col" [filter]="true" header="Typ produktu" filterMatchMode="equals" [sortable]="true" >
+
+        <p-column field="productSubType.subTypeName" styleClass="type_col" [filter]="true" header="Typ produktu" filterMatchMode="equals" [sortable]="true" [style]="{'width':'220px'}">
             <ng-template  let-col pTemplate="filter"  >
-                <p-multiSelect  [filter]="false" [showToggleAll]="false" [options]="productsType" defaultLabel="Wszystkie" (onChange)="dt.filter($event.value, col.field, 'in')"></p-multiSelect>
+                <p-multiSelect  [filter]="true" [showToggleAll]="false" [options]="productsType" defaultLabel="Wszystkie" (onChange)="dt.filter($event.value, col.field, 'in')"></p-multiSelect>
             </ng-template>
 
             <ng-template let-row="rowData" pTemplate="body"  >
@@ -95,7 +98,6 @@
 
 </div>
 
-Liczba sprzedanych koszy
 
 <p-confirmDialog header="Usuwanie produktu" icon="fa fa-question-circle" width="425"></p-confirmDialog>
 

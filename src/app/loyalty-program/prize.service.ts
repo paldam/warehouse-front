@@ -8,6 +8,7 @@ import {Order} from "../model/order.model";
 import {Prize} from "../model/prize";
 import {BasketExt} from "../model/BasketExt";
 import {Supplier} from "../model/supplier.model";
+import {PointScheme} from "../model/point-scheme.model";
 
 @Injectable()
 export class PrizeService {
@@ -39,9 +40,20 @@ export class PrizeService {
 	}
 
 	getPrize() {
-		return this.http.get<Prize[]>(this.baseUrl + `/prize/prizelist`)
+		return this.http.get(this.baseUrl + `/prize/prizelist`)
 			.map((response: Response) =>
 				response.json());
+	}
+
+
+	getPointScheme() {
+		return this.http.get(this.baseUrl + `/prize/pointscheme`)
+			.map((response: Response) =>
+				response.json());
+	}
+	savePointScheme(pointScheme: PointScheme): Observable<Response> {
+		return this.http.post(this.baseUrl+`/prize/pointscheme/add`, pointScheme)
+		//.map((response: Response) => response.json());
 	}
 
 	savePrizeNoImg(prize: Prize): Observable<Response> {

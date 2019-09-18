@@ -55,6 +55,9 @@ export class ProductEditFormComponent implements OnInit {
 
         if (form.valid && this.selectedSuppliersToAddEdit.length > 0 && this.product.productSubType) {
 			this.product.suppliers = this.selectedSuppliersToAddEdit;
+			if(!this.product.price){
+				this.product.price = 0;
+			}
             this.product.price= this.productPrice*100;
             this.productsService.saveProduct(this.product).subscribe(
                 order => {

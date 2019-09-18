@@ -20,7 +20,15 @@
       <input type="text" [(ngModel)]="priceMax" pInputText placeholder="Cena do">
     </div>
 
+    <div class="onlyDeleted form-check">
+      <label class="form-check-label">
+        <input #filterByProductsPrize type="checkbox" class="form-check-input" name="">
+        Szukaj po cenie produktów
+      </label>
+    </div>
   </div>
+
+
 
 
 
@@ -94,7 +102,7 @@
               [filter]="true" filterMatchMode="equals" [sortable]="false">
 
       <ng-template let-col pTemplate="filter">
-        <p-multiSelect [filter]="false" [showToggleAll]="false" [options]="basketSeasonList" defaultLabel="Wszystkie"
+        <p-multiSelect [filter]="true" [showToggleAll]="false" [options]="basketSeasonList" defaultLabel="Wszystkie"
                        (onChange)="datatable.filter($event.value, col.field, 'in')"></p-multiSelect>
       </ng-template>
 
@@ -113,12 +121,16 @@
 
     <p-column field="basketTotalPrice"  header="Cena kosza "  [sortable]="true" [style]="{'width':'120px'}">
 
-      <ng-template  let-col pTemplate="filter"  >
-        <p-multiSelect [filter]="false" [showToggleAll]="false" [options]="orderStatusList" defaultLabel="Wszystkie" (onChange)="datatable.filter($event.value, col.field, 'in')"></p-multiSelect>
-      </ng-template>
-
       <ng-template let-row="rowData" pTemplate="body">
         {{row.basketTotalPrice/100| number : '1.2-2'}} zł.
+      </ng-template>
+    </p-column>
+
+
+    <p-column field="basketProductsPrice"  header="Cena kosza "  [sortable]="true" [style]="{'width':'120px'}">
+
+      <ng-template let-row="rowData" pTemplate="body">
+        {{row.basketProductsPrice/100| number : '1.2-2'}} zł.
       </ng-template>
     </p-column>
 

@@ -94,7 +94,6 @@ export class OrderComponent implements OnInit, OnDestroy {
 		this.setCurentPageType();
 		this.setSearchOptions();
 		this.setOrderData();
-		this.setEventSources();
 	}
 
 
@@ -115,6 +114,10 @@ export class OrderComponent implements OnInit, OnDestroy {
 		this.setExportMenu();
 		this.setAutoRefresh(10);
 		this.notificationsService.checkNumberOfNotifications();
+		setTimeout(() => {
+			this.setEventSources();    
+		}, 1000);
+
 
 
 

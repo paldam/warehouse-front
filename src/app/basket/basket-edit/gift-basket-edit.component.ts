@@ -169,6 +169,8 @@ export class GiftBasketEditComponent implements OnInit {
 			if(!this.basket.basketSezon){
 				this.basket.basketSezon = new BasketSeason(0) //todo
 			}
+			this.basket.basketProductsPrice = this.total;
+
 			this.basket.basketItems = this.basketItems;
 			this.basket.basketTotalPrice *= 100;
 

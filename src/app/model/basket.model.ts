@@ -9,6 +9,7 @@ export class Basket {
 		public basketType?: BasketType,
 		public basketItems?: BasketItems[],
 		public basketTotalPrice?: number,
+		public basketProductsPrice?: number,
 		public season?: string,
 		public isAlcoholic?: number,
 		public isAvailable?: number,

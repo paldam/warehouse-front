@@ -7,9 +7,11 @@ import {BasketType} from '../../model/basket_type.model';
 import {BasketService} from '../basket.service';
 import {NgForm} from '@angular/forms';
 import {GiftBasketComponent} from '../basket-helper-list/gift-baskets.component';
-import {FileUpload, SelectItem} from "primeng/primeng";
+import {DataTable, FileUpload, SelectItem} from "primeng/primeng";
 import {MessageServiceExt} from "../../messages/messageServiceExt";
 import {BasketSeason} from "../../model/basket_season.model";
+import {Supplier} from "../../model/supplier.model";
+import {ProductSubType} from "../../model/product_sub_type";
 
 
 @Component({
@@ -33,8 +35,12 @@ export class ProductPickerComponent implements OnInit{
     public loading: boolean;
     public basketPatterPickDialogShow: boolean = false;
 	public basketSeasonSelectItemList: SelectItem[]=[];
+	public productsType: SelectItem[] = [];
+	public suppliers: SelectItem[] = [];
 	public basketSeasonList: BasketSeason[]=[];
     public filtersLoaded: Promise<boolean>;
+    public suppliersList : Supplier[]=[];
+	@ViewChild('dt') dataTable: DataTable;
     public basketFile: any;
     @ViewChild(GiftBasketComponent) giftBasketComponent : GiftBasketComponent;
     @ViewChild(FileUpload) fileUploadElement: FileUpload;
@@ -51,6 +57,22 @@ export class ProductPickerComponent implements OnInit{
 
 		});
 
+		productsService.getProductsSubTypes().subscribe((data: ProductSubType[]) => {
+			data.forEach(value => {
+				this.productsType.push({label: '' + value.subTypeName + '('+ value.productType.typeName +')', value: value.subTypeName});
+
+			});
+			productsService.getSuppliers().subscribe(data=> {
+
+				this.suppliers.push({label: '-- Wszyscy Dostawcy --', value: null});
+				data.forEach(data => {
+					this.suppliers.push({label: data.supplierName, value: data.supplierId});
+				})
+			});
+
+
+		});
+
 
         basketService.getBasketsTypes().subscribe(data=>{
             this.basketTypes = data;
@@ -63,16 +85,40 @@ export class ProductPickerComponent implements OnInit{
 
 
 
+		productsService.getSuppliers().subscribe(data=> {
+			this.suppliersList = data;
+		});
+
     }
 
     ngOnInit(){
 
-
+		this.setCustomSupplierFilterToDataTable();
     }
 
 
 
+	private setCustomSupplierFilterToDataTable() {
+		this.dataTable.filterConstraints['inCollection'] = function inCollection(value: Supplier[], filter: any): boolean {
+			if (filter === undefined || filter === null) {
+				return true;
+			}
+			if (value === undefined || value === null || value.length === 0) {
+				return false;
+			}
 
+			if(filter == -99){
+				return true;
+			}
+
+			for (let i = 0; i < value.length; i++) {
+				if (value[i].supplierId == filter) {
+					return true;
+				}
+			}
+			return false;
+		};
+	}
 
     addProductToGiftBasket(product: Product){
         let line = this.basketItems.find(data => data.product.id == product.id );
@@ -140,12 +186,13 @@ export class ProductPickerComponent implements OnInit{
             this.basket.basketTotalPrice *= 100;
             this.basket.isAlcoholic = 0;
             this.basket.isAvailable = 0;
+            this.basket.stock = 0;
+            this.basket.basketProductsPrice = this.total;
 
 
             if(!this.basket.basketSezon){
 				this.basket.basketSezon = new BasketSeason(0) //todo
 			}
-
 
 
 
@@ -173,6 +220,8 @@ export class ProductPickerComponent implements OnInit{
             else {
 
                 this.basketService.addBasket(this.basket).subscribe(data => {
+                    
+                    console.log(this.basket);
 
                     },
                     error => {

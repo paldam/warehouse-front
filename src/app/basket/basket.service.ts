@@ -60,8 +60,8 @@ export class BasketService {
 
     }
 
-	getBasketWithFilter(priceMin: number,priceMax: number, productsSubTypes: number[]) {
-		return this.http.get(this.baseUrl + `/basket/find/${priceMin}/${priceMax}/${productsSubTypes}`)
+	getBasketWithFilter(priceMin: number,priceMax: number, basketPrice: boolean, productsSubTypes: number[]) {
+		return this.http.get(this.baseUrl + `/basket/find/${priceMin}/${priceMax}/${basketPrice}/${productsSubTypes}`)
 			.map((response: Response) => response.json());
 	}
 

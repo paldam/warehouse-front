@@ -28,6 +28,7 @@ export class BasketComponent implements OnInit {
 	public totalRecords: number;
 	public showImageFrame: boolean = false;
 	@ViewChild('onlyDeleted') el: ElementRef;
+	@ViewChild('filterByProductsPrize') filterByProductsPrizeCheckBox: ElementRef;
 	@ViewChild('op') overlayPanel: OverlayPanel;
 	@ViewChild('dt') datatable: DataTable;
 	public paginatorValues = AppConstans.PAGINATOR_VALUES;
@@ -68,7 +69,12 @@ export class BasketComponent implements OnInit {
 		});
 
 
-		this.basketService.getBasketWithFilter(this.priceMin, this.priceMax,this.selectedCategoriesIds).subscribe(data =>{
+
+
+
+		let filterByBasketTotalPrice: boolean = !this.filterByProductsPrizeCheckBox.nativeElement.checked;
+
+		this.basketService.getBasketWithFilter(this.priceMin, this.priceMax, filterByBasketTotalPrice,this.selectedCategoriesIds).subscribe(data =>{
 			this.baskets = data;
 
 

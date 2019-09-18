@@ -7,10 +7,11 @@ import {UserService} from "../user.service";
 import { PrizeOrderComponent } from './prize-order/prize-order.component';
 import {PrizeService} from "./prize.service";
 import { PrizeComponent } from './prize/prize.component';
+import { PointsSchemeComponent } from './points-scheme/points-scheme.component';
 
 
 @NgModule({
-	declarations: [ProgramUserComponent, PrizeOrderComponent, PrizeComponent],
+	declarations: [ProgramUserComponent, PrizeOrderComponent, PrizeComponent, PointsSchemeComponent],
 	imports: [routing ,CommonModule,PrimeNgModule],
 	providers: [UserService,PrizeService]
 })

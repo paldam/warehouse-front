@@ -24,21 +24,41 @@
                 </ng-template>
             </p-column>
             <p-column field="productName" header="Nazwa" [sortable]="true"></p-column>
-            <p-column field="capacity" header="Pojemność" [sortable]="true" [style]="{'width':'120px'}"></p-column>
-            <p-column field="suppliers" header="Dostawca" styleClass="deliver_col" >
+            <p-column field="capacity" header="Pojemność" [sortable]="true" [style]="{'width':'80px'}"></p-column>
+
+
+
+
+
+
+
+            <p-column field="suppliers" header="Dostawca" [filter]="true" filterMatchMode="inCollection" [style]="{'width':'220px'}">
+                <ng-template pTemplate="filter" let-col>
+                    <p-dropdown [filter]="true" [options]="suppliers" placeholder="Wszyscy"  [style]="{'width':'100%'}" (onChange)="dataTable.filter($event.value,col.field,col.filterMatchMode)" styleClass="ui-column-filter"></p-dropdown>
+                </ng-template>
                 <ng-template  let-item="rowData"   pTemplate="body">
                     <tr *ngFor="let supplier of item.suppliers">  {{supplier.supplierName}}  </tr>
                 </ng-template>
             </p-column>
 
+            <p-column field="productSubType.subTypeName" styleClass="type_col" [filter]="true" header="Typ produktu" [style]="{'width':'220px'}" filterMatchMode="equals" [sortable]="true" >
+                <ng-template  let-col pTemplate="filter"  >
+                    <p-multiSelect  [filter]="true" [showToggleAll]="false" [options]="productsType" defaultLabel="Wszystkie" (onChange)="dataTable.filter($event.value, col.field, 'in')"></p-multiSelect>
+                </ng-template>
 
-            <p-column field="price" styleClass="price_col" header="Cena" [sortable]="true">
+                <ng-template let-row="rowData" pTemplate="body"  >
+                    <span> {{ row.productSubType?.subTypeName}} ({{row.productSubType?.productType?.typeName}}) </span>
+                </ng-template>
+            </p-column>
+
+
+            <p-column field="price" styleClass="price_col" header="Cena" [sortable]="true" [style]="{'width':'90px'}">
                 <ng-template let-row="rowData" pTemplate="body">
                     {{row.price/100| number : '1.2-2'}} zł
                 </ng-template>
             </p-column>
 
-            <p-column field="stock" styleClass="stock_col" header="Stan" [sortable]="true">
+            <p-column field="stock" styleClass="stock_col" header="Stan" [sortable]="true" [style]="{'width':'70px'}">
                 <ng-template let-row="rowData" pTemplate="body">
                     {{row.stock}} szt.
                 </ng-template>
