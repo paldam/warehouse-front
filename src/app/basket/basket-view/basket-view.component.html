@@ -127,7 +127,7 @@
     </p-column>
 
 
-    <p-column field="basketProductsPrice"  header="Cena kosza "  [sortable]="true" [style]="{'width':'120px'}">
+    <p-column field="basketProductsPrice"  header="Cena Produktów "  [sortable]="true" [style]="{'width':'120px'}">
 
       <ng-template let-row="rowData" pTemplate="body">
         {{row.basketProductsPrice/100| number : '1.2-2'}} zł.
