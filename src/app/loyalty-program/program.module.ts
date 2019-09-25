@@ -8,12 +8,14 @@ import { PrizeOrderComponent } from './prize-order/prize-order.component';
 import {PrizeService} from "./prize.service";
 import { PrizeComponent } from './prize/prize.component';
 import { PointsSchemeComponent } from './points-scheme/points-scheme.component';
+import {BasketService} from "../basket/basket.service";
+import {ConfirmationService} from "primeng/api";
 
 
 @NgModule({
 	declarations: [ProgramUserComponent, PrizeOrderComponent, PrizeComponent, PointsSchemeComponent],
 	imports: [routing ,CommonModule,PrimeNgModule],
-	providers: [UserService,PrizeService]
+	providers: [UserService,PrizeService,BasketService,ConfirmationService]
 })
 export class ProgramModule {
 }

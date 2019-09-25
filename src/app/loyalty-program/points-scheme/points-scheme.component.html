@@ -1,31 +1,71 @@
-<!--&lt;!&ndash;<button class="btn btn-primary" (click)="showAddUserModal= true">Dodaj</button>&ndash;&gt;-->
-<!--&lt;!&ndash;&ndash;&gt;-->
-<!--<div  class="products_box">-->
-  <!--<div class="input-group search_bar">-->
-    <!--<span class="input-group-addon" id="basic-addon1">-->
-                 <!--<i class="fa fa-search" aria-hidden="true"></i>-->
-            <!--</span>-->
-    <!--<input #gb type="text" class="form-control search_input" pInputText size="50" placeholder="Szukaj"aria-describedby="basic-addon1" >-->
-
-    <!--<i class="fa fa-refresh pull-right refresh_icon fa-2x" aria-hidden="true" (click)="refreshData()"></i>-->
-  <!--</div>-->
-
-  <!--<p-dataTable [value]="pointSchemes" [rows]="50" [paginator]="true" [globalFilter]="gb" #dt-->
-               <!--[loading]="loading" loadingIcon="fa-circle-o-notch"     [paginator]="true" [pageLinks]="5" [rowsPerPageOptions]= paginatorValues  >-->
-    <!--<p-header>Użytkownicy programu lojalnościowego</p-header>-->
+<button class="btn btn-primary add-button" (click)="showAddPointModal= true">Dodaj</button>
 
 
-    <!--<p-column  header="lp."   [style]="{'width':'50px','text-align': 'center'}">-->
-      <!--<ng-template let-row="rowData" let-i="rowIndex" pTemplate="rowexpansion">-->
-        <!--{{i+1}}-->
-      <!--</ng-template>-->
-    <!--</p-column>-->
-
-    <!--<p-column field="basketSezon.basketSezonName" styleClass="name_col" header="Sezon" [sortable]="true"></p-column>-->
-    <!--<p-column field="points" styleClass="name_col" header="Ilość pkt." [sortable]="true"></p-column>-->
-    <!--<p-column field="step" styleClass="name_col" header="za każde wydane zł" [sortable]="true"></p-column>-->
+<div class="col-6">
 
 
+    <p-dataTable [value]="pointSchemes" [rows]="50" [paginator]="true"  #dt
+                 [loading]="loading" loadingIcon="fa-circle-o-notch" [paginator]="true" [pageLinks]="5" [editable]="true" (onEditComplete)="editPoints($event.data)"
+                 [rowsPerPageOptions]=paginatorValues [style]="{'width':'500px','text-align': 'center'}">
+        <p-header>Schemat przydzielania punktów</p-header>
 
-  <!--</p-dataTable>-->
-<!--</div>-->
+
+        <p-column header="lp." [style]="{'width':'50px','text-align': 'center'}">
+            <ng-template let-row="rowData" let-i="rowIndex" pTemplate="rowexpansion">
+                {{i+1}}
+            </ng-template>
+        </p-column>
+
+        <p-column field="basketSezon.basketSezonName" styleClass="name_col" header="Sezon" [sortable]="true"></p-column>
+        <p-column field="points" styleClass="name_col" header="Ilość pkt." [editable]="true"></p-column>
+        <p-column field="step" styleClass="name_col" header="za każde wydane zł" [editable]="true"></p-column>
+        <p-column  header="Akcja"  styleClass="action_col">
+            <ng-template let-row="rowData" pTemplate="body" let-row="rowData" let-i="rowIndex" pTemplate="rowexpansion">
+                <i  class="fa fa-trash fa-2x edit_icon" aria-hidden="true" title="Usuń"  (click)="ShowConfirmModal(row)"></i>
+            </ng-template>
+        </p-column>
+
+
+    </p-dataTable>
+</div>
+
+
+
+<p-dialog header="Dodaj" modal="true" width="600" [(visible)]="showAddPointModal"  >
+
+    <form id="addForm" novalidate #form="ngForm">
+
+        <div class="form-group">
+            <small id="product_typeDesc" class="text-muted">Sezon</small>
+
+
+            <p-listbox name="type_list" [style]="{ 'width':'500px'}" [listStyle]="{'max-height':'100px', 'width':'490px'}"
+                       [options]="basketSeasonSelectItemList"
+                       [(ngModel)]="pointSchemeToAdd.basketSezon" [filter]="true">
+
+
+            </p-listbox>
+
+        </div>
+
+
+        <div class="form-group">
+            <small id="contactPersonDescript" class="text-muted">Punkty </small>
+            <input type="number" #contact_person name="supplier_name" class="form-control" [(ngModel)]="pointSchemeToAdd.points" #name="ngModel" aria-describedby="contactPersonDescript" required   >
+        </div>
+
+        <div class="form-group">
+            <small id="contactPersonDescript" class="text-muted">Krok </small>
+            <input type="number" #contact_person name="supplier_name" class="form-control" [(ngModel)]="pointSchemeToAdd.step" #name="ngModel" aria-describedby="contactPersonDescript" required=""  >
+        </div>
+
+
+
+
+        <button class="btn bg-primary " (click)="addPoint(form)"> Zapisz</button>
+    </form>
+
+
+</p-dialog>
+
+<p-confirmDialog header="Potwierdz" icon="fa fa-question-circle" width="425"></p-confirmDialog>

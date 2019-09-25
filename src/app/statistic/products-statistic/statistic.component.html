@@ -45,11 +45,11 @@
 
 
 
-  <p-column field="suppliers" header="Dostawca" [filter]="true" filterMatchMode="inCollection">
+  <p-column field="suppliers" header="Dostawca" [filter]="true" filterMatchMode="inCollection" >
     <ng-template pTemplate="filter" let-col>
       <p-dropdown [options]="suppliers" placeholder="Wszyscy"  [style]="{'width':'100%'}" (onChange)="dt.filter($event.value,col.field,col.filterMatchMode)" styleClass="ui-column-filter"></p-dropdown>
     </ng-template>
-    <ng-template  let-item="rowData"   pTemplate="body">
+    <ng-template  let-item="rowData"   pTemplate="body" >
       <tr *ngFor="let supplier of item.suppliers">  {{supplier.supplierName}}  </tr>
     </ng-template>
   </p-column>

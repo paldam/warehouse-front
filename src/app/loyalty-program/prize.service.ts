@@ -51,6 +51,13 @@ export class PrizeService {
 			.map((response: Response) =>
 				response.json());
 	}
+
+
+	deletePointScheme(id: number) {
+		return this.http.delete(this.baseUrl + `/prize/pointscheme/${id}`)
+
+	}
+
 	savePointScheme(pointScheme: PointScheme): Observable<Response> {
 		return this.http.post(this.baseUrl+`/prize/pointscheme/add`, pointScheme)
 		//.map((response: Response) => response.json());

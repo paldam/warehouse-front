@@ -13,7 +13,7 @@ import {
 import {FormsModule} from "@angular/forms";
 
 import {ToastModule} from "primeng/toast";
-import {TableModule} from "primeng/table";
+import { TableModule} from "primeng/table";
 import {ListboxModule} from 'primeng/listbox';
 
 @NgModule({

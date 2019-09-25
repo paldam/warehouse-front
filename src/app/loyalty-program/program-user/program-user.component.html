@@ -21,15 +21,14 @@
         {{i+1}}
       </ng-template>
     </p-column>
-
-    <p-column field="login" styleClass="name_col" header="login" [sortable]="true"></p-column>
-    <p-column field="name" styleClass="name_col" header="name" [sortable]="true"></p-column>
-    <p-column field="email" styleClass="name_col" header="email" [sortable]="true"></p-column>
-
+    <p-column field="login" styleClass="name_col" header="Login" [sortable]="true" [style]="{'width':'150px'}"></p-column>
+    <p-column field="name" styleClass="name_col" header="Imię i nazwisko" [sortable]="true"></p-column>
+    <p-column field="email" styleClass="name_col" header="Email" [sortable]="true"></p-column>
 
 
 
-    <p-column field="points" styleClass="price_col" header="Cena"  [sortable]="true">
+
+    <p-column field="points" styleClass="price_col" header="Liczba punktów"  [sortable]="true" [style]="{'width':'100px','text-align': 'center'}">
       <ng-template let-row="rowData" pTemplate="body"  >
         {{row.points }} pkt.
       </ng-template>
@@ -37,12 +36,12 @@
 
 
 
-    <p-column  header="Akcja" styleClass="action_col">
-      <ng-template let-product="rowData" pTemplate="body" let-row="rowData" let-i="rowIndex" pTemplate="rowexpansion">
-        <!--<i *ngIf="authenticationService.isAdmin()" class="fa fa-pencil-square-o fa-2x" aria-hidden="true"  title="Edytuj produkt" (click)=""></i>-->
-        <!--<i *ngIf="authenticationService.isAdmin()" class="fa fa-trash fa-2x edit_icon" aria-hidden="true" title="Usuń produkt"  (click)=""></i>-->
-      </ng-template>
-    </p-column>
+    <!--<p-column  header="Akcja" styleClass="action_col">-->
+      <!--<ng-template let-product="rowData" pTemplate="body" let-row="rowData" let-i="rowIndex" pTemplate="rowexpansion">-->
+        <!--&lt;!&ndash;<i *ngIf="authenticationService.isAdmin()" class="fa fa-pencil-square-o fa-2x" aria-hidden="true"  title="Edytuj produkt" (click)=""></i>&ndash;&gt;-->
+        <!--&lt;!&ndash;<i *ngIf="authenticationService.isAdmin()" class="fa fa-trash fa-2x edit_icon" aria-hidden="true" title="Usuń produkt"  (click)=""></i>&ndash;&gt;-->
+      <!--</ng-template>-->
+    <!--</p-column>-->
 
 
   </p-dataTable>

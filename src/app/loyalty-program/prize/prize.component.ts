@@ -19,7 +19,7 @@ import {MessageServiceExt} from "../../messages/messageServiceExt";
 export class PrizeComponent implements OnInit {
 
   public prizeList :Prize[]=[];
-
+	@ViewChild('globalfilter2') gb: ElementRef;
 	public loading: boolean;
 	public paginatorValues = AppConstans.PAGINATOR_VALUES;
 	public showAddPrizeModal: boolean = false;

@@ -14,7 +14,7 @@
                (onRowDblclick)="showOrderPreview($event)"
                (onRowClick)="getOrderFromRow($event)"
               (onContextMenuSelect)="OnSelectRow($event)">
-    <p-header>Zamówienia w</p-header>
+    <p-header>Zamówienia</p-header>
 
 
     <p-column  header="lp."   [style]="{'width':'50px','text-align': 'center'}">
@@ -25,27 +25,24 @@
 
 
 
-    <p-column field="orderDate" styleClass="name_col" header="login" [sortable]="true">
+    <p-column field="orderDate" styleClass="name_col" header="Data zamówienia" [sortable]="true" [style]="{'width':'150px'}">
       <ng-template let-row="rowData" pTemplate="body"  >
-        {{row.orderDate| date: 'dd/MM/yyyy HH:mm:ss'}}
+        {{row.orderDate| date: 'dd/MM/yyyy HH:mm'}}
       </ng-template>
 
     </p-column>
+    <p-column field="user.login" styleClass="name_col" header="Login" [sortable]="true" [style]="{'width':'180px'}"></p-column>
+    <p-column field="user.email" styleClass="name_col" header="Email" [sortable]="true"></p-column>
+    <p-column field="address" styleClass="name_col" header="Adres" [sortable]="true"></p-column>
+
+    <p-column field="prizeOrderStatus.orderStatusName" styleClass="name_col" header="Status" [sortable]="true" [style]="{'width':'100px'}"></p-column>
 
 
-    <p-column field="orderTotalAmount" styleClass="name_col" header="punkty" [sortable]="true">
+    <p-column field="orderTotalAmount" styleClass="name_col" header="Punkty" [sortable]="true" [style]="{'width':'100px'}">
       <ng-template let-row="rowData" pTemplate="body"  >
         {{row.orderTotalAmount}} pkt.
       </ng-template>
     </p-column>
-
-    <p-column field="address" styleClass="name_col" header="adres" [sortable]="true"></p-column>
-
-    <p-column field="prizeOrderStatus.orderStatusName" styleClass="name_col" header="status" [sortable]="true"></p-column>
-    <p-column field="user.login" styleClass="name_col" header="login" [sortable]="true"></p-column>
-    <p-column field="email" styleClass="name_col" header="email" [sortable]="true"></p-column>
-
-
     <!--<p-column  header="Akcja" styleClass="action_col">-->
       <!--<ng-template let-product="rowData" pTemplate="body" let-row="rowData" let-i="rowIndex" pTemplate="rowexpansion">-->
         <!--&lt;!&ndash;<i *ngIf="authenticationService.isAdmin()" class="fa fa-pencil-square-o fa-2x" aria-hidden="true"  title="Edytuj produkt" (click)=""></i>&ndash;&gt;-->
@@ -71,9 +68,15 @@
 
 
         <div class="form-group">
-          <small id="fv_numbereDescript" class="text-muted">login</small>
+          <small id="fv_numbereDescript" class="text-muted">Login</small>
           <input type="text" name="fv_number" #fv_number="ngModel" class="form-control" [readonly]="true"
                  aria-describedby="delivery_dateDesc" [(ngModel)]="selectedToPrintOrder?.user.login">
+        </div>
+
+        <div class="form-group">
+          <small id="email" class="text-muted">Email</small>
+          <input type="text" name="fv_number" #fv_number="ngModel" class="form-control" [readonly]="true"
+                 aria-describedby="delivery_dateDesc" [(ngModel)]="selectedToPrintOrder?.user.email">
         </div>
 
 
@@ -95,7 +98,7 @@
 
 
         <div class="form-group">
-          <small id="total_Desc" class="text-muted">Wartość zamówienia</small>
+          <small id="total_Desc" class="text-muted">Wartość zamówienia w punktach</small>
           <input type="text" name="total" class="form-control" size="300" aria-describedby="total_Desc"
                  [readonly]="true" [(ngModel)]="selectedToPrintOrder.orderTotalAmount">
         </div>
@@ -106,12 +109,12 @@
 
 
 
-        <p-panel header="Zawartość zamówienia">
+        <p-panel header="Wybrane nagrody">
           <table>
             <thead>
             <tr>
-              <th>nazwa kosza</th>
-              <th class="col_quantity">ilość</th>
+              <th>Nazwa nagrody</th>
+              <th class="col_quantity">Ilość</th>
             </tr>
             </thead>
             <tbody>
