@@ -46,6 +46,11 @@ export class UserService {
         //.map((response: Response) => response.json());
     }
 
+	simpleEditUser(user: User): Observable<Response> {
+		return this.http.post(this.baseUrl+`/useredit/`, user)
+		//.map((response: Response) => response.json());
+	}
+
 	saveProgramUser(user: User): Observable<Response> {
 		return this.http.post(this.baseUrl+`/program_users/`, user)
 		//.map((response: Response) => response.json());
@@ -59,6 +64,10 @@ export class UserService {
             return this.http.delete(this.baseUrl+`/users/${login}`)
         //.map((response: Response) => response.json());
     }
+	deleteProgramUser(login : string): Observable<Response> {
+		return this.http.delete(this.baseUrl+`/programusers/${login}`)
+		//.map((response: Response) => response.json());
+	}
     resetPassword(login : string): Observable<Response> {
         return this.http.put(this.baseUrl+`/users/reset/${login}`,login)
         //.map((response: Response) => response.json());

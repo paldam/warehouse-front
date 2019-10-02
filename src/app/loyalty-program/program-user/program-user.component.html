@@ -12,7 +12,7 @@
   </div>
 
   <p-dataTable [value]="programUsers" [rows]="50" [paginator]="true" [globalFilter]="gb" #dt
-               [loading]="loading" loadingIcon="fa-circle-o-notch"     [paginator]="true" [pageLinks]="5" [rowsPerPageOptions]= paginatorValues  >
+               [loading]="loading" loadingIcon="fa-circle-o-notch"  [editable]="true"   (onEditComplete)="editProgramUser($event.data)"  [paginator]="true" [pageLinks]="5" [rowsPerPageOptions]= paginatorValues  >
     <p-header>Użytkownicy programu lojalnościowego</p-header>
 
 
@@ -21,14 +21,14 @@
         {{i+1}}
       </ng-template>
     </p-column>
-    <p-column field="login" styleClass="name_col" header="Login" [sortable]="true" [style]="{'width':'150px'}"></p-column>
-    <p-column field="name" styleClass="name_col" header="Imię i nazwisko" [sortable]="true"></p-column>
+    <p-column field="login" styleClass="name_col" header="Nr. klienta" [sortable]="true" [style]="{'width':'150px'}"></p-column>
+    <p-column field="name" styleClass="name_col" header="Imię i nazwisko" [editable]="true" [sortable]="true"></p-column>
     <p-column field="email" styleClass="name_col" header="Email" [sortable]="true"></p-column>
 
 
 
 
-    <p-column field="points" styleClass="price_col" header="Liczba punktów"  [sortable]="true" [style]="{'width':'100px','text-align': 'center'}">
+    <p-column field="points" styleClass="price_col" header="Liczba punktów"  [editable]="true" [sortable]="true" [style]="{'width':'100px','text-align': 'center'}">
       <ng-template let-row="rowData" pTemplate="body"  >
         {{row.points }} pkt.
       </ng-template>
@@ -36,12 +36,12 @@
 
 
 
-    <!--<p-column  header="Akcja" styleClass="action_col">-->
-      <!--<ng-template let-product="rowData" pTemplate="body" let-row="rowData" let-i="rowIndex" pTemplate="rowexpansion">-->
-        <!--&lt;!&ndash;<i *ngIf="authenticationService.isAdmin()" class="fa fa-pencil-square-o fa-2x" aria-hidden="true"  title="Edytuj produkt" (click)=""></i>&ndash;&gt;-->
-        <!--&lt;!&ndash;<i *ngIf="authenticationService.isAdmin()" class="fa fa-trash fa-2x edit_icon" aria-hidden="true" title="Usuń produkt"  (click)=""></i>&ndash;&gt;-->
-      <!--</ng-template>-->
-    <!--</p-column>-->
+    <p-column  header="Akcja" styleClass="action_col">
+      <ng-template let-user="rowData" pTemplate="body" let-row="rowData" let-i="rowIndex" pTemplate="rowexpansion">
+        <!--<i *ngIf="authenticationService.isAdmin()" class="fa fa-pencil-square-o fa-2x" aria-hidden="true"  title="Edytuj produkt" (click)=""></i>-->
+        <i *ngIf="authenticationService.isAdmin()" class="fa fa-trash fa-2x edit_icon" aria-hidden="true" title="Usuń użytkownika"  (click)="ShowConfirmModal(user)" ></i>
+      </ng-template>
+    </p-column>
 
 
   </p-dataTable>
@@ -55,7 +55,7 @@
     <form id="addForm" novalidate #form="ngForm">
 
       <div class="form-group">
-        <small id="nameDescript" class="text-muted">Login </small>
+        <small id="nameDescript" class="text-muted">Nr. klienta </small>
         <input type="text" #login name="login" [(ngModel)]="userToAdd.login" #login="ngModel" class="form-control"  aria-describedby="nameDescript"  required >
 
       </div>
@@ -78,5 +78,8 @@
 
 
   </p-dialog>
+
+
+<p-confirmDialog header="Usuwanie użytkowniak" icon="fa fa-question-circle" width="425"></p-confirmDialog>
 
 

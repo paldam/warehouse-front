@@ -121,7 +121,7 @@ export class StatisticComponent implements OnInit {
           }
 
 
-            dataToGenerateFile[i] = {"Nazwa Produktu":filt[i].product_name,"Pojemność":filt[i].capacity, "Nazwa Dostawcy":tmpSupplierNameList,"Ilość":filt[i].suma}
+            dataToGenerateFile[i] = {"Nazwa Produktu":filt[i].product_name,"Pojemność":filt[i].capacity, "Nazwa Dostawcy":tmpSupplierNameList,"Ilość":filt[i].suma,"Stan Magazynu":filt[i].stock,"Liczba zamówionych":filt[i].tmpOrdered}
         }
 
 
