@@ -7,7 +7,7 @@ import {DeliveryType} from "../../model/delivery_type.model";
 import {Customer} from "../../model/customer.model";
 import {OrderStatus} from "../../model/OrderStatus";
 import {Product} from "../../model/product.model";
-import {Checkbox, ConfirmationService, DataTable, FileUpload} from "primeng/primeng";
+import {Checkbox, ConfirmationService, DataTable, FileUpload, SelectItem} from "primeng/primeng";
 import {AuthenticationService} from "../../authentication.service";
 import {Basket} from "../../model/basket.model";
 import {BasketService} from "../../basket/basket.service";
@@ -73,6 +73,7 @@ export class OrderDetailsComponent implements OnInit {
 	public isDeliveryDateValid: boolean = true;
 	public isDeliveryWeekDateValid: boolean = true;
 	public addressPickDialogShow: boolean = false;
+	public basketSeasonList: SelectItem[] = [];
 	public isTextToCardVisible: boolean = false;
 	@ViewChild('form') orderForm: NgForm;
 	@ViewChild('formAdidtional') additionalForm: NgForm;
@@ -80,6 +81,7 @@ export class OrderDetailsComponent implements OnInit {
 	@ViewChild(FileUpload) fileUploadElement: FileUpload;
 	@ViewChild('globalfilter2') globalfilter2: ElementRef;
 	@ViewChild('dtCustomer') datatableCustomer: DataTable;
+	@ViewChild('dtt') basketTable: DataTable;
 	public company: Company = new Company();
 	public orderAddress: Address = new Address();
 
@@ -87,6 +89,7 @@ export class OrderDetailsComponent implements OnInit {
 				private basketService: BasketService,private userService :UserService, private orderService: OrderService, activeRoute: ActivatedRoute,
 				private  router: Router, private routingState: RoutingState, private spinerService: SpinerService, public authenticationService: AuthenticationService, private customerService: CustomerService, private messageServiceExt: MessageServiceExt) {
 		this.orderId = activeRoute.snapshot.params["id"];
+		this.getBasketSeasonForDataTableFilter();
 		this.originOrderIdCopy = activeRoute.snapshot.params["id"];
 		if (this.isCopyOfExistingOrder()) {
 			this.setDataForCopyOfOrder();
@@ -124,6 +127,7 @@ export class OrderDetailsComponent implements OnInit {
 		if (this.isCopyOfExistingOrder()) {
 			this.fileUploadElement.url = null;
 		}
+
 	}
 
 	private setVisabilityOfTextToCardField() {
@@ -135,6 +139,16 @@ export class OrderDetailsComponent implements OnInit {
 			this.isTextToCardVisible = true;
 		}
 	}
+
+	private getBasketSeasonForDataTableFilter() {
+		this.basketService.getBasketSeason().subscribe(data => {
+			data.forEach(value => {
+				this.basketSeasonList.push({label: '' + value.basketSezonName, value: value.basketSezonId});
+			});
+		});
+	}
+	
+
 
 	private setDataForOrderEdit() {
 		this.orderService.getOrder(this.orderId).subscribe(res => {

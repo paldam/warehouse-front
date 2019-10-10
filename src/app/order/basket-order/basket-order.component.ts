@@ -121,6 +121,7 @@ export class BasketOrderComponent implements OnInit, OnDestroy {
 		];
 		this.customer.company = null;
 		this.setBasketsListAutoRefresh();
+
 	}
 
 	ngOnDestroy(){
@@ -144,6 +145,7 @@ export class BasketOrderComponent implements OnInit, OnDestroy {
 			});
 		});
 	}
+
 
 	contextMenuSelected(event) {
 		this.selectedBasketOnContextMenu = event.data;

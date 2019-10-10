@@ -3,21 +3,23 @@
     <div class="col-md-6">
 
 
-            <div class="form-group">
-                <div class="input-group">
-                    <input type="text" name="organization" class="form-control" size="300"
-                           aria-describedby="organizationDesc" [readonly]="true" [value]="getCustomerDesc()" disabled>
-                    <span class="input-group-addon" id="organizationDesc">Klient</span>
-                </div>
-            </div>
+
 
         <div class="form-group">
-            <div class="input-group">
-                <input type="text" name="address" class="form-control" size="300"
-                       aria-describedby="organizationDesc" [readonly]="true" [value]="getAddressDesc()"  disabled>
-                <span class="input-group-addon" id="organizationDesc">Adres</span>
-            </div>
+            <small id="organization" class="text-muted">Klient</small>
+            <textarea class="form-control" name="additional_information"  rows="2"
+                      [readonly]="true" [value]="getCustomerDesc()"></textarea>
         </div>
+        <div class="form-group">
+            <small id="addr" class="text-muted">Adres</small>
+            <textarea class="form-control" name="additional_information" id="addr_information" rows="2"
+                      [readonly]="true" [value]="getAddressDesc()"></textarea>
+        </div>
+
+
+
+
+
 
 
             <div class="form-group">

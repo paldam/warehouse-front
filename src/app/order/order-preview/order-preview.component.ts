@@ -31,7 +31,7 @@ export class OrderPreviewComponent implements OnInit {
 
 
 	getAddressDesc(): string{
-		return this.orderToShow.address.address + "  " + this.orderToShow.address.zipCode + "  " + this.orderToShow.address.cityName ;
+		return this.orderToShow.address.contactPerson + "  " +this.orderToShow.address.address + "  " + this.orderToShow.address.zipCode + "  " + this.orderToShow.address.cityName ;
 	}
 
 
