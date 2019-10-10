@@ -48,6 +48,11 @@ export class ProductsService {
     }
 
 
+	setMultiDelivery(ids: number[], values : number[]): Observable<Response> {
+		return this.http.get(this.baseUrl+`/products/multidelivery/${ids}/${values}`)
+			.map((response: Response) => response.json());
+
+	}
 
 	deleteProductType(id: number): Observable<Response>{
 		return this.http.delete(this.baseUrl+`/products/types/${id}`)

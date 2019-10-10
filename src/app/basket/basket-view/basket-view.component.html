@@ -154,6 +154,7 @@
             <col span="1" style="width: 10%;">
             <col span="1" style="width: 15%;">
             <col span="1" style="width: 15%;">
+            <col span="1" style="width: 15%;">
             <col span="1" style="width: 10%;">
           </colgroup>
 
@@ -162,6 +163,7 @@
             <th>Nazwa Produktu</th>
             <th>Typ</th>
             <th>Pojemność</th>
+            <th>Dostawca</th>
             <th>Cena zakupu</th>
             <th>Ilość</th>
           </tr>
@@ -170,8 +172,9 @@
           <tbody>
           <tr *ngFor="let i of basket.basketItems">
             <td>{{i.product.productName}}</td>
-            <td>{{i.product.productType?.typeName}}</td>
+            <td>{{i.product.productSubType?.subTypeName}}</td>
             <td>{{i.product.capacity}}</td>
+            <td>{{i.product.suppliers[0]?.supplierName}}</td>
             <td>{{i.product.price/100| number : '1.2-2'}} zł</td>
             <td>{{i.quantity}} szt.</td>
           </tr>
