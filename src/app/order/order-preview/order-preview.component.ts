@@ -1,4 +1,5 @@
 import {Component, Input, OnInit} from '@angular/core';
+import {Order} from "../../model/order.model";
 
 @Component({
   selector: 'app-order-preview',
@@ -8,7 +9,7 @@ import {Component, Input, OnInit} from '@angular/core';
 export class OrderPreviewComponent implements OnInit {
 
 
- @Input() orderToShow :any;
+ @Input() orderToShow :Order;
  public additionalSaleCheckbox: boolean = false;
 
   constructor() { }
@@ -27,6 +28,11 @@ export class OrderPreviewComponent implements OnInit {
   getCustomerDesc(): string{
       return this.orderToShow.customer.name + " | " + this.orderToShow.customer.company.companyName;
   }
+
+
+	getAddressDesc(): string{
+		return this.orderToShow.address.address + "  " + this.orderToShow.address.zipCode + "  " + this.orderToShow.address.cityName ;
+	}
 
 
 }
