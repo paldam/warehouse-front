@@ -141,7 +141,7 @@ export class StatisticComponent implements OnInit {
 
 		let timeNow = new Date().getTime();
 
-		if( (timeNow - rowData.lastEditNumberOfOrderedDate) /1000/60 < 60){    // 1h
+		if( (timeNow - rowData.lastEditNumberOfOrderedDate) /1000/60 < 60 ){    // 1h
 			return 'ddd';
 
 		}else{

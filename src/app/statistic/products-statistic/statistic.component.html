@@ -81,7 +81,7 @@
   <p-column  field="tmpOrdered" [style]="{'width':'90px'}" header="Liczba zamówionych" [sortable]="true"></p-column>
 
   <p-column *ngIf="deliveryFnAvailable"  field="valueForDeliver"  [style]="{'width':'80px'}" [editable]="true" [filter]="false" header="Dostawa"  [sortable]="true" ></p-column>
-  <p-column  field="lastEditNumberOfOrderedDate" styleClass="date_col" header="Modyfikacja"
+  <p-column  *ngIf="deliveryFnAvailable" field="lastEditNumberOfOrderedDate" [style]="{'width':'142px'}" header="Modyfikacja"
             [sortable]="true">
 
     <ng-template let-row="rowData" pTemplate="body">

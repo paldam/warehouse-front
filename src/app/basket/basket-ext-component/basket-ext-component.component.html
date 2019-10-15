@@ -16,7 +16,7 @@
 
   </div>
 
-  <p-dataTable [value]="baskets" [rows]="50" [paginator]="true" [globalFilter]="gb" #dt
+  <p-dataTable [value]="baskets" [rows]="50" [paginator]="true" [globalFilter]="gb" #dt [editable]="true"  (onEditComplete)="updateBasketExtRow($event)"
                [loading]="loading" loadingIcon="fa-circle-o-notch" expandableRows="true" [contextMenu]="cm" (onContextMenuSelect)="contextMenuSelected($event)" [paginator]="true" [pageLinks]="5" [rowsPerPageOptions]= paginatorValues>
     <p-column expander="true" header="Zawartość" styleClass="col-icon " [style]="{'width':'70px'}"></p-column>
 
@@ -27,16 +27,31 @@
     </p-column>
 
 
-    <p-column field="basketName" header="Nazwa kosza" [sortable]="true"></p-column>
+    <p-column field="basketName" header="Nazwa kosza" [sortable]="true" [editable]="true"></p-column>
     <p-column field="basketType.basketTypeName" header="Typ kosza" [sortable]="true" ></p-column>
-    <!--<p-column field="season" header="Sezon" [sortable]="true" ></p-column>-->
-    <p-column field="basketTotalPrice"  header="Cena kosza "  [sortable]="true" >
+
+
+
+    <p-column field="isAlcoholic" header="Zawiera alkohol" [editable]="true">
+      <ng-template let-col let-basket="rowData" pTemplate="editor">
+        <p-dropdown  (onChange)="updateBasketExtRow(basket)" [(ngModel)]="basket.isAlcoholic" [options]="alcoholOptions" [autoWidth]="false" [style]="{'width':'100%'}" required="true"  appendTo="body"></p-dropdown>
+      </ng-template>
       <ng-template let-row="rowData" pTemplate="body">
-        {{row.basketTotalPrice/100| number : '1.2-2'}} zł.
+       <span *ngIf="row.isAlcoholic==1"> Z alkoholem</span>
+        <span *ngIf="row.isAlcoholic==0">Bez alkoholu</span>
       </ng-template>
     </p-column>
 
-    <p-column field="isAvailable"  header="Dostępność"  [sortable]="true" [style]="{'width':'70px'}">
+
+
+    <!--<p-column field="season" header="Sezon" [sortable]="true" ></p-column>-->
+    <p-column field="basketTotalPrice"  header="Cena kosza " [editable]="true"  [sortable]="true" >
+      <ng-template let-row="rowData" pTemplate="body">
+        {{row.basketTotalPrice| number : '1.2-2'}} zł.
+      </ng-template>
+    </p-column>
+
+    <p-column field="isAvailable"  header="Dostępność"  [sortable]="true" [style]="{'width':'70px', 'text-align':'center'}">
       <ng-template let-row="rowData" pTemplate="body">
         <img *ngIf="row.isAvailable == 1" class="state_img" src="/assets/images/yes.png" height="30" width="30">
         <img *ngIf="row.isAvailable == 0" class="state_img" src="/assets/images/no.png" height="30" width="30">
@@ -44,12 +59,11 @@
       </ng-template>
     </p-column>
 
-    <!--<p-column  header="Akcja" styleClass="action_col">-->
-      <!--<ng-template let-basket="rowData" pTemplate="body">-->
-        <!--<i *ngIf="authenticationService.isAdmin() || authenticationService.isBiuroUser() " class="fa fa-pencil-square-o fa-2x" aria-hidden="true"  title="Edytuj kosz" [routerLink]="['/basket/', basket.basketId] "></i>-->
-        <!--<i *ngIf="authenticationService.isAdmin()" class="fa fa-trash fa-2x edit_icon" aria-hidden="true" title="Usuń kosz"  (click)="ShowConfirmModal(basket)"></i>-->
-      <!--</ng-template>-->
-    <!--</p-column>-->
+    <p-column  header="Akcja" [style]="{'width':'50px','text-align':'center'}">
+      <ng-template let-basket="rowData" pTemplate="body">
+        <i *ngIf="authenticationService.isAdmin()" class="fa fa-trash fa-2x edit_icon" aria-hidden="true" title="Usuń kosz"  (click)="ShowConfirmModal(basket)"></i>
+      </ng-template>
+    </p-column>
 
     <ng-template let-basket pTemplate="rowexpansion">
       <div class="basket_products_info">

@@ -23,6 +23,13 @@ export class BasketExtService {
             .map((response: Response) => response.json());
 
     }
+	editBasket(basket: BasketExt): Observable<Response> {
+		return this.http.post(this.baseUrl+`/basketextedit/`, basket)
+			.map((response: Response) => response.json());
+
+	}
+
+
 
     changeStatus(basket: BasketExt): Observable<Response> {
         return this.http.post(this.baseUrl+`/basketextstatus/`, basket)
