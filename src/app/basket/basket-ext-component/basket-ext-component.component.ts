@@ -59,6 +59,7 @@ export class BasketExtComponentComponent implements OnInit {
 			tmpStatus = 1;
 		}
 		basket.isAvailable = tmpStatus;
+		basket.basketTotalPrice *=100;
 		this.basketService.changeStatus(basket).subscribe();
 		this.refreshData();
 	}

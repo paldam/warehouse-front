@@ -42,10 +42,14 @@
       </ng-template>
     </p-column>
 
-
+    <p-column field="basketProductsPrice"  header="Koszt złożenia" [editable]="true"  [sortable]="true" >
+      <ng-template let-row="rowData" pTemplate="body">
+        {{row.basketProductsPrice /100| number : '1.2-2'}} zł.
+      </ng-template>
+    </p-column>
 
     <!--<p-column field="season" header="Sezon" [sortable]="true" ></p-column>-->
-    <p-column field="basketTotalPrice"  header="Cena kosza " [editable]="true"  [sortable]="true" >
+    <p-column field="basketTotalPrice"  header="Cena dla agencji" [editable]="true"  [sortable]="true" >
       <ng-template let-row="rowData" pTemplate="body">
         {{row.basketTotalPrice| number : '1.2-2'}} zł.
       </ng-template>

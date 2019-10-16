@@ -175,7 +175,20 @@
             <p-column field="id" header="ID" [sortable]="true" [style]="{'width':'70px'}"></p-column>
             <p-column field="productName" header="Nazwa" [sortable]="true"></p-column>
             <p-column field="capacity" header="Pojemność" [sortable]="true" [style]="{'width':'120px'}"></p-column>
-            <p-column field="deliver" header="Dostawca" [sortable]="true"></p-column>
+
+
+
+            <p-column field="suppliers" header="Dostawca" [filter]="true" filterMatchMode="inCollection" [style]="{'width':'220px'}">
+                <ng-template pTemplate="filter" let-col>
+                    <p-dropdown [filter]="true" [options]="suppliers" placeholder="Wszyscy"  [style]="{'width':'100%'}" (onChange)="dataTable.filter($event.value,col.field,col.filterMatchMode)" styleClass="ui-column-filter"></p-dropdown>
+                </ng-template>
+                <ng-template  let-item="rowData"   pTemplate="body">
+                    <tr *ngFor="let supplier of item.suppliers">  {{supplier.supplierName}}  </tr>
+                </ng-template>
+            </p-column>
+
+
+
             <p-column field="price" styleClass="price_col" header="Cena" [sortable]="true">
                 <ng-template let-row="rowData" pTemplate="body">
                     {{row.price/100| number : '1.2-2'}} zł

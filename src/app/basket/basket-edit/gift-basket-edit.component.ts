@@ -8,9 +8,10 @@ import {ProductsService} from "../../products/products.service";
 import {Product} from "../../model/product.model";
 import {BasketItems} from "../../model/basket_items.model";
 import {NgForm} from '@angular/forms';
-import {FileUpload, SelectItem} from "primeng/primeng";
+import {DataTable, FileUpload, SelectItem} from "primeng/primeng";
 import {MessageServiceExt} from "../../messages/messageServiceExt";
 import {BasketSeason} from "../../model/basket_season.model";
+import {Supplier} from "../../model/supplier.model";
 
 @Component({
 	selector: 'app-gift-basket-edit',
@@ -31,8 +32,10 @@ export class GiftBasketEditComponent implements OnInit {
 	public fileToUpload: File = null;
 	public basketImege: any = null;
 	public basketSeasonSelectItemList: SelectItem[]=[];
+	public suppliers: SelectItem[] = [];
 	public basketSeasonList: BasketSeason[]=[];
 	@ViewChild(FileUpload) fileUploadElement: FileUpload;
+	@ViewChild('dt') dataTable: DataTable;
 
 	constructor(private productsService: ProductsService, private basketService: BasketService, private router: Router, activeRoute: ActivatedRoute, private messageServiceExt: MessageServiceExt) {
 
@@ -51,6 +54,17 @@ export class GiftBasketEditComponent implements OnInit {
 			})
 
 		});
+
+		productsService.getSuppliers().subscribe(data=> {
+
+			productsService.getSuppliers().subscribe(data => {
+				this.suppliers.push({label: '-- Wszyscy Dostawcy --', value: null});
+				data.forEach(data => {
+					this.suppliers.push({label: data.supplierName, value: data.supplierId});
+				})
+			});
+		});
+
 
 		basketService.getBasketsTypes().subscribe(data => {
 			this.basketTypes = data;
@@ -77,7 +91,29 @@ export class GiftBasketEditComponent implements OnInit {
 		setTimeout(() => {
 			this.recalculate();
 		}, 700);
+		this.setCustomSupplierFilterToDataTable();
+	}
 
+	private setCustomSupplierFilterToDataTable() {
+		this.dataTable.filterConstraints['inCollection'] = function inCollection(value: Supplier[], filter: any): boolean {
+			if (filter === undefined || filter === null) {
+				return true;
+			}
+			if (value === undefined || value === null || value.length === 0) {
+				return false;
+			}
+
+			if(filter == -99){
+				return true;
+			}
+
+			for (let i = 0; i < value.length; i++) {
+				if (value[i].supplierId == filter) {
+					return true;
+				}
+			}
+			return false;
+		};
 	}
 
 	compareBasketType(optionOne: BasketType, optionTwo: BasketType): boolean {
