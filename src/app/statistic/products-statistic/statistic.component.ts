@@ -86,7 +86,7 @@ export class StatisticComponent implements OnInit {
 			}, error1 => {
 				this.spinerService.showSpinner = false;
 			}, () => this.productsToOrder.forEach(value => {
-				value.valueForDeliver = value.suma;
+				value.valueForDeliver = value.suma - value.stock -value.tmpOrdered;
 				this.spinerService.showSpinner = false;
 			}))
 	}
