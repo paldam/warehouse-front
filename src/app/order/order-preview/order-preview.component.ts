@@ -26,12 +26,12 @@ export class OrderPreviewComponent implements OnInit {
 
 
   getCustomerDesc(): string{
-      return this.orderToShow.customer.name + " | " + this.orderToShow.customer.company.companyName;
+      return this.orderToShow.customer.name + " | " + this.orderToShow.customer.company.companyName + " | " + this.orderToShow.customer.phoneNumber + " | " + this.orderToShow.customer.email ;
   }
 
 
 	getAddressDesc(): string{
-		return this.orderToShow.address.contactPerson + "  " +this.orderToShow.address.address + "  " + this.orderToShow.address.zipCode + "  " + this.orderToShow.address.cityName ;
+		return this.orderToShow.address.contactPerson + "  " +this.orderToShow.address.address + "  " + this.orderToShow.address.zipCode + "  " + this.orderToShow.address.cityName + "  " + this.orderToShow.address.phoneNumber ;
 	}
 
 

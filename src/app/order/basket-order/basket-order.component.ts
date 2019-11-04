@@ -120,7 +120,7 @@ export class BasketOrderComponent implements OnInit, OnDestroy {
 			},
 		];
 		this.customer.company = null;
-		this.setBasketsListAutoRefresh();
+		//this.setBasketsListAutoRefresh();
 
 	}
 
