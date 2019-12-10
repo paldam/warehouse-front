@@ -104,7 +104,7 @@ export class OrderComponent implements OnInit, OnDestroy {
 	ngOnDestroy() {
 		this.serverSideEventsService.newOrderEventSource.close();
 		this.serverSideEventsService.orderCopyEventSource.close();
-		this.intervalsubscription.unsubscribe();
+		//this.intervalsubscription.unsubscribe();
 	}
 
 	ngOnInit() {
@@ -112,7 +112,7 @@ export class OrderComponent implements OnInit, OnDestroy {
 		this.getOrderYearsForDataTableFilter();
 		this.getProductionUserForContextMenuSet();
 		this.setExportMenu();
-		this.setAutoRefresh(10);
+		//this.setAutoRefresh(10);
 		this.notificationsService.checkNumberOfNotifications();
 		setTimeout(() => {
 			this.setEventSources();    
@@ -225,10 +225,10 @@ export class OrderComponent implements OnInit, OnDestroy {
 	setEventSources() {
 		this.serverSideEventsService.renew();
 		this.serverSideEventsService.newOrderEventSource.addEventListener('message', (message :any ) => {
-			this.refreshData();
+			//this.refreshData();
 
 			if( this.authenticationService.isMagazynUser() ||this.authenticationService.isWysylkaUser() || message.data == this.authenticationService.getCurrentUser() ){
-				this.refreshData();
+				//this.refreshData();
 				this.messageServiceExt.addMessageWithTime('success', 'Informacja', 'Dodano nowe zamówienie(a)',15000);
 			}
 
