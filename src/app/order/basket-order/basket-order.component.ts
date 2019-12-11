@@ -125,7 +125,7 @@ export class BasketOrderComponent implements OnInit, OnDestroy {
 	}
 
 	ngOnDestroy(){
-		this.intervalsubscription.unsubscribe();
+		//this.intervalsubscription.unsubscribe();
 	}
 
 	ngAfterViewInit(): void {
