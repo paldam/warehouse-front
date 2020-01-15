@@ -1,191 +1,189 @@
-
-<p-dialog  header="Kosz" [(visible)]="showImageFrame">
-  <img [src]="imageToShow" [height]="700" [width]="700">
+<p-dialog header="Kosz" [(visible)]="showImageFrame">
+    <img [src]="imageToShow" [height]="700" [width]="700">
 </p-dialog>
 
 
 <p-fieldset legend="Lista Koszy" [toggleable]="true">
 
 
-  <div class="row">
+    <div class="row">
 
-    <div class="ui-inputgroup pric">
-      <span class="ui-inputgroup-addon"> Cena od </span>
-      <input type="text" [(ngModel)]="priceMin" pInputText placeholder="Cena od">
+        <div class="ui-inputgroup pric">
+            <span class="ui-inputgroup-addon"> Cena od </span>
+            <input type="text" [(ngModel)]="priceMin" pInputText placeholder="Cena od">
+        </div>
+
+
+        <div class="ui-inputgroup pric">
+            <span class="ui-inputgroup-addon"> Cena do </span>
+            <input type="text" [(ngModel)]="priceMax" pInputText placeholder="Cena do">
+        </div>
+
+        <div class="onlyDeleted form-check">
+            <label class="form-check-label">
+                <input #filterByProductsPrize type="checkbox" class="form-check-input" name="">
+                Szukaj po cenie produktów
+            </label>
+        </div>
     </div>
 
 
-    <div class="ui-inputgroup pric">
-      <span class="ui-inputgroup-addon"> Cena do </span>
-      <input type="text" [(ngModel)]="priceMax" pInputText placeholder="Cena do">
-    </div>
+    <p-panel header="Wybierz typy produktów:">
+        <div class="row ">
+            <div class="col-xl-3">
 
-    <div class="onlyDeleted form-check">
-      <label class="form-check-label">
-        <input #filterByProductsPrize type="checkbox" class="form-check-input" name="">
-        Szukaj po cenie produktów
-      </label>
-    </div>
-  </div>
+                <p-multiSelect defaultLabel="Wszystkie" [options]="productSubType" [(ngModel)]="selectedCategories"
+                               [panelStyle]="{minWidth:'300px'}" scrollHeight="500px"></p-multiSelect>
 
+            </div>
 
+            <div class="col-xl-9">
+                <p *ngIf="selectedCategories.length > 0"> Wybrane kategorie : </p>
 
+                <span class="span_gap" *ngFor="let cat of selectedCategories">{{cat.subTypeName}}</span>
 
-
-  <p-panel header="Wybierz typy produktów:">
-    <div class="row ">
-      <div class="col-xl-3">
-
-        <p-multiSelect defaultLabel="Wszystkie" [options]="productSubType" [(ngModel)]="selectedCategories"
-                       [panelStyle]="{minWidth:'300px'}" scrollHeight="500px"></p-multiSelect>
-
-      </div>
-
-      <div class="col-xl-9">
-        <p *ngIf="selectedCategories.length > 0"> Wybrane kategorie : </p>
-
-          <span class="span_gap" *ngFor="let cat of selectedCategories">{{cat.subTypeName}}</span>
-
-      </div>
-    </div>
+            </div>
+        </div>
 
 
-  </p-panel>
+    </p-panel>
 
 
+    <button class="btnclic btn bg-primary" (click)="getBasketWithFilter()"> Szukaj</button>
+    <button class="btnclic btn bg-primary" (click)="refreshData()"> Reset</button>
 
 
-
-
-  <button class="btnclic btn bg-primary" (click)="getBasketWithFilter()"> Szukaj</button>
-  <button class="btnclic btn bg-primary" (click)="refreshData()"> Reset</button>
-
-
-
-  <div class="input-group search_bar">
+    <div class="input-group search_bar">
             <span class="input-group-addon" id="basic-addon1">
                  <i class="fa fa-search" aria-hidden="true"></i>
             </span>
-    <input #gb type="text" class="dd form-control search_input" pInputText size="50" placeholder="Szukaj"
-           aria-describedby="basic-addon1">
+        <input #gb type="text" class="dd form-control search_input" pInputText size="50" placeholder="Szukaj"
+               aria-describedby="basic-addon1">
 
-    <div class="onlyDeleted form-check">
-      <label class="form-check-label">
-        <input #onlyDeleted type="checkbox" class="form-check-input" name=""
-               (click)="clickOnlyDeletedBasketChceckBox()">
-        Tylko archiwalne
-      </label>
+        <div class="onlyDeleted form-check">
+            <label class="form-check-label">
+                <input #onlyDeleted type="checkbox" class="form-check-input" name=""
+                       (click)="clickOnlyDeletedBasketChceckBox()">
+                Tylko archiwalne
+            </label>
+        </div>
+
+        <i class="fa fa-refresh pull-right refresh_icon fa-2x" aria-hidden="true" (click)="refreshData()"></i>
+
     </div>
 
-    <i class="fa fa-refresh pull-right refresh_icon fa-2x" aria-hidden="true" (click)="refreshData()"></i>
+    <p-dataTable [value]="baskets" [rows]="20" [paginator]="true" [globalFilter]="gb" #dt
+                 [loading]="loading" loadingIcon="fa-circle-o-notch" expandableRows="true" [paginator]="true"
+                 [pageLinks]="5" [rowsPerPageOptions]=paginatorValues
+                 (onRowDblclick)="router.navigateByUrl('/basket/' + $event.data.basketId)"
+                 [editable]="this.authenticationService.isAdmin()" (onEditComplete)="editBasketStock($event.data)"
+                 [lazy]="true" (onLazyLoad)="loadBasketsLazy($event)" [totalRecords]="totalRecords">
+        <p-column expander="true" header="Zawartość" styleClass="col-icon " [style]="{'width':'70px'}"></p-column>
 
-  </div>
-
-  <p-dataTable [value]="baskets" [rows]="20" [paginator]="true" [globalFilter]="gb" #dt
-               [loading]="loading" loadingIcon="fa-circle-o-notch" expandableRows="true" [paginator]="true" [pageLinks]="5" [rowsPerPageOptions]= paginatorValues
-               (onRowDblclick)="router.navigateByUrl('/basket/' + $event.data.basketId)" [editable]="this.authenticationService.isAdmin()" (onEditComplete)="editBasketStock($event.data)"
-               [lazy]="true" (onLazyLoad)="loadBasketsLazy($event)" [totalRecords]="totalRecords"  >
-    <p-column expander="true" header="Zawartość" styleClass="col-icon " [style]="{'width':'70px'}"></p-column>
-
-    <p-column  header="lp."   [style]="{'width':'70px'}">
-      <ng-template let-i="rowIndex" pTemplate="rowexpansion">
-        {{i+1}}
-      </ng-template>
-    </p-column>
+        <p-column header="lp." [style]="{'width':'70px'}">
+            <ng-template let-i="rowIndex" pTemplate="rowexpansion">
+                {{i+1}}
+            </ng-template>
+        </p-column>
 
 
-    <p-column field="basketName" header="Nazwa kosza" [sortable]="true"></p-column>
-    <p-column field="basketType.basketTypeName" header="Typ kosza" [sortable]="false" [style]="{'width':'120px'}" ></p-column>
+        <p-column field="basketName" header="Nazwa kosza" [sortable]="true"></p-column>
+        <p-column field="basketType.basketTypeName" header="Typ kosza" [sortable]="false"
+                  [style]="{'width':'120px'}"></p-column>
 
 
-    <p-column field="basketSezon.basketSezonName" header="Sezon" [style]="{'width':'150px', 'text-align':'center'}"
-              [filter]="true" filterMatchMode="equals" [sortable]="false">
+        <p-column field="basketSezon.basketSezonName" header="Sezon" [style]="{'width':'150px', 'text-align':'center'}"
+                  [filter]="true" filterMatchMode="equals" [sortable]="false">
 
-      <ng-template let-col pTemplate="filter">
-        <p-multiSelect [filter]="true" [showToggleAll]="false" [options]="basketSeasonList" defaultLabel="Wszystkie"
-                       (onChange)="datatable.filter($event.value, col.field, 'in')"></p-multiSelect>
-      </ng-template>
+            <ng-template let-col pTemplate="filter">
+                <p-multiSelect [filter]="true" [showToggleAll]="false" [options]="basketSeasonList"
+                               defaultLabel="Wszystkie"
+                               (onChange)="datatable.filter($event.value, col.field, 'in')"></p-multiSelect>
+            </ng-template>
 
-      <ng-template let-row="rowData" pTemplate="body">
-        {{row.basketSezon?.basketSezonName}}
-      </ng-template>
+            <ng-template let-row="rowData" pTemplate="body">
+                {{row.basketSezon?.basketSezonName}}
+            </ng-template>
 
-    </p-column>
-
-
-
+        </p-column>
 
 
+        <p-column field="stock" header="Stan" [editable]="true" [sortable]="true"
+                  [style]="{'width':'120px'}"></p-column>
 
-    <p-column field="stock" header="Stan"  [editable]="true" [sortable]="true" [style]="{'width':'120px'}"></p-column>
+        <p-column field="basketTotalPrice" header="Cena kosza " [sortable]="true" [style]="{'width':'120px'}">
 
-    <p-column field="basketTotalPrice"  header="Cena kosza "  [sortable]="true" [style]="{'width':'120px'}">
-
-      <ng-template let-row="rowData" pTemplate="body">
-        {{row.basketTotalPrice/100| number : '1.2-2'}} zł.
-      </ng-template>
-    </p-column>
+            <ng-template let-row="rowData" pTemplate="body">
+                {{row.basketTotalPrice/100| number : '1.2-2'}} zł.
+            </ng-template>
+        </p-column>
 
 
-    <p-column field="basketProductsPrice"  header="Cena Produktów "  [sortable]="true" [style]="{'width':'120px'}">
+        <p-column field="basketProductsPrice" header="Cena Produktów " [sortable]="true" [style]="{'width':'120px'}">
 
-      <ng-template let-row="rowData" pTemplate="body">
-        {{row.basketProductsPrice/100| number : '1.2-2'}} zł.
-      </ng-template>
-    </p-column>
+            <ng-template let-row="rowData" pTemplate="body">
+                {{row.basketProductsPrice/100| number : '1.2-2'}} zł.
+            </ng-template>
+        </p-column>
 
-      <p-column  header="Akcja" [style]="{'width':'140px'}">
-        <ng-template let-basket="rowData" pTemplate="body">
-          <i *ngIf="authenticationService.isAdmin() || authenticationService.isBiuroUser() " class="fa fa-pencil-square-o fa-2x" aria-hidden="true"  title="Edytuj kosz" [routerLink]="['/basket/', basket.basketId] "></i>
-          <i *ngIf="authenticationService.isAdmin()" class="fa fa-trash fa-2x edit_icon" aria-hidden="true" title="Usuń kosz"  (click)="ShowConfirmModal(basket)"></i>
-          <i *ngIf="basket.isBasketImg!=1" class="fa fa-picture-o fa-2x" style="color:grey" aria-hidden="true" title="Zdjęcie kosza niedostępne" ></i>
-          <i *ngIf="basket.isBasketImg==1" class="fa fa-picture-o fa-2x" aria-hidden="true" title="Pokaż zdjęcie kosza" (click)=" showBacketImg($event,basket.basketId)" ></i>
-          <i class="fa fa-file-pdf-o fa-2x " aria-hidden="true" title="Drukuj skład kosza ze zdjęciem" (click)="printProductListInBasketPdf(basket.basketId)" ></i>
+        <p-column header="Akcja" [style]="{'width':'140px'}">
+            <ng-template let-basket="rowData" pTemplate="body">
+                <i *ngIf="authenticationService.isAdmin() || authenticationService.isBiuroUser() "
+                   class="fa fa-pencil-square-o fa-2x" aria-hidden="true" title="Edytuj kosz"
+                   [routerLink]="['/basket/', basket.basketId] "></i>
+                <i *ngIf="authenticationService.isAdmin()" class="fa fa-trash fa-2x edit_icon" aria-hidden="true"
+                   title="Usuń kosz" (click)="ShowConfirmModal(basket)"></i>
+                <i *ngIf="basket.isBasketImg!=1" class="fa fa-picture-o fa-2x" style="color:grey" aria-hidden="true"
+                   title="Zdjęcie kosza niedostępne"></i>
+                <i *ngIf="basket.isBasketImg==1" class="fa fa-picture-o fa-2x" aria-hidden="true"
+                   title="Pokaż zdjęcie kosza" (click)=" showBasketImg($event,basket.basketId)"></i>
+                <i class="fa fa-file-pdf-o fa-2x " aria-hidden="true" title="Drukuj skład kosza ze zdjęciem"
+                   (click)="printProductListInBasketPdf(basket.basketId)"></i>
+            </ng-template>
+        </p-column>
+
+        <ng-template let-basket pTemplate="rowexpansion">
+            Zawartość kosza: {{basket.basketName}}
+            <div class="d-table-wrapper">
+
+                <table class="d-table">
+                    <colgroup>
+                        <col span="1" style="width: 50%;">
+                        <col span="1" style="width: 10%;">
+                        <col span="1" style="width: 15%;">
+                        <col span="1" style="width: 15%;">
+                        <col span="1" style="width: 15%;">
+                        <col span="1" style="width: 10%;">
+                    </colgroup>
+
+                    <thead>
+                    <tr>
+                        <th>Nazwa Produktu</th>
+                        <th>Typ</th>
+                        <th>Pojemność</th>
+                        <th>Dostawca</th>
+                        <th>Cena zakupu</th>
+                        <th>Ilość</th>
+                    </tr>
+                    </thead>
+
+                    <tbody>
+                    <tr *ngFor="let i of basket.basketItems">
+                        <td>{{i.product.productName}}</td>
+                        <td>{{i.product.productSubType?.subTypeName}}</td>
+                        <td>{{i.product.capacity}}</td>
+                        <td>{{i.product.suppliers[0]?.supplierName}}</td>
+                        <td>{{i.product.price/100| number : '1.2-2'}} zł</td>
+                        <td>{{i.quantity}} szt.</td>
+                    </tr>
+                    </tbody>
+                </table>
+
+            </div>
+
         </ng-template>
-      </p-column>
 
-    <ng-template let-basket pTemplate="rowexpansion">
-      Zawartość kosza:  {{basket.basketName}}
-      <div class="d-table-wrapper">
-
-        <table class="d-table">
-          <colgroup>
-            <col span="1" style="width: 50%;">
-            <col span="1" style="width: 10%;">
-            <col span="1" style="width: 15%;">
-            <col span="1" style="width: 15%;">
-            <col span="1" style="width: 15%;">
-            <col span="1" style="width: 10%;">
-          </colgroup>
-
-          <thead>
-          <tr>
-            <th>Nazwa Produktu</th>
-            <th>Typ</th>
-            <th>Pojemność</th>
-            <th>Dostawca</th>
-            <th>Cena zakupu</th>
-            <th>Ilość</th>
-          </tr>
-          </thead>
-
-          <tbody>
-          <tr *ngFor="let i of basket.basketItems">
-            <td>{{i.product.productName}}</td>
-            <td>{{i.product.productSubType?.subTypeName}}</td>
-            <td>{{i.product.capacity}}</td>
-            <td>{{i.product.suppliers[0]?.supplierName}}</td>
-            <td>{{i.product.price/100| number : '1.2-2'}} zł</td>
-            <td>{{i.quantity}} szt.</td>
-          </tr>
-          </tbody>
-        </table>
-
-      </div>
-
-    </ng-template>
-
-  </p-dataTable>
+    </p-dataTable>
 </p-fieldset>
 
 

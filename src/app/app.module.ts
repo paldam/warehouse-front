@@ -18,14 +18,12 @@ import {UserService} from "./user.service";
 import {AdminOrSuperUserGuard} from "./guard/adminOrSuperUser.guard";
 import {MapService} from "./maps/map.service";
 import {CalendarSetingsComponent} from "./primeNgCalendarSetings/calendarStings.component";
-import {FileSendService} from "./file-send/file-send.service";
 import {MessageService} from "primeng/api";
 import {MessageServiceExt} from './messages/messageServiceExt';
 import {RoutingState} from "./routing-stage";
 import {SpinerService} from "./spiner.service";
 import {PrimeNgModule} from "./prime-ng.module";
 import {MapsComponent} from "./maps/maps.component";
-import {FileSendComponent} from "./file-send/file-send.component";
 import {NotificationsService} from "./nav-bars/top-nav/notification.service";
 import {ServerSideEventsService} from "./server-side-events-service";
 
@@ -39,7 +37,6 @@ export function httpExt(backend: XHRBackend, options: RequestOptions, router: Ro
 		NavComponent,
 		LeftNavComponent,
 		LoginComponent,
-		FileSendComponent,
 		MapsComponent
 	],
 	imports: [

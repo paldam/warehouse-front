@@ -1,118 +1,128 @@
 <div class="row">
-  <div class="col-lg-4">
-  <p-fieldset legend="Dodaj użytkownikavs" [toggleable]="true">
+    <div class="col-lg-4">
+        <p-fieldset legend="Dodaj użytkownika" [toggleable]="true">
 
-      <form id="userForm" novalidate #form="ngForm" (submit)="submitForm(form)">
+            <form id="userForm" novalidate #form="ngForm" (submit)="submitForm(form)">
 
-        <div class="form-group">
-          <small id="loginDescript" class="text-muted">Login</small>
-          <input type="text" name="login" class="form-control" [(ngModel)]="user.login" #login="ngModel" aria-describedby="loginDescript" required >
-          <ul class="text-danger list-unstyled" *ngIf="login.dirty || formSubmitted">
-            <li  *ngIf="login.errors?.required && formSubmitted">To pole nie może być puste</li>
-          </ul>
-        </div>
-
-
-        <div class="form-group">
-          <small id="pass_1_Descript" class="text-muted">Hasło</small>
-          <input type="password" name="pass_1" class="form-control"  [(ngModel)]="user.password" #pass_1="ngModel" aria-describedby="pass_1Descript" required="">
-          <ul class="text-danger list-unstyled" *ngIf="pass_1.dirty || formSubmitted">
-            <li  *ngIf="pass_1.errors?.required && formSubmitted">Podaj hasło</li>
-          </ul>
-        </div>
-
-        <div class="form-group">
-          <small id="pass_2_Descript" class="text-muted">Powtórz hasło</small>
-          <input type="password" name="pass_2" class="form-control"  [(ngModel)]="passwordConfirm" #pass_2="ngModel" aria-describedby="pass_2Descript" required="">
-          <ul class="text-danger list-unstyled" *ngIf="pass_2.dirty || formSubmitted">
-            <li  *ngIf="pass_2.errors?.required">Powtórz hasło</li>
-          </ul>
-          <ul class="text-danger list-unstyled" *ngIf="pass_1.dirty && pass_2.dirty && formSubmitted && passwordDontMatch">
-            <li>Hasła nie są takie same</li>
-          </ul>
-        </div>
-
-        <div class="form-group">
-          <small id="authDesc" class="text-muted">Uprawnienia</small>
-          <select multiple class="form-control" [(ngModel)]="user.authorities" name="auth" #auth="ngModel"  >
-            <option *ngFor="let item of authorities" [ngValue]="item">{{item.name}} </option>
-          </select>
+                <div class="form-group">
+                    <small id="loginDescript" class="text-muted">Login</small>
+                    <input type="text" name="login" class="form-control" [(ngModel)]="user.login" #login="ngModel"
+                           aria-describedby="loginDescript" required>
+                    <ul class="text-danger list-unstyled" *ngIf="login.dirty || formSubmitted">
+                        <li *ngIf="login.errors?.required && formSubmitted">To pole nie może być puste</li>
+                    </ul>
+                </div>
 
 
-        </div>
+                <div class="form-group">
+                    <small id="pass_1_Descript" class="text-muted">Hasło</small>
+                    <input type="password" name="pass_1" class="form-control" [(ngModel)]="user.password"
+                           #pass_1="ngModel" aria-describedby="pass_1Descript" required="">
+                    <ul class="text-danger list-unstyled" *ngIf="pass_1.dirty || formSubmitted">
+                        <li *ngIf="pass_1.errors?.required && formSubmitted">Podaj hasło</li>
+                    </ul>
+                </div>
 
-        <button class="btn bg-primary " type="submit" > Dodaj</button>
-        {{status}}
-      </form>
-  </p-fieldset>
-</div>
-  <div class="col-lg-8">
-    <p-fieldset legend="Lista użytkowników">
+                <div class="form-group">
+                    <small id="pass_2_Descript" class="text-muted">Powtórz hasło</small>
+                    <input type="password" name="pass_2" class="form-control" [(ngModel)]="passwordConfirm"
+                           #pass_2="ngModel" aria-describedby="pass_2Descript" required="">
+                    <ul class="text-danger list-unstyled" *ngIf="pass_2.dirty || formSubmitted">
+                        <li *ngIf="pass_2.errors?.required">Powtórz hasło</li>
+                    </ul>
+                    <ul class="text-danger list-unstyled"
+                        *ngIf="pass_1.dirty && pass_2.dirty && formSubmitted && passwordDontMatch">
+                        <li>Hasła nie są takie same</li>
+                    </ul>
+                </div>
 
-        <p-dataTable [value]="usersList" [rows]="20" [paginator]="true"  #dt
-                     [loading]="loading" loadingIcon="fa-circle-o-notch" >
-          <p-header>Lista użytkowników</p-header>
-
-          <p-column  header="lp."   [style]="{'width':'70px'}">
-            <ng-template let-row="rowData" let-i="rowIndex" pTemplate="rowexpansion">
-              {{i+1}}
-            </ng-template>
-          </p-column>
-
-          <p-column field="login" styleClass="name_col" header="Login"  [style]="{'width':'200px'}"></p-column>
-          <p-column field="isArchival" styleClass="name_col" header="Archiwalny?"  [style]="{'width':'200px'}"></p-column>
-
-          <p-column  styleClass="price_col" header="Uprawnienia"  >
-            <ng-template let-i="rowData" pTemplate="body"  >
-               <i *ngFor="let a of i.authorities" >{{a.name}} </i>
-            </ng-template>
-          </p-column>
-
-          <p-column  header="Akcja" [style]="{'width':'100px'}">
-            <ng-template let-user="rowData" pTemplate="body">
-              <i class="fa fa-pencil-square-o fa-2x" aria-hidden="true"  title="Edytuj użytkownia"  (click)="showChangeDialog(user)"></i>
-              <i class="fa fa-user-times fa-2x edit_icon" aria-hidden="true" title="Usuń użytkownika"  (click)="ShowConfirmModal(user)"></i>
-              <i class="fa fa-unlock-alt fa-2x edit_icon" aria-hidden="true" title="Resetuj hasło"  (click)="ShowConfirmResetModal(user)"></i>
-
-            </ng-template>
-          </p-column>
+                <div class="form-group">
+                    <small id="authDesc" class="text-muted">Uprawnienia</small>
+                    <select multiple class="form-control" [(ngModel)]="user.authorities" name="auth" #auth="ngModel">
+                        <option *ngFor="let item of authorities" [ngValue]="item">{{item.name}}</option>
+                    </select>
 
 
-        </p-dataTable>
+                </div>
 
-    </p-fieldset>
-  </div>
-</div>
+                <button class="btn bg-primary " type="submit"> Dodaj</button>
+                {{status}}
+            </form>
+        </p-fieldset>
+    </div>
+    <div class="col-lg-8">
+        <p-fieldset legend="Lista użytkowników">
 
-<!--TODO-->
-<div *ngIf="authenticationService.isAdmin()" class="row" >
-  <div class="col-lg-4">
-<p-fieldset legend="Zerowanie stanów magazynowych">
-    <button class="btn bg-primary " (click)="resetDbAllStockState()" > Wyzeruj stan</button>
-</p-fieldset>
+            <p-dataTable [value]="usersList" [rows]="20" [paginator]="true" #dt
+                         [loading]="loading" loadingIcon="fa-circle-o-notch">
+                <p-header>Lista użytkowników</p-header>
 
-  </div>
+                <p-column header="lp." [style]="{'width':'70px'}">
+                    <ng-template let-row="rowData" let-i="rowIndex" pTemplate="rowexpansion">
+                        {{i+1}}
+                    </ng-template>
+                </p-column>
+
+                <p-column field="login" styleClass="name_col" header="Login" [style]="{'width':'200px'}"></p-column>
+                <p-column field="isArchival" styleClass="name_col" header="Archiwalny?"
+                          [style]="{'width':'200px'}"></p-column>
+
+                <p-column styleClass="price_col" header="Uprawnienia">
+                    <ng-template let-i="rowData" pTemplate="body">
+                        <i *ngFor="let a of i.authorities">{{a.name}} </i>
+                    </ng-template>
+                </p-column>
+
+                <p-column header="Akcja" [style]="{'width':'100px'}">
+                    <ng-template let-user="rowData" pTemplate="body">
+                        <i class="fa fa-pencil-square-o fa-2x" aria-hidden="true" title="Edytuj użytkownia"
+                           (click)="showChangeDialog(user)"></i>
+                        <i class="fa fa-user-times fa-2x edit_icon" aria-hidden="true" title="Usuń użytkownika"
+                           (click)="ShowConfirmModal(user)"></i>
+                        <i class="fa fa-unlock-alt fa-2x edit_icon" aria-hidden="true" title="Resetuj hasło"
+                           (click)="ShowConfirmResetModal(user)"></i>
+
+                    </ng-template>
+                </p-column>
+
+
+            </p-dataTable>
+
+        </p-fieldset>
+    </div>
 </div>
 
-<p-confirmDialog header="Usuwanie użytkownika" key="removeDialog" icon="fa fa-question-circle" width="425"></p-confirmDialog>
-<p-confirmDialog header="Resetowanie hasła" key="resetDialog" icon="fa fa-question-circle" width="425"></p-confirmDialog>
-<p-confirmDialog header="Resetowanie stanu magazynowego" key="resetState" icon="fa fa-question-circle" width="425"></p-confirmDialog>
+<div *ngIf="authenticationService.isAdmin()" class="row">
+    <div class="col-lg-4">
+        <p-fieldset legend="Zerowanie stanów magazynowych">
+            <button class="btn bg-primary " (click)="resetDbAllStockState()"> Wyzeruj stan</button>
+        </p-fieldset>
+
+    </div>
+</div>
+
+<p-confirmDialog header="Usuwanie użytkownika" key="removeDialog" icon="fa fa-question-circle"
+                 width="425"></p-confirmDialog>
+<p-confirmDialog header="Resetowanie hasła" key="resetDialog" icon="fa fa-question-circle"
+                 width="425"></p-confirmDialog>
+<p-confirmDialog header="Resetowanie stanu magazynowego" key="resetState" icon="fa fa-question-circle"
+                 width="425"></p-confirmDialog>
 
 <p-dialog header="Zmień uprawnienia" [(visible)]="changeModal" modal="modal" width="300" [responsive]="true">
-  <p>Wybierz uprawnienia dla użytkownia {{selectedUser.login}}</p>
+    <p>Wybierz uprawnienia dla użytkownia {{selectedUser.login}}</p>
 
-  <form id="authForm" novalidate #form="ngForm" (submit)="submitChangeAuthForm(form)">
+    <form id="authForm" novalidate #form="ngForm" (submit)="submitChangeAuthForm(form)">
 
-    <div class="form-group">
-      <small id="authDesc" class="text-muted">Uprawnienia</small>
-      <select multiple class="form-control" [(ngModel)]="authoritiesToSave" name="auth2" #auth2="ngModel"  >
-        <option *ngFor="let item of authorities" [ngValue]="item">{{item.name}}</option>
-      </select>
-    </div>
-    <p-footer>
-      <button class="btn bg-primary " type="submit" > Zmień</button>
-    </p-footer>
-  </form>
+        <div class="form-group">
+            <small id="auth-list-desc" class="text-muted">Uprawnienia</small>
+            <select multiple class="form-control" [(ngModel)]="authoritiesToSave" name="auth2" #auth2="ngModel">
+                <option *ngFor="let item of authorities" [ngValue]="item">{{item.name}}</option>
+            </select>
+        </div>
+        <p-footer>
+            <button class="btn bg-primary " type="submit"> Zmień</button>
+        </p-footer>
+    </form>
 
 </p-dialog>
 

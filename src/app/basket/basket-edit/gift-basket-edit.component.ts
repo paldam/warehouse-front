@@ -1,9 +1,8 @@
-import {Component, OnInit, ViewChild, ViewEncapsulation} from '@angular/core';
+import {Component, OnInit, ViewChild} from '@angular/core';
 import {BasketService} from "../basket.service";
 import {ActivatedRoute, Router} from "@angular/router";
 import {Basket} from "../../model/basket.model";
 import {BasketType} from "../../model/basket_type.model";
-import {BasketOrderComponent} from "../../order/basket-order/basket-order.component";
 import {ProductsService} from "../../products/products.service";
 import {Product} from "../../model/product.model";
 import {BasketItems} from "../../model/basket_items.model";
@@ -12,14 +11,15 @@ import {DataTable, FileUpload, SelectItem} from "primeng/primeng";
 import {MessageServiceExt} from "../../messages/messageServiceExt";
 import {BasketSeason} from "../../model/basket_season.model";
 import {Supplier} from "../../model/supplier.model";
+import {AppConstans} from "../../constans";
 
 @Component({
 	selector: 'app-gift-basket-edit',
 	templateUrl: './gift-basket-edit.component.html',
 	styleUrls: ['./gift-basket-edit.component.css']
 })
-export class GiftBasketEditComponent implements OnInit {
-
+export class GiftBasketEditComponent
+	implements OnInit {
 	public basket: Basket = new Basket();
 	public basketTypes: BasketType[] = [];
 	public basketItems: BasketItems[] = [];
@@ -31,32 +31,26 @@ export class GiftBasketEditComponent implements OnInit {
 	public productTmp: Product[] = [];
 	public fileToUpload: File = null;
 	public basketImege: any = null;
-	public basketSeasonSelectItemList: SelectItem[]=[];
+	public basketSeasonSelectItemList: SelectItem[] = [];
 	public suppliers: SelectItem[] = [];
-	public basketSeasonList: BasketSeason[]=[];
+	public basketSeasonList: BasketSeason[] = [];
 	@ViewChild(FileUpload) fileUploadElement: FileUpload;
 	@ViewChild('dt') dataTable: DataTable;
 
-	constructor(private productsService: ProductsService, private basketService: BasketService, private router: Router, activeRoute: ActivatedRoute, private messageServiceExt: MessageServiceExt) {
-
+	constructor(private productsService: ProductsService, private basketService: BasketService,
+				private router: Router, activeRoute: ActivatedRoute, private messageServiceExt: MessageServiceExt) {
 		basketService.getBasket(activeRoute.snapshot.params["basketId"]).subscribe(data => {
-
-			console.log(data);
 			this.basket = data;
 			this.basketItems = data.basketItems;
 			this.basket.basketTotalPrice /= 100;
 		});
-
-		this.basketService.getBasketSeason().subscribe(data=> {
+		this.basketService.getBasketSeason().subscribe(data => {
 			this.basketSeasonList = data;
 			this.basketSeasonList.forEach(value => {
-				this.basketSeasonSelectItemList.push({label: value.basketSezonName , value: value})
+				this.basketSeasonSelectItemList.push({label: value.basketSezonName, value: value})
 			})
-
 		});
-
-		productsService.getSuppliers().subscribe(data=> {
-
+		productsService.getSuppliers().subscribe(data => {
 			productsService.getSuppliers().subscribe(data => {
 				this.suppliers.push({label: '-- Wszyscy Dostawcy --', value: null});
 				data.forEach(data => {
@@ -64,30 +58,24 @@ export class GiftBasketEditComponent implements OnInit {
 				})
 			});
 		});
-
-
 		basketService.getBasketsTypes().subscribe(data => {
 			this.basketTypes = data;
 			this.basketTypes = this.basketTypes
 				.filter(value => {
-					return value.basketTypeId != 999;
+					return value.basketTypeId != AppConstans.BASKET_TYPE_ID_ARCHWIUM;
 				})
 				.filter(value => {
-					return value.basketTypeId != 99;
+					return value.basketTypeId != AppConstans.BASKET_TYPE_ID_USUNIETY;
 				})
 				.filter(value => {
-					return value.basketTypeId != 100;
-				})
+					return value.basketTypeId != AppConstans.BASKET_TYPE_ID_EXPORTOWY;
+				});
 		});
-
 		productsService.getProducts().subscribe(data => this.products = data);
-
 		this.getBasketImage(activeRoute.snapshot.params["basketId"]);
-
 	}
 
 	ngOnInit() {
-
 		setTimeout(() => {
 			this.recalculate();
 		}, 700);
@@ -102,11 +90,9 @@ export class GiftBasketEditComponent implements OnInit {
 			if (value === undefined || value === null || value.length === 0) {
 				return false;
 			}
-
-			if(filter == -99){
+			if (filter == -99) {
 				return true;
 			}
-
 			for (let i = 0; i < value.length; i++) {
 				if (value[i].supplierId == filter) {
 					return true;
@@ -118,13 +104,10 @@ export class GiftBasketEditComponent implements OnInit {
 
 	compareBasketType(optionOne: BasketType, optionTwo: BasketType): boolean {
 		return optionTwo && optionTwo ? optionOne.basketTypeId === optionTwo.basketTypeId : optionOne === optionTwo;
-
 	}
 
 	addProductToGiftBasket(product: Product) {
-
 		let line = this.basketItems.find(data => data.product.id == product.id);
-
 		if (line == undefined) {
 			this.basketItems.push(new BasketItems(product, 1))
 		} else {
@@ -134,8 +117,7 @@ export class GiftBasketEditComponent implements OnInit {
 	}
 
 	filtrOnlyAvaileble(event) {
-		var isChecked = event.target.checked;
-
+		let isChecked = event.target.checked;
 		if (isChecked) {
 			if (this.productTmp.length == 0) {
 				this.productTmp = this.products;
@@ -163,7 +145,6 @@ export class GiftBasketEditComponent implements OnInit {
 	}
 
 	deleteProductLine(id: number) {
-
 		let index = this.basketItems.findIndex(data => data.product.id == id);
 		if (index > -1) {
 			this.basketItems.splice(index, 1);
@@ -180,14 +161,12 @@ export class GiftBasketEditComponent implements OnInit {
 
 	handleFileInput(event) {
 		this.fileToUpload = this.fileUploadElement.files[0];
-
 		if (this.fileUploadElement.files.length == 1) {
 			this.fileUploadElement.disabled = true;
 			this.isAddNewImg = true;
 		} else {
 			this.isAddNewImg = false;
 		}
-
 	}
 
 	enableUploadButton() {
@@ -200,31 +179,28 @@ export class GiftBasketEditComponent implements OnInit {
 
 	submitForm(form: NgForm) {
 		this.formSubmitted = true;
-
 		if (this.isFormValid(form)) {
-			if(!this.basket.basketSezon){
+			if (!this.basket.basketSezon) {
 				this.basket.basketSezon = new BasketSeason(0) //todo
 			}
 			this.basket.basketProductsPrice = this.total;
-
 			this.basket.basketItems = this.basketItems;
 			this.basket.basketTotalPrice *= 100;
-
 			if (this.basket.basketType.basketTypeId == 1) {
-				this.isAddNewImg ? this.performActionForBasketWithNewImg(form) : this.performActionForBasketWhichHasImgInDb(form);
+				this.isAddNewImg ?
+					this.performActionForBasketWithNewImg(form) : this.performActionForBasketWhichHasImgInDb(form);
 			} else {
 				if (this.isAddNewImg) {
 					this.performActionForBasketWithNewImg(form)
 				} else {
-					this.basket.isBasketImg ? this.performActionForBasketWhichHasImgInDb(form) : this.performActionForBasketWhitoutNewImgAndImgInDb(form);
+					this.basket.isBasketImg ?
+						this.performActionForBasketWhichHasImgInDb(form) : this.performActionForBasketWhitoutNewImgAndImgInDb(form);
 				}
 			}
 		}
-
 	}
 
 	private performActionForBasketWithNewImg(form: NgForm) {
-
 		this.basketService.saveBasketWithImg(this.basket, this.fileToUpload).subscribe(data => {
 			this.basket = new Basket();
 			this.basketItems = [];
@@ -247,14 +223,15 @@ export class GiftBasketEditComponent implements OnInit {
 	}
 
 	private performActionForBasketWhitoutNewImgAndImgInDb(form: NgForm) {
-
 		this.basketService.addBasket(this.basket).subscribe(data => {
 			},
 			error => {
-				this.messageServiceExt.addMessage('error', 'Błąd', "Status: " + error.status + ' ' + error.statusText)
+				this.messageServiceExt.addMessage(
+					'error', 'Błąd', "Status: " + error.status + ' ' + error.statusText)
 			},
 			() => {
-				this.messageServiceExt.addMessage('success', 'Status', 'Poprawnie edytowano kosz');
+				this.messageServiceExt.addMessage(
+					'success', 'Status', 'Poprawnie edytowano kosz');
 				this.basket = new Basket();
 				this.basketItems = [];
 				form.resetForm();
@@ -262,40 +239,31 @@ export class GiftBasketEditComponent implements OnInit {
 				this.recalculate();
 				this.fileUploadElement.clear();
 				this.router.navigateByUrl('/baskets');
-
 			});
 	}
 
 	private isFormValid(form: NgForm) {
-
 		if (this.basket.basketType) {
 			if (this.basket.basketType.basketTypeId == 1) {
-				return form.valid && this.basketItems.length > 0 && (this.fileUploadElement.files.length == 1 || this.basket.isBasketImg == 1)
+				return form.valid && this.basketItems.length > 0 && (this.fileUploadElement.files.length == 1 ||
+					   this.basket.isBasketImg == 1)
 			} else {
 				return form.valid && this.basketItems.length > 0;
 			}
 		} else {
 			return false;
 		}
-
 	}
 
 	getBasketImage(basketId: number) {
-
 		this.basketService.getBasketImg(basketId).subscribe(res => {
-
 			let reader = new FileReader();
 			reader.addEventListener("load", () => {
 				this.basketImege = reader.result;
-
 			}, false);
-
 			if (res) {
 				reader.readAsDataURL(res);
 			}
-
 		});
-
 	}
-
 }

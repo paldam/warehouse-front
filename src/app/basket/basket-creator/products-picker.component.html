@@ -1,14 +1,14 @@
 <div class="products_box">
     <p-fieldset legend="Lista produktów" [toggleable]="true">
         <div class="input-group search_bar">
-            <span class="input-group-addon" id="basic-addon1">
+            <span class="input-group-addon" id="basic-addon-prod">
                  <i class="fa fa-search" aria-hidden="true"></i>
             </span>
             <input #gb type="text" class="form-control search_input" pInputText size="50" placeholder="Szukaj"
                    aria-describedby="basic-addon1">
 
-            <label class="form-check-label only_availeble_product_checkbox">
-                <input class="form-check-input" type="checkbox" (change)="filtrOnlyAvaileble($event)"> pokaż tylko
+            <label class="form-check-label only_available_product_checkbox">
+                <input class="form-check-input" type="checkbox" (change)="filerOnlyAvailable($event)"> pokaż tylko
                 dostępne produkty
             </label>
 
@@ -27,26 +27,27 @@
             <p-column field="capacity" header="Pojemność" [sortable]="true" [style]="{'width':'80px'}"></p-column>
 
 
-
-
-
-
-
-            <p-column field="suppliers" header="Dostawca" [filter]="true" filterMatchMode="inCollection" [style]="{'width':'220px'}">
+            <p-column field="suppliers" header="Dostawca" [filter]="true" filterMatchMode="inCollection"
+                      [style]="{'width':'220px'}">
                 <ng-template pTemplate="filter" let-col>
-                    <p-dropdown [filter]="true" [options]="suppliers" placeholder="Wszyscy"  [style]="{'width':'100%'}" (onChange)="dataTable.filter($event.value,col.field,col.filterMatchMode)" styleClass="ui-column-filter"></p-dropdown>
+                    <p-dropdown [filter]="true" [options]="suppliers" placeholder="Wszyscy" [style]="{'width':'100%'}"
+                                (onChange)="dataTable.filter($event.value,col.field,col.filterMatchMode)"
+                                styleClass="ui-column-filter"></p-dropdown>
                 </ng-template>
-                <ng-template  let-item="rowData"   pTemplate="body">
-                    <tr *ngFor="let supplier of item.suppliers">  {{supplier.supplierName}}  </tr>
+                <ng-template let-item="rowData" pTemplate="body">
+                    <tr *ngFor="let supplier of item.suppliers"> {{supplier.supplierName}}</tr>
                 </ng-template>
             </p-column>
 
-            <p-column field="productSubType.subTypeName" styleClass="type_col" [filter]="true" header="Typ produktu" [style]="{'width':'220px'}" filterMatchMode="equals" [sortable]="true" >
-                <ng-template  let-col pTemplate="filter"  >
-                    <p-multiSelect  [filter]="true" [showToggleAll]="false" [options]="productsType" defaultLabel="Wszystkie" (onChange)="dataTable.filter($event.value, col.field, 'in')"></p-multiSelect>
+            <p-column field="productSubType.subTypeName" styleClass="type_col" [filter]="true" header="Typ produktu"
+                      [style]="{'width':'220px'}" filterMatchMode="equals" [sortable]="true">
+                <ng-template let-col pTemplate="filter">
+                    <p-multiSelect [filter]="true" [showToggleAll]="false" [options]="productsType"
+                                   defaultLabel="Wszystkie"
+                                   (onChange)="dataTable.filter($event.value, col.field, 'in')"></p-multiSelect>
                 </ng-template>
 
-                <ng-template let-row="rowData" pTemplate="body"  >
+                <ng-template let-row="rowData" pTemplate="body">
                     <span> {{ row.productSubType?.subTypeName}} ({{row.productSubType?.productType?.typeName}}) </span>
                 </ng-template>
             </p-column>
@@ -72,7 +73,8 @@
 <div class="row">
     <div class="picked_products_list col-xl-6">
         <p-fieldset legend="Zawartość kosza" [toggleable]="true">
-            <button class="btn bg-primary text pull-right btnsample" (click)="showBasketPatterList()">kosz na wzór</button>
+            <button class="btn bg-primary text pull-right btnsample" (click)="showBasketPatterList()">kosz na wzór
+            </button>
 
             <div class="d-table-wrapper">
                 <table class="d-table" *ngIf="isProductLinesEmpty()==false">
@@ -142,7 +144,8 @@
                             <small id="product_typeDesc" class="text-muted">Sezon</small>
 
 
-                            <p-listbox name="type_list" [style]="{ 'width':'400px'}" [listStyle]="{'max-height':'100px', 'width':'390px'}"
+                            <p-listbox name="type_list" [style]="{ 'width':'400px'}"
+                                       [listStyle]="{'max-height':'100px', 'width':'390px'}"
                                        [options]="basketSeasonSelectItemList"
                                        [(ngModel)]="basket.basketSezon" [filter]="true">
 
@@ -184,7 +187,8 @@
                         </div>
 
 
-                        <div *ngIf="this.fileUploadElement.files.length !=1 && formSubmitted && this.basket.basketType?.basketTypeId == 1"
+                        <div *ngIf="this.fileUploadElement.files.length !=1 && formSubmitted
+                                     && this.basket.basketType?.basketTypeId == 1"
                              class="alert alert-danger" role="alert">
                             <strong>Wgraj plik </strong>
                         </div>

@@ -2,26 +2,25 @@ import {Component, OnInit} from '@angular/core';
 import {Router} from "@angular/router";
 import {BasketService} from "../basket.service";
 import {SpinerService} from "../../spiner.service";
-import {CustomerService} from "../../customer/customer.service";
-import {OrderService} from "../../order/order.service";
 import {MessageServiceExt} from "../../messages/messageServiceExt";
 import {ConfirmationService} from "primeng/api";
 import {AuthenticationService} from "../../authentication.service";
 import {Basket} from "../../model/basket.model";
 import {OrderItem} from "../../model/order_item";
-import {BasketType} from "../../model/basket_type.model";
 
 @Component({
 	selector: 'app-baskets-in-advance',
 	templateUrl: './baskets-in-advance.component.html',
 	styleUrls: ['./baskets-in-advance.component.css']
 })
-export class BasketsInAdvanceComponent implements OnInit {
+export class BasketsInAdvanceComponent
+	implements OnInit {
 	public baskets: Basket[] = [];
 	public orderItems: OrderItem[] = [];
 
 	constructor(private router: Router, private basketService: BasketService, private spinerService: SpinerService,
-				private messageServiceExt: MessageServiceExt, private confirmationService: ConfirmationService, public authenticationService: AuthenticationService) {
+				private messageServiceExt: MessageServiceExt, private confirmationService: ConfirmationService,
+				public authenticationService: AuthenticationService) {
 		basketService.getBaskets().subscribe(data => this.baskets = data);
 	}
 
@@ -36,7 +35,6 @@ export class BasketsInAdvanceComponent implements OnInit {
 		if (line != undefined) {
 			line.quantity = Number(quantity);
 		}
-		// this.recalculateTotalPlusMarkUp();
 	}
 
 	deleteProductLine(id: number) {
@@ -53,15 +51,10 @@ export class BasketsInAdvanceComponent implements OnInit {
 		} else {
 			line.quantity = line.quantity + 1;
 		}
-		// this.recalculateTotalPlusMarkUp();
 	}
 
 	isBasketLinesEmpty(): boolean {
-		if (this.orderItems.length == 0) {
-			return true
-		} else {
-			return false
-		}
+		return this.orderItems.length == 0;
 	}
 
 	refreshData() {
@@ -74,17 +67,19 @@ export class BasketsInAdvanceComponent implements OnInit {
 		});
 	}
 
-	addBaskettoStock() {
+	addBasketToStock() {
 		this.confirmationService.confirm({
 			message: 'Jesteś pewny że chcesz dodać kosze na stan ? ',
 			accept: () => {
 				this.spinerService.showSpinner = true;
 				this.basketService.addBasketsToStock(this.orderItems).subscribe(value => {
 				}, error => {
-					this.messageServiceExt.addMessage('error', 'Błąd', "Status: " + error.status + ' ' + error.statusText);
+					this.messageServiceExt.addMessage(
+						'error', 'Błąd', "Status: " + error.status + ' ' + error.statusText);
 					this.spinerService.showSpinner = false;
 				}, () => {
-					this.messageServiceExt.addMessage('success', 'Uwaga', 'Dodano kosze na stan');
+					this.messageServiceExt.addMessage(
+						'success', 'Uwaga', 'Dodano kosze na stan');
 					this.refreshData();
 					this.orderItems = [];
 				});
@@ -99,10 +94,12 @@ export class BasketsInAdvanceComponent implements OnInit {
 		this.basketService.saveNewStockOfBasket(basket.basketId, basket.stock).subscribe(
 			value => {
 				this.refreshData();
-				this.messageServiceExt.addMessageWithTime('success', 'Status', 'Dokonano edycji stanu magazynowego koszy', 5000);
+				this.messageServiceExt.addMessageWithTime(
+					'success', 'Status', 'Dokonano edycji stanu magazynowego koszy', 5000);
 			},
 			error => {
-				this.messageServiceExt.addMessageWithTime('error', 'Błąd', "Status: " + error._body + ' ', 5000);
+				this.messageServiceExt.addMessageWithTime(
+					'error', 'Błąd', "Status: " + error._body + ' ', 5000);
 			}
 		)
 	}

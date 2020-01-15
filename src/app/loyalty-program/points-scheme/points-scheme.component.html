@@ -4,8 +4,9 @@
 <div class="col-6">
 
 
-    <p-dataTable [value]="pointSchemes" [rows]="50" [paginator]="true"  #dt
-                 [loading]="loading" loadingIcon="fa-circle-o-notch" [paginator]="true" [pageLinks]="5" [editable]="true" (onEditComplete)="editPoints($event.data)"
+    <p-dataTable [value]="pointSchemes" [rows]="50" [paginator]="true" #dt
+                 [loading]="loading" loadingIcon="fa-circle-o-notch" [paginator]="true" [pageLinks]="5"
+                 [editable]="true" (onEditComplete)="editPoints($event.data)"
                  [rowsPerPageOptions]=paginatorValues [style]="{'width':'500px','text-align': 'center'}">
         <p-header>Schemat przydzielania punktów</p-header>
 
@@ -19,9 +20,10 @@
         <p-column field="basketSezon.basketSezonName" styleClass="name_col" header="Sezon" [sortable]="true"></p-column>
         <p-column field="points" styleClass="name_col" header="Ilość pkt." [editable]="true"></p-column>
         <p-column field="step" styleClass="name_col" header="za każde wydane zł" [editable]="true"></p-column>
-        <p-column  header="Akcja"  styleClass="action_col">
+        <p-column header="Akcja" styleClass="action_col">
             <ng-template let-row="rowData" pTemplate="body" let-row="rowData" let-i="rowIndex" pTemplate="rowexpansion">
-                <i  class="fa fa-trash fa-2x edit_icon" aria-hidden="true" title="Usuń"  (click)="ShowConfirmModal(row)"></i>
+                <i class="fa fa-trash fa-2x edit_icon" aria-hidden="true" title="Usuń"
+                   (click)="ShowConfirmModal(row)"></i>
             </ng-template>
         </p-column>
 
@@ -30,8 +32,7 @@
 </div>
 
 
-
-<p-dialog header="Dodaj" modal="true" width="600" [(visible)]="showAddPointModal"  >
+<p-dialog header="Dodaj" modal="true" width="600" [(visible)]="showAddPointModal">
 
     <form id="addForm" novalidate #form="ngForm">
 
@@ -39,7 +40,8 @@
             <small id="product_typeDesc" class="text-muted">Sezon</small>
 
 
-            <p-listbox name="type_list" [style]="{ 'width':'500px'}" [listStyle]="{'max-height':'100px', 'width':'490px'}"
+            <p-listbox name="type_list" [style]="{ 'width':'500px'}"
+                       [listStyle]="{'max-height':'100px', 'width':'490px'}"
                        [options]="basketSeasonSelectItemList"
                        [(ngModel)]="pointSchemeToAdd.basketSezon" [filter]="true">
 
@@ -50,16 +52,18 @@
 
 
         <div class="form-group">
-            <small id="contactPersonDescript" class="text-muted">Punkty </small>
-            <input type="number" #contact_person name="supplier_name" class="form-control" [(ngModel)]="pointSchemeToAdd.points" #name="ngModel" aria-describedby="contactPersonDescript" required   >
+            <small id="pointPersonDescript" class="text-muted">Punkty</small>
+            <input type="number" #contact_person name="supplier_name" class="form-control"
+                   [(ngModel)]="pointSchemeToAdd.points" #name="ngModel" aria-describedby="contactPersonDescript"
+                   required>
         </div>
 
         <div class="form-group">
-            <small id="contactPersonDescript" class="text-muted">Krok </small>
-            <input type="number" #contact_person name="supplier_name" class="form-control" [(ngModel)]="pointSchemeToAdd.step" #name="ngModel" aria-describedby="contactPersonDescript" required=""  >
+            <small id="stepDescript" class="text-muted">Krok</small>
+            <input type="number" #contact_person name="supplier_name" class="form-control"
+                   [(ngModel)]="pointSchemeToAdd.step" #name="ngModel" aria-describedby="contactPersonDescript"
+                   required="">
         </div>
-
-
 
 
         <button class="btn bg-primary " (click)="addPoint(form)"> Zapisz</button>

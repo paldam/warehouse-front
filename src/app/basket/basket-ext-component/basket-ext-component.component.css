@@ -1,29 +1,34 @@
-.basketList{
+.basketList {
     padding-top: 10px;
 }
-.basket_products_info{
+
+.basket_products_info {
     padding: 10px;
 }
-.product_tab{
+
+.product_tab {
     width: 65%;
     border: 1px solid black;
 }
-.product_tab th ,td,tr{
+
+.product_tab th, td, tr {
     border: 1px solid black;
 }
-.product_tab th{
+
+.product_tab th {
     background-color: #ebedf0;
     text-align: left;
 
 }
 
-
 .product_tab_row {
     text-align: left;
 }
-.state_img{
+
+.state_img {
 
 }
-.action_col{
+
+.action_col {
     width: 50px;
 }

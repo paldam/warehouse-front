@@ -5,6 +5,6 @@ export class ProductSubType {
 		public subTypeId?: number,
 		public subTypeName?: string,
 		public productType?: ProductType
-	){
+	) {
 	}
 }

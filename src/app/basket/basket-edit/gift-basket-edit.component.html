@@ -89,7 +89,8 @@
                                 <small id="product_typeDesc" class="text-muted">Sezon</small>
 
 
-                                <p-listbox name="type_list" [style]="{ 'width':'400px'}" [listStyle]="{'max-height':'100px', 'width':'390px'}"
+                                <p-listbox name="type_list" [style]="{ 'width':'400px'}"
+                                           [listStyle]="{'max-height':'100px', 'width':'390px'}"
                                            [options]="basketSeasonSelectItemList"
                                            [(ngModel)]="basket.basketSezon" [filter]="true">
 
@@ -133,7 +134,8 @@
                             </div>
 
 
-                            <div *ngIf="this.fileUploadElement.files.length !=1 && formSubmitted && this.basket.basketType?.basketTypeId == 1"
+                            <div *ngIf="this.fileUploadElement.files.length !=1 && formSubmitted
+                                        && this.basket.basketType?.basketTypeId == 1"
                                  class="alert alert-danger" role="alert">
                                 <strong>Wgraj plik </strong>
                             </div>
@@ -162,14 +164,14 @@
             <input #gb type="text" class="form-control search_input" pInputText size="50" placeholder="Szukaj"
                    aria-describedby="basic-addon1">
 
-            <label class="form-check-label only_availeble_product_checkbox">
+            <label class="form-check-label only_available_product_checkbox">
                 <input class="form-check-input" type="checkbox" (change)="filtrOnlyAvaileble($event)"> pokaż tylko
                 dostępne produkty
             </label>
 
 
         </div>
-        <p-dataTable  [value]="products" [rows]="10" [paginator]="true" [globalFilter]="gb" #dt
+        <p-dataTable [value]="products" [rows]="10" [paginator]="true" [globalFilter]="gb" #dt
                      [loading]="loading" loadingIcon="fa-circle-o-notch"
                      (onRowDblclick)="addProductToGiftBasket($event.data)">
             <p-column field="id" header="ID" [sortable]="true" [style]="{'width':'70px'}"></p-column>
@@ -177,16 +179,17 @@
             <p-column field="capacity" header="Pojemność" [sortable]="true" [style]="{'width':'120px'}"></p-column>
 
 
-
-            <p-column field="suppliers" header="Dostawca" [filter]="true" filterMatchMode="inCollection" [style]="{'width':'220px'}">
+            <p-column field="suppliers" header="Dostawca" [filter]="true" filterMatchMode="inCollection"
+                      [style]="{'width':'220px'}">
                 <ng-template pTemplate="filter" let-col>
-                    <p-dropdown [filter]="true" [options]="suppliers" placeholder="Wszyscy"  [style]="{'width':'100%'}" (onChange)="dataTable.filter($event.value,col.field,col.filterMatchMode)" styleClass="ui-column-filter"></p-dropdown>
+                    <p-dropdown [filter]="true" [options]="suppliers" placeholder="Wszyscy" [style]="{'width':'100%'}"
+                                (onChange)="dataTable.filter($event.value,col.field,col.filterMatchMode)"
+                                styleClass="ui-column-filter"></p-dropdown>
                 </ng-template>
-                <ng-template  let-item="rowData"   pTemplate="body">
-                    <tr *ngFor="let supplier of item.suppliers">  {{supplier.supplierName}}  </tr>
+                <ng-template let-item="rowData" pTemplate="body">
+                    <tr *ngFor="let supplier of item.suppliers"> {{supplier.supplierName}}</tr>
                 </ng-template>
             </p-column>
-
 
 
             <p-column field="price" styleClass="price_col" header="Cena" [sortable]="true">

@@ -1,9 +1,8 @@
-
 <top-nav></top-nav>
 
 <div id="main">
-    <router-outlet ></router-outlet>
-    <p-toast  [baseZIndex]="999999" position="top-right"></p-toast>
+    <router-outlet></router-outlet>
+    <p-toast [baseZIndex]="999999" position="top-right"></p-toast>
     <div *ngIf="spinerService.showSpinner" class="spinner_overlay">
         <p-progressSpinner strokeWidth="5"></p-progressSpinner>
     </div>

@@ -1,16 +1,16 @@
-#main{
+#main {
     padding-top: 70px !important;
 }
 
-.ui-progress-spinner{
+.ui-progress-spinner {
 
     height: 90px;
     width: 90px;
     z-index: 99999;
 
     position: absolute;
-    top: calc(50% - 45px) ;
-    left: calc(50% - 45px) ;
+    top: calc(50% - 45px);
+    left: calc(50% - 45px);
 }
 
 .spinner_overlay {

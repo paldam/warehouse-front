@@ -3,7 +3,6 @@ import {LoginComponent} from "./login/login.component";
 import {AuthGuard} from "./guard/auth.guard";
 import {MapsComponent} from "./maps/maps.component";
 import {ModuleWithProviders} from "@angular/core";
-import {FileSendComponent} from "./file-send/file-send.component";
 
 const routes: Routes = [
 	{path: '', loadChildren: './products/products.module#ProductsModule', canActivate: [AuthGuard]},
@@ -16,7 +15,6 @@ const routes: Routes = [
 	{path: 'login', component: LoginComponent},
 	{path: 'admin', loadChildren: './admin/admin.module#AdminModule', canActivate: [AuthGuard]},
 	{path: 'maps', component: MapsComponent, canActivate: [AuthGuard]},
-	{path: 'file', component: FileSendComponent},
 ];
 export const routing: ModuleWithProviders = RouterModule.forRoot(routes, {useHash: true});
 

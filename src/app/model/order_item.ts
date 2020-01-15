@@ -8,7 +8,7 @@ export class OrderItem {
 		public  stateOnProduction  ?: number,
 		public  stateOnWarehouse ?: number,
 		public  stateOnLogistics  ?: number,
-		public quantityFromSurplus? : number
+		public quantityFromSurplus?: number
 	) {
 	}
 }

@@ -1,8 +1,7 @@
 import {Component, ViewEncapsulation} from '@angular/core';
-import {NavigationCancel, NavigationEnd, NavigationError, NavigationStart, Router} from "@angular/router";
+import {Event, NavigationCancel, NavigationEnd, NavigationError, NavigationStart, Router} from "@angular/router";
 import {RoutingState} from "../routing-stage";
 import {SpinerService} from "../spiner.service";
-import {Event} from '@angular/router';
 
 @Component({
 	selector: 'app-root',
@@ -13,10 +12,7 @@ import {Event} from '@angular/router';
 export class AppComponent {
 	title = 'app';
 
-
 	constructor(routingState: RoutingState, public spinerService: SpinerService, public router: Router) {
-
-
 		routingState.loadRouting();
 		this.router.events.subscribe((event: Event) => {
 			switch (true) {
@@ -25,7 +21,7 @@ export class AppComponent {
 					break;
 				}
 				case event instanceof NavigationEnd:
-				case event instanceof NavigationCancel:{
+				case event instanceof NavigationCancel: {
 					this.spinerService.showSpinner = false;
 					break;
 				}
@@ -38,9 +34,5 @@ export class AppComponent {
 				}
 			}
 		});
-
-
 	}
-
-
 }

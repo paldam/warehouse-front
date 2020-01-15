@@ -10,7 +10,7 @@
         </div>
 
         <p-dataTable [value]="baskets" [rows]="10" [paginator]="true" [globalFilter]="gb" #dt
-                      loadingIcon="fa-circle-o-notch" expandableRows="true"
+                     loadingIcon="fa-circle-o-notch" expandableRows="true"
                      (onRowDblclick)="addBasketToOrder($event.data)"
                      [editable]="this.authenticationService.isAdmin()" (onEditComplete)="editBasketStock($event.data)">
             <p-column expander="true" header="Zawartość" styleClass="col-icon" [style]="{'width':'70px'}"></p-column>
@@ -30,7 +30,8 @@
 
             <p-column field="season" header="Sezon" [sortable]="true" [filter]="true" filterPlaceholder="Szukaj"
                       [style]="{'width':'120px'}"></p-column>
-            <p-column field="stock" header="Stan" [editable]="true" [sortable]="true" [style]="{'width':'120px'}"></p-column>
+            <p-column field="stock" header="Stan" [editable]="true" [sortable]="true"
+                      [style]="{'width':'120px'}"></p-column>
 
 
             <ng-template let-basket pTemplate="rowexpansion">
@@ -65,46 +66,44 @@
 </div>
 
 
-
-
 <div class="row">
     <div class="picked_products_list col-xl-6 ">
         <p-fieldset legend="Pozycje do wprowadzenia na stan" [toggleable]="true">
 
 
-                <div class="d-table-wrapper ">
-                    <table class="d-table" *ngIf="isBasketLinesEmpty()==false">
-                        <colgroup>
-                            <col span="1" style="width: 70%;">
-                            <col span="1" style="width: 25%;">
-                            <col span="1" style="width: 5%;">
+            <div class="d-table-wrapper ">
+                <table class="d-table" *ngIf="isBasketLinesEmpty()==false">
+                    <colgroup>
+                        <col span="1" style="width: 70%;">
+                        <col span="1" style="width: 25%;">
+                        <col span="1" style="width: 5%;">
 
-                        </colgroup>
-                        <thead>
-                        <tr>
-                            <th>Nazwa kosza</th>
-                            <th>Ilość</th>
-                            <th>Usuń</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr *ngFor="let orderItems of orderItems">
-                            <td scope="row">{{orderItems.basket.basketName}}</td>
-                            <td><input type="number" class="form-control" name="" id="" aria-describedby="helpId"
-                                       placeholder="" min="0" [value]="orderItems.quantity"
-                                       (change)="updateQuantity(orderItems,$event.target.value)"></td>
-                            <td><i class="fa fa-trash" aria-hidden="true"
-                                   (click)="deleteProductLine(orderItems.basket.basketId)"></i></td>
-                        </tr>
-                        </tbody>
-                    </table>
-                    <p *ngIf="isBasketLinesEmpty()==true">Brak pozycji w zamówieniu</p>
-                </div>
-
-
-                    <button [disabled]="orderItems.length<=0" class="btn bg-primary btnil" (click)="addBaskettoStock()" >Dodaj kosze na stan</button>
+                    </colgroup>
+                    <thead>
+                    <tr>
+                        <th>Nazwa kosza</th>
+                        <th>Ilość</th>
+                        <th>Usuń</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr *ngFor="let orderItems of orderItems">
+                        <td scope="row">{{orderItems.basket.basketName}}</td>
+                        <td><input type="number" class="form-control" name="" id="" aria-describedby="helpId"
+                                   placeholder="" min="0" [value]="orderItems.quantity"
+                                   (change)="updateQuantity(orderItems,$event.target.value)"></td>
+                        <td><i class="fa fa-trash" aria-hidden="true"
+                               (click)="deleteProductLine(orderItems.basket.basketId)"></i></td>
+                    </tr>
+                    </tbody>
+                </table>
+                <p *ngIf="isBasketLinesEmpty()==true">Brak pozycji w zamówieniu</p>
+            </div>
 
 
+            <button [disabled]="orderItems.length<=0" class="btn bg-primary btnil" (click)="addBasketToStock()">Dodaj
+                kosze na stan
+            </button>
 
 
         </p-fieldset>

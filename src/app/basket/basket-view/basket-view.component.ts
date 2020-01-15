@@ -1,4 +1,4 @@
-import {Component, ElementRef, OnInit, ViewChild, ViewEncapsulation} from '@angular/core';
+import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import {BasketService} from "../basket.service";
 import {Router} from "@angular/router";
 import {Basket} from "../../model/basket.model";
@@ -11,15 +11,15 @@ import {ProductsService} from "../../products/products.service";
 import {SpinerService} from "../../spiner.service";
 import {MessageServiceExt} from "../../messages/messageServiceExt";
 
-
 @Component({
 	selector: 'app-basket',
 	templateUrl: './basket-view.component.html',
 	styleUrls: ['./basket-view.component.css']
 })
-export class BasketComponent implements OnInit {
+export class BasketComponent
+	implements OnInit {
 	public priceMin: number = 0;
-	public priceMax: number= 9999;
+	public priceMax: number = 9999;
 	public baskets: Basket[] = [];
 	public loading: boolean;
 	public gb: any;
@@ -32,23 +32,29 @@ export class BasketComponent implements OnInit {
 	@ViewChild('op') overlayPanel: OverlayPanel;
 	@ViewChild('dt') datatable: DataTable;
 	public paginatorValues = AppConstans.PAGINATOR_VALUES;
-	public productSubType: SelectItem[]=[];
-	public selectedCategories : any[]=[];
-	public selectedCategoriesIds : number[]=[];
+	public productSubType: SelectItem[] = [];
+	public selectedCategories: any[] = [];
+	public selectedCategoriesIds: number[] = [];
 	public basketSeasonList: SelectItem[] = [];
 
-	constructor(private messageServiceExt: MessageServiceExt,private spinerService :SpinerService ,private productsService :ProductsService, private basketService: BasketService, public router: Router, private confirmationService: ConfirmationService, public authenticationService: AuthenticationService) {
-		basketService.getBasketsPage(1,20,"","basketName",-1,false,[]).subscribe((data :any) => {
+	constructor(private messageServiceExt: MessageServiceExt, private spinerService: SpinerService,
+				private productsService: ProductsService, private basketService: BasketService,
+				public router: Router, private confirmationService: ConfirmationService,
+				public authenticationService: AuthenticationService) {
+
+		basketService
+			.getBasketsPage(1,20,"","basketName", -1, false,[])
+			.subscribe((data: any) => {
 			this.baskets = data.basketsList;
 			this.totalRecords = data.totalRowsOfRequest;
 		});
-
 		this.getBasketSeasonForDataTableFilter();
 		productsService.getProductsSubTypes().subscribe((data: ProductSubType[]) => {
 			data.forEach(value => {
-				this.productSubType.push({value: value , label: value.subTypeName + " (" + value.productType.typeName + " )"});
-
-
+				this.productSubType.push({
+					value: value,
+					label: value.subTypeName + " (" + value.productType.typeName + " )"
+				});
 			})
 		});
 		this.url = router.url;
@@ -57,79 +63,63 @@ export class BasketComponent implements OnInit {
 	ngOnInit() {
 	}
 
-	getBasketWithFilter(){
+	getBasketWithFilter() {
 		this.datatable.lazy = false;
-
-
-
-		this.spinerService.showSpinner=true;
-
+		this.spinerService.showSpinner = true;
 		this.selectedCategories.forEach(value => {
 			this.selectedCategoriesIds.push(value.subTypeId);
 		});
-
-
-
-
-
 		let filterByBasketTotalPrice: boolean = !this.filterByProductsPrizeCheckBox.nativeElement.checked;
-
-		this.basketService.getBasketWithFilter(this.priceMin, this.priceMax, filterByBasketTotalPrice,this.selectedCategoriesIds).subscribe(data =>{
+		this.basketService
+			.getBasketWithFilter(this.priceMin, this.priceMax, filterByBasketTotalPrice, this.selectedCategoriesIds)
+			.subscribe(data => {
 			this.baskets = data;
-
-
-		},error => {
-			this.spinerService.showSpinner=false;
-		},() => {
-			this.selectedCategoriesIds =[];
+		}, error => {
+			this.spinerService.showSpinner = false;
+		}, () => {
+			this.selectedCategoriesIds = [];
 			setTimeout(() => {
-				this.spinerService.showSpinner=false;    ;
+				this.spinerService.showSpinner = false;
+				;
 			}, 500);
-
 		})
 	}
-
-
 
 	editBasketStock(basket: Basket) {
 		this.spinerService.showSpinner = true;
 		this.basketService.saveNewStockOfBasket(basket.basketId, basket.stock).subscribe(
 			value => {
-				this.messageServiceExt.addMessageWithTime('success', 'Status', 'Dokonano edycji stanu magazynowego koszy', 5000);
-
+				this.messageServiceExt.addMessageWithTime(
+					'success', 'Status', 'Dokonano edycji stanu magazynowego koszy', 5000);
 			},
 			error => {
-				this.messageServiceExt.addMessageWithTime('error', 'Błąd', "Status: " + error._body + ' ', 5000);
+				this.messageServiceExt.addMessageWithTime
+				('error', 'Błąd', "Status: " + error._body + ' ', 5000);
 				this.spinerService.showSpinner = false;
-			},() => {
+			}, () => {
 				this.spinerService.showSpinner = false;
 			}
 		)
 	}
 
 	loadBasketsLazy(event: LazyLoadEvent) {
-
-
 		this.loading = true;
 		let pageNumber = 0;
 		if (event.first) {
 			pageNumber = event.first / event.rows;
 		}
 		let sortField = event.sortField;
-
 		if (sortField == undefined) {
 			sortField = "basketName";
 		}
-
 		let basketSeasonList: any[] = [];
 		if (event.filters != undefined && event.filters["basketSezon.basketSezonName"] != undefined) {
-			basketSeasonList= event.filters["basketSezon.basketSezonName"].value;
+			basketSeasonList = event.filters["basketSezon.basketSezonName"].value;
 		}
-
-
-
-
-		this.basketService.getBasketsPage(pageNumber,event.rows,event.globalFilter,sortField,event.sortOrder,false,basketSeasonList).subscribe((data: any) => {
+		this.basketService
+			.getBasketsPage(
+				pageNumber, event.rows, event.globalFilter, sortField, event.sortOrder,false, basketSeasonList)
+			.subscribe((data: any) => {
 				this.baskets = data.basketsList;
 				this.totalRecords = data.totalRowsOfRequest;
 			}, null
@@ -139,12 +129,11 @@ export class BasketComponent implements OnInit {
 	}
 
 	ShowConfirmModal(basket: Basket) {
-		if (basket.basketType.basketTypeId == 99) {
+		if (basket.basketType.basketTypeId == AppConstans.BASKET_TYPE_ID_USUNIETY ) {
 			this.confirmationService.confirm({
 				message: 'Jesteś pewny że chcesz trwale usunąć kosz ? ',
 				accept: () => {
-					let tmpBaskettype: BasketType = new BasketType(999);
-					basket.basketType = tmpBaskettype;
+					basket.basketType = new BasketType(AppConstans.BASKET_TYPE_ID_ARCHWIUM);
 					this.basketService.saveBasketWithoutImg(basket).subscribe(data => {
 						this.refreshData();
 					});
@@ -156,8 +145,7 @@ export class BasketComponent implements OnInit {
 			this.confirmationService.confirm({
 				message: 'Jesteś pewny że chcesz przenieś kosz  ' + basket.basketName + ' do archiwum ?',
 				accept: () => {
-					let tmpBaskettype: BasketType = new BasketType(99);
-					basket.basketType = tmpBaskettype;
+					basket.basketType = new BasketType(AppConstans.BASKET_TYPE_ID_USUNIETY);
 					this.basketService.saveBasketWithoutImg(basket).subscribe(data => {
 						this.refreshData();
 					});
@@ -168,19 +156,8 @@ export class BasketComponent implements OnInit {
 		}
 	}
 
-
 	refreshData() {
 		this.datatable.lazy = true;
-
-
-		// this.basketService.getBaskets().subscribe(data => {
-		// 	this.baskets = data
-		// }, error => {
-		// 	this.spinerService.showSpinner = false;
-		// }, () => {
-		// 	this.spinerService.showSpinner = false;
-		// });
-
 		this.loading = true;
 		setTimeout(() => {
 			this.clickOnlyDeletedBasketChceckBox();
@@ -188,23 +165,21 @@ export class BasketComponent implements OnInit {
 		}, 1000);
 	}
 
-
-
 	clickOnlyDeletedBasketChceckBox() {
-
-
 		if (this.el.nativeElement.checked) {
-			this.basketService.getBasketsPage(1,20,"","basketName",-1,true,[]).subscribe((data :any) => {
+			this.basketService
+				.getBasketsPage(1, 20, "", "basketName", -1, true, [])
+				.subscribe((data: any) => {
 				this.baskets = data.basketsList;
 				this.totalRecords = data.totalRowsOfRequest;
-
 				setTimeout(() => {
 					this.datatable.totalRecords = data.totalRowsOfRequest;
 				}, 500);
-
 			});
 		} else {
-			this.basketService.getBasketsPage(1,20,"","basketName",-1,false,[]).subscribe((data :any) => {
+			this.basketService
+				.getBasketsPage(1, 20, "", "basketName", -1, false, [])
+				.subscribe((data: any) => {
 				this.baskets = data.basketsList;
 				this.totalRecords = data.totalRowsOfRequest;
 				setTimeout(() => {
@@ -212,17 +187,12 @@ export class BasketComponent implements OnInit {
 				}, 500);
 			});
 		}
-
 		;
-
-
 	}
 
-	showBacketImg(event, basketId: number) {
+	showBasketImg(event, basketId: number) {
 		this.basketService.getBasketImg(basketId).subscribe(res => {
 			this.createImageFromBlob(res);
-		}, error => {
-		}, complete => {
 		});
 		this.showImageFrame = true;
 	}

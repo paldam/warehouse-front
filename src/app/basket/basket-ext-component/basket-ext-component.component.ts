@@ -15,7 +15,8 @@ import {MessageServiceExt} from "../../messages/messageServiceExt";
 	templateUrl: 'basket-ext-component.component.html',
 	styleUrls: ['basket-ext-component.component.css']
 })
-export class BasketExtComponentComponent implements OnInit {
+export class BasketExtComponentComponent
+	implements OnInit {
 	public baskets: Basket[] = [];
 	public loading: boolean;
 	public gb: any;
@@ -26,9 +27,11 @@ export class BasketExtComponentComponent implements OnInit {
 	@ViewChild('onlyDeleted') el: ElementRef;
 	public paginatorValues = AppConstans.PAGINATOR_VALUES;
 
-	constructor(private basketService: BasketExtService, private router: Router, private messageServiceExt: MessageServiceExt, private confirmationService: ConfirmationService, private authenticationService: AuthenticationService) {
+	constructor(private basketService: BasketExtService, private router: Router,
+				private messageServiceExt: MessageServiceExt, private confirmationService: ConfirmationService,
+				private authenticationService: AuthenticationService) {
 		basketService.getBaskets().subscribe(data => this.baskets = data,
-			error1 => {
+			error => {
 			}, () => {
 				this.baskets.forEach(value => {
 					value.basketTotalPrice /= 100;
@@ -59,7 +62,7 @@ export class BasketExtComponentComponent implements OnInit {
 			tmpStatus = 1;
 		}
 		basket.isAvailable = tmpStatus;
-		basket.basketTotalPrice *=100;
+		basket.basketTotalPrice *= 100;
 		this.basketService.changeStatus(basket).subscribe();
 		this.refreshData();
 	}
@@ -83,22 +86,22 @@ export class BasketExtComponentComponent implements OnInit {
 	}
 
 	updateBasketExtRow(event: any) {
-		console.log("asdas");
 		let basket;
 		if (event.data) {
 			basket = event.data;
 		} else {
 			basket = event
 		}
-
 		let convertedPrice: string = basket.basketTotalPrice;
 		basket.basketTotalPrice = convertedPrice.toString().replace(/,/g, '.');
 		basket.basketTotalPrice = basket.basketTotalPrice * 100;
 		this.basketService.editBasket(basket).subscribe(data => {
-			this.messageServiceExt.addMessageWithTime('success', 'Status', 'Dokonano edycji stanu produktu', 1000);
+			this.messageServiceExt.addMessageWithTime(
+				'success', 'Status', 'Dokonano edycji stanu produktu', 1000);
 			this.refreshData();
 		}, error => {
-			this.messageServiceExt.addMessage('error', 'Błąd', "Status: " + error.status + ' ' + error.statusText);
+			this.messageServiceExt.addMessage(
+				'error', 'Błąd', "Status: " + error.status + ' ' + error.statusText);
 			event.data.basketTotalPrice = event.data.basketTotalPrice / 100;
 		}, () => {
 			event.data.basketTotalPrice = event.data.basketTotalPrice / 100;
@@ -106,28 +109,17 @@ export class BasketExtComponentComponent implements OnInit {
 	}
 
 	ShowConfirmModal(basket: Basket) {
-
-			this.confirmationService.confirm({
-				message: 'Jesteś pewny że chcesz przenieś kosz  ' + basket.basketName + ' do archiwum ?',
-				accept: () => {
-					basket.basketTotalPrice = basket.basketTotalPrice * 100;
-					let tmpBaskettype: BasketType = new BasketType(99);
-					basket.basketType = tmpBaskettype;
-					this.basketService.editBasket(basket).subscribe(data => {
-						this.refreshData();
-					});
-				},
-				reject: () => {
-				}
-			});
-		}
-
-
-	clickOnlyDeletedBasketChceckBox() {
-		if (this.el.nativeElement.checked) {
-			this.basketService.getDeletedBaskets().subscribe(data => this.baskets = data);
-		} else {
-			this.basketService.getBaskets().subscribe(data => this.baskets = data);
-		}
+		this.confirmationService.confirm({
+			message: 'Jesteś pewny że chcesz przenieś kosz  ' + basket.basketName + ' do archiwum ?',
+			accept: () => {
+				basket.basketTotalPrice = basket.basketTotalPrice * 100;
+				basket.basketType = new BasketType(99);
+				this.basketService.editBasket(basket).subscribe(data => {
+					this.refreshData();
+				});
+			},
+			reject: () => {
+			}
+		});
 	}
 }

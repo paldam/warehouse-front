@@ -1,45 +1,50 @@
 <p-fieldset legend="Lista Klientów" [toggleable]="true">
-  <div class="input-group search_bar">
+    <div class="input-group search_bar">
             <span class="input-group-addon" id="basic-addon1">
                  <i class="fa fa-search" aria-hidden="true"></i>
             </span>
-    <input #gb type="text" class="dd form-control search_input" pInputText size="50" placeholder="Szukaj"aria-describedby="basic-addon1" [(ngModel)]="findInputTextOnCustomerViewPage">
+        <input #gb type="text" class="dd form-control search_input" pInputText size="50" placeholder="Szukaj"
+               aria-describedby="basic-addon1" [(ngModel)]="findInputTextOnCustomerViewPage">
 
 
+        <i class="fa fa-refresh pull-right refresh_icon fa-2x" aria-hidden="true" (click)="refreshData()"></i>
 
-    <i class="fa fa-refresh pull-right refresh_icon fa-2x" aria-hidden="true" (click)="refreshData()"></i>
+    </div>
 
-  </div>
+    <p-dataTable [value]="customersList" [rows]="50" [globalFilter]="gb" #dt
+                 (onRowDblclick)="goToEditPageFromDoubleclick($event)"
+                 [loading]="loading" loadingIcon="fa-circle-o-notch"
+                 [(first)]="lastPaginationPageNumberOnCustomerViewPage" expandableRows="true" [paginator]="true"
+                 [pageLinks]="5" [rowsPerPageOptions]=paginatorValues>
 
-  <p-dataTable [value]="customersList" [rows]="50" [paginator]="true" [globalFilter]="gb" #dt (onRowDblclick)="goToEditPageFromDoubleclick($event)"
-               [loading]="loading" loadingIcon="fa-circle-o-notch" [(first)]="lastPaginationPageNumberOnCustomerViewPage" expandableRows="true" [paginator]="true" [pageLinks]="5" [rowsPerPageOptions]= paginatorValues>
-
-    <p-column styleClass="lp_col"  header="lp." >
-      <ng-template let-i="rowIndex" pTemplate="rowexpansion">
-        {{i+1}}
-      </ng-template>
-    </p-column>
-
-
-    <p-column field="name" header="Imię i nazwisko" [sortable]="true"></p-column>
-    <p-column field="company.companyName" header="Nazwa Firmy" styleClass="company_col" [sortable]="true" ></p-column>
-    <p-column field="email" header="Email" styleClass="email_col"  ></p-column>
-    <p-column field="phoneNumber" header="Telefon"  styleClass="tel_col" ></p-column>
+        <p-column styleClass="lp_col" header="lp.">
+            <ng-template let-i="rowIndex" pTemplate="rowexpansion">
+                {{i+1}}
+            </ng-template>
+        </p-column>
 
 
-    <p-column  header="Akcja"  styleClass="action_col">
-      <ng-template let-customer="rowData"   let-i="rowIndex" pTemplate="body">
-        <i *ngIf="authenticationService.isAdmin() || authenticationService.isBiuroUser()" class="fa fa-pencil-square-o fa-2x" aria-hidden="true"  title="Edytuj klienta" (click)="goToEditPage(i+1,customer.customerId)"  ></i>
-        <i *ngIf="authenticationService.isAdmin() || authenticationService.isBiuroUser()" class="fa fa fa-trash  fa-2x" aria-hidden="true"  (click)="showDeleteConfirmWindow(customer.customerId)" title="Usuń klienta"  ></i>
-
-      </ng-template>
-    </p-column>
+        <p-column field="name" header="Imię i nazwisko" [sortable]="true"></p-column>
+        <p-column field="company.companyName" header="Nazwa Firmy" styleClass="company_col"
+                  [sortable]="true"></p-column>
+        <p-column field="email" header="Email" styleClass="email_col"></p-column>
+        <p-column field="phoneNumber" header="Telefon" styleClass="tel_col"></p-column>
 
 
+        <p-column header="Akcja" styleClass="action_col">
+            <ng-template let-customer="rowData" let-i="rowIndex" pTemplate="body">
+                <i *ngIf="authenticationService.isAdmin() || authenticationService.isBiuroUser()"
+                   class="fa fa-pencil-square-o fa-2x" aria-hidden="true" title="Edytuj klienta"
+                   (click)="goToEditPage(i+1,customer.customerId)"></i>
+                <i *ngIf="authenticationService.isAdmin() || authenticationService.isBiuroUser()"
+                   class="fa fa fa-trash  fa-2x" aria-hidden="true"
+                   (click)="showDeleteConfirmWindow(customer.customerId)" title="Usuń klienta"></i>
+
+            </ng-template>
+        </p-column>
 
 
-
-  </p-dataTable>
+    </p-dataTable>
 </p-fieldset>
 
-<p-confirmDialog  header="Usuwanie klienta" icon="fa fa-question-circle" width="425"></p-confirmDialog>
+<p-confirmDialog header="Usuwanie klienta" icon="fa fa-question-circle" width="425"></p-confirmDialog>

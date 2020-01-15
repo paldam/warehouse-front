@@ -5,16 +5,17 @@
             <span class="input-group-addon" id="basic-addon1">
                  <i class="fa fa-search" aria-hidden="true"></i>
             </span>
-            <input #gb type="text" class="form-control search_input" pInputText size="50" placeholder="Szukaj"aria-describedby="basic-addon1">
+            <input #gb type="text" class="form-control search_input" pInputText size="50" placeholder="Szukaj"
+                   aria-describedby="basic-addon1">
         </div>
 
         <p-dataTable [value]="baskets" [rows]="10" [paginator]="true" [globalFilter]="gb" #dt
                      [loading]="loading" loadingIcon="fa-circle-o-notch" expandableRows="true"
-            [lazy]="true" (onLazyLoad)="loadBasketsLazy($event)" [totalRecords]="totalRecords"  >
+                     [lazy]="true" (onLazyLoad)="loadBasketsLazy($event)" [totalRecords]="totalRecords">
 
             <p-column expander="true" header="Zawartość" styleClass="col-icon " [style]="{'width':'70px'}"></p-column>
 
-            <p-column  header="lp."   [style]="{'width':'70px'}">
+            <p-column header="lp." [style]="{'width':'70px'}">
                 <ng-template let-i="rowIndex" pTemplate="rowexpansion">
                     {{i+1}}
                 </ng-template>
@@ -22,13 +23,15 @@
             <p-column field="basketId" header="basketId" [sortable]="true"></p-column>
 
             <p-column field="basketName" header="Nazwa kosza" [sortable]="true"></p-column>
-            <p-column field="basketType.basketTypeName" header="Typ kosza" [sortable]="true" ></p-column>
-            <p-column field="basketSezon.basketSezonName" header="Sezon" [style]="{'width':'150px', 'text-align':'center'}"
+            <p-column field="basketType.basketTypeName" header="Typ kosza" [sortable]="true"></p-column>
+            <p-column field="basketSezon.basketSezonName" header="Sezon"
+                      [style]="{'width':'150px', 'text-align':'center'}"
                       [filter]="true" filterMatchMode="equals" [sortable]="false">
 
                 <ng-template let-col pTemplate="filter">
-                    <p-multiSelect [filter]="false" [showToggleAll]="false" [options]="basketSeasonList" defaultLabel="Wszystkie"
-                                   (onChange)="datatable.filter($event.value, col.field, 'in')"></p-multiSelect>
+                    <p-multiSelect [filter]="false" [showToggleAll]="false" [options]="basketSeasonList"
+                                   defaultLabel="Wszystkie"
+                                   (onChange)="dataTable.filter($event.value, col.field, 'in')"></p-multiSelect>
                 </ng-template>
 
                 <ng-template let-row="rowData" pTemplate="body">
@@ -37,7 +40,7 @@
 
             </p-column>
 
-            <p-column field="basketTotalPrice"  header="Cena kosza"  [sortable]="true" >
+            <p-column field="basketTotalPrice" header="Cena kosza" [sortable]="true">
                 <ng-template let-row="rowData" pTemplate="body">
                     {{row.basketTotalPrice/100| number : '1.2-2'}} zł.
                 </ng-template>
@@ -46,25 +49,25 @@
             <ng-template let-basket pTemplate="rowexpansion">
 
                 <div class="basket_products_info">
-                 Zawartość kosza:  {{basket.basketName}}
-                 <table class="product_tab" >
-                            <thead>
-                            <tr class="product_tab_row">
-                                <th>Nazwa Produktu</th>
-                                <th>Pojemność</th>
-                                <th>Cena zakupu</th>
-                                <th>Ilość</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <tr class="product_tab_row" *ngFor="let i of basket.basketItems">
-                                <td>{{i.product.productName}}</td>
-                                <td>{{i.product.capacity}}</td>
-                                <td>{{i.product.price/100| number : '1.2-2'}} zł</td>
-                                <td>{{i.quantity}} szt.</td>
-                            </tr>
-                            </tbody>
-                 </table>
+                    Zawartość kosza: {{basket.basketName}}
+                    <table class="product_tab">
+                        <thead>
+                        <tr class="product_tab_row">
+                            <th>Nazwa Produktu</th>
+                            <th>Pojemność</th>
+                            <th>Cena zakupu</th>
+                            <th>Ilość</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr class="product_tab_row" *ngFor="let i of basket.basketItems">
+                            <td>{{i.product.productName}}</td>
+                            <td>{{i.product.capacity}}</td>
+                            <td>{{i.product.price/100| number : '1.2-2'}} zł</td>
+                            <td>{{i.quantity}} szt.</td>
+                        </tr>
+                        </tbody>
+                    </table>
 
                 </div>
 

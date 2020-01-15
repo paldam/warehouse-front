@@ -1,54 +1,46 @@
 <div class="map_cont">
-<div class="row input_form">
-    <form id="MapForm" novalidate #form="ngForm" (submit)="submitOrderForm(form)">
-        <label for="start_date" >Data początkowa</label>
-        <p-calendar id="start_date" [utc]="true" [locale]="dateLang" dateFormat="yy.mm.dd" name="start_date" #start_date="ngModel" aria-describedby="start_dateDesc" [(ngModel)]="startDate" ></p-calendar>
+    <div class="row input_form">
+        <form id="MapForm" novalidate #form="ngForm" (submit)="submitOrderForm(form)">
+            <label for="start_date">Data początkowa</label>
+            <p-calendar id="start_date" [utc]="true" [locale]="dateLang" dateFormat="yy.mm.dd" name="start_date"
+                        #start_date="ngModel" aria-describedby="start_dateDesc" [(ngModel)]="startDate"></p-calendar>
 
-        <label for="end_date" >Data końcowa</label>
-        <p-calendar [utc]="true" [locale]="dateLang" dateFormat="yy.mm.dd" id="end_date" name="end_date" #end_date="ngModel" aria-describedby="end_dateDesc" [(ngModel)]="endDate" ></p-calendar>
+            <label for="end_date">Data końcowa</label>
+            <p-calendar [utc]="true" [locale]="dateLang" dateFormat="yy.mm.dd" id="end_date" name="end_date"
+                        #end_date="ngModel" aria-describedby="end_dateDesc" [(ngModel)]="endDate"></p-calendar>
 
-
-        <button class="btn bg-primary " type="submit" form="MapForm" >Szukaj</button>
-
-    </form>
-</div>
-
-
-
-
-<div class="row">
-    <div id="mapka" class="col-8"  style=" height: 500px; border: 1px solid black; background: gray;">
-
+            <button class="btn bg-primary " type="submit" form="MapForm">Szukaj</button>
+        </form>
     </div>
 
+    <div class="row">
+        <div id="mapka" class="col-8" style=" height: 500px; border: 1px solid black; background: gray;">
 
+        </div>
 
-    <div >
-        <table class="table">
-            <thead>
-            <tr>
-                <th>Numer</th>
-                <th>Numer Zamówienia</th>
-                <th>Adres</th>
-                <th>Data Dostawy</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr *ngFor="let i of mapModel">
-                <td>{{i.number}}</td>
-                <td>{{i.orderNumber}}</td>
-                <td>{{i.address}}</td>
-                <td>{{i.deliveryDate| date: 'dd/MM/yyyy'}}</td>
-            </tr>
+        <div>
+            <table class="table">
+                <thead>
+                <tr>
+                    <th>Numer</th>
+                    <th>Numer Zamówienia</th>
+                    <th>Adres</th>
+                    <th>Data Dostawy</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr *ngFor="let i of mapModel">
+                    <td>{{i.number}}</td>
+                    <td>{{i.orderNumber}}</td>
+                    <td>{{i.address}}</td>
+                    <td>{{i.deliveryDate| date: 'dd/MM/yyyy'}}</td>
+                </tr>
 
-            </tbody>
-        </table>
+                </tbody>
+            </table>
 
+        </div>
 
     </div>
-
-
-
-</div>
 </div>
 

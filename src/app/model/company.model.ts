@@ -1,12 +1,8 @@
-export class Company{
-
-    constructor(
-        public companyId?: number,
-        public companyName?: string,
-        public wasCombined?: number
-
-    ){
-
-    }
-
+export class Company {
+	constructor(
+		public companyId?: number,
+		public companyName?: string,
+		public wasCombined?: number
+	) {
+	}
 }
