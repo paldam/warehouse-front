@@ -1,24 +1,25 @@
-
 <div class="col-lg-7 col-md-11">
-<p-panel header="Edycja Produktu">
+    <p-panel header="Edycja Produktu">
         <p></p>
         <form id="productForm" novalidate #form="ngForm" (submit)="submitForm(form)">
-        <div class="form-group">
-            <small id="nameDescript" class="text-muted">Nazwa</small>
-            <input type="text" name="name" class="form-control" [(ngModel)]="product.productName" #name="ngModel" aria-describedby="nameDescript" required >
-            <ul class="text-danger list-unstyled" *ngIf="name.dirty|| formSubmitted">
-                <li  *ngIf="name.errors?.required">To pole nie może być puste</li>
-            </ul>
-        </div>
+            <div class="form-group">
+                <small id="nameDescript" class="text-muted">Nazwa</small>
+                <input type="text" name="name" class="form-control" [(ngModel)]="product.productName" #name="ngModel"
+                       aria-describedby="nameDescript" required>
+                <ul class="text-danger list-unstyled" *ngIf="name.dirty|| formSubmitted">
+                    <li *ngIf="name.errors?.required">To pole nie może być puste</li>
+                </ul>
+            </div>
 
 
-        <div class="form-group">
-            <small id="capacityDescript" class="text-muted">Pojemność</small>
-            <input type="text" name="capacity " class="form-control"  [(ngModel)]="product.capacity" #capacity="ngModel" aria-describedby="capacityDescript" required >
-            <ul class="text-danger list-unstyled" *ngIf="capacity.dirty|| formSubmitted">
-                <li  *ngIf="capacity.errors?.required">To pole nie może być puste</li>
-            </ul>
-        </div>
+            <div class="form-group">
+                <small id="capacityDescript" class="text-muted">Pojemność</small>
+                <input type="text" name="capacity " class="form-control" [(ngModel)]="product.capacity"
+                       #capacity="ngModel" aria-describedby="capacityDescript" required>
+                <ul class="text-danger list-unstyled" *ngIf="capacity.dirty|| formSubmitted">
+                    <li *ngIf="capacity.errors?.required">To pole nie może być puste</li>
+                </ul>
+            </div>
 
             <div class="form-group">
                 <p-listbox name="suppliers_list" [listStyle]="{'max-height':'250px'}" [options]="productSuppliers"
@@ -38,24 +39,11 @@
                 </ul>
             </div>
 
-
-            <!--<div class="form-group">-->
-                <!--<small id="supplier_typeDesc" class="text-muted">Dostawca</small>-->
-                <!--<select [compareWith]="compareSupplier" class="form-control"  #supplier="ngModel" [(ngModel)]="product.supplier" name="supplier"  required >-->
-                    <!--<option *ngFor="let item of productSuppliers"  [ngValue]="item"  >{{item.supplierName}}</option>-->
-                <!--</select>-->
-
-                <!--<ul class="text-danger list-unstyled" *ngIf="supplier.dirty|| formSubmitted">-->
-                    <!--<li  *ngIf="supplier.errors?.required">Wybierz dostawcę z listy</li>-->
-                <!--</ul>-->
-            <!--</div>-->
-
-
-
             <div class="form-group">
                 <small id="product_typeDesc" class="text-muted">Typ Produktu</small>
 
-                <p-listbox name="type_list" [style]="{ 'width':'400px'}" [listStyle]="{'max-height':'100px', 'width':'390px'}"
+                <p-listbox name="type_list" [style]="{ 'width':'400px'}"
+                           [listStyle]="{'max-height':'100px', 'width':'390px'}"
                            [options]="productSubTypesSelectItems"
                            [(ngModel)]="product.productSubType" [filter]="true">
 
@@ -67,26 +55,29 @@
             </div>
 
 
-
             <div class="form-group">
                 <small id="priceDescript" class="text-muted">Cena</small>
-                <input type="text" name="price" class="form-control"  [(ngModel)]="productPrice"   #price="ngModel" aria-describedby="priceDescript" pattern="^(?=.*?\d)\d*[.]?\d{1,2}$">
+                <input type="text" name="price" class="form-control" [(ngModel)]="productPrice" #price="ngModel"
+                       aria-describedby="priceDescript" pattern="^(?=.*?\d)\d*[.]?\d{1,2}$">
                 <ul class="text-danger list-unstyled" *ngIf="price.dirty|| formSubmitted">
-                    <li  *ngIf="price.errors?.pattern">To pole musi zawierać format waluty z kropką np : 0.59 , 2.5 , 0.99 , 19.99</li>
+                    <li *ngIf="price.errors?.pattern">To pole musi zawierać format waluty z kropką np : 0.59 , 2.5 ,
+                        0.99 , 19.99
+                    </li>
                 </ul>
             </div>
 
             <div class="form-group">
                 <small id="stockDescript" class="text-muted">Stan magazynu</small>
-                <input type="text" name="stock" class="form-control" [(ngModel)]="product.stock" #stock="ngModel" aria-describedby="stockDescript" pattern="^[0-9]*$" >
+                <input type="text" name="stock" class="form-control" [(ngModel)]="product.stock" #stock="ngModel"
+                       aria-describedby="stockDescript" pattern="^[0-9]*$">
                 <ul class="text-danger list-unstyled" *ngIf="stock.dirty|| formSubmitted">
-                    <li  *ngIf="stock.errors?.pattern">To pole musi zawierać same cyfry</li>
+                    <li *ngIf="stock.errors?.pattern">To pole musi zawierać same cyfry</li>
                 </ul>
             </div>
 
 
-        <button class="btn bg-primary" type="submit" > Zatwierdź</button>
+            <button class="btn bg-primary" type="submit"> Zatwierdź</button>
 
-    </form>
+        </form>
     </p-panel>
 </div>

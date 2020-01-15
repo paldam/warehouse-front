@@ -1,19 +1,16 @@
 .redcolor {
-     border-color: red !important; ;
+    border-color: red !important;;
 
- }
-
+}
 .redcolor3 {
-    border-color: yellow !important; ;
+    border-color: yellow !important;;
 
 }
-
 .redcolor2 {
-    color: red !important; ;
+    color: red !important;;
 
 }
-
-.input-group-addon{
+.input-group-addon {
     min-width: 150px !important;
 }
 

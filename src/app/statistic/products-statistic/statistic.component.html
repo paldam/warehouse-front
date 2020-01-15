@@ -1,105 +1,117 @@
 <div class="map_cont">
-  <div class="row input_form">
-    <form id="MapForm" novalidate #form="ngForm" (submit)="submitOrderForm(form)">
-      <div class="map_cont">
-        <div class="row input_form">
-          <label for="start_date" >Data początkowa</label>
-          <p-calendar [dataType]="'string'" [utc]="false"  [locale]="dateLang"  dateFormat="yy-mm-dd" name="start_date" [(ngModel)]="startDate" required></p-calendar>
-          <label for="end_date" >Data końcowa</label>
-          <p-calendar [dataType]="'string'" [utc]="false"  [locale]="dateLang" dateFormat="yy-mm-dd" id="end_date" name="end_date" #end_date="ngModel" aria-describedby="end_dateDesc" [(ngModel)]="endDate" ></p-calendar>
+    <div class="row input_form">
+        <form id="MapForm" novalidate #form="ngForm" (submit)="submitOrderForm(form)">
+            <div class="map_cont">
+                <div class="row input_form">
+                    <label for="start_date">Data początkowa</label>
+                    <p-calendar [dataType]="'string'" [utc]="false" [locale]="dateLang" dateFormat="yy-mm-dd"
+                                name="start_date" [(ngModel)]="startDate" required></p-calendar>
+                    <label for="end_date">Data końcowa</label>
+                    <p-calendar [dataType]="'string'" [utc]="false" [locale]="dateLang" dateFormat="yy-mm-dd"
+                                id="end_date" name="end_date" #end_date="ngModel" aria-describedby="end_dateDesc"
+                                [(ngModel)]="endDate"></p-calendar>
 
 
-          <button class="btn bg-primary " type="submit" form="MapForm" >Szukaj</button>
+                    <button class="btn bg-primary " type="submit" form="MapForm">Szukaj</button>
 
-          <button type="button" class="btn btn-primary" (click)="generateXls()"><i class="fa fa-file-excel-o fa-x" aria-hidden="true"></i> Export do Excela</button>
-          <button *ngIf="authenticationService.isAdmin() && deliveryFnAvailable && el.dataToRender.length>0" type="button" class="btn btn-primary" (click)="orderProducts()"><i class="fa fa-file-excel-o fa-x" aria-hidden="true"></i> Zamów produkty</button>
-          <button *ngIf="authenticationService.isAdmin() && !deliveryFnAvailable" type="button" class="btn btn-primary" (click)="deliveryFnAvailable=true"><i class="fa fa-file-excel-o fa-x" aria-hidden="true"></i> Aktywuj funkcje zamawiania</button>
+                    <button type="button" class="btn btn-primary" (click)="generateXls()"><i
+                            class="fa fa-file-excel-o fa-x" aria-hidden="true"></i> Export do Excela
+                    </button>
+                    <button *ngIf="authenticationService.isAdmin() && deliveryFnAvailable && el.dataToRender.length>0"
+                            type="button" class="btn btn-primary" (click)="orderProducts()"><i
+                            class="fa fa-file-excel-o fa-x" aria-hidden="true"></i> Zamów produkty
+                    </button>
+                    <button *ngIf="authenticationService.isAdmin() && !deliveryFnAvailable" type="button"
+                            class="btn btn-primary" (click)="deliveryFnAvailable=true"><i
+                            class="fa fa-file-excel-o fa-x" aria-hidden="true"></i> Aktywuj funkcje zamawiania
+                    </button>
 
-          <ul class="text-danger list-unstyled" *ngIf="dateError">
-            <li >Data początkowa nie może być większa od końcowej</li>
-          </ul>
-        </div>
-      </div>
-    </form>
-  </div>
+                    <ul class="text-danger list-unstyled" *ngIf="dateError">
+                        <li>Data początkowa nie może być większa od końcowej</li>
+                    </ul>
+                </div>
+            </div>
+        </form>
+    </div>
 </div>
 
 
-<div  class="input-group search_bar" >
+<div class="input-group search_bar">
             <span class="input-group-addon" id="basic-addon1">
                  <i class="fa fa-search" aria-hidden="true"></i>
             </span>
-  <input #globalfilter type="text"  class="form-control search_input" pInputText size="50" placeholder="Szukaj"aria-describedby="basic-addon1" >
+    <input #globalfilter type="text" class="form-control search_input" pInputText size="50" placeholder="Szukaj"
+           aria-describedby="basic-addon1">
 
 </div>
 
-<p-dataTable [value]="productsToOrder" [rows]="20" [paginator]="true" [globalFilter]="globalfilter" [pageLinks]="5" [rowsPerPageOptions]= paginatorValues
-             [loading]="loading" loadingIcon="fa-circle-o-notch" #dt  [editable]="true"
+<p-dataTable [value]="productsToOrder" [rows]="20" [paginator]="true" [globalFilter]="globalfilter" [pageLinks]="5"
+             [rowsPerPageOptions]=paginatorValues
+             [loading]="loading" loadingIcon="fa-circle-o-notch" #dt [editable]="true"
              [rowStyleClass]="deliveryFnAvailable ? getRowStyle : getRowStyle">
-  <p-header>Lista Produktów potrzebych do zamówień</p-header>
+    <p-header>Lista Produktów potrzebych do zamówień</p-header>
 
 
-  <p-column  header="lp."   [style]="{'width':'70px'}">
-    <ng-template let-row="rowData" let-i="rowIndex" pTemplate="rowexpansion">
-      {{i+1}}
-    </ng-template>
-  </p-column>
-  <p-column field="product_name"  header="Nazwa" [sortable]="true" ></p-column>
+    <p-column header="lp." [style]="{'width':'70px'}">
+        <ng-template let-row="rowData" let-i="rowIndex" pTemplate="rowexpansion">
+            {{i+1}}
+        </ng-template>
+    </p-column>
+    <p-column field="product_name" header="Nazwa" [sortable]="true"></p-column>
 
 
-
-  <p-column field="suppliers" header="Dostawca" [filter]="true" filterMatchMode="inCollection" >
-    <ng-template pTemplate="filter" let-col>
-      <p-dropdown [options]="suppliers" placeholder="Wszyscy"  [style]="{'width':'100%'}" (onChange)="dt.filter($event.value,col.field,col.filterMatchMode)" styleClass="ui-column-filter"></p-dropdown>
-    </ng-template>
-    <ng-template  let-item="rowData"   pTemplate="body" >
-      <tr *ngFor="let supplier of item.suppliers">  {{supplier.supplierName}}  </tr>
-    </ng-template>
-  </p-column>
-
-
-
+    <p-column field="suppliers" header="Dostawca" [filter]="true" filterMatchMode="inCollection">
+        <ng-template pTemplate="filter" let-col>
+            <p-dropdown [options]="suppliers" placeholder="Wszyscy" [style]="{'width':'100%'}"
+                        (onChange)="dt.filter($event.value,col.field,col.filterMatchMode)"
+                        styleClass="ui-column-filter"></p-dropdown>
+        </ng-template>
+        <ng-template let-item="rowData" pTemplate="body">
+            <tr *ngFor="let supplier of item.suppliers"> {{supplier.supplierName}}</tr>
+        </ng-template>
+    </p-column>
 
 
-  <p-column field="productSubType.subTypeName" styleClass="type_col"  [filter]="true" header="Typ produktu"  [sortable]="true" >
-    <ng-template  let-col pTemplate="filter"  >
-      <p-multiSelect  styleClass="ui-column-filter" [showToggleAll]="true" [options]="productsType" defaultLabel="Wszystkie" (onChange)="dt.filter($event.value, col.field, 'in')"></p-multiSelect>
-    </ng-template>
+    <p-column field="productSubType.subTypeName" styleClass="type_col" [filter]="true" header="Typ produktu"
+              [sortable]="true">
+        <ng-template let-col pTemplate="filter">
+            <p-multiSelect styleClass="ui-column-filter" [showToggleAll]="true" [options]="productsType"
+                           defaultLabel="Wszystkie"
+                           (onChange)="dt.filter($event.value, col.field, 'in')"></p-multiSelect>
+        </ng-template>
 
-    <ng-template let-row="rowData" pTemplate="body"  >
-      <span> {{ row.productSubType?.subTypeName}} ({{row.productSubType?.productType?.typeName}}) </span>
-    </ng-template>
-  </p-column>
-
-
-
-
-  <p-column field="capacity"  header="Pojemność " [style]="{'width':'120px'}" ></p-column>
-
-  <p-column field="stock"  header="Stan Magazynu" [style]="{'width':'120px'}" ></p-column>
-  <p-column field="suma"  header="Potrzebna ilość" [sortable]="true" [style]="{'width':'120px'}" ></p-column>
+        <ng-template let-row="rowData" pTemplate="body">
+            <span> {{ row.productSubType?.subTypeName}} ({{row.productSubType?.productType?.typeName}}) </span>
+        </ng-template>
+    </p-column>
 
 
-  <p-column  field="tmpOrdered" [style]="{'width':'90px'}" header="Liczba zamówionych" [sortable]="true"></p-column>
+    <p-column field="capacity" header="Pojemność " [style]="{'width':'120px'}"></p-column>
+
+    <p-column field="stock" header="Stan Magazynu" [style]="{'width':'120px'}"></p-column>
+    <p-column field="suma" header="Potrzebna ilość" [sortable]="true" [style]="{'width':'120px'}"></p-column>
 
 
+    <p-column field="tmpOrdered" [style]="{'width':'90px'}" header="Liczba zamówionych" [sortable]="true"></p-column>
 
 
-  <p-column *ngIf="deliveryFnAvailable"  field="valueForDeliver"  [style]="{'width':'80px'}" [editable]="true" [filter]="false" header="Dostawa"  [sortable]="true" >
+    <p-column *ngIf="deliveryFnAvailable" field="valueForDeliver" [style]="{'width':'80px'}" [editable]="true"
+              [filter]="false" header="Dostawa" [sortable]="true">
 
-  </p-column>
+    </p-column>
 
 
-  <p-column  *ngIf="deliveryFnAvailable" field="lastEditNumberOfOrderedDate" [style]="{'width':'142px'}" header="Modyfikacja"
-            [sortable]="true">
+    <p-column *ngIf="deliveryFnAvailable" field="lastEditNumberOfOrderedDate" [style]="{'width':'142px'}"
+              header="Modyfikacja"
+              [sortable]="true">
 
-    <ng-template let-row="rowData" pTemplate="body">
-      {{row.lastEditNumberOfOrderedDate| date: 'dd/MM/yyyy HH:mm:ss'}}
-    </ng-template>
+        <ng-template let-row="rowData" pTemplate="body">
+            {{row.lastEditNumberOfOrderedDate| date: 'dd/MM/yyyy HH:mm:ss'}}
+        </ng-template>
 
-  </p-column>
+    </p-column>
 
-  <p-column field="suppliersConcatString" hidden="true" ></p-column>
+    <p-column field="suppliersConcatString" hidden="true"></p-column>
 
 </p-dataTable>
 

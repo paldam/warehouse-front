@@ -1,36 +1,24 @@
 import {Injectable} from "@angular/core";
 import {HttpService} from "../../http-service";
-import {Order} from "../../model/order.model";
 import {Observable} from "rxjs";
 import {Response} from "@angular/http";
-import {DeliveryType} from "../../model/delivery_type.model";
 import {Notification} from "../../model/notification";
-
-
-
 
 @Injectable()
 export class NotificationsService {
-	 private  protocol: string = "http";
+	private protocol: string = "http";
 	private port: number = 8080;
 	private baseUrl: string;
-
 	public showNotificationModal: boolean = false;
 	public notifications: Notification[] = [];
 	public notificationsTotal: number = 0;
 
-
-
-
 	public constructor(private http: HttpService) {
 		this.baseUrl = `${this.protocol}://${location.hostname}:${this.port}`;
-		//this.setEventSource();
 		this.checkNumberOfNotifications();
-
 		this.getNotifications().subscribe(data => {
 			this.notifications = data;
 		});
-
 	}
 
 	getNotifications(): Observable<Notification[]> {
@@ -53,7 +41,6 @@ export class NotificationsService {
 			this.getNotifications().subscribe(data => {
 				this.notifications = data;
 			});
-
 		});
 	}
 
@@ -63,16 +50,10 @@ export class NotificationsService {
 		});
 	}
 
-
 	showNotificationModalF() {
 		this.showNotificationModal = true;
 		this.getNotifications().subscribe(data => {
 			this.notifications = data;
 		});
 	}
-
-
-
-
-
 }

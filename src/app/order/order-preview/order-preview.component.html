@@ -1,25 +1,18 @@
 <p-panel header="Zamówienie">
     <div class="row">
-    <div class="col-md-6">
+        <div class="col-md-6">
 
 
-
-
-        <div class="form-group">
-            <small id="organization" class="text-muted">Klient</small>
-            <textarea class="form-control" name="additional_information"  rows="2"
-                      [readonly]="true" [value]="getCustomerDesc()"></textarea>
-        </div>
-        <div class="form-group">
-            <small id="addr" class="text-muted">Adres</small>
-            <textarea class="form-control" name="additional_information" id="addr_information" rows="2"
-                      [readonly]="true" [value]="getAddressDesc()"></textarea>
-        </div>
-
-
-
-
-
+            <div class="form-group">
+                <small id="organization" class="text-muted">Klient</small>
+                <textarea class="form-control" name="additional_information" rows="2"
+                          [readonly]="true" [value]="getCustomerDesc()"></textarea>
+            </div>
+            <div class="form-group">
+                <small id="addr" class="text-muted">Adres</small>
+                <textarea class="form-control" name="additional_information" id="addr_information" rows="2"
+                          [readonly]="true" [value]="getAddressDesc()"></textarea>
+            </div>
 
 
             <div class="form-group">
@@ -81,54 +74,52 @@
             </div>
 
 
-
-
-        <div class="form-group">
-            <p>
-                <p-checkbox name="additionalSaleCheckbox" binary="true" (disabled)="true"
-                            [(ngModel)]="additionalSaleCheckbox"></p-checkbox>
-                <span>dosprzedaż</span>
-            </p>
-        </div>
-
-    </div>
-
-    <div class="col-md-6">
-
-        <div class="form-group">
-            <small id="additional_informationDesc" class="text-muted">Dodatkowe informacje</small>
-            <textarea class="form-control" name="additional_information" id="additional_information" rows="6"
-                      [readonly]="true" [(ngModel)]="orderToShow.additionalInformation"></textarea>
-        </div>
-
-        <div class="form-group">
             <div class="form-group">
-                <small id="text_to_cardDesc" class="text-muted">Tekst na kartkę</small>
-                <textarea  [readonly]="true" class="form-control" name="text_to_card" id="text_to_card"  size="1000" rows="1" [(ngModel)]="orderToShow.textToCard"></textarea>
+                <p>
+                    <p-checkbox name="additionalSaleCheckbox" binary="true" (disabled)="true"
+                                [(ngModel)]="additionalSaleCheckbox"></p-checkbox>
+                    <span>dosprzedaż</span>
+                </p>
             </div>
+
         </div>
 
+        <div class="col-md-6">
 
-        <p-panel header="Zawartość zamówienia">
-            <table>
-                <thead>
-                <tr>
-                    <th>nazwa kosza</th>
-                    <th class="col_quantity">ilość</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr *ngFor="let orderItems of orderToShow.orderItems">
-                    <td scope="row">{{orderItems.basket.basketName}}</td>
-                    <td><input type="number" class="form-control" name="" id="" aria-describedby="helpId"
-                               placeholder="" min="0" [value]="orderItems.quantity" [readonly]="true"></td>
-                </tr>
-                </tbody>
-            </table>
-        </p-panel>
+            <div class="form-group">
+                <small id="additional_informationDesc" class="text-muted">Dodatkowe informacje</small>
+                <textarea class="form-control" name="additional_information" id="additional_information" rows="6"
+                          [readonly]="true" [(ngModel)]="orderToShow.additionalInformation"></textarea>
+            </div>
+
+            <div class="form-group">
+                <div class="form-group">
+                    <small id="text_to_cardDesc" class="text-muted">Tekst na kartkę</small>
+                    <textarea [readonly]="true" class="form-control" name="text_to_card" id="text_to_card" size="1000"
+                              rows="1" [(ngModel)]="orderToShow.textToCard"></textarea>
+                </div>
+            </div>
 
 
+            <p-panel header="Zawartość zamówienia">
+                <table>
+                    <thead>
+                    <tr>
+                        <th>nazwa kosza</th>
+                        <th class="col_quantity">ilość</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr *ngFor="let orderItems of orderToShow.orderItems">
+                        <td scope="row">{{orderItems.basket.basketName}}</td>
+                        <td><input type="number" class="form-control" name="" id="" aria-describedby="helpId"
+                                   placeholder="" min="0" [value]="orderItems.quantity" [readonly]="true"></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </p-panel>
 
+
+        </div>
     </div>
-</div>
 </p-panel>

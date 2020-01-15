@@ -2,7 +2,7 @@ import {Injectable} from "@angular/core";
 import {Observable} from "rxjs/Observable";
 import {Headers, Http, RequestOptions} from "@angular/http";
 import {Order} from "../model/order.model";
-import {AppConstans} from "../constans";
+import {AppConstants} from "../constans";
 
 @Injectable()
 export class MapService {
@@ -19,7 +19,7 @@ export class MapService {
 		myHeaders.delete('Authorization')
 		let options = new RequestOptions({headers: myHeaders});
 		return this.http.get(`https://maps.googleapis.com/maps/api/geocode/json?address=${address}&sensor=false&key=`
-            + AppConstans.GOOGLE_MAPS_API_KEY, options)
+            + AppConstants.GOOGLE_MAPS_API_KEY, options)
 			.map((response: any) =>
 				response.json());
 	}

@@ -5,13 +5,11 @@ import {NgForm} from "@angular/forms";
 import {ConfirmationService, SelectItem} from "primeng/api";
 import * as XLSX from "xlsx";
 import {DataTable} from "primeng/primeng";
-import {AppConstans} from "../../constans";
+import {AppConstants} from "../../constans";
 import {ProductSubType} from "../../model/product_sub_type";
 import {Supplier} from "../../model/supplier.model";
 import {AuthenticationService} from "../../authentication.service";
 import {SpinerService} from "../../spiner.service";
-import {BasketType} from "../../model/basket_type.model";
-
 declare var $: any;
 
 @Component({
@@ -20,7 +18,8 @@ declare var $: any;
 	styleUrls: ['./statistic.component.css'],
 	encapsulation: ViewEncapsulation.None
 })
-export class StatisticComponent implements OnInit {
+export class StatisticComponent
+	implements OnInit {
 	public productsToOrder: any[] = [];
 	value: Date;
 	dateLang: any;
@@ -32,10 +31,12 @@ export class StatisticComponent implements OnInit {
 	public dateError: boolean = false;
 	public deliveryFnAvailable: boolean = false;
 	public productsType: SelectItem[] = [];
-	public paginatorValues = AppConstans.PAGINATOR_VALUES;
+	public paginatorValues = AppConstants.PAGINATOR_VALUES;
 	@ViewChild('dt') el: DataTable;
 
-	constructor(private confirmationService: ConfirmationService, private productService: ProductsService, private calendarSetingsComponent: CalendarSetingsComponent, public authenticationService: AuthenticationService, public spinerService: SpinerService) {
+	constructor(private confirmationService: ConfirmationService, private productService: ProductsService,
+				private calendarSetingsComponent: CalendarSetingsComponent,
+				public authenticationService: AuthenticationService, public spinerService: SpinerService) {
 		productService.getSuppliers().subscribe(data => {
 			this.suppliers.push({label: '-- Wszyscy Dostawcy --', value: null});
 			data.forEach(data => {
@@ -86,7 +87,7 @@ export class StatisticComponent implements OnInit {
 			}, error1 => {
 				this.spinerService.showSpinner = false;
 			}, () => this.productsToOrder.forEach(value => {
-				value.valueForDeliver = value.suma - value.stock -value.tmpOrdered;
+				value.valueForDeliver = value.suma - value.stock - value.tmpOrdered;
 				this.spinerService.showSpinner = false;
 			}))
 	}
@@ -136,18 +137,12 @@ export class StatisticComponent implements OnInit {
 		})
 	}
 
-	getRowStyle(rowData: any, rowIndex: number): string{
-
-
+	getRowStyle(rowData: any, rowIndex: number): string {
 		let timeNow = new Date().getTime();
-
-		if( (timeNow - rowData.lastEditNumberOfOrderedDate) /1000/60 < 60 ){    // 1h
+		if ((timeNow - rowData.lastEditNumberOfOrderedDate) / 1000 / 60 < 60) {
 			return 'ddd';
-
-		}else{
-
+		} else {
 			return '';
-
 		}
 	}
 
@@ -177,7 +172,6 @@ export class StatisticComponent implements OnInit {
 		const workbook: XLSX.WorkBook = {Sheets: {'data': worksheet}, SheetNames: ['data']};
 		let today = new Date();
 		let date = today.getFullYear() + '' + (today.getMonth() + 1) + '' + today.getDate() + '_';
-		//let time = today.getHours() + "-" + today.getMinutes() + "-" + today.getSeconds();
 		let fileName = "Zestawienie_" + date + ".xls";
 		XLSX.writeFile(workbook, fileName, {bookType: 'xls', type: 'buffer'});
 	}

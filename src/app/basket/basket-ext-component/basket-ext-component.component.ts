@@ -7,7 +7,7 @@ import {BasketType} from "../../model/basket_type.model";
 import {AuthenticationService} from "../../authentication.service";
 import {MenuItem} from 'primeng/api';
 import {BasketExt} from '../../model/BasketExt';
-import {AppConstans} from "../../constans";
+import {AppConstants} from "../../constans";
 import {MessageServiceExt} from "../../messages/messageServiceExt";
 
 @Component({
@@ -25,7 +25,7 @@ export class BasketExtComponentComponent
 	public alcoholOptions: SelectItem[];
 	public selectedBasketOnContextMenu: BasketExt = new BasketExt();
 	@ViewChild('onlyDeleted') el: ElementRef;
-	public paginatorValues = AppConstans.PAGINATOR_VALUES;
+	public paginatorValues = AppConstants.PAGINATOR_VALUES;
 
 	constructor(private basketService: BasketExtService, private router: Router,
 				private messageServiceExt: MessageServiceExt, private confirmationService: ConfirmationService,

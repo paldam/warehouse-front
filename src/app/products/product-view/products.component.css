@@ -5,46 +5,54 @@
     padding-bottom: 20px;
 }
 
-.search_input{
+.search_input {
     max-width: 50%;
 }
+
 .refresh_icon {
     position: absolute;
     right: 10px;
     top: 5px;
 }
-.price_col{
-    text-align: right;
+
+.price_col {
+    text-align: riaght;
     width: 90px;
 }
-.stock_col{
+
+.stock_col {
     width: 70px;
     text-align: right;
 }
-.action_col{
+
+.action_col {
     width: 110px;
     text-align: center;
 }
 
-.state_col{
-width: 60px;
+.state_col {
+    width: 60px;
 }
-.deliver_col{
-     width: 150px;
- }
-.type_col{
+
+.deliver_col {
+    width: 150px;
+}
+
+.type_col {
     width: 160px;
 }
 
-.capacity_col{
+.capacity_col {
     width: 100px;
 }
-.edit_icon{
+
+.edit_icon {
     position: relative;
     right: 0px;
     top: -2px;
 }
-.basket_icon{
+
+.basket_icon {
     position: relative;
     top: -8px;
     left: 0px;

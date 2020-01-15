@@ -1,18 +1,13 @@
 import {ViewChild} from "@angular/core";
 import {DataTable} from "primeng/primeng";
-import {AppConstans} from "./constans";
-import {AuthenticationService} from "./authentication.service";
-import {MessageServiceExt} from "./messages/messageServiceExt";
+import {AppConstants} from "./constans";
 
 export class CoreDataTableViewComponent {
+	public loading: boolean;
+	public lastVisitedPage: number;
+	public paginatorValues = AppConstants.PAGINATOR_VALUES;
+	@ViewChild('dt') dataTable: DataTable;
 
-    public loading: boolean;
-    public lastVisitedPage: number;
-    public paginatorValues = AppConstans.PAGINATOR_VALUES;
-    @ViewChild('dt') dataTable: DataTable;
-
-    constructor() {
-
-    }
-
+	constructor() {
+	}
 }

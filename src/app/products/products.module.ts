@@ -12,7 +12,8 @@ import {SuppliersService} from "./suppliers.service";
 import { ProductsCategoryComponent } from './products-category/products-category.component';
 
 @NgModule({
-	declarations: [ProductDeliveryComponent,ProductsComponent,ProductFormComponent,ProductEditFormComponent,SuppliersComponent, ProductsCategoryComponent],
+	declarations: [ProductDeliveryComponent,ProductsComponent,ProductFormComponent,ProductEditFormComponent,
+		SuppliersComponent, ProductsCategoryComponent],
 	imports: [routing,CommonModule,PrimeNgModule],
 	providers: [ProductsService,SuppliersService],
 	exports:[ProductsComponent]

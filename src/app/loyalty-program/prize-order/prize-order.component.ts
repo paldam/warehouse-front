@@ -3,7 +3,7 @@ import {UserService} from "../../user.service";
 import {AuthenticationService} from "../../authentication.service";
 import {MessageServiceExt} from "../../messages/messageServiceExt";
 import {User} from "../../model/user.model";
-import {AppConstans} from "../../constans";
+import {AppConstants} from "../../constans";
 import {PrizeOrder} from "../../model/prize-order.model";
 import {PrizeService} from "../prize.service";
 import {Order} from "../../model/order.model";
@@ -17,7 +17,7 @@ import {MenuItem} from "primeng/api";
 export class PrizeOrderComponent implements OnInit {
 	public loading: boolean;
 	public orders: PrizeOrder [] = [];
-	public paginatorValues = AppConstans.PAGINATOR_VALUES;
+	public paginatorValues = AppConstants.PAGINATOR_VALUES;
 	public showOrderPreviewModal: boolean = false;
 	public isOrderToShowFetchComplete: Promise<boolean>;
 	public selectedOrderFromRow: PrizeOrder = new PrizeOrder();

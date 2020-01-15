@@ -1,45 +1,54 @@
-
-<div *ngIf="authenticationService.isMagazynUser() ||authenticationService.isWysylkaUser() ||authenticationService.isProdukcjaUser()  " class="asd">
+<div *ngIf="authenticationService.isMagazynUser() ||authenticationService.isWysylkaUser()
+                                                  ||authenticationService.isProdukcjaUser()"
+     class="asd">
     <a *ngIf="authenticationService.isLoggedIn()" class="notification">
-        <i (click)="notificationsService.showNotificationModalF()" class=" ica fa fa-envelope-open-o fa-3x" aria-hidden="true"></i>
+        <i (click)="notificationsService.showNotificationModalF()" class=" ica fa fa-envelope-open-o fa-3x"
+           aria-hidden="true"></i>
         <span [class]="getBadgeStyle()">{{notificationsService.notificationsTotal}}</span>
 
     </a>
 </div>
 
 
-<button  *ngIf="this.isCurrentPageOrdersViewRedirectedFromBasketStatitis" (click)="backToRegularOrderView()" class="btn bg-primary" type="button"> Czyść </button>
-<button *ngIf="this.isCurrentPageOrdersViewRedirectedFromBasketStatitis" (click)="backToBasketStatistic()" class="btn bg-primary" type="button"> Powrót do statystyki koszy koszy </button>
+<button *ngIf="this.isCurrentPageOrdersViewRedirectedFromBasketStatitis" (click)="backToRegularOrderView()"
+        class="btn bg-primary" type="button"> Czyść
+</button>
+<button *ngIf="this.isCurrentPageOrdersViewRedirectedFromBasketStatitis" (click)="backToBasketStatistic()"
+        class="btn bg-primary" type="button"> Powrót do statystyki koszy koszy
+</button>
 <div class="products_box">
 
-    <div  class="input-group search_bar" >
+    <div class="input-group search_bar">
             <span class="input-group-addon" id="basic-addon1">
                  <i class="fa fa-search" aria-hidden="true"></i>
             </span>
-        <input #globalfilter type="text"  class="form-control search_input" pInputText size="50" placeholder="Szukaj"aria-describedby="basic-addon1" [(ngModel)]="findInputTextOnOrderViewPage">
-
-
+        <input #globalfilter type="text" class="form-control search_input" pInputText size="50" placeholder="Szukaj"
+               aria-describedby="basic-addon1" [(ngModel)]="findInputTextOnOrderViewPage">
 
 
         <div *ngIf="this.isCurrentPageOrdersView" class="onlyWithAttach form-check">
             <label class="form-check-label">
-                <input  #onlyWithAttach type="checkbox" class="form-check-input" name=""  (click)="clickOnlyWithAtttach()" >
+                <input #onlyWithAttach type="checkbox" class="form-check-input" name=""
+                       (click)="clickOnlyWithAtttach()">
                 Tylko z załącznikami
             </label>
         </div>
 
 
-        <i [hidden]="isCurrentPageCustomerEdit || isCurrentPageOrdersViewRedirectedFromBasketStatitis" class="fa fa-refresh pull-right refresh_icon fa-2x" aria-hidden="true" (click)="refreshData()"></i>
+        <i [hidden]="isCurrentPageCustomerEdit || isCurrentPageOrdersViewRedirectedFromBasketStatitis"
+           class="fa fa-refresh pull-right refresh_icon fa-2x" aria-hidden="true" (click)="refreshData()"></i>
 
 
     </div>
 
 
-
-    <p-dataTable #dt [value]="orders" [rows]="50" [paginator]="true" [globalFilter]="globalfilter"  [totalRecords]="totalRecords" selectionMode="multiple"
-                 [loading]="loading" loadingIcon="fa-circle-o-notch" expandableRows="true"   [(first)]="lastPaginationPageNumberOnOrderViewPage"  [(selection)]="selectedOrdersMultiselction"
+    <p-dataTable #dt [value]="orders" [rows]="50" [paginator]="true" [globalFilter]="globalfilter"
+                 [totalRecords]="totalRecords" selectionMode="multiple"
+                 [loading]="loading" loadingIcon="fa-circle-o-notch" expandableRows="true"
+                 [(first)]="lastPaginationPageNumberOnOrderViewPage" [(selection)]="selectedOrdersMultiselction"
                  dataKey="orderId" [contextMenu]="cm"
-                 rowExpandMode = single [paginator]="true" [pageLinks]="5" [rowsPerPageOptions]= paginatorValues [lazy]="false"
+                 rowExpandMode=single [paginator]="true" [pageLinks]="5" [rowsPerPageOptions]=paginatorValues
+                 [lazy]="false"
                  (onContextMenuSelect)="OnSelectRow($event)"
                  (onRowExpand)="rowExpand($event)"
                  (onRowCollapse)="onRowCollapse($event)"
@@ -53,55 +62,56 @@
 
 
         <p-header>
-            <i *ngIf="this.isCurrentPageOrdersView" class="fa fa-1x fa-file-text excel-export" aria-hidden="true" (click)="menuExport.toggle($event);changeRowPerPage()"></i>
-            <i *ngIf="authenticationService.isAdmin()" class="fa fa-1x fa-print print-today-order-icon" aria-hidden="true" (click)="printAllTotayPdf()"></i>
+            <i *ngIf="this.isCurrentPageOrdersView" class="fa fa-1x fa-file-text excel-export" aria-hidden="true"
+               (click)="menuExport.toggle($event);changeRowPerPage()"></i>
+            <i *ngIf="authenticationService.isAdmin()" class="fa fa-1x fa-print print-today-order-icon"
+               aria-hidden="true" (click)="printAllTotayPdf()"></i>
             Lista Zamówień
         </p-header>
         <p-column expander="true" header="" styleClass="col-icon " [style]="{'width':'40px'}"></p-column>
 
 
-        <p-column field="orderFvNumber" header="Numer FV"  [style]="{'width':'90px'}"></p-column>
+        <p-column field="orderFvNumber" header="Numer FV" [style]="{'width':'90px'}"></p-column>
 
 
-        <p-column field="orderDate" header="Data zamówienia" [style]="{'width':'140px', 'text-align':'center'}" [sortable]="true" [filter]="this.isCurrentPageOrdersView" filterMatchMode="equals">
+        <p-column field="orderDate" header="Data zamówienia" [style]="{'width':'140px', 'text-align':'center'}"
+                  [sortable]="true" [filter]="this.isCurrentPageOrdersView" filterMatchMode="equals">
 
-            <ng-template *ngIf="this.isCurrentPageOrdersView" let-col pTemplate="filter"  >
+            <ng-template *ngIf="this.isCurrentPageOrdersView" let-col pTemplate="filter">
                 <div>
-                    <p-multiSelect *ngIf="!this.isCurrentPageOrdersViewRedirectedFromBasketStatitis" [filter]="false" [showToggleAll]="false" [options]="ordersYears" defaultLabel="Wszystkie" (onChange)="datatable.filter($event.value, col.field, 'in')"></p-multiSelect>
+                    <p-multiSelect *ngIf="!this.isCurrentPageOrdersViewRedirectedFromBasketStatitis" [filter]="false"
+                                   [showToggleAll]="false" [options]="ordersYears" defaultLabel="Wszystkie"
+                                   (onChange)="datatable.filter($event.value, col.field, 'in')"></p-multiSelect>
                 </div>
 
             </ng-template>
 
-            <ng-template let-row="rowData" pTemplate="body"  >
+            <ng-template let-row="rowData" pTemplate="body">
                 {{row.orderDate| date: 'dd/MM/yyyy HH:mm:ss'}}
             </ng-template>
         </p-column>
 
 
-
-
-
-        <p-column field="customer.customerName" header="Nabywca" >
-            <ng-template let-row="rowData" pTemplate="body"  >
+        <p-column field="customer.customerName" header="Nabywca">
+            <ng-template let-row="rowData" pTemplate="body">
                 {{row.customer.name}} | {{row.customer.company?.companyName}}
             </ng-template>
         </p-column>
 
         <!--Hide columns, only to global search purpose-->
-        <p-column field="customer.name" header=""  hidden="true"></p-column>
-        <p-column field="customer.company.companyName" header=""  hidden="true"></p-column>
+        <p-column field="customer.name" header="" hidden="true"></p-column>
+        <p-column field="customer.company.companyName" header="" hidden="true"></p-column>
 
 
-
-
-        <p-column field="additionalInformation" header="Dodatkowe informacje" >
-            <ng-template let-row="rowData" pTemplate="body" >
+        <p-column field="additionalInformation" header="Dodatkowe informacje">
+            <ng-template let-row="rowData" pTemplate="body">
 
                 
                 <span *ngIf="!isLongCell(row.additionalInformation)">
                     {{row.additionalInformation}}
                 </span>
-                <span pTooltip="dsadassd" *ngIf="isLongCell(row.additionalInformation)" (click)="showAdditionalIInfExtension($event,row.additionalInformation)">
+                <span pTooltip="dsadassd" *ngIf="isLongCell(row.additionalInformation)"
+                      (click)="showAdditionalIInfExtension($event,row.additionalInformation)">
                     {{row.additionalInformation| slice:0:90}}... <i class="fa fa-bolt " aria-hidden="true"></i>
 
                 </span>
@@ -109,67 +119,81 @@
         </p-column>
 
 
-        <p-column  field="deliveryDate" header="Data dostawy" [style]="{'width':'85px', 'text-align':'center'}" [sortable]="true">
-            <ng-template let-row="rowData" pTemplate="body"  >
-            {{row.deliveryDate| date: 'dd/MM/yyyy'}}
+        <p-column field="deliveryDate" header="Data dostawy" [style]="{'width':'85px', 'text-align':'center'}"
+                  [sortable]="true">
+            <ng-template let-row="rowData" pTemplate="body">
+                {{row.deliveryDate| date: 'dd/MM/yyyy'}}
             </ng-template>
         </p-column>
 
 
-        <p-column [styleClass]="'removable-col'" field="productionUser.login" header="Produkcja" [style]="{'width':'60px', 'text-align':'center'}" ></p-column>
+        <p-column [styleClass]="'removable-col'" field="productionUser.login" header="Produkcja"
+                  [style]="{'width':'60px', 'text-align':'center'}"></p-column>
 
 
+        <p-column [styleClass]="'removable-col'" field="weekOfYear" header="T" [sortable]="true"
+                  [style]="{'width':'35px', 'text-align':'center'}"></p-column>
 
-        <p-column [styleClass]="'removable-col'" field="weekOfYear" header="T" [sortable]="true"  [style]="{'width':'35px', 'text-align':'center'}" ></p-column>
-
-        <p-column field="orderTotalAmount" header="total" [style]="{'width':'90px', 'text-align':'center'}" [sortable]="true">
-            <ng-template let-row="rowData" pTemplate="body"  >
+        <p-column field="orderTotalAmount" header="total" [style]="{'width':'90px', 'text-align':'center'}"
+                  [sortable]="true">
+            <ng-template let-row="rowData" pTemplate="body">
                 {{row.orderTotalAmount/100 | number : '1.2-2'}} zł
             </ng-template>
         </p-column>
 
 
-        <p-column field="orderStatus.orderStatusName" header="Status" [style]="{'width':'150px', 'text-align':'center'}" [filter]="this.isCurrentPageOrdersView" filterMatchMode="equals" [sortable]="true" >
+        <p-column field="orderStatus.orderStatusName" header="Status" [style]="{'width':'150px', 'text-align':'center'}"
+                  [filter]="this.isCurrentPageOrdersView" filterMatchMode="equals" [sortable]="true">
 
-            <ng-template  let-col pTemplate="filter"  >
-                <p-multiSelect [filter]="false" [showToggleAll]="false" [options]="orderStatusList" defaultLabel="Wszystkie" (onChange)="datatable.filter($event.value, col.field, 'in')"></p-multiSelect>
+            <ng-template let-col pTemplate="filter">
+                <p-multiSelect [filter]="false" [showToggleAll]="false" [options]="orderStatusList"
+                               defaultLabel="Wszystkie"
+                               (onChange)="datatable.filter($event.value, col.field, 'in')"></p-multiSelect>
             </ng-template>
 
-            <ng-template let-row="rowData" pTemplate="body"  >
+            <ng-template let-row="rowData" pTemplate="body">
 
-                <span *ngIf="(row.orderStatus.orderStatusId == 6 && (isCurrentPageOrdersView || isCurrentPageOrdersViewForProduction))" ><p-progressBar [ngClass]="{'progressbar-color-green': value < 50, 'progressbar-color-red': value > 50}"   [value]="row.progress"></p-progressBar></span>
-                <span *ngIf="(row.orderStatus.orderStatusId != 6 ||isCurrentPageCustomerEdit || isCurrentPageOrdersViewRedirectedFromBasketStatitis)" [ngStyle]="calculateStyles(row.orderStatus.orderStatusName)">{{row.orderStatus.orderStatusName }}</span>
+                <span *ngIf="(row.orderStatus.orderStatusId == AppConstants.ORDER_STATUS_W_TRAKCIE_REALIZACJI
+                                && (isCurrentPageOrdersView || isCurrentPageOrdersViewForProduction))">
+                    <p-progressBar [ngClass]="{'progressbar-color-green': value < 50, 'progressbar-color-red': value > 50}"
+                        [value]="row.progress">
+                    </p-progressBar></span>
+                <span *ngIf="(row.orderStatus.orderStatusId != AppConstants.ORDER_STATUS_W_TRAKCIE_REALIZACJI ||
+                                isCurrentPageCustomerEdit || isCurrentPageOrdersViewRedirectedFromBasketStatitis)"
+                      [ngStyle]="calculateStyles(row.orderStatus.orderStatusName)">{{row.orderStatus.orderStatusName }}</span>
             </ng-template>
 
         </p-column>
 
 
+        <p-column [styleClass]="'removable-col'" field="deliveryType.deliveryTypeName" header="Rodzaj dostawy"
+                  [style]="{'width':'130px', 'text-align':'center'}"></p-column>
 
-        <p-column  [styleClass]="'removable-col'" field="deliveryType.deliveryTypeName" header="Rodzaj dostawy" [style]="{'width':'130px', 'text-align':'center'}"></p-column>
 
-
-        <p-column [styleClass]="'removable-col2'"class="attach_col" field="dbFileId"   [sortable]="false" header="Z" [style]="{'width':'28px'}">
-            <ng-template let-row="rowData"  pTemplate="body">
+        <p-column [styleClass]="'removable-col2'" class="attach_col" field="dbFileId" [sortable]="false" header="Z"
+                  [style]="{'width':'28px'}">
+            <ng-template let-row="rowData" pTemplate="body">
 
                 <span *ngIf="row.dbFileId!=0"> <i class="fa  fa-paperclip" aria-hidden="true"></i></span>
             </ng-template>
         </p-column>
 
-        <p-column [styleClass]="'removable-col2'" class="attach_col" field="additionalSale"   [sortable]="true" header="D" [style]="{'width':'28px'}">
-            <ng-template let-row="rowData"  pTemplate="body">
+        <p-column [styleClass]="'removable-col2'" class="attach_col" field="additionalSale" [sortable]="true" header="D"
+                  [style]="{'width':'28px'}">
+            <ng-template let-row="rowData" pTemplate="body">
 
                 <span *ngIf="row.additionalSale==1"> <i class="fa fa-check" aria-hidden="true"></i></span>
             </ng-template>
         </p-column>
 
 
-        <p-column [hidden]="isCurrentPageCustomerEdit" class="action_col"  field="orders" header="Akcja" [style]="{'width':'40px'}">
-        <ng-template let-order="rowData" let-i="rowIndex" pTemplate="body">
-            <i id="action_extention_icon" class="fa fa-cog fa-2x " aria-hidden="true"  title="Edytuj zamówienie"   (click)="showActionExtention($event)"></i>
-        </ng-template>
-    </p-column>
-
-
+        <p-column [hidden]="isCurrentPageCustomerEdit" class="action_col" field="orders" header="Akcja"
+                  [style]="{'width':'40px'}">
+            <ng-template let-order="rowData" let-i="rowIndex" pTemplate="body">
+                <i id="action_extention_icon" class="fa fa-cog fa-2x " aria-hidden="true" title="Edytuj zamówienie"
+                   (click)="showActionExtention($event)"></i>
+            </ng-template>
+        </p-column>
 
 
         <ng-template *ngIf="!authenticationService.isAdmin()" let-orders pTemplate="rowexpansion">
@@ -186,19 +210,19 @@
                         <col span="1" style="width: 8%;">
                     </colgroup>
                     <thead>
-                    <tr >
-                        <th >Nazwa kosza</th>
-                        <th >Zdjęcie</th>
-                        <th >Skład kosza</th>
-                        <th >Kosze gotowe / Do zrobienia </th>
-                        <th >Magazyn</th>
-                        <th >Produkcja</th>
-                        <th >Logistyka</th>
+                    <tr>
+                        <th>Nazwa kosza</th>
+                        <th>Zdjęcie</th>
+                        <th>Skład kosza</th>
+                        <th>Kosze gotowe / Do zrobienia</th>
+                        <th>Magazyn</th>
+                        <th>Produkcja</th>
+                        <th>Logistyka</th>
                     </tr>
                     </thead>
                     <tbody>
-                    <tr  *ngFor="let row of orders.orderItems; index as i;">
-                        <td >{{row.basket.basketName}}</td>
+                    <tr *ngFor="let row of orders.orderItems; index as i;">
+                        <td>{{row.basket.basketName}}</td>
 
                         <td>
                             <i class="fa fa-picture-o fa-2x" aria-hidden="true" title="Pokaż zdjęcie kosza"
@@ -210,46 +234,55 @@
                         </td>
 
                         <td *ngIf="authenticationService.isBiuroUser()">
-                            <span *ngIf="row.quantityFromSurplus > 0"><i class="fa fa-exclamation surplus total-ready-basket" aria-hidden="true" > Kosze z nadwyżki</i></span>
-                            <!--<span *ngIf="row.quantityFromSurplus == 0" class="total-ready-basket" >{{ row.stateOnWarehouse}} </span>-->
-                            <span *ngIf="row.quantityFromSurplus > 0" class="total-ready-basket surplus" > {{row.quantityFromSurplus}}</span>
+                            <span *ngIf="row.quantityFromSurplus > 0">
+                                <i class="fa fa-exclamation surplus total-ready-basket" aria-hidden="true"> Kosze z nadwyżki</i></span>
+                            <span *ngIf="row.quantityFromSurplus > 0" class="total-ready-basket surplus"> {{row.quantityFromSurplus}}</span>
                             <span> / {{row.quantity}} </span>
 
                         </td>
                         <td *ngIf="authenticationService.isMagazynUser()">
-                            <i *ngIf="!isMagazynInputDisable(orders.orderStatus.orderStatusId,row.quantityFromSurplus)" class="fa fa-pencil"  aria-hidden="true" (click)="showEditCurrentOrderStateDialog(orders,row)"></i>
+                            <i *ngIf="!isMagazynInputDisable(orders.orderStatus.orderStatusId,row.quantityFromSurplus)"
+                               class="fa fa-pencil" aria-hidden="true"
+                               (click)="showEditCurrentOrderStateDialog(orders,row)"></i>
 
-                            <span *ngIf="row.quantityFromSurplus > 0"><i class="fa fa-exclamation surplus total-ready-basket" aria-hidden="true" > Kosze z nadwyżki</i></span>
-                            <span *ngIf="row.quantityFromSurplus == 0" class="total-ready-basket" >{{ row.stateOnWarehouse}} </span>
-                            <span *ngIf="row.quantityFromSurplus > 0" class="total-ready-basket surplus" > {{row.quantityFromSurplus}}</span>
+                            <span *ngIf="row.quantityFromSurplus > 0"><i
+                                    class="fa fa-exclamation surplus total-ready-basket" aria-hidden="true"> Kosze z nadwyżki</i></span>
+                            <span *ngIf="row.quantityFromSurplus == 0" class="total-ready-basket">{{ row.stateOnWarehouse}} </span>
+                            <span *ngIf="row.quantityFromSurplus > 0" class="total-ready-basket surplus"> {{row.quantityFromSurplus}}</span>
                             <span> / {{row.quantity}} </span>
 
                         </td>
                         <td *ngIf="authenticationService.isProdukcjaUser()">
-                            <i *ngIf="!isProductionInputDisable(orders.orderStatus.orderStatusId,row.quantityFromSurplus)" class="fa fa-pencil" aria-hidden="true" (click)="showEditCurrentOrderStateDialog(orders,row)"></i>
+                            <i *ngIf="!isProductionInputDisable(orders.orderStatus.orderStatusId,row.quantityFromSurplus)"
+                               class="fa fa-pencil" aria-hidden="true"
+                               (click)="showEditCurrentOrderStateDialog(orders,row)"></i>
 
-                            <span *ngIf="row.quantityFromSurplus > 0"><i class="fa fa-exclamation surplus total-ready-basket" aria-hidden="true"> Kosze z nadwyżki</i></span>
-                            <span *ngIf="row.quantityFromSurplus == 0" class="total-ready-basket" >{{ row.stateOnProduction}} </span>
+                            <span *ngIf="row.quantityFromSurplus > 0"><i
+                                    class="fa fa-exclamation surplus total-ready-basket" aria-hidden="true"> Kosze z nadwyżki</i></span>
+                            <span *ngIf="row.quantityFromSurplus == 0" class="total-ready-basket">{{ row.stateOnProduction}} </span>
                             <span *ngIf="row.quantityFromSurplus > 0" class="total-ready-basket surplus"> ({{row.quantityFromSurplus}})</span>
                             <span> / {{row.quantity}} </span>
 
                         </td>
                         <td *ngIf="authenticationService.isWysylkaUser()">
-                            <i *ngIf="!isWysylkaInputDisable(orders.orderStatus.orderStatusId)" class="fa fa-pencil" aria-hidden="true" (click)="showEditCurrentOrderStateDialog(orders,row)"></i>
+                            <i *ngIf="!isWysylkaInputDisable(orders.orderStatus.orderStatusId)" class="fa fa-pencil"
+                               aria-hidden="true" (click)="showEditCurrentOrderStateDialog(orders,row)"></i>
                             <span class="total-ready-basket"> {{ row.stateOnLogistics}} </span> / {{row.quantity}}
                         </td>
 
 
                         <td class="add-value-cell">
-                            <input *ngIf="!authenticationService.isMagazynUser() || isMagazynInputDisable(orders.orderStatus.orderStatusId,row.quantityFromSurplus)" type="number"
+                            <input *ngIf="!authenticationService.isMagazynUser() || isMagazynInputDisable(orders.orderStatus.orderStatusId,row.quantityFromSurplus)"
+                                   type="number"
                                    [disabled]="isMagazynInputDisable(orders.orderStatus.orderStatusId,row.quantityFromSurplus)"
                                    class="form-control inp-state" aria-describedby="helpId" placeholder="" min="0"
                                    [max]="row.quantity" [value]="row.stateOnWarehouse"
                                    (change)="updateStateOnWarehouse(orders,$event.target.value,i)">
 
                             <div *ngIf="!isMagazynInputDisable(orders.orderStatus.orderStatusId,row.quantityFromSurplus)">
-                                <p-spinner size="1" [(ngModel)]="row.addTmp" placeholder="0" [min]="0" [max]="row.quantity"></p-spinner>
-                                <i   class="plusic fa fa-2x fa-plus-circle" aria-hidden="true"
+                                <p-spinner size="1" [(ngModel)]="row.addTmp" placeholder="0" [min]="0"
+                                           [max]="row.quantity"></p-spinner>
+                                <i class="plusic fa fa-2x fa-plus-circle" aria-hidden="true"
                                    (click)="updateSpecifiedOrderItemProgressOnWarehouseByAddValue(row.orderItemId,row.addTmp)"> </i>
                             </div>
 
@@ -257,38 +290,40 @@
                         </td>
 
                         <td class="add-value-cell">
-                            <input *ngIf="!authenticationService.isProdukcjaUser() || isProductionInputDisable(orders.orderStatus.orderStatusId,row.quantityFromSurplus)" type="number"
+                            <input *ngIf="!authenticationService.isProdukcjaUser() || isProductionInputDisable(orders.orderStatus.orderStatusId,row.quantityFromSurplus)"
+                                   type="number"
                                    [disabled]="isProductionInputDisable(orders.orderStatus.orderStatusId,row.quantityFromSurplus)"
                                    class="form-control inp-state" aria-describedby="helpId" placeholder="" min="0"
                                    [max]="row.quantity" [value]="row.stateOnProduction"
                                    (change)="updateStateOnProduction(orders,$event.target.value,i)">
 
                             <div *ngIf="!isProductionInputDisable(orders.orderStatus.orderStatusId,row.quantityFromSurplus)">
-                                <p-spinner size="1" [(ngModel)]="row.addTmp" placeholder="0"  [min]="0" [max]="row.quantity"></p-spinner>
-                                <i   class="plusic fa fa-2x fa-plus-circle" aria-hidden="true"
-                                    (click)="updateSpecifiedOrderItemProgressOnProductionByAddValue(row.orderItemId,row.addTmp)"> </i>
+                                <p-spinner size="1" [(ngModel)]="row.addTmp" placeholder="0" [min]="0"
+                                           [max]="row.quantity"></p-spinner>
+                                <i class="plusic fa fa-2x fa-plus-circle" aria-hidden="true"
+                                   (click)="updateSpecifiedOrderItemProgressOnProductionByAddValue(row.orderItemId,row.addTmp)"> </i>
                             </div>
 
 
                         </td>
 
                         <td class="add-value-cell">
-                            <input *ngIf="!authenticationService.isWysylkaUser() || isWysylkaInputDisable(orders.orderStatus.orderStatusId)" type="number"
+                            <input *ngIf="!authenticationService.isWysylkaUser() || isWysylkaInputDisable(orders.orderStatus.orderStatusId)"
+                                   type="number"
                                    [disabled]="isWysylkaInputDisable(orders.orderStatus.orderStatusId)"
                                    class="form-control inp-state" aria-describedby="helpId" placeholder="" min="0"
                                    [max]="row.quantity" [value]="row.stateOnLogistics"
                                    (change)="updateStateOnLogistics(orders,$event.target.value,i)">
 
                             <div *ngIf="!isWysylkaInputDisable(orders.orderStatus.orderStatusId)">
-                                <p-spinner size="1" [(ngModel)]="row.addTmp" placeholder="0" [min]="0" [max]="row.quantity"></p-spinner>
-                                <i   class="plusic fa fa-2x fa-plus-circle" aria-hidden="true"
-                                    (click)="updateSpecifiedOrderItemProgressOnLogisticsByAddValue(row.orderItemId,row.addTmp)"> </i>
+                                <p-spinner size="1" [(ngModel)]="row.addTmp" placeholder="0" [min]="0"
+                                           [max]="row.quantity"></p-spinner>
+                                <i class="plusic fa fa-2x fa-plus-circle" aria-hidden="true"
+                                   (click)="updateSpecifiedOrderItemProgressOnLogisticsByAddValue(row.orderItemId,row.addTmp)"> </i>
                             </div>
 
 
                         </td>
-
-
 
 
                     </tr>
@@ -313,19 +348,19 @@
                         <col span="1" style="width: 8%;">
                     </colgroup>
                     <thead>
-                    <tr >
-                        <th >Nazwa kosza</th>
-                        <th >Zdjęcie</th>
-                        <th >Skład kosza</th>
-                        <th >Ilość koszy</th>
-                        <th >Magazyn</th>
-                        <th >Produkcja</th>
-                        <th >Logistyka</th>
+                    <tr>
+                        <th>Nazwa kosza</th>
+                        <th>Zdjęcie</th>
+                        <th>Skład kosza</th>
+                        <th>Ilość koszy</th>
+                        <th>Magazyn</th>
+                        <th>Produkcja</th>
+                        <th>Logistyka</th>
                     </tr>
                     </thead>
                     <tbody>
-                    <tr  *ngFor="let row of orders.orderItems; index as i">
-                        <td >{{row.basket.basketName}}</td>
+                    <tr *ngFor="let row of orders.orderItems; index as i">
+                        <td>{{row.basket.basketName}}</td>
 
                         <td>
                             <i class="fa fa-picture-o fa-2x" aria-hidden="true" title="Pokaż zdjęcie kosza"
@@ -338,11 +373,11 @@
                         <td>
 
 
-                            <span *ngIf="row.quantityFromSurplus > 0"><i class="fa fa-exclamation surplus total-ready-basket" aria-hidden="true" > Kosze z nadwyżki</i></span>
+                            <span *ngIf="row.quantityFromSurplus > 0"><i
+                                    class="fa fa-exclamation surplus total-ready-basket" aria-hidden="true"> Kosze z nadwyżki</i></span>
                             <!--<span *ngIf="row.quantityFromSurplus == 0" class="total-ready-basket" >{{ row.stateOnWarehouse}} </span>-->
-                            <span *ngIf="row.quantityFromSurplus > 0" class="total-ready-basket surplus" > {{row.quantityFromSurplus}}</span>
+                            <span *ngIf="row.quantityFromSurplus > 0" class="total-ready-basket surplus"> {{row.quantityFromSurplus}}</span>
                             <span> / {{row.quantity}} </span>
-
 
 
                         </td>
@@ -350,7 +385,8 @@
                         <td>
                             <input type="number"
                                    [disabled]="isMagazynInputDisable(orders.orderStatus.orderStatusId) || row.quantityFromSurplus > 0"
-                                   class="form-control" aria-describedby="helpId" placeholder="" min="0" [max]="row.quantity" [value]="row.stateOnWarehouse"
+                                   class="form-control" aria-describedby="helpId" placeholder="" min="0"
+                                   [max]="row.quantity" [value]="row.stateOnWarehouse"
                                    (change)="updateStateOnWarehouse(orders,$event.target.value,i)">
                         </td>
                         <td>
@@ -363,24 +399,21 @@
 
                         <td>
                             <input [disabled]="isWysylkaInputDisable(orders.orderStatus.orderStatusId)"
-                                   type="number"  class="form-control"
-                                   aria-describedby="helpId" placeholder="" min="0" [max]="row.quantity" [value]="row.stateOnLogistics" (change)="updateStateOnLogistics(orders,$event.target.value,i)">
+                                   type="number" class="form-control"
+                                   aria-describedby="helpId" placeholder="" min="0" [max]="row.quantity"
+                                   [value]="row.stateOnLogistics"
+                                   (change)="updateStateOnLogistics(orders,$event.target.value,i)">
                         </td>
                     </tr>
                     </tbody>
                 </table>
-                <button class="btn bg-primary change-state-btn" (click)="updateOrderProgress(orders)" >Aktualizuj</button>
+                <button class="btn bg-primary change-state-btn" (click)="updateOrderProgress(orders)">Aktualizuj
+                </button>
 
             </div>
 
 
-
-
         </ng-template>
-
-
-
-
 
 
     </p-dataTable>
@@ -390,12 +423,12 @@
 <p-confirmDialog header="Usuwanie produktu" icon="fa fa-question-circle" width="425"></p-confirmDialog>
 
 
-
-
-<p-dialog header="Wybierz pozycje do wydruku:" closeOnEscape="false" modal="true" width="600" [(visible)]="printDeliveryConfirmationPdFSettings"  >
-    <p-dataTable [value]="selectedToPrintOrder.orderItems" [rows]="20"   [paginator]="true"  #dt [loading]="loading" loadingIcon="fa-circle-o-notch"  >
+<p-dialog header="Wybierz pozycje do wydruku:" closeOnEscape="false" modal="true" width="600"
+          [(visible)]="printDeliveryConfirmationPdFSettings">
+    <p-dataTable [value]="selectedToPrintOrder.orderItems" [rows]="20" [paginator]="true" #dt [loading]="loading"
+                 loadingIcon="fa-circle-o-notch">
         <p-column field="basket.basketName" styleClass="nazwa" header="Nazwa kosza"></p-column>
-        <p-column field="quantity"   styleClass="quantity_col" header="Ilość"   >
+        <p-column field="quantity" styleClass="quantity_col" header="Ilość">
             <ng-template let-row="rowData" pTemplate="body" type="number">
                 <p-spinner size="4" [(ngModel)]="row.quantity" [min]="0"></p-spinner>
             </ng-template>
@@ -406,54 +439,47 @@
 </p-dialog>
 
 
-
-
-
-
-
-<p-dialog *ngIf="isOrderToPrintProductOfBasketsFetchComplete | async" header="Wybierz kosze do wydrukowania:" closeOnEscape="false" modal="true" width="600" [(visible)]="pdialogBasketProductsPrint"  >
-    <p-dataTable [value]="selectedOrderToPrintBasketProducts.orderItems" [rows]="20"   [paginator]="true"  #dt [loading]="loading" loadingIcon="fa-circle-o-notch"  >
+<p-dialog *ngIf="isOrderToPrintProductOfBasketsFetchComplete | async" header="Wybierz kosze do wydrukowania:"
+          closeOnEscape="false" modal="true" width="600" [(visible)]="pdialogBasketProductsPrint">
+    <p-dataTable [value]="selectedOrderToPrintBasketProducts.orderItems" [rows]="20" [paginator]="true" #dt
+                 [loading]="loading" loadingIcon="fa-circle-o-notch">
         <p-column field="basket.basketName" styleClass="nazwa" header="Nazwa kosza"></p-column>
         <p-column field="quantity" styleClass="nazwa" header="Ilość"></p-column>
-        <p-column    styleClass="quantity_col" header="Wydrukować ?"   >
+        <p-column styleClass="quantity_col" header="Wydrukować ?">
             <ng-template let-row="rowData" pTemplate="body" type="number">
                 <p-checkbox [(ngModel)]="row.added" binary="true"></p-checkbox>
             </ng-template>
         </p-column>
     </p-dataTable>
 
-    <button type="button" (click)="printOrderBasketsProductsPdf()" class="btn btn-primary"> Drukuj zestawienie koszy</button>
+    <button type="button" (click)="printOrderBasketsProductsPdf()" class="btn btn-primary"> Drukuj zestawienie koszy
+    </button>
 </p-dialog>
 
 
+<p-dialog *ngIf="isOrderToShowFetchComplete | async" header="Podgląd Zamówienia" closeOnEscape="false" modal="true"
+          width="1000" [(visible)]="showOrderPreviewModal">
 
 
-
-
-
-<p-dialog *ngIf="isOrderToShowFetchComplete | async" header="Podgląd Zamówienia" closeOnEscape="false" modal="true" width="1000" [(visible)]="showOrderPreviewModal"  >
-
-
-   <app-order-preview [orderToShow]="selectedToPrintOrder"> </app-order-preview>
+    <app-order-preview [orderToShow]="selectedToPrintOrder"></app-order-preview>
 
 </p-dialog>
 
 
-
-
-
-<p-dialog *ngIf="fileFilterLoaded | async" header="Podgląd załączników do zamówienia" closeOnEscape="false" modal="true" width="600" [(visible)]="showAttachmentModal"  >
+<p-dialog *ngIf="fileFilterLoaded | async" header="Podgląd załączników do zamówienia" closeOnEscape="false" modal="true"
+          width="600" [(visible)]="showAttachmentModal">
 
 
     <p *ngIf="selectedOrderFileList.length ==0"> Brak załączników dla tego zamówienia</p>
 
-    <table >
+    <table>
         <thead>
         </thead>
         <tbody>
-        <tr class="fileLink"  *ngFor="let item of selectedOrderFileList" >
-            <td class="fileprev" (click)="getFile(item.fileId)" ><i class="fa fa-file-text-o" aria-hidden="true"></i>  {{item.fileName}}</td>
-            <!--<td *ngIf="authenticationService.isAdmin() || authenticationService.isBiuroUser()"> <i (click)="ShowConfirmModal(item)" class="fa fa-trash"></i></td>-->
+        <tr class="fileLink" *ngFor="let item of selectedOrderFileList">
+            <td class="fileprev" (click)="getFile(item.fileId)"><i class="fa fa-file-text-o" aria-hidden="true"></i>
+                {{item.fileName}}
+            </td>
         </tr>
         </tbody>
     </table>
@@ -461,63 +487,86 @@
 </p-dialog>
 
 
+<p-contextMenu #cm [model]="items"></p-contextMenu>
 
-
-
-
-
-<p-contextMenu #cm [model]="items"> </p-contextMenu>
-
-<p-overlayPanel #information_extention  >
+<p-overlayPanel #information_extention>
     {{additionalInforamtionTmp}}
 </p-overlayPanel>
 
 
-<div #action_extention  [hidden]="true" class="action_extention" [style.top.px]="actionExtentionPositionTop" [style.left.px]="actionExtentionPositionLeft">
+<div #action_extention [hidden]="true" class="action_extention" [style.top.px]="actionExtentionPositionTop"
+     [style.left.px]="actionExtentionPositionLeft">
     <div class="cont2">
-        <i [ngClass]="notAllowedStyle()" class="fa fa-pencil-square-o fa-2x famargin2 action_extention_icon" aria-hidden="true"  title="Edytuj zamówienie" (click)="goToEditPage(selectedOrderFromRow.orderId)"></i>
-        <i *ngIf="authenticationService.isAdmin()" class="fa fa-trash fa-2x edit_icon famargin2 action_extention_icon" aria-hidden="true" title="Usuń zamówienie" (click)="showDeleteOrderPanel(selectedOrderFromRow)"></i>
-        <i  class="fa fa-print fa-2x famargin2 action_extention_icon " aria-hidden="true" title="Drukuj zamówienie" (click)="printPdf(selectedOrderFromRow.orderId)" ></i>
-        <i  class="fa fa-file-pdf-o fa-2x  famargin2 action_extention_icon" aria-hidden="true" title="Drukuj potwierdzenie odbioru" (click)="showPrintOrderDeliveryConfirmationWindows(selectedOrderFromRow.orderId)" ></i>
-        <i  class="fa fa-file-text fa-2x famargin2 action_extention_icon" aria-hidden="true" title="Drukuj liste produktow" (click)=" printProductListPdf(selectedOrderFromRow.orderId)" ></i>
-        <i  class="fa fa-file-text-o fa-2x fa_zero_margin action_extention_icon" aria-hidden="true" title="Drukuj sklad koszy" (click)=" showPdialogBasketProductsPrint(selectedOrderFromRow.orderId)" ></i>
+        <i [ngClass]="notAllowedStyle()" class="fa fa-pencil-square-o fa-2x famargin2 action_extention_icon"
+           aria-hidden="true" title="Edytuj zamówienie" (click)="goToEditPage(selectedOrderFromRow.orderId)"></i>
+        <i *ngIf="authenticationService.isAdmin()" class="fa fa-trash fa-2x edit_icon famargin2 action_extention_icon"
+           aria-hidden="true" title="Usuń zamówienie" (click)="showDeleteOrderPanel(selectedOrderFromRow)"></i>
+        <i class="fa fa-print fa-2x famargin2 action_extention_icon " aria-hidden="true" title="Drukuj zamówienie"
+           (click)="printPdf(selectedOrderFromRow.orderId)"></i>
+        <i class="fa fa-file-pdf-o fa-2x  famargin2 action_extention_icon" aria-hidden="true"
+           title="Drukuj potwierdzenie odbioru"
+           (click)="showPrintOrderDeliveryConfirmationWindows(selectedOrderFromRow.orderId)"></i>
+        <i class="fa fa-file-text fa-2x famargin2 action_extention_icon" aria-hidden="true"
+           title="Drukuj liste produktow" (click)=" printProductListPdf(selectedOrderFromRow.orderId)"></i>
+        <i class="fa fa-file-text-o fa-2x fa_zero_margin action_extention_icon" aria-hidden="true"
+           title="Drukuj sklad koszy" (click)=" showPdialogBasketProductsPrint(selectedOrderFromRow.orderId)"></i>
     </div>
 
 </div>
 
-<p-dialog  header="Kosz" [(visible)]="showImageFrame">
+<p-dialog header="Kosz" [(visible)]="showImageFrame">
     <img [src]="imageToShow" [height]="700" [width]="700">
 </p-dialog>
 
 <p-menu #menuExport [popup]="true" [model]="exportItems"></p-menu>
 
 
-
-<p-dialog header="Całkowita liczba gotowych koszy:" [(visible)]="editCurrentOrderStateDialog" [modal]="true" [width]="400">
+<p-dialog header="Całkowita liczba gotowych koszy:" [(visible)]="editCurrentOrderStateDialog" [modal]="true"
+          [width]="400">
 
     <div>
         <p class="basket_name">{{this.orderItemRowToEditState.basket?.basketName}}</p>
     </div>
     <div class="row">
-        <input  *ngIf="authenticationService.isMagazynUser()" class="edit-state-input" type="number"   aria-describedby="helpId" placeholder="" min="0" [max]="this.orderItemRowToEditState.quantity" [value]="this.orderItemRowToEditState.stateOnWarehouse" [(ngModel)]="this.orderItemRowToEditState.stateOnWarehouse">
-        <input  *ngIf="authenticationService.isProdukcjaUser()" class="edit-state-input" type="number"   aria-describedby="helpId" placeholder="" min="0" [max]="this.orderItemRowToEditState.quantity" [value]="this.orderItemRowToEditState.stateOnProduction" [(ngModel)]="this.orderItemRowToEditState.stateOnProduction">
-        <input *ngIf="authenticationService.isWysylkaUser()"  class="edit-state-input" type="number"   aria-describedby="helpId" placeholder="" min="0" [max]="this.orderItemRowToEditState.quantity" [value]="this.orderItemRowToEditState.stateOnLogistics" [(ngModel)]="this.orderItemRowToEditState.stateOnLogistics">
+        <input *ngIf="authenticationService.isMagazynUser()" class="edit-state-input" type="number"
+               aria-describedby="helpId" placeholder="" min="0" [max]="this.orderItemRowToEditState.quantity"
+               [value]="this.orderItemRowToEditState.stateOnWarehouse"
+               [(ngModel)]="this.orderItemRowToEditState.stateOnWarehouse">
+        <input *ngIf="authenticationService.isProdukcjaUser()" class="edit-state-input" type="number"
+               aria-describedby="helpId" placeholder="" min="0" [max]="this.orderItemRowToEditState.quantity"
+               [value]="this.orderItemRowToEditState.stateOnProduction"
+               [(ngModel)]="this.orderItemRowToEditState.stateOnProduction">
+        <input *ngIf="authenticationService.isWysylkaUser()" class="edit-state-input" type="number"
+               aria-describedby="helpId" placeholder="" min="0" [max]="this.orderItemRowToEditState.quantity"
+               [value]="this.orderItemRowToEditState.stateOnLogistics"
+               [(ngModel)]="this.orderItemRowToEditState.stateOnLogistics">
 
-        <button *ngIf="authenticationService.isMagazynUser()" class="btn bg-primary edit-state-input-btn " (click)="updateSpecifiedOrderItemProgressOnWarehouse(this.orderItemRowToEditState.orderItemId,this.orderItemRowToEditState.stateOnWarehouse)" >Aktualizuj</button>
-        <button *ngIf="authenticationService.isProdukcjaUser()" class="btn bg-primary edit-state-input-btn " (click)="updateSpecifiedOrderItemProgressOnProduction(this.orderItemRowToEditState.orderItemId,this.orderItemRowToEditState.stateOnProduction)" >Aktualizuj</button>
-        <button *ngIf="authenticationService.isWysylkaUser()" class="btn bg-primary edit-state-input-btn " (click)="updateSpecifiedOrderItemProgressOnLogistics(this.orderItemRowToEditState.orderItemId,this.orderItemRowToEditState.stateOnLogistics)" >Aktualizuj</button>
+        <button *ngIf="authenticationService.isMagazynUser()" class="btn bg-primary edit-state-input-btn "
+                (click)="updateSpecifiedOrderItemProgressOnWarehouse(this.orderItemRowToEditState.orderItemId,this.orderItemRowToEditState.stateOnWarehouse)">
+            Aktualizuj
+        </button>
+        <button *ngIf="authenticationService.isProdukcjaUser()" class="btn bg-primary edit-state-input-btn "
+                (click)="updateSpecifiedOrderItemProgressOnProduction(this.orderItemRowToEditState.orderItemId,this.orderItemRowToEditState.stateOnProduction)">
+            Aktualizuj
+        </button>
+        <button *ngIf="authenticationService.isWysylkaUser()" class="btn bg-primary edit-state-input-btn "
+                (click)="updateSpecifiedOrderItemProgressOnLogistics(this.orderItemRowToEditState.orderItemId,this.orderItemRowToEditState.stateOnLogistics)">
+            Aktualizuj
+        </button>
     </div>
 
 </p-dialog>
 
-<p-dialog  header="Informacja" [(visible)]="autoRefreshInfo" [width]="300" height="150">
+<p-dialog header="Informacja" [(visible)]="autoRefreshInfo" [width]="300" height="150">
     <p>Nastąpi odświeżenie za {{autoRefreshTimerInSec}} sekund ; </p>
 
-    <button class="bg-primary btn-cancel-refresh" (click)="stopAutoRefresh();hideAutoRefreshInfo()">Nie odświeżaj</button>
+    <button class="bg-primary btn-cancel-refresh" (click)="stopAutoRefresh();hideAutoRefreshInfo()">Nie odświeżaj
+    </button>
 </p-dialog>
 
 
-<p-dialog *ngIf="orderToDelete?.orderItems" header="Anuluj zamówienie / przywróć stan koszy" [(visible)]="deleteOrderPanelVisi" [width]="800"  [modal]="true">
+<p-dialog *ngIf="orderToDelete?.orderItems" header="Anuluj zamówienie / przywróć stan koszy"
+          [(visible)]="deleteOrderPanelVisi" [width]="800" [modal]="true">
     <table class="d-table d-2">
         <colgroup>
             <col span="1" style="width: 55%;">
@@ -527,24 +576,26 @@
 
         </colgroup>
         <thead>
-        <tr >
-            <th >Nazwa kosza</th>
-            <th >Suma koszy</th>
-            <th >W produktach</th>
-            <th >W koszach</th>
+        <tr>
+            <th>Nazwa kosza</th>
+            <th>Suma koszy</th>
+            <th>W produktach</th>
+            <th>W koszach</th>
         </tr>
         </thead>
         <tbody>
         <tr *ngFor="let oi of orderToDelete.orderItems">
-            <td >{{oi.basket.basketName}}</td>
-            <td >
+            <td>{{oi.basket.basketName}}</td>
+            <td>
                 {{oi.quantity}}
             </td>
-            <td >
-                <input type="number" class="form-control inp-state" aria-describedby="helpId" placeholder="" min="0" [max]="oi.quantity" [value]="oi.stateOnWarehouse" [(ngModel)]="oi.stateOnWarehouse">
+            <td>
+                <input type="number" class="form-control inp-state" aria-describedby="helpId" placeholder="" min="0"
+                       [max]="oi.quantity" [value]="oi.stateOnWarehouse" [(ngModel)]="oi.stateOnWarehouse">
             </td>
-            <td >
-                <input type="number" class="form-control inp-state" aria-describedby="helpId" placeholder="" min="0" [max]="oi.quantity" [value]="oi.stateOnProduction" [(ngModel)]="oi.stateOnProduction">
+            <td>
+                <input type="number" class="form-control inp-state" aria-describedby="helpId" placeholder="" min="0"
+                       [max]="oi.quantity" [value]="oi.stateOnProduction" [(ngModel)]="oi.stateOnProduction">
             </td>
 
         </tr>
@@ -556,25 +607,26 @@
 </p-dialog>
 
 
-
-<p-dialog  header="Powiadomienia" closeOnEscape="false" modal="true" width="1000" [(visible)]="notificationsService.showNotificationModal"  (onShow)="notificationsService.checkNumberOfNotifications()" >
+<p-dialog header="Powiadomienia" closeOnEscape="false" modal="true" width="1000"
+          [(visible)]="notificationsService.showNotificationModal"
+          (onShow)="notificationsService.checkNumberOfNotifications()">
 
 
     <button class="btn all_ra" (click)="markReadedAll()">Przeczytano wszystkie</button>
 
-    <p-dataTable #dt [value]="notificationsService.notifications" [rows]="50" [paginator]="true" [rowStyleClass]="lookupRowStyleClass"> >
+    <p-dataTable #dt [value]="notificationsService.notifications" [rows]="50" [paginator]="true"
+                 [rowStyleClass]="lookupRowStyleClass"> >
 
 
-
-        <p-column field="notificationDate" header="Data"  [style]="{'width':'200px'}">
-            <ng-template let-row="rowData" pTemplate="body"  >
+        <p-column field="notificationDate" header="Data" [style]="{'width':'200px'}">
+            <ng-template let-row="rowData" pTemplate="body">
                 {{row.notificationDate| date: 'dd/MM/yyyy HH:mm:ss'}}
             </ng-template>
         </p-column>
 
-        <p-column field="notificationText" header="Powiadomienie"  [style]="{'width':'500px'}"></p-column>
-        <p-column  header="Idź"  [style]="{'width':'130px','text-align':'center'}">
-            <ng-template let-row="rowData" pTemplate="body"   >
+        <p-column field="notificationText" header="Powiadomienie" [style]="{'width':'500px'}"></p-column>
+        <p-column header="Idź" [style]="{'width':'130px','text-align':'center'}">
+            <ng-template let-row="rowData" pTemplate="body">
                 <button (click)="openRow(row.notiOrderContext,row.orderId)">Idz -></button>
             </ng-template>
         </p-column>

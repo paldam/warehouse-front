@@ -9,21 +9,18 @@ import {Order} from '../../model/order.model';
 import {OrderService} from '../order.service';
 import {DeliveryType} from '../../model/delivery_type.model';
 import {OrderStatus} from "../../model/OrderStatus";
-import {ConfirmationService, DataTable, FileUpload, LazyLoadEvent, Panel, SelectItem} from "primeng/primeng";
+import {ConfirmationService, DataTable, FileUpload, LazyLoadEvent, MenuItem, Panel, SelectItem} from "primeng/primeng";
 import {AuthenticationService, TOKEN, TOKEN_USER} from "../../authentication.service";
-import {ContextMenuModule, MenuItem, ContextMenu} from 'primeng/primeng';
 import {Router} from "@angular/router";
 import {Address} from "../../model/address.model";
 import {MessageServiceExt} from "../../messages/messageServiceExt";
 import {Company} from "../../model/company.model";
 import {StringUtils} from "../../string-utils";
-import {Supplier} from "../../model/supplier.model";
 import {SpinerService} from "../../spiner.service";
-import {AppConstans} from "../../constans";
+import {AppConstants} from "../../constans";
 import {interval, Subscription} from "rxjs";
 import {UserService} from "../../user.service";
 import {User} from "../../model/user.model";
-
 declare var jquery: any;
 declare var $: any;
 
@@ -42,15 +39,14 @@ export class BasketOrderComponent implements OnInit, OnDestroy {
 	public orderAddress: Address = new Address();
 	public companyList: any[] = [];
 	public companyAddressList: Address[] = [];
-	public comapnyNameToMarge: string;
+	public companyNameToMarge: string;
 	public addressPickDialogShow: boolean = false;
 	public order: Order = new Order();
 	public total: number = 0;
 	public formSubmitted: boolean = false;
 	public formCompanyAddForm = false;
 	public formCompanyMargeForm: boolean = false;
-	public addAddressDialogShow: boolean = false;
-	public clickSelectcomapnyGuard: boolean = false;
+	public clickSelectCompanyGuard: boolean = false;
 	public totalRecords: number;
 	public clickSelectCustomerGuard: boolean = false;
 	public deliveryTypes: DeliveryType[] = [];
@@ -64,11 +60,11 @@ export class BasketOrderComponent implements OnInit, OnDestroy {
 	public companyPickDialogShow: boolean = false;
 	public mergeCompanyPanelShow: boolean = false;
 	public loyaltyProgramUserPanelShow: boolean = false;
-	public generatedOrderId: number = null; //id too print PDF
+	public generatedOrderId: number = null;
 	public items: MenuItem[];
 	public tmpCityList: any[] = [];
 	public pickCityByZipCodeWindow: boolean = false;
-	public programUsers: User []=[];
+	public programUsers: User [] = [];
 	public weekOfYearTmp: Date;
 	public weekOfYear: number;
 	public basketSeasonList: SelectItem[] = [];
@@ -76,8 +72,8 @@ export class BasketOrderComponent implements OnInit, OnDestroy {
 	public isDeliveryWeekDateValid: boolean = true;
 	public isTextToCardVisible: boolean = false;
 	public selectedBasketOnContextMenu: Basket = new Basket();
+	public intervalSubscription: Subscription;
 	@ViewChild('choseCompanyPanel') choseCompanyPanel: Panel;
-	public intervalsubscription: Subscription;
 	@ViewChild(FileUpload) fileUploadElement: FileUpload;
 	@ViewChild('zip_code') el: any;
 	@ViewChild('address2') storedCustomerAddressList: any;
@@ -85,17 +81,21 @@ export class BasketOrderComponent implements OnInit, OnDestroy {
 	@ViewChild('globalfilter2') globalfilter2: ElementRef;
 	@ViewChild('dtCustomer') datatableCustomer: DataTable;
 	@ViewChild('dt') datatable: DataTable;
-
 	value: Date;
 	dateLang: any;
 
-	constructor(private router: Router, private basketService: BasketService, private spinerService: SpinerService, private  customerService: CustomerService,
-				private orderService: OrderService,private userService :UserService, private messageServiceExt: MessageServiceExt, private confirmationService: ConfirmationService, private authenticationService: AuthenticationService) {
+	constructor(private router: Router, private basketService: BasketService, private spinerService: SpinerService,
+				private  customerService: CustomerService, private orderService: OrderService,
+				private userService: UserService, private messageServiceExt: MessageServiceExt,
+				private confirmationService: ConfirmationService, private authenticationService: AuthenticationService){
+
 		customerService.getCustomers().subscribe(data => this.customers = data);
 		orderService.getCompany().subscribe(data => this.companyList = data);
 		orderService.getDeliveryTypes().subscribe(data => this.deliveryTypes = data);
 		this.getBasketSeasonForDataTableFilter();
-		basketService.getBasketsPage(1,20,"","basketName",-1,false,[]).subscribe((data :any) => {
+		basketService.getBasketsPage(
+			1, 20, "", "basketName", -1, false, [])
+			.subscribe((data: any) => {
 			this.baskets = data.basketsList;
 			this.totalRecords = data.totalRowsOfRequest;
 		});
@@ -107,7 +107,8 @@ export class BasketOrderComponent implements OnInit, OnDestroy {
 			dayNames: ["Sobota", "Poniedziałek", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
 			dayNamesShort: ["Nie", "Pon", "Wto", "Śro", "Czw", "Pią", "Sob"],
 			dayNamesMin: ["Nd", "Po", "Wt", "Śr", "Cz", "Pi", "So"],
-			monthNames: ["Styczeń", "Luty", "Marzec", "Kwiecień", "Maj", "Czerwiec", "Lipiec", "Sierpień", "Wrzesień", "Październik", "Listopad", "Grudzień"],
+			monthNames: ["Styczeń", "Luty", "Marzec", "Kwiecień", "Maj", "Czerwiec", "Lipiec", "Sierpień",
+						"Wrzesień", "Październik", "Listopad", "Grudzień"],
 			monthNamesShort: ["Sty", "Lut", "Mar", "Kwi", "Maj", "Cze", "Lip", "Sie", "Wrz", "Paź", "Lis", "Gru"],
 			today: 'Dzisiaj',
 			clear: 'czyść'
@@ -120,12 +121,9 @@ export class BasketOrderComponent implements OnInit, OnDestroy {
 			},
 		];
 		this.customer.company = null;
-		//this.setBasketsListAutoRefresh();
-
 	}
 
-	ngOnDestroy(){
-		//this.intervalsubscription.unsubscribe();
+	ngOnDestroy() {
 	}
 
 	ngAfterViewInit(): void {
@@ -146,20 +144,20 @@ export class BasketOrderComponent implements OnInit, OnDestroy {
 		});
 	}
 
-
 	contextMenuSelected(event) {
 		this.selectedBasketOnContextMenu = event.data;
 	}
-//todo
-	addBasketToOrder(basket: Basket) {
 
-		if (basket.basketId == 206) {
-			this.messageServiceExt.addMessageWithTime('success', 'Uwaga', 'Dodano do zamówienia grawer, pamiętaj o wgraniu plików', 25000);
-		} //todo
-		if (basket.basketId == 187 || basket.basketId == 188) {
+	addBasketToOrder(basket: Basket) {
+		if (basket.basketId == AppConstants.BASKET_GRAWER_ID) {
+			this.messageServiceExt.addMessageWithTime(
+				'success', 'Uwaga', 'Dodano do zamówienia grawer, pamiętaj o wgraniu plików', 25000);
+		}
+		if (basket.basketId == AppConstants.BASKET_KARTKA_BEZ_LOGO_ID || basket.basketId == AppConstants.BASKET_KARTKA_Z_LOGO_ID) {
 			this.isTextToCardVisible = true;
-			this.messageServiceExt.addMessageWithTime('success', 'Uwaga', 'Dodano do zamówienia kartkę, pamiętaj o wpisaniu tekstu', 25000);
-		} //todo
+			this.messageServiceExt.addMessageWithTime(
+				'success', 'Uwaga', 'Dodano do zamówienia kartkę, pamiętaj o wpisaniu tekstu', 25000);
+		}
 		let line = this.orderItems.find(data => data.basket.basketId == basket.basketId);
 		if (line == undefined) {
 			this.orderItems.push(new OrderItem(basket, 1))
@@ -167,32 +165,25 @@ export class BasketOrderComponent implements OnInit, OnDestroy {
 			line.quantity = line.quantity + 1;
 		}
 		this.recalculate();
-
 	}
 
 	loadBasketsLazy(event: LazyLoadEvent) {
-
-
 		this.loading = true;
 		let pageNumber = 0;
 		if (event.first) {
 			pageNumber = event.first / event.rows;
 		}
 		let sortField = event.sortField;
-
 		if (sortField == undefined) {
 			sortField = "basketName";
 		}
-
 		let basketSeasonList: any[] = [];
 		if (event.filters != undefined && event.filters["basketSezon.basketSezonName"] != undefined) {
-			basketSeasonList= event.filters["basketSezon.basketSezonName"].value;
+			basketSeasonList = event.filters["basketSezon.basketSezonName"].value;
 		}
-
-
-
-
-		this.basketService.getBasketsPage(pageNumber,event.rows,event.globalFilter,sortField,event.sortOrder,false,basketSeasonList).subscribe((data: any) => {
+		this.basketService.getBasketsPage(
+			pageNumber, event.rows, event.globalFilter, sortField, event.sortOrder, false, basketSeasonList)
+			.subscribe((data: any) => {
 				this.baskets = data.basketsList;
 				this.totalRecords = data.totalRowsOfRequest;
 			}, null
@@ -200,7 +191,6 @@ export class BasketOrderComponent implements OnInit, OnDestroy {
 				this.loading = false;
 			})
 	}
-
 
 	updateQuantity(basketLine: OrderItem, quantity: number) {
 		if (quantity == 0) {
@@ -211,40 +201,32 @@ export class BasketOrderComponent implements OnInit, OnDestroy {
 			line.quantity = Number(quantity);
 		}
 		this.recalculate();
-		// this.recalculateTotalPlusMarkUp();
 	}
 
 	isBasketLinesEmpty(): boolean {
-		if (this.orderItems.length == 0) {
-			return true
-		} else {
-			return false
-		}
+		return this.orderItems.length == 0;
 	}
-	cleanLoyaltyUser(){
+
+	cleanLoyaltyUser() {
 		this.order.loyaltyUser = null;
 	}
 
-	pickLoyaltyUser(user){
-
+	pickLoyaltyUser(user) {
 		this.order.loyaltyUser = user;
 		this.loyaltyProgramUserPanelShow = false;
 	}
 
-	prepereLoyaltyUserPanel(){
-
+	prepereLoyaltyUserPanel() {
 		this.loyaltyProgramUserPanelShow = true;
-
-		this.userService.getProgramUsers().subscribe(data =>{
+		this.userService.getProgramUsers().subscribe(data => {
 			this.programUsers = data;
-		} )
-
+		})
 	}
-	private setBasketsListAutoRefresh(){
-		this.intervalsubscription = interval(20000).subscribe(x => {
+
+	private setBasketsListAutoRefresh() {
+		this.intervalSubscription = interval(20000).subscribe(x => {
 			this.basketService.getBaskets().subscribe(data => this.baskets = data);
 		});
-
 	}
 
 	deleteProductLine(id: number) {
@@ -256,9 +238,11 @@ export class BasketOrderComponent implements OnInit, OnDestroy {
 		this.recalculate();
 	}
 
-	private deactiveTextToCardIfNoCardInOrder(basketId: number) { //todo magic
-		if (basketId == 187 || basketId == 188) {
-			let isAnyCardInOrder = this.orderItems.find(data => data.basket.basketId == 187 || data.basket.basketId == 188);
+	private deactiveTextToCardIfNoCardInOrder(basketId: number) {
+		if (basketId == AppConstants.BASKET_KARTKA_BEZ_LOGO_ID || basketId == AppConstants.BASKET_KARTKA_Z_LOGO_ID) {
+			let isAnyCardInOrder = this.orderItems
+				.find(data => data.basket.basketId == AppConstants.BASKET_KARTKA_BEZ_LOGO_ID
+					|| data.basket.basketId == AppConstants.BASKET_KARTKA_Z_LOGO_ID);
 			if (!isAnyCardInOrder) {
 				this.isTextToCardVisible = false;
 				this.order.textToCard = null;
@@ -268,7 +252,7 @@ export class BasketOrderComponent implements OnInit, OnDestroy {
 
 	cleanCompany() {
 		this.company = {companyId: 0, companyName: "Klient indywidualny"};
-		this.clickSelectcomapnyGuard = false;
+		this.clickSelectCompanyGuard = false;
 	}
 
 	cleanCustomer() {
@@ -297,7 +281,7 @@ export class BasketOrderComponent implements OnInit, OnDestroy {
 			this.company = new Company();
 		} else {
 			this.company = customer.company;
-			this.clickSelectcomapnyGuard = true;
+			this.clickSelectCompanyGuard = true;
 			this.clickSelectCustomerGuard = true
 		}
 		this.customerPickDialogShow = false;
@@ -307,9 +291,10 @@ export class BasketOrderComponent implements OnInit, OnDestroy {
 		this.companyPickDialogShow = false;
 		this.company = event;
 		if (this.company.wasCombined == 1) {
-			this.messageServiceExt.addMessage('success', 'Uwaga', 'Wybrana firma była scalana w przeszłości');
+			this.messageServiceExt.addMessage(
+				'success', 'Uwaga', 'Wybrana firma była scalana w przeszłości');
 		}
-		this.clickSelectcomapnyGuard = true;
+		this.clickSelectCompanyGuard = true;
 	}
 
 	pickAddress(event) {
@@ -326,16 +311,6 @@ export class BasketOrderComponent implements OnInit, OnDestroy {
 		this.globalfilter2.nativeElement.value = this.company.companyName;
 		this.customerPickDialogShow = true;
 		this.datatableCustomer.filter(this.company.companyId, 'company.companyId', 'equals');
-		//
-		// setTimeout(() => {
-		// 	this.companyNameToSearch = "Damian";
-		//
-		// }, 3000);
-		//
-		// setTimeout(() => {
-		// 	this.companyNameToSearch = "kamil";
-		//
-		// }, 1000);
 	}
 
 	showAddressesList() {
@@ -348,14 +323,14 @@ export class BasketOrderComponent implements OnInit, OnDestroy {
 
 	showCompanyList() {
 		this.orderService.getCompany().subscribe(data => this.companyList = data);
-		this.clickSelectcomapnyGuard = false;
+		this.clickSelectCompanyGuard = false;
 		this.companyPickDialogShow = true;
 	}
 
 	onHideComapnyPanel() {
 		this.selectedCompanyToMarge = [];
 		if (this.company.companyId) {
-			this.clickSelectcomapnyGuard = true;
+			this.clickSelectCompanyGuard = true;
 		}
 	}
 
@@ -364,7 +339,7 @@ export class BasketOrderComponent implements OnInit, OnDestroy {
 	}
 
 	selectCompanyNameInMergePanel(companyName: string) {
-		this.comapnyNameToMarge = companyName;
+		this.companyNameToMarge = companyName;
 	}
 
 	deleteCompanyNameInMergePanel(comapnyId: number) {
@@ -385,7 +360,7 @@ export class BasketOrderComponent implements OnInit, OnDestroy {
 		this.customer = new Customer();
 		this.formSubmitted = false;
 		this.orderAddress = new Address();
-		this.clickSelectcomapnyGuard = false;
+		this.clickSelectCompanyGuard = false;
 		this.clickSelectCustomerGuard = false;
 		this.company = new Company();
 		this.customerService.getCustomers().subscribe(data => this.customers = data);
@@ -395,18 +370,20 @@ export class BasketOrderComponent implements OnInit, OnDestroy {
 		this.formCompanyMargeForm = true;
 		if (companyMergeForm.valid) {
 			this.spinerService.showSpinner = true;
-			this.orderService.getMergeCompanies(this.selectedCompanyToMarge, this.comapnyNameToMarge).subscribe(data => {
+			this.orderService.getMergeCompanies(this.selectedCompanyToMarge, this.companyNameToMarge)
+				.subscribe(data => {
 				this.company = data;
 			}, error => {
-				this.messageServiceExt.addMessage('error', 'Błąd', "Status: " + error.status + ' ' + error.statusText);
+				this.messageServiceExt.addMessage(
+					'error', 'Błąd', "Status: " + error.status + ' ' + error.statusText);
 				this.mergeCompanyPanelShow = false;
 				this.spinerService.showSpinner = false;
 				this.selectedCompanyToMarge = [];
 			}, () => {
-				this.messageServiceExt.addMessage('success', 'Status', 'Poprawnie scalono firmy');
+				this.messageServiceExt.addMessage(
+					'success', 'Status', 'Poprawnie scalono firmy');
 				setTimeout(() => {
 					this.spinerService.showSpinner = false;
-					;
 				}, 900);
 				this.mergeCompanyPanelShow = false;
 				this.selectedCompanyToMarge = [];
@@ -417,7 +394,7 @@ export class BasketOrderComponent implements OnInit, OnDestroy {
 	}
 
 	onCloseMergePanel() {
-		this.comapnyNameToMarge = null;
+		this.companyNameToMarge = null;
 	}
 
 	submitCompanyAddForm(formCompanyAdd: NgForm) {
@@ -427,10 +404,12 @@ export class BasketOrderComponent implements OnInit, OnDestroy {
 			this.orderService.saveCompany(this.companyToPersist).subscribe(data => {
 				this.companyToPersist = new Company();
 				this.formCompanyAddForm = false;
-				this.messageServiceExt.addMessage('success', 'Status', 'Poprawnie dodano firmę');
+				this.messageServiceExt.addMessage(
+					'success', 'Status', 'Poprawnie dodano firmę');
 				this.company = data;
 			}, error => {
-				this.messageServiceExt.addMessage('error', 'Błąd', "Status: " + error.status + ' ' + error.statusText);
+				this.messageServiceExt.addMessage(
+					'error', 'Błąd', "Status: " + error.status + ' ' + error.statusText);
 				this.companyAddDialogShow = false;
 				this.spinerService.showSpinner = false;
 			}, () => {
@@ -447,12 +426,12 @@ export class BasketOrderComponent implements OnInit, OnDestroy {
 			this.orderService.saveOrder(this.order).subscribe(
 				data => {
 					this.generatedOrderId = data.orderId;
-					this.fileUploadElement.url = "http://www.kosze.waw.pl:8080/uploadfiles?orderId=" + data.orderId;
+					this.fileUploadElement.url = AppConstants.FILE_UPLOAD_URL + data.orderId;
 					this.fileUploadElement.upload();
-					console.log(this.order);
 				},
 				error => {
-					this.messageServiceExt.addMessage('error', 'Błąd', "Status: " + error.status + ' ' + error.statusText);
+					this.messageServiceExt.addMessage(
+						'error', 'Błąd', "Status: " + error.status + ' ' + error.statusText);
 				},
 				() => {
 					this.recalculate();
@@ -465,7 +444,8 @@ export class BasketOrderComponent implements OnInit, OnDestroy {
 	}
 
 	private isAllDataValid(form: NgForm, formAdidtional: NgForm): boolean {
-		return (form.valid && formAdidtional.valid && this.orderItems.length > 0 && this.isDeliveryDateValid && this.isDeliveryWeekDateValid);
+		return (form.valid && formAdidtional.valid && this.orderItems.length > 0 && this.isDeliveryDateValid &&
+			this.isDeliveryWeekDateValid);
 	}
 
 	private setUpOrderBeforeSave() {
@@ -481,9 +461,7 @@ export class BasketOrderComponent implements OnInit, OnDestroy {
 			if (!value.stateOnProduction) {
 				value.stateOnProduction = 0;
 			}
-
-			value.quantityFromSurplus =0;
-
+			value.quantityFromSurplus = 0;
 		});
 		this.order.additionalSale = 0;
 		this.order.customer = this.customer;
@@ -493,13 +471,15 @@ export class BasketOrderComponent implements OnInit, OnDestroy {
 			this.order.customer.company = this.company;
 		}
 		this.order.address = this.orderAddress;
-		if (this.order.deliveryType.deliveryTypeId == 5 || this.order.deliveryType.deliveryTypeId == 6 || this.order.deliveryType.deliveryTypeId == 7) {
+		if (this.order.deliveryType.deliveryTypeId == AppConstants.DELIVERY_TYPE_KURIER_PACZKA_POBRANIE
+			|| this.order.deliveryType.deliveryTypeId == AppConstants.DELIVERY_TYPE_OBIOR_OSOBISTY_POBRANIE
+			|| this.order.deliveryType.deliveryTypeId == AppConstants.DELIVERY_TYPE_NASZ_KIEROWCA_POBRANIE) {
 			this.order.cod *= 100;
 		} else {
 			this.order.cod = 0;
 		}
 		this.autoAddTicketsToOrder();
-		this.order.orderStatus = new OrderStatus(1);
+		this.order.orderStatus = new OrderStatus(AppConstants.ORDER_STATUS_NOWE);
 		this.order.userName = localStorage.getItem(TOKEN_USER);
 		this.order.weekOfYear = this.getWeekNumber(this.weekOfYearTmp);
 	}
@@ -519,7 +499,7 @@ export class BasketOrderComponent implements OnInit, OnDestroy {
 	}
 
 	private autoAddTicketsToOrder() {
-		if (this.order.deliveryType.deliveryTypeId == AppConstans.DELIVERY_TYPE_PACZKA_KURIER_ID) {//todo magic
+		if (this.order.deliveryType.deliveryTypeId == AppConstants.DELIVERY_TYPE_PACZKA_KURIER_ID) {
 			this.removeAllTicketsFromOrderIfExist();
 			let totalBasketNumberOfOrder = 0;
 			this.order.orderItems.forEach(orderItemLine => {
@@ -527,15 +507,19 @@ export class BasketOrderComponent implements OnInit, OnDestroy {
 					totalBasketNumberOfOrder += orderItemLine.quantity;
 				}
 			});
-			this.order.orderItems.push(new OrderItem(new Basket(326), totalBasketNumberOfOrder, null, 0, 0, 0,0));
+			this.order.orderItems.push(
+				new OrderItem(
+					new Basket(AppConstants.BASKET_BILECIK_ID), totalBasketNumberOfOrder, null, 0, 0, 0, 0));
 			if (totalBasketNumberOfOrder > 0) {
-				this.messageServiceExt.addMessage('success', 'Informacja', 'Dodano automatycznie ' + totalBasketNumberOfOrder + ' bilecik(ów) ');
+				this.messageServiceExt.addMessage(
+					'success', 'Informacja', 'Dodano automatycznie ' + totalBasketNumberOfOrder + ' bilecik(ów) ');
 			}
 		}
 	}
 
 	private isProductKartkaOrGrawer(basketId: number): boolean {
-		return basketId == AppConstans.BASKET_GRAWER_ID || basketId == AppConstans.BASKET_KARTKA_BEZ_LOGO_ID || basketId == AppConstans.BASKET_KARTKA_Z_LOGO_ID
+		return basketId == AppConstants.BASKET_GRAWER_ID || basketId == AppConstants.BASKET_KARTKA_BEZ_LOGO_ID ||
+			basketId == AppConstants.BASKET_KARTKA_Z_LOGO_ID
 	}
 
 	private removeAllTicketsFromOrderIfExist() {
@@ -547,9 +531,9 @@ export class BasketOrderComponent implements OnInit, OnDestroy {
 
 	printPdf() {
 		this.orderService.getPdf(this.generatedOrderId).subscribe(res => {
-			var fileURL = URL.createObjectURL(res);
+			let fileURL = URL.createObjectURL(res);
 			window.open(fileURL);
-		})
+		});
 		this.generatedOrderId = null;
 	}
 
@@ -578,7 +562,6 @@ export class BasketOrderComponent implements OnInit, OnDestroy {
 				});
 			})
 		}
-		;
 	}
 
 	selectCity(city: string) {
@@ -600,9 +583,8 @@ export class BasketOrderComponent implements OnInit, OnDestroy {
 		d = new Date(d);
 		d.setHours(0, 0, 0);
 		d.setDate(d.getDate() + 4 - (d.getDay() || 7));
-		var yearStart = new Date(d.getFullYear(), 0, 1);
-		var weekNo = Math.ceil((((d.valueOf() - yearStart.valueOf()) / 86400000) + 1) / 7);
-		return weekNo
+		let yearStart = new Date(d.getFullYear(), 0, 1);
+		return Math.ceil((((d.valueOf() - yearStart.valueOf()) / 86400000) + 1) / 7)
 	}
 
 	OnWeekOfYearDateChange() {
@@ -612,30 +594,20 @@ export class BasketOrderComponent implements OnInit, OnDestroy {
 
 	closeCustomerPicker() {
 		if (this.customer.name == null) {
-			//this.storedCustomerMode=false;
 		}
 	}
 
 	isDeliveryWeekValid() {
 		let weekOfYearFromNowDate = this.getWeekNumber(new Date());
-		if (weekOfYearFromNowDate > this.weekOfYear) {
-			this.isDeliveryWeekDateValid = false
-		} else {
-			this.isDeliveryWeekDateValid = true
-		}
-		console.log(this.isDeliveryWeekDateValid);
+		this.isDeliveryWeekDateValid = weekOfYearFromNowDate <= this.weekOfYear;
 	}
 
 	onDeliveryDataChange() {
-		var tmpDeliveryDate = new Date(this.order.deliveryDate);
+		let tmpDeliveryDate = new Date(this.order.deliveryDate);
 		tmpDeliveryDate.setHours(23, 59, 59, 99);
 		let now = new Date();
 		console.log(now.getTime());
-		if (tmpDeliveryDate.getTime() > now.getTime()) {
-			this.isDeliveryDateValid = true
-		} else {
-			this.isDeliveryDateValid = false
-		}
+		this.isDeliveryDateValid = tmpDeliveryDate.getTime() > now.getTime();
 	}
 
 	compareDeliveryType(optionOne: DeliveryType, optionTwo: DeliveryType): boolean {

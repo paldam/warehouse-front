@@ -1,32 +1,38 @@
-.capacity_col{
+.capacity_col {
     width: 100px;
 }
-.price_col{
+
+.price_col {
     width: 90px;
 }
-.add_col{
+
+.add_col {
     width: 130px;
 }
-.stock_col{
+
+.stock_col {
     width: 50px;
     text-align: center;
 }
-.date_col{
+
+.date_col {
     width: 140px;
 }
-.deliver_col{
+
+.deliver_col {
     width: 170px;
 }
-.plusic{
+
+.plusic {
     position: relative;
     left: 11px;
     top: 5px;
 }
 
-.ddd{
-    background-color:palegreen !important;
+.ddd {
+    background-color: palegreen !important;
 }
 
-.eee{
-    background-color:palegreen !important;
+.eee {
+    background-color: palegreen !important;
 }

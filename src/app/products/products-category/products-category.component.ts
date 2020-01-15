@@ -2,7 +2,6 @@ import {Component, OnInit, ViewChild} from '@angular/core';
 import {ProductsService} from "../products.service";
 import {ProductType} from "../../model/product_type.model";
 import {MessageServiceExt} from "../../messages/messageServiceExt";
-import {Supplier} from "../../model/supplier.model";
 import {ConfirmationService} from "primeng/api";
 import {AuthenticationService} from "../../authentication.service";
 import {CoreDataTableViewComponent} from "../../coreViewComponent";
@@ -14,9 +13,11 @@ import {NgForm} from "@angular/forms";
 	templateUrl: './products-category.component.html',
 	styleUrls: ['./products-category.component.css']
 })
-export class ProductsCategoryComponent extends CoreDataTableViewComponent implements OnInit {
+export class ProductsCategoryComponent
+	extends CoreDataTableViewComponent
+	implements OnInit {
 	public mainCategoriesList: ProductType[] = [];
-	public subCategoriesList: ProductSubType[]=[];
+	public subCategoriesList: ProductSubType[] = [];
 	public tmpTypeName: string;
 	public tmpSubTypeName: string;
 	//TODO
@@ -26,21 +27,21 @@ export class ProductsCategoryComponent extends CoreDataTableViewComponent implem
 	public addProductTypeDialogShow: boolean = false;
 	public addProductSubTypeDialogShow: boolean = false;
 	public editProductSubTypeDialogShow: boolean = false;
-	public subCategory:  ProductSubType = new ProductSubType();
-	public subCategoryToEdit : ProductSubType = new ProductSubType();
+	public subCategory: ProductSubType = new ProductSubType();
+	public subCategoryToEdit: ProductSubType = new ProductSubType();
 	@ViewChild('type_name') formTypeNameInputField: any;
 	@ViewChild('sub_type_name') formSubTypeNameInputField: any;
 	@ViewChild('hd') hd: any;
-	constructor(private productsService: ProductsService, private messageServiceExt: MessageServiceExt, private confirmationService: ConfirmationService, private authenticationService: AuthenticationService) {
+
+	constructor(private productsService: ProductsService, private messageServiceExt: MessageServiceExt,
+				private confirmationService: ConfirmationService, private authenticationService: AuthenticationService){
 		super();
 		productsService.getProductsTypes().subscribe(data => {
 			this.mainCategoriesList = data;
 		});
-
 		this.productsService.getProductsSubTypes().subscribe(value => {
 			this.subCategoriesList = value;
 		});
-
 	}
 
 	ngOnInit() {
@@ -79,7 +80,6 @@ export class ProductsCategoryComponent extends CoreDataTableViewComponent implem
 		});
 	}
 
-
 	deleteSubCategory(category: ProductSubType) {
 		this.confirmationService.confirm({
 			message: 'Jesteś pewny że chcesz usunąć ten typ produktu ?',
@@ -107,37 +107,34 @@ export class ProductsCategoryComponent extends CoreDataTableViewComponent implem
 			this.productsService.getProductsSubTypes().subscribe(value => this.subCategoriesList = value);
 			this.loading = false;
 		}, 1000);
-
 	}
 
-	addTypeShow(){
+	addTypeShow() {
 		this.addProductTypeDialogShow = true;
-
 	}
 
-	addSubTypeShow(){
+	addSubTypeShow() {
 		this.addProductSubTypeDialogShow = true;
 	}
 
-
-
-	closeSupplierAddDialog(){
+	closeSupplierAddDialog() {
 		this.addProductTypeDialogShow = false;
 	}
 
-	closeSubAddDialog(){
+	closeSubAddDialog() {
 		this.addProductSubTypeDialogShow = false;
 	}
-	closeSubEditDialog(){
+
+	closeSubEditDialog() {
 		this.editProductSubTypeDialogShow = false;
 	}
 
-	compareProductSubType( optionOne : ProductSubType, optionTwo : ProductSubType) : boolean {
-		return optionTwo && optionTwo ? optionOne.subTypeName === optionTwo.subTypeName :optionOne === optionTwo;
+	compareProductSubType(optionOne: ProductSubType, optionTwo: ProductSubType): boolean {
+		return optionTwo && optionTwo ? optionOne.subTypeName === optionTwo.subTypeName : optionOne === optionTwo;
 	}
 
-	compareProductType( optionOne : ProductType, optionTwo : ProductType) : boolean {
-		return optionTwo && optionTwo ? optionOne.typeName === optionTwo.typeName :optionOne === optionTwo;
+	compareProductType(optionOne: ProductType, optionTwo: ProductType): boolean {
+		return optionTwo && optionTwo ? optionOne.typeName === optionTwo.typeName : optionOne === optionTwo;
 	}
 
 	addProductsType() {
@@ -157,7 +154,6 @@ export class ProductsCategoryComponent extends CoreDataTableViewComponent implem
 		}
 	}
 
-
 	addProductsSubType(subCatAddForm: NgForm) {
 		this.formSubmitted2 = true;
 		let tmpName: string = this.formSubTypeNameInputField.nativeElement.value;
@@ -172,30 +168,19 @@ export class ProductsCategoryComponent extends CoreDataTableViewComponent implem
 			this.tmpSubTypeName = "";
 			this.addProductSubTypeDialogShow = false;
 			this.refreshData();
-			console.log(this.hd);
-			this.hd.nativeElement.value =null;
-			console.log(this.hd);
+			this.hd.nativeElement.value = null;
 			this.subCategory = new ProductSubType();
 			subCatAddForm.resetForm();
-
 		}
 	}
 
-
-	goToEditPage(subcat: ProductSubType){
+	goToEditPage(subcat: ProductSubType) {
 		this.editProductSubTypeDialogShow = true;
 		this.subCategoryToEdit = subcat;
-		console.log(this.subCategoryToEdit.productType);
 	}
-
 
 	editProductsSubType(subCatEditForm: NgForm) {
 		this.formSubmitted3 = true;
-
-
-		console.log(subCatEditForm);
-		console.log(this.subCategoryToEdit.productType);
-
 		if (subCatEditForm.valid && this.subCategoryToEdit.productType) {
 			this.productsService.saveProductSubType(this.subCategoryToEdit).subscribe(
 				value => {
@@ -206,12 +191,8 @@ export class ProductsCategoryComponent extends CoreDataTableViewComponent implem
 			this.formSubmitted3 = false;
 			this.editProductSubTypeDialogShow = false;
 			this.refreshData();
-
 			subCatEditForm.resetForm();
 			this.subCategoryToEdit = new ProductSubType();
-
 		}
 	}
-
-
 }

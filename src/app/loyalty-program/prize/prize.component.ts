@@ -2,7 +2,7 @@ import {ChangeDetectorRef, Component, ElementRef, OnInit, ViewChild} from '@angu
 import {PrizeService} from "../prize.service";
 import {Prize} from "../../model/prize";
 import {User} from "../../model/user.model";
-import {AppConstans} from "../../constans";
+import {AppConstants} from "../../constans";
 import {JhiDataUtils} from "ng-jhipster";
 import {PrizeImgExt} from "../../model/prize_img_ext.model";
 import {NgForm} from "@angular/forms";
@@ -21,7 +21,7 @@ export class PrizeComponent implements OnInit {
   public prizeList :Prize[]=[];
 	@ViewChild('globalfilter2') gb: ElementRef;
 	public loading: boolean;
-	public paginatorValues = AppConstans.PAGINATOR_VALUES;
+	public paginatorValues = AppConstants.PAGINATOR_VALUES;
 	public showAddPrizeModal: boolean = false;
 	public showChangeImgModal: boolean = false;
 	public formSubmitted: boolean = false;

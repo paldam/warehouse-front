@@ -1,90 +1,102 @@
 <div class="col-lg-7 col-md-11">
-<p-panel header="Dodaj Produkt">
+    <p-panel header="Dodaj Produkt">
 
-<form id="productForm" novalidate #form="ngForm" (submit)="submitForm(form)">
+        <form id="productForm" novalidate #form="ngForm" (submit)="submitForm(form)">
 
-    <div class="form-group">
-        <small id="nameDescript" class="text-muted">Nazwa</small>
-        <input type="text" name="name" class="form-control" [(ngModel)]="product.productName" #name="ngModel" aria-describedby="nameDescript"  required >
-        <ul class="text-danger list-unstyled" *ngIf="name.dirty|| formSubmitted">
-            <li  *ngIf="name.errors?.required">To pole nie może być puste</li>
-        </ul>
-    </div>
+            <div class="form-group">
+                <small id="nameDescript" class="text-muted">Nazwa</small>
+                <input type="text" name="name" class="form-control" [(ngModel)]="product.productName" #name="ngModel"
+                       aria-describedby="nameDescript" required>
+                <ul class="text-danger list-unstyled" *ngIf="name.dirty|| formSubmitted">
+                    <li *ngIf="name.errors?.required">To pole nie może być puste</li>
+                </ul>
+            </div>
 
-    <div class="form-group">
-        <small id="capacityDescript" class="text-muted">Pojemność</small>
-        <input type="text" name="capacity" class="form-control"  [(ngModel)]="product.capacity" #capacity="ngModel" aria-describedby="capacityDescript" required >
-        <ul class="text-danger list-unstyled" *ngIf="capacity.dirty|| formSubmitted">
-            <li  *ngIf="capacity.errors?.required">To pole nie może być puste</li>
-        </ul>
-    </div>
+            <div class="form-group">
+                <small id="capacityDescript" class="text-muted">Pojemność</small>
+                <input type="text" name="capacity" class="form-control" [(ngModel)]="product.capacity"
+                       #capacity="ngModel" aria-describedby="capacityDescript" required>
+                <ul class="text-danger list-unstyled" *ngIf="capacity.dirty|| formSubmitted">
+                    <li *ngIf="capacity.errors?.required">To pole nie może być puste</li>
+                </ul>
+            </div>
 
-    <div class="form-group">
-        <p-listbox name="suppliers_list" [style]="{ 'width':'400px'}" [listStyle]="{'max-height':'100px', 'width':'390px'}" [options]="productSuppliers"
-                   [(ngModel)]="selectedSuppliersToAddEdit" multiple="multiple" checkbox="checkbox" filter="filter"
-                   optionLabel="supplierName" (onChange)="checkSupplierValid()">>
-            <p-header>
-                Dostawcy :
-            </p-header>
-        </p-listbox>
+            <div class="form-group">
+                <p-listbox name="suppliers_list" [style]="{ 'width':'400px'}"
+                           [listStyle]="{'max-height':'100px', 'width':'390px'}" [options]="productSuppliers"
+                           [(ngModel)]="selectedSuppliersToAddEdit" multiple="multiple" checkbox="checkbox"
+                           filter="filter"
+                           optionLabel="supplierName" (onChange)="checkSupplierValid()">>
+                    <p-header>
+                        Dostawcy :
+                    </p-header>
+                </p-listbox>
 
-        <p>Wybrani dostawcy: <span *ngFor="let c of selectedSuppliersToAddEdit" style="margin-right: 10px">{{c.supplierName}}</span>
-        </p>
-        <ul class="text-danger list-unstyled" *ngIf="supplierRequiredError">Wybierz przynajmniej jednego dostawcę</ul>
-    </div>
+                <p>Wybrani dostawcy: <span *ngFor="let c of selectedSuppliersToAddEdit" style="margin-right: 10px">{{c.supplierName}}</span>
+                </p>
+                <ul class="text-danger list-unstyled" *ngIf="supplierRequiredError">Wybierz przynajmniej jednego
+                    dostawcę
+                </ul>
+            </div>
 
-    <div class="form-group">
-        <small id="product_typeDesc" class="text-muted">Typ Produktu</small>
+            <div class="form-group">
+                <small id="product_typeDesc" class="text-muted">Typ Produktu</small>
 
 
-        <p-listbox name="type_list" [style]="{ 'width':'400px'}" [listStyle]="{'max-height':'100px', 'width':'390px'}"
-                   [options]="productSubTypesSelectItems"
-                   [(ngModel)]="product.productSubType" [filter]="true">
+                <p-listbox name="type_list" [style]="{ 'width':'400px'}"
+                           [listStyle]="{'max-height':'100px', 'width':'390px'}"
+                           [options]="productSubTypesSelectItems"
+                           [(ngModel)]="product.productSubType" [filter]="true">
 
-            <p-header>
-                Typ Produktu:
-            </p-header>
-        </p-listbox>
+                    <p-header>
+                        Typ Produktu:
+                    </p-header>
+                </p-listbox>
 
-    </div>
+            </div>
 
-    <div class="form-group">
-        <small id="priceDescript" class="text-muted">Cena</small>
-        <input type="text" name="price" class="form-control"  [(ngModel)]="product.price" #price="ngModel" aria-describedby="priceDescript" pattern="^(?=.*?\d)\d*[.]?\d{1,2}$">
-        <ul class="text-danger list-unstyled" *ngIf="price.dirty|| formSubmitted">
-            <li  *ngIf="price.errors?.pattern">To pole musi zawierać format waluty z kropką np : 0.59 , 2.5 , 0.99 , 19.99</li>
-        </ul>
-    </div>
+            <div class="form-group">
+                <small id="priceDescript" class="text-muted">Cena</small>
+                <input type="text" name="price" class="form-control" [(ngModel)]="product.price" #price="ngModel"
+                       aria-describedby="priceDescript" pattern="^(?=.*?\d)\d*[.]?\d{1,2}$">
+                <ul class="text-danger list-unstyled" *ngIf="price.dirty|| formSubmitted">
+                    <li *ngIf="price.errors?.pattern">To pole musi zawierać format waluty z kropką np : 0.59 , 2.5 ,
+                        0.99 , 19.99
+                    </li>
+                </ul>
+            </div>
 
-    <div class="form-group">
-        <small id="stockDescript" class="text-muted">Stan magazynu</small>
-        <input type="text" name="stock" class="form-control" [(ngModel)]="product.stock" #stock="ngModel" aria-describedby="stockDescript" pattern="^[0-9]*$" >
-        <ul class="text-danger list-unstyled" *ngIf="stock.dirty|| formSubmitted">
-            <li  *ngIf="stock.errors?.pattern">To pole musi zawierać same cyfry</li>
-        </ul>
-    </div>
+            <div class="form-group">
+                <small id="stockDescript" class="text-muted">Stan magazynu</small>
+                <input type="text" name="stock" class="form-control" [(ngModel)]="product.stock" #stock="ngModel"
+                       aria-describedby="stockDescript" pattern="^[0-9]*$">
+                <ul class="text-danger list-unstyled" *ngIf="stock.dirty|| formSubmitted">
+                    <li *ngIf="stock.errors?.pattern">To pole musi zawierać same cyfry</li>
+                </ul>
+            </div>
 
-    <button class="btn bg-primary " form="productForm"  type="submit" > Zatwierdź</button>
+            <button class="btn bg-primary " form="productForm" type="submit"> Zatwierdź</button>
 
-    <button class="btn bg-primary" type="button" (click)="addSupplierWindowOn()" > Dodaj dostawcę</button>
+            <button class="btn bg-primary" type="button" (click)="addSupplierWindowOn()"> Dodaj dostawcę</button>
 
-</form>
-</p-panel>
+        </form>
+    </p-panel>
 </div>
 
 
 <p-dialog [(visible)]="addSupplierWindow" modal="true" width="600">
 
-    <form id="supplierAddForm" novalidate #form2="ngForm" >
+    <form id="supplierAddForm" novalidate #form2="ngForm">
 
         <div class="form-group">
             <small id="nameDescript" class="text-muted">Nazwa Dostawcy</small>
-            <input type="text" name="nameSupplier" class="form-control" [(ngModel)]="productSupplierToAdd.supplierName" #nameSupplier="ngModel" aria-describedby="nameDescript" required >
+            <input type="text" name="nameSupplier" class="form-control" [(ngModel)]="productSupplierToAdd.supplierName"
+                   #nameSupplier="ngModel" aria-describedby="nameDescript" required>
             <ul class="text-danger list-unstyled" *ngIf="nameSupplier.dirty|| formSupplierAddForm">
-                <li  *ngIf="nameSupplier.errors?.required">To pole nie może być puste</li>
+                <li *ngIf="nameSupplier.errors?.required">To pole nie może być puste</li>
             </ul>
         </div>
-        <button class="btn bg-primary " (click)="submitSupplierAddForm(form2)" > Zatwierdź</button>
+        <button class="btn bg-primary " (click)="submitSupplierAddForm(form2)"> Zatwierdź</button>
 
     </form>
 

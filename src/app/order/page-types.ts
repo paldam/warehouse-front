@@ -2,9 +2,9 @@ import {OrderViewPageType} from "./order-view-page-type";
 import {OrderService} from "./order.service";
 import {ActivatedRoute} from "@angular/router";
 
-export class RegularOrderView implements OrderViewPageType {
+export class RegularOrderView
+	implements OrderViewPageType {
 	constructor(public orderService: OrderService) {
-
 	}
 
 	getOrders() {
@@ -13,18 +13,18 @@ export class RegularOrderView implements OrderViewPageType {
 		this.orderService.getOrdersDto(0, 50, "", "orderDate", 1, [], []).subscribe(
 			(data: any) => {
 				orders = data.orderDtoList;
-
 			}, error => {
 				return null;
 			}, () => {
 				setTimeout(() => {
-					return orders   ;
+					return orders;
 				}, 2000);
 			})
 	}
 }
 
-export class OrderViewForProduction implements OrderViewPageType {
+export class OrderViewForProduction
+	implements OrderViewPageType {
 	constructor(public orderService: OrderService) {
 	}
 
@@ -33,7 +33,7 @@ export class OrderViewForProduction implements OrderViewPageType {
 		this.orderService.getOrdersDtoForProduction().subscribe(
 			(data: any) => {
 				orders = data;
-			}, error=> {
+			}, error => {
 				return null;
 			}, () => {
 				return {orders}
@@ -41,7 +41,8 @@ export class OrderViewForProduction implements OrderViewPageType {
 	}
 }
 
-export class OrderViewForStatistics implements OrderViewPageType {
+export class OrderViewForStatistics
+	implements OrderViewPageType {
 	constructor(public orderService: OrderService, private activatedRoute: ActivatedRoute) {
 	}
 
@@ -53,7 +54,6 @@ export class OrderViewForStatistics implements OrderViewPageType {
 		let endDateTmp = this.activatedRoute.snapshot.paramMap.get('endDate');
 		this.orderService.getOrdersByBasketIdAndOrderDateRange(basketIdTmp, startDateTmp, endDateTmp).subscribe(data => {
 			orders = ordersNotFiltered = data;
-
 		}, error => {
 			return null;
 		}, () => {
@@ -62,7 +62,8 @@ export class OrderViewForStatistics implements OrderViewPageType {
 	}
 }
 
-export class OrderViewForCustomers implements OrderViewPageType {
+export class OrderViewForCustomers
+	implements OrderViewPageType {
 	constructor(public orderService: OrderService, private activatedRoute: ActivatedRoute) {
 	}
 
@@ -71,13 +72,13 @@ export class OrderViewForCustomers implements OrderViewPageType {
 		let ordersNotFiltered;
 		let currentCustomerOnCustomerEditPage;
 		this.orderService.getOrderByCustomer(this.activatedRoute.snapshot.params["id"]).subscribe(data => {
-				orders = ordersNotFiltered= data;
+				orders = ordersNotFiltered = data;
 				currentCustomerOnCustomerEditPage = this.activatedRoute.snapshot.params["id"];
 			}, error => {
-			return null;
+				return null;
 			}
 			, () => {
-			return {orders,currentCustomerOnCustomerEditPage}
+				return {orders, currentCustomerOnCustomerEditPage}
 			}
 		)
 	}

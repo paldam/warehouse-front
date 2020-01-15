@@ -1,6 +1,7 @@
 .ui-panelmenu {
     margin: 20px 0 0 0;
 }
+
 .sidenav {
     height: 100%;
     width: 190px;
@@ -8,12 +9,13 @@
     z-index: 998;
     top: 50px;
     left: 0;
-    background-color:#363a41;
+    background-color: #363a41;
     overflow-x: hidden;
     transition: 0.5s;
     padding-top: 20px;
     box-shadow: 3px 0px 5px #888888;
 }
+
 #main {
     transition: margin-left .5s;
     padding: 16px;
@@ -38,21 +40,26 @@
 }
 
 @media screen and (max-height: 450px) {
-    .sidenav {padding-top: 15px;}
-    .sidenav a {font-size: 18px;}
+    .sidenav {
+        padding-top: 15px;
+    }
+
+    .sidenav a {
+        font-size: 18px;
+    }
 }
 
-.black_background{
-     background-color:black;
-     opacity: .80;
-     position: fixed;
-     top: 0px;
-     left: 0px;
-     width: 100%;
-     height: 100%;
-     z-index: 996;
-     transition: 1.3s;
- }
+.black_background {
+    background-color: black;
+    opacity: .80;
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    width: 100%;
+    height: 100%;
+    z-index: 996;
+    transition: 1.3s;
+}
 
 #menu {
     background: #363a41;
@@ -109,9 +116,11 @@
 #menu ul ul {
     display: none;
 }
+
 #menu ul {
     padding: 0;
 }
+
 #menu li.active_main ul {
     display: block;
 }
@@ -121,37 +130,42 @@
     background: #4a4d54;
     border-left: 5px solid #92c774;
 }
+
 #menu ul li ul li a.active {
     background: #4a4d54;
     border-left: 6px solid #92c774;
     padding-left: 44px;
 }
-.login_user_image{
+
+.login_user_image {
     color: #5d6468;
     text-align: center;
 }
-.login_user{
+
+.login_user {
     color: #eeeeee;
     text-align: center;
     padding-bottom: 20px;
 }
-.line{
+
+.line {
     box-shadow: 0px 0px 5px #000000;
     height: 1px;
     background-color: #434a4e;
 }
 
-
 @media screen and (max-width: 650px) {
     .sidenav {
         box-shadow: 1px 0px 1px #888888
     }
-    #main{
+
+    #main {
         margin-left: 0px;
     }
 
 }
-.cursor_dis{
+
+.cursor_dis {
     cursor: not-allowed !important;
 
 }

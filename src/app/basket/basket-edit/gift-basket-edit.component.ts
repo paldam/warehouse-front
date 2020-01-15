@@ -11,7 +11,7 @@ import {DataTable, FileUpload, SelectItem} from "primeng/primeng";
 import {MessageServiceExt} from "../../messages/messageServiceExt";
 import {BasketSeason} from "../../model/basket_season.model";
 import {Supplier} from "../../model/supplier.model";
-import {AppConstans} from "../../constans";
+import {AppConstants} from "../../constans";
 
 @Component({
 	selector: 'app-gift-basket-edit',
@@ -62,13 +62,13 @@ export class GiftBasketEditComponent
 			this.basketTypes = data;
 			this.basketTypes = this.basketTypes
 				.filter(value => {
-					return value.basketTypeId != AppConstans.BASKET_TYPE_ID_ARCHWIUM;
+					return value.basketTypeId != AppConstants.BASKET_TYPE_ID_ARCHWIUM;
 				})
 				.filter(value => {
-					return value.basketTypeId != AppConstans.BASKET_TYPE_ID_USUNIETY;
+					return value.basketTypeId != AppConstants.BASKET_TYPE_ID_USUNIETY;
 				})
 				.filter(value => {
-					return value.basketTypeId != AppConstans.BASKET_TYPE_ID_EXPORTOWY;
+					return value.basketTypeId != AppConstants.BASKET_TYPE_ID_EXPORTOWY;
 				});
 		});
 		productsService.getProducts().subscribe(data => this.products = data);

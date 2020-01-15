@@ -7,7 +7,6 @@ import {LeftNavComponent} from './nav-bars/left-nav/left-nav.component';
 import {ConfirmationService,} from 'primeng/primeng';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {routing} from './app.routing';
-//import {ProductFormComponent} from './products/products-add-form/product-form.component';
 import {LoginComponent} from './login/login.component';
 import {AuthGuard} from "./guard/auth.guard";
 import {AuthenticationService} from "./authentication.service";
@@ -26,13 +25,14 @@ import {PrimeNgModule} from "./prime-ng.module";
 import {MapsComponent} from "./maps/maps.component";
 import {NotificationsService} from "./nav-bars/top-nav/notification.service";
 import {ServerSideEventsService} from "./server-side-events-service";
+import {FileSendService} from "./file-send/file-send.service";
 
-export function httpExt(backend: XHRBackend, options: RequestOptions, router: Router, messageService: MessageService,messageServiceExt: MessageServiceExt) {
-	return new HttpService(backend, options, router, messageService,messageServiceExt );
+export function httpExt(backend: XHRBackend, options: RequestOptions, router: Router, messageService: MessageService, messageServiceExt: MessageServiceExt) {
+	return new HttpService(backend, options, router, messageService, messageServiceExt);
 }
 
 @NgModule({
-	declarations: [ //all loaded on start apps
+	declarations: [
 		AppComponent,
 		NavComponent,
 		LeftNavComponent,
@@ -43,10 +43,13 @@ export function httpExt(backend: XHRBackend, options: RequestOptions, router: Ro
 		routing, BrowserModule, HttpModule, BrowserAnimationsModule, PrimeNgModule
 	],
 	providers: [{
-		provide: HttpService, useFactory: (httpExt), deps: [XHRBackend, RequestOptions, Router, MessageService, MessageServiceExt]
+		provide: HttpService,
+		useFactory: (httpExt),
+		deps: [XHRBackend, RequestOptions, Router, MessageService, MessageServiceExt]
 	},
 		CalendarSetingsComponent, MessageServiceExt, RoutingState, SpinerService, MessageService, FileSendService, MapService,
-		ConfirmationService, AuthGuard, AdminGuard, AdminOrSuperUserGuard, AuthenticationService, UserService,NotificationsService,ServerSideEventsService],
+		ConfirmationService, AuthGuard, AdminGuard, AdminOrSuperUserGuard, AuthenticationService, UserService,
+		NotificationsService, ServerSideEventsService],
 	bootstrap: [
 		AppComponent
 	]

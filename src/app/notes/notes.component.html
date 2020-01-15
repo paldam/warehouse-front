@@ -1,33 +1,33 @@
-
 <div class="sort_box">
     Sortuj po dacie ważności:
 
 
     <i class="fa fa-arrow-down ser_icon " (click)="sortNotesDESC()"></i>
-    <i class="fa fa-arrow-up ser_icon"(click)="sortNotesASC()"></i>
+    <i class="fa fa-arrow-up ser_icon" (click)="sortNotesASC()"></i>
 
 </div>
 
 
-
-
-<button class=" add_note_icon btn bg-primary " form="productForm"  (click)="createNote()" > Dodaj Notatkę </button>
+<button class=" add_note_icon btn bg-primary " form="productForm" (click)="createNote()"> Dodaj Notatkę</button>
 <div class="container-fluid">
     <div class="card_container row">
-        <div  *ngFor="let noteItem of notes"  class="card fadeIn" >
+        <div *ngFor="let noteItem of notes" class="card fadeIn">
             <div class="container">
-                <i class="prior_icon fa fa-exclamation fa-2x" [ngStyle]="setMyStyles(noteItem.priority)" aria-hidden="true" title="Priorytet"></i>
-                <i class="edit_icon fa fa-pencil fa-2x"  aria-hidden="true" title="Edytuj notatkę" (click)="editNote(noteItem.notesId)"></i>
-                <i class="del_icon fa fa-trash fa-2x" aria-hidden="true" (click)="ShowConfirmModal(noteItem)" title="Usuń notatkę"></i>
-                    <p class="note_content"> {{noteItem.noteContent}}</p>
-
-
+                <i class="prior_icon fa fa-exclamation fa-2x" [ngStyle]="setMyStyles(noteItem.priority)"
+                   aria-hidden="true" title="Priorytet"></i>
+                <i class="edit_icon fa fa-pencil fa-2x" aria-hidden="true" title="Edytuj notatkę"
+                   (click)="editNote(noteItem.notesId)"></i>
+                <i class="del_icon fa fa-trash fa-2x" aria-hidden="true" (click)="ShowConfirmModal(noteItem)"
+                   title="Usuń notatkę"></i>
+                <p class="note_content"> {{noteItem.noteContent}}</p>
 
 
                 <div class="add_inf">
                     <hr class="line2">
-                    <p class="add_line">Data dodania: <span class="add2">{{noteItem.creationDate| date: 'dd/MM/yyyy HH:mm:ss'}}</span></p>
-                    <p class="add_line">Data ważności: <span class="add2">{{noteItem.expirationDate| date: 'dd/MM/yyyy '}}</span></p>
+                    <p class="add_line">Data dodania: <span class="add2">{{noteItem.creationDate| date: 'dd/MM/yyyy HH:mm:ss'}}</span>
+                    </p>
+                    <p class="add_line">Data ważności: <span class="add2">{{noteItem.expirationDate| date: 'dd/MM/yyyy '}}</span>
+                    </p>
                     <p class="add_line">Dodane przez: <span class="add2">{{noteItem.addedBy}}</span></p>
 
                 </div>
@@ -36,20 +36,21 @@
 
     </div>
 </div>
-<p-dialog header="Edytuj notatkę" modal="true" width="600" [(visible)]="noteEditDialogShow" >
+<p-dialog header="Edytuj notatkę" modal="true" width="600" [(visible)]="noteEditDialogShow">
 
 
     <div class="order_detail_form col-md-12">
         <form id="NoteForm" novalidate #noteForm="ngForm" (submit)="editForm(noteForm)">
 
 
-
             <div class="form-group">
                 <div class="form-group">
                     <small id="additional_informationDesc" class="text-muted">Treść notatki</small>
-                    <textarea class="form-control" name="additional_information"#additional_information="ngModel"  id="additional_information"  size="1000" rows="3" [(ngModel)]="note.noteContent" required></textarea>
+                    <textarea class="form-control" name="additional_information" #additional_information="ngModel"
+                              id="additional_information" size="1000" rows="3" [(ngModel)]="note.noteContent"
+                              required></textarea>
                     <ul class="text-danger list-unstyled" *ngIf="formSubmitted">
-                        <li  *ngIf="additional_information.errors?.required">Wprowadź treść notatki</li>
+                        <li *ngIf="additional_information.errors?.required">Wprowadź treść notatki</li>
                     </ul>
                 </div>
 
@@ -57,33 +58,33 @@
 
             <div class="form-group">
                 <small id="delivery_typeDesc" class="text-muted">Priorytet</small>
-                <select class="form-control" [(ngModel)]="note.priority" name="delivery_type" #delivery_type="ngModel" required >
+                <select class="form-control" [(ngModel)]="note.priority" name="delivery_type" #delivery_type="ngModel"
+                        required>
                     <option selected value="0">Standardowy</option>
-                    <option  value="1">Wysoki</option>
+                    <option value="1">Wysoki</option>
                 </select>
                 <ul class="text-danger list-unstyled" *ngIf=" formSubmitted">
-                    <li  *ngIf="delivery_type.errors?.required">Wybierz Priorytet</li>
+                    <li *ngIf="delivery_type.errors?.required">Wybierz Priorytet</li>
                 </ul>
             </div>
 
             <div class="form-group">
                 <div class="input-group">
-                    <input type="date" name="delivery_date"   class="form-control" #delivery_date="ngModel" [(ngModel)]="note.expirationDate"  aria-describedby="delivery_dateDesc" required>
+                    <input type="date" name="delivery_date" class="form-control" #delivery_date="ngModel"
+                           [(ngModel)]="note.expirationDate" aria-describedby="delivery_dateDesc" required>
 
                     <span class="input-group-addon" id="taxDesc">Ważność notatki</span>
                 </div>
                 <ul class="text-danger list-unstyled" *ngIf=" formSubmitted">
-                <li  *ngIf="delivery_date.errors?.required">Wprowadz datę ważności notatki</li>
-            </ul>
+                    <li *ngIf="delivery_date.errors?.required">Wprowadz datę ważności notatki</li>
+                </ul>
             </div>
-
 
 
         </form>
 
-        <button class="btn bg-primary " type="submit"  form="NoteForm" >Zapisz Notatkę</button>
-        <button class="btn bg-primary " (click)="cancelEditNote()"  >Anuluj </button>
-
+        <button class="btn bg-primary " type="submit" form="NoteForm">Zapisz Notatkę</button>
+        <button class="btn bg-primary " (click)="cancelEditNote()">Anuluj</button>
 
 
     </div>

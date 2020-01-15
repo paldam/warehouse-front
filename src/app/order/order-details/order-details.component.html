@@ -1,616 +1,686 @@
 <div class="order_summary col-12">
-  <p-fieldset  [legend]="getTitleForMainFieldset(order.orderFvNumber)" [toggleable]="true">
+    <p-fieldset [legend]="getTitleForMainFieldset(order.orderFvNumber)" [toggleable]="true">
 
-    <div class="row">
-      <div class="customer_data_form col-md-6">
-        <p-panel header="Dane osoby zamawiającej">
-
-
-
-          <div class="form-group">
-            <form id="OrderForm" novalidate #form="ngForm" >
+        <div class="row">
+            <div class="customer_data_form col-md-6">
+                <p-panel header="Dane osoby zamawiającej">
 
 
-              <div class="cont">
-                <p-panel  class="customerpanels" header="Firma">
+                    <div class="form-group">
+                        <form id="OrderForm" novalidate #form="ngForm">
 
 
-
-                  <i  class="fa fa-address-card-o fa-2x pickfromdb " (click)="showCompanyList()" aria-hidden="true"></i>
-                  <i  *ngIf="this.company.companyName && !this.customer.customerId"  class="fa fa-times fa-2x clean-company-icon2" aria-hidden="true" (click)="cleanCompany()"></i>
-                  <i class="fa fa-plus fa-2x add-company-icon" (click)="addCompanyShowPanel()" aria-hidden="true"></i>
+                            <div class="cont">
+                                <p-panel class="customerpanels" header="Firma">
 
 
-                  <div  class="form-group">
-                    <div class="input-group">
-                      <input type="text" name="organization" #organization="ngModel" class="form-control"  size="300" aria-describedby="organizationDesc"  [readonly]="true"  [(ngModel)]="company.companyName">
-                      <span class="input-group-addon" id="organizationDesc">Nazwa Firmy</span>
+                                    <i class="fa fa-address-card-o fa-2x pickfromdb " (click)="showCompanyList()"
+                                       aria-hidden="true"></i>
+                                    <i *ngIf="this.company.companyName && !this.customer.customerId"
+                                       class="fa fa-times fa-2x clean-company-icon2" aria-hidden="true"
+                                       (click)="cleanCompany()"></i>
+                                    <i class="fa fa-plus fa-2x add-company-icon" (click)="addCompanyShowPanel()"
+                                       aria-hidden="true"></i>
+
+
+                                    <div class="form-group">
+                                        <div class="input-group">
+                                            <input type="text" name="organization" #organization="ngModel"
+                                                   class="form-control" size="300" aria-describedby="organizationDesc"
+                                                   [readonly]="true" [(ngModel)]="company.companyName">
+                                            <span class="input-group-addon" id="organizationDesc">Nazwa Firmy</span>
+                                        </div>
+                                    </div>
+                                </p-panel>
+                            </div>
+
+                            <div class="cont">
+
+                                <p-panel class="customerpanels2" header="Klient">
+                                    <i class="fa fa-address-card-o fa-2x pickfromdb " (click)="showCustomerList()"
+                                       aria-hidden="true"></i>
+                                    <i *ngIf="this.customer.name" class="fa fa-times fa-2x clean-company-icon"
+                                       aria-hidden="true" (click)="cleanCustomer()"></i>
+
+                                    <div class="form-group">
+                                        <div class="input-group">
+                                            <input type="text" name="name" #name="ngModel" class="form-control"
+                                                   size="300" aria-describedby="nameDesc"
+                                                   [readonly]="clickSelectCustomerGuard" [(ngModel)]="customer.name"
+                                                   required>
+                                            <span class="input-group-addon" id="nameDesc">Imię i Nazwisko </span>
+                                        </div>
+                                        <ul class="text-danger list-unstyled" *ngIf="name.dirty || formSubmitted">
+                                            <li *ngIf="name.errors?.required">To pole nie może być puste</li>
+                                        </ul>
+                                    </div>
+
+
+                                    <div class="form-group">
+                                        <div class="input-group">
+                                            <input type="email" name="email" class="form-control" size="300"
+                                                   aria-describedby="emailDesc" [readonly]="clickSelectCustomerGuard"
+                                                   [(ngModel)]="customer.email">
+                                            <span class="input-group-addon" id="emailDesc">Email</span>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <div class="input-group">
+                                            <input type="text" name="tel" class="form-control" size="300"
+                                                   aria-describedby="telDesc" [readonly]="clickSelectCustomerGuard"
+                                                   [(ngModel)]="customer.phoneNumber">
+                                            <span class="input-group-addon" id="telDesc">Telefon</span>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <div class="input-group">
+                                            <input type="text" name="cust_inf" class="form-control" size="300"
+                                                   aria-describedby="custDesc"
+                                                   [(ngModel)]="customer.additionalInformation">
+                                            <span class="input-group-addon" id="custDesc">Uwagi</span>
+                                        </div>
+                                    </div>
+                                </p-panel>
+                            </div>
+
+
+                            <div class="cont">
+                                <p-panel class="customerpanels" header="Adres Dostawy">
+
+                                    <i *ngIf="this.company.companyId != null"
+                                       class="fa fa-address-card-o fa-2x pickfromdb " (click)="showAddressesList()"
+                                       aria-hidden="true"></i>
+                                    <i *ngIf="this.orderAddress.contactPerson || this.orderAddress.address
+                                    || this.orderAddress.additionalInformation ||this.orderAddress.zipCode
+                                    || this.orderAddress.cityName || this.orderAddress.phoneNumber "
+                                       class="fa fa-times fa-2x clean-company-icon" aria-hidden="true"
+                                       (click)="cleanAddress()"></i>
+                                    <i *ngIf="orderAddress.addressId" class="fa fa-pencil fa-2x edit-address-icon "
+                                       aria-hidden="true" (click)="editAddressMode()"></i>
+
+                                    <div class="form-group">
+                                        <div class="input-group">
+                                            <input type="text" name="contactPerson" #contactPerson="ngModel"
+                                                   class="form-control" size="300" aria-describedby="streetDesc"
+                                                   [readonly]="orderAddress.addressId"
+                                                   [(ngModel)]="orderAddress.contactPerson" required>
+                                            <span class="input-group-addon" id="streetDesc">Osoba kontaktowa</span>
+                                        </div>
+                                        <ul class="text-danger list-unstyled"
+                                            *ngIf="contactPerson.dirty || formSubmitted">
+                                            <li *ngIf="contactPerson.errors?.required">To pole nie może być puste</li>
+                                        </ul>
+                                    </div>
+
+
+                                    <div class="form-group">
+                                        <div class="input-group">
+                                            <input type="text" name="address" #address="ngModel" class="form-control"
+                                                   size="300" aria-describedby="streetDesc"
+                                                   [readonly]="orderAddress.addressId"
+                                                   [(ngModel)]="orderAddress.address" required>
+                                            <span class="input-group-addon" id="streetDesc">Ulica / nr. lokalu</span>
+                                        </div>
+                                        <ul class="text-danger list-unstyled" *ngIf="address.dirty|| formSubmitted">
+                                            <li *ngIf="address.errors?.required">To pole nie może być puste</li>
+                                        </ul>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <div class="input-group">
+                                            <input type="text" name="zip_code" #zip_code="ngModel" class="form-control"
+                                                   size="300" aria-describedby="zip_codeDesc"
+                                                   [readonly]="orderAddress.addressId"
+                                                   [(ngModel)]="orderAddress.zipCode" required pattern="\d{2}-\d{3}">
+                                            <span class="input-group-addon" id="zip_codeDesc">Kod pocztowy</span>
+                                        </div>
+                                        <ul class="text-danger list-unstyled" *ngIf="zip_code.dirty || formSubmitted">
+                                            <li *ngIf="zip_code.errors?.pattern">Kod musi być w formacie xx-xxx</li>
+                                            <li *ngIf="zip_code.errors?.required">To pole nie może być puste</li>
+                                        </ul>
+                                    </div>
+
+
+                                    <div class="form-group">
+                                        <div class="input-group">
+                                            <input type="text" name="city_name" #city_name="ngModel"
+                                                   class="form-control" size="300" aria-describedby="city_nameDesc"
+                                                   [readonly]="orderAddress.addressId"
+                                                   [(ngModel)]="orderAddress.cityName" required>
+                                            <span class="input-group-addon" id="city_nameDesc">Miejscowość</span>
+                                        </div>
+                                        <ul class="text-danger list-unstyled" *ngIf="city_name.dirty || formSubmitted">
+                                            <li *ngIf="city_name.errors?.required">To pole nie może być puste</li>
+                                        </ul>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <div class="input-group">
+                                            <input type="text" name="phone_number_addr" #phone_number_addr="ngModel"
+                                                   class="form-control" size="300" aria-describedby="phone_numberDesc"
+                                                   [readonly]="orderAddress.addressId"
+                                                   [(ngModel)]="orderAddress.phoneNumber" required>
+                                            <span class="input-group-addon"
+                                                  id="phone_numberDesc">Telefon kontaktowy</span>
+                                        </div>
+                                        <ul class="text-danger list-unstyled"
+                                            *ngIf="phone_number_addr.dirty || formSubmitted">
+                                            <li *ngIf="phone_number_addr?.errors?.required">To pole nie może być puste
+                                            </li>
+                                        </ul>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <div class="input-group">
+                                            <input type="text" name="additional_inf_add" #additional_inf_add="ngModel"
+                                                   class="form-control" size="300"
+                                                   aria-describedby="additional_inf_addDesc"
+                                                   [readonly]="orderAddress.addressId"
+                                                   [(ngModel)]="orderAddress.additionalInformation">
+                                            <span class="input-group-addon" id="additional_inf_addDesc">Dodatkowe informacje</span>
+                                        </div>
+                                    </div>
+
+
+                                </p-panel>
+                            </div>
+
+                            <div class="cont">
+                                <p-panel class="customerpanels3" header="Klient Programu Loyalnościowego">
+
+                                    <i class="fa fa-address-card-o fa-2x pickfromdb " title="Wybierz firmę z bazy"
+                                       (click)="prepareLoyaltyUserPanel()" aria-hidden="true"></i>
+                                    <i title="Wyszczyć" class="fa fa-times fa-2x clean-company-icon2" aria-hidden="true"
+                                       (click)="cleanLoyaltyUser()"></i>
+
+                                    <div class="form-group">
+                                        <div class="input-group">
+                                            <input type="text" name="organization" class="form-control"
+                                                   [value]="order.loyaltyUser!=null ?  order.loyaltyUser?.login + ' | '
+                                                    + order.loyaltyUser?.email : ''"
+                                                   size="300" aria-describedby="organizationDesc" [readonly]="true">
+                                            <span class="input-group-addon" id="organizationDesc">Klient</span>
+                                        </div>
+
+                                    </div>
+                                </p-panel>
+                            </div>
+
+                        </form>
                     </div>
-                  </div>
                 </p-panel>
-              </div>
+            </div>
+            <div class="order_detail_form col-md-6">
+                <p-panel header="Dodatkowe informacje">
+                    <form id="OrderFormAdditional" novalidate #formAdidtional="ngForm">
 
-              <div class="cont">
 
-                <p-panel  class="customerpanels2"  header="Klient">
-                  <i class="fa fa-address-card-o fa-2x pickfromdb " (click)="showCustomerList()" aria-hidden="true"></i>
-                  <i  *ngIf="this.customer.name"  class="fa fa-times fa-2x clean-company-icon" aria-hidden="true" (click)="cleanCustomer()"></i>
+                        <div class="form-group">
+                            <small id="fv_numbereDescript" class="text-muted">Numer FV</small>
+                            <input type="text" name="fv_number" #fv_number="ngModel" class="form-control"
+                                   [readonly]="!authenticationService.isAdmin() && !authenticationService.isBiuroUser()"
+                                   aria-describedby="delivery_dateDesc" required [(ngModel)]="order.orderFvNumber">
+                            <ul class="text-danger list-unstyled" *ngIf="fv_number.dirty|| formSubmitted">
+                                <li *ngIf="fv_number.errors?.required">Wprowadz numer FV</li>
+                            </ul>
+                        </div>
 
-                  <div class="form-group">
-                    <div class="input-group">
-                      <input type="text" name="name" #name="ngModel" class="form-control" size="300" aria-describedby="nameDesc" [readonly]="clickSelectCustomerGuard" [(ngModel)]="customer.name" required >
-                      <span class="input-group-addon" id="nameDesc">Imię i Nazwisko </span>
+
+                        <div *ngIf="isEditOrderType()" class="form-group">
+                            <div class="form-group">
+                                <small id="order_date_Desc" class="text-muted">Data złożenia zamówienia</small>
+                                <input type="text" name="order_date" class="form-control" size="300"
+                                       aria-describedby="order_date_Desc"
+                                       [readonly]="isFormReadOnly() && !authenticationService.isAdmin() &&
+                                       !authenticationService.isBiuroUser()"
+                                       [value]="order.orderDate| date: 'dd/MM/yyyy HH:mm:ss'">
+                            </div>
+                        </div>
+
+
+                        <div *ngIf="isEditOrderType()" class="form-group">
+                            <small id="statusDesc" class="text-muted">Status zamówienia</small>
+                            <input type="text" name="order_status" class="form-control" size="300"
+                                   aria-describedby="order_status_Desc" [readonly]="true"
+                                   [value]="order.orderStatus?.orderStatusName">
+
+                        </div>
+
+
+                        <div *ngIf="isEditOrderType()" class="form-group">
+                            <div class="form-group">
+                                <small id="total_Desc" class="text-muted">Wartość zamówienia</small>
+                                <input type="text" name="total" class="form-control" size="300"
+                                       aria-describedby="total_Desc" [readonly]="isFormReadOnly()"
+                                       [(ngModel)]="totalAmount">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <small id="delivery_typeDesc" class="text-muted">Rodzaj dostawy</small>
+                            <select [compareWith]="compareDeliveryType" class="form-control"
+                                    [disabled]="!authenticationService.isAdmin() && !authenticationService.isBiuroUser()"
+                                    #delivery_type="ngModel" [(ngModel)]="order.deliveryType" name="delivery_type"
+                                    required>
+                                <option *ngFor="let item of deliveryTypes" [ngValue]="item">{{item.deliveryTypeName}}
+                                </option>
+                            </select>
+                            <ul class="text-danger list-unstyled" *ngIf="delivery_type.dirty|| formSubmitted">
+                                <li *ngIf="delivery_type.errors?.required">Wybierz typ dostawy</li>
+                            </ul>
+                        </div>
+
+
+                        <div *ngIf="order.deliveryType?.deliveryTypeId==AppConstants.DELIVERY_TYPE_KURIER_PACZKA_POBRANIE || order.deliveryType?.deliveryTypeId==AppConstants.DELIVERY_TYPE_OBIOR_OSOBISTY_POBRANIE ||
+                        order.deliveryType?.deliveryTypeId==AppConstants.AppConstants.DELIVERY_TYPE_NASZ_KIEROWCA_POBRANIE">
+                            <div class="form-group">
+                                <small id="codDescript" class="text-muted">Kwota pobrania</small>
+                                <input type="number" name="cod" #cod="ngModel" class="form-control" size="200"
+                                       aria-describedby="codDesc"
+                                       [readonly]="!authenticationService.isAdmin() && !authenticationService.isBiuroUser()"
+                                       [(ngModel)]="order.cod" pattern="^(?=.*?\d)\d*[.]?\d{1,2}$">
+                            </div>
+                            <ul class="text-danger list-unstyled" *ngIf="cod?.dirty|| formSubmitted">
+                                <li *ngIf="cod.errors?.pattern">To pole musi zawierać format waluty z kropką np : 0.59 ,
+                                    2.5 , 0.99 , 19.99
+                                </li>
+                            </ul>
+                        </div>
+
+
+                        <div class="form-group">
+                            <div class="input-group">
+                                <input type="date" name="delivery_date" (change)="onDeliveryDataChange()"
+                                       class="form-control" #delivery_date="ngModel" [(ngModel)]="order.deliveryDate"
+                                       [readonly]="!authenticationService.isAdmin() && !authenticationService.isBiuroUser()"
+                                       aria-describedby="delivery_dateDesc" required>
+                                <span class="input-group-addon" id="taxDesc">Planowana data wysyłki</span>
+                            </div>
+                            <ul class="text-danger list-unstyled" *ngIf="delivery_date.dirty|| formSubmitted">
+                                <li *ngIf="delivery_date.errors?.required">Wprowadz planowaną datę wysyłki</li>
+                            </ul>
+                            <ul class="text-danger list-unstyled" *ngIf="!isDeliveryDateValid">
+                                <li>Data wysyłki nie może być wcześniej niż data zamówienia</li>
+                            </ul>
+                        </div>
+
+
+                        <div class="form-groupS">
+
+                            <div class="input-group ">
+                                <div class="weekofyear_date">Tydzień {{weekOfYear}}</div>
+                                <input type="date" name="weekofyear_date" (input)="OnWeekOfYearDateChange()"
+                                       class="form-control" #weekofyear_date="ngModel" [(ngModel)]="weekOfYearTmp"
+                                       aria-describedby="weekofyear_dateDesc">
+
+                                <span class="input-group-addon" id="taxDesc">Tydzień dostawy </span>
+                            </div>
+                            <ul class="text-danger list-unstyled" *ngIf="weekofyear_date.dirty|| formSubmitted">
+                                <li *ngIf="weekofyear_date.errors?.required">Wybierz tydzień z kalenarza</li>
+                            </ul>
+                            <ul class="text-danger list-unstyled" *ngIf="!isDeliveryWeekDateValid">
+                                <li>Tydzień dostawy nie moży być przed nr. tygodnia złożenia zamówienia</li>
+                            </ul>
+                        </div>
+
+
+                        <div class="form-group">
+                            <div class="form-group">
+                                <small id="additional_informationDesc" class="text-muted">Dodatkowe informacje</small>
+                                <textarea class="form-control" name="additional_information" id="additional_information"
+                                          rows="3"
+                                          [readonly]="!authenticationService.isAdmin() && !authenticationService.isBiuroUser()"
+                                          [(ngModel)]="order.additionalInformation"></textarea>
+                            </div>
+                        </div>
+
+                        <div *ngIf="isTextToCardVisible" class="form-group">
+                            <div class="form-group">
+                                <small id="text_to_cardDesc" class="text-muted">Tekst na kartkę</small>
+                                <textarea class="form-control" name="text_to_card" id="text_to_card" size="1000"
+                                          rows="1" [(ngModel)]="order.textToCard"></textarea>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="form-group">
+                                <p>
+                                    <p-checkbox [(ngModel)]="checkedAdditionalSale" #additionalSaleCheckBox="ngModel"
+                                                name="additionalSaleCheckBox" binary="true"></p-checkbox>
+                                    <span>dosprzedaż</span>
+                                </p>
+                            </div>
+                        </div>
+
+
+                        <div class="form-group">
+                            <small id="add_file" class="text-muted">Wgraj plik</small>
+                            <p-fileUpload
+                                    [disabled]="!authenticationService.isAdmin() && !authenticationService.isBiuroUser()"
+                                    name="files" multiple="multiple" maxFileSize="5000000"
+                                    invalidFileSizeMessageSummary="{0} - plik jest za duży"
+                                    invalidFileSizeMessageDetail="rozmiar pliku może wynosić maksymalnie {0}"
+                                    chooseLabel="Wybierz plik" uploadLabel="Wgraj" cancelLabel="Anuluj"
+                                    (onBeforeSend)="onBeforeUpload($event)" (onUpload)="refreshFileList()">
+
+
+                                <ng-template pTemplate="content">
+
+                                    <table>
+                                        <thead>
+                                        </thead>
+                                        <tbody>
+                                        <tr class="fileLink" *ngFor="let item of fileList">
+                                            <td (click)="getFile(item.fileId)">{{item.fileName}}</td>
+                                            <td *ngIf="authenticationService.isAdmin() || authenticationService.isBiuroUser()">
+                                                <i (click)="ShowConfirmModal(item)" class="fa fa-trash"></i></td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+
+                                </ng-template>
+
+                            </p-fileUpload>
+                        </div>
+
+
+                    </form>
+                    <button *ngIf="isCopyOfExistingOrder()" class="btn bg-primary " (click)="editOrderForm()">Stwórz
+                        zamówienie
+                    </button>
+                    <button *ngIf="isEditOrderType()" class="btn bg-primary " (click)="editOrderForm()">Edytuj
+                        zamówienie
+                    </button>
+                    <button class="btn bg-primary " (click)="cancelEdit()">Anuluj</button>
+                    <div *ngIf="orderItems.length<1 && formSubmitted" class="alert alert-danger" role="alert">
+                        <strong>Błąd. Zamówienie nie może być puste</strong>
                     </div>
-                    <ul class="text-danger list-unstyled" *ngIf="name.dirty || formSubmitted">
-                      <li  *ngIf="name.errors?.required">To pole nie może być puste</li>
-                    </ul>
-                  </div>
 
 
-
-                  <div class="form-group">
-                    <div class="input-group">
-                      <input type="email" name="email" class="form-control"  size="300" aria-describedby="emailDesc" [readonly]="clickSelectCustomerGuard" [(ngModel)]="customer.email">
-                      <span class="input-group-addon" id="emailDesc">Email</span>
-                    </div>
-                  </div>
-
-                  <div class="form-group">
-                    <div class="input-group">
-                      <input type="text" name="tel" class="form-control"  size="300" aria-describedby="telDesc" [readonly]="clickSelectCustomerGuard" [(ngModel)]="customer.phoneNumber" >
-                      <span class="input-group-addon" id="telDesc">Telefon</span>
-                    </div>
-                  </div>
-
-                  <div class="form-group">
-                    <div class="input-group">
-                      <input type="text" name="cust_inf" class="form-control"  size="300" aria-describedby="custDesc"   [(ngModel)]="customer.additionalInformation" >
-                      <span class="input-group-addon" id="custDesc">Uwagi</span>
-                    </div>
-                  </div>
                 </p-panel>
-              </div>
-
-
-
-
-
-              <div class="cont">
-                <p-panel class="customerpanels" header="Adres Dostawy">
-
-                  <i *ngIf="this.company.companyId != null" class="fa fa-address-card-o fa-2x pickfromdb " (click)="showAddressesList()" aria-hidden="true"></i>
-                  <i  *ngIf="this.orderAddress.contactPerson || this.orderAddress.address || this.orderAddress.additionalInformation ||this.orderAddress.zipCode || this.orderAddress.cityName || this.orderAddress.phoneNumber "
-                      class="fa fa-times fa-2x clean-company-icon" aria-hidden="true" (click)="cleanAddress()"></i>
-                  <i *ngIf="orderAddress.addressId" class="fa fa-pencil fa-2x edit-address-icon " aria-hidden="true" (click)="editAddressMode()" ></i>
-
-                  <div  class="form-group">
-                    <div class="input-group">
-                      <input type="text" name="contactPerson" #contactPerson="ngModel" class="form-control"  size="300" aria-describedby="streetDesc" [readonly]="orderAddress.addressId" [(ngModel)]="orderAddress.contactPerson" required >
-                      <span class="input-group-addon" id="streetDesc">Osoba kontaktowa</span>
-                    </div>
-                    <ul class="text-danger list-unstyled" *ngIf="contactPerson.dirty || formSubmitted">
-                      <li  *ngIf="contactPerson.errors?.required">To pole nie może być puste</li>
-                    </ul>
-                  </div>
-
-
-                  <div  class="form-group">
-                    <div class="input-group">
-                      <input type="text" name="address" #address="ngModel" class="form-control"  size="300" aria-describedby="streetDesc" [readonly]="orderAddress.addressId" [(ngModel)]="orderAddress.address" required>
-                      <span class="input-group-addon" id="streetDesc">Ulica / nr. lokalu</span>
-                    </div>
-                    <ul class="text-danger list-unstyled" *ngIf="address.dirty|| formSubmitted">
-                      <li  *ngIf="address.errors?.required">To pole nie może być puste</li>
-                    </ul>
-                  </div>
-
-                  <div  class="form-group">
-                    <div class="input-group">
-                      <input type="text" name="zip_code" #zip_code="ngModel" class="form-control" size="300" aria-describedby="zip_codeDesc"
-                             [readonly]="orderAddress.addressId" [(ngModel)]="orderAddress.zipCode" required pattern="\d{2}-\d{3}"  >
-                      <span class="input-group-addon" id="zip_codeDesc">Kod pocztowy</span>
-                    </div>
-                    <ul class="text-danger list-unstyled" *ngIf="zip_code.dirty || formSubmitted">
-                      <li  *ngIf="zip_code.errors?.pattern">Kod musi być w formacie xx-xxx </li>
-                      <li  *ngIf="zip_code.errors?.required">To pole nie może być puste</li>
-                    </ul>
-                  </div>
-
-
-
-
-                  <div  class="form-group">
-                    <div class="input-group">
-                      <input type="text" name="city_name" #city_name="ngModel" class="form-control"  size="300" aria-describedby="city_nameDesc" [readonly]="orderAddress.addressId" [(ngModel)]="orderAddress.cityName" required>
-                      <span class="input-group-addon" id="city_nameDesc">Miejscowość</span>
-                    </div>
-                    <ul class="text-danger list-unstyled" *ngIf="city_name.dirty || formSubmitted">
-                      <li  *ngIf="city_name.errors?.required">To pole nie może być puste</li>
-                    </ul>
-                  </div>
-
-                  <div  class="form-group">
-                    <div class="input-group">
-                      <input type="text" name="phone_number_addr" #phone_number_addr="ngModel" class="form-control"  size="300" aria-describedby="phone_numberDesc" [readonly]="orderAddress.addressId"  [(ngModel)]="orderAddress.phoneNumber" required >
-                      <span class="input-group-addon" id="phone_numberDesc">Telefon kontaktowy</span>
-                    </div>
-                    <ul class="text-danger list-unstyled" *ngIf="phone_number_addr.dirty || formSubmitted">
-                      <li  *ngIf="phone_number_addr?.errors?.required">To pole nie może być puste</li>
-                    </ul>
-                  </div>
-
-                  <div  class="form-group">
-                    <div class="input-group">
-                      <input type="text" name="additional_inf_add" #additional_inf_add="ngModel" class="form-control"  size="300" aria-describedby="additional_inf_addDesc"  [readonly]="orderAddress.addressId" [(ngModel)]="orderAddress.additionalInformation" >
-                      <span class="input-group-addon" id="additional_inf_addDesc">Dodatkowe informacje</span>
-                    </div>
-                  </div>
-
-
-
-
-                </p-panel>
-              </div>
-
-              <div class="cont">
-                <p-panel  class="customerpanels3" header="Klient Programu Loyalnościowego">
-
-                  <i  class="fa fa-address-card-o fa-2x pickfromdb " title="Wybierz firmę z bazy" (click)="prepereLoyaltyUserPanel()" aria-hidden="true"></i>
-                  <i  title="Wyszczyć" class="fa fa-times fa-2x clean-company-icon2" aria-hidden="true" (click)="cleanLoyaltyUser()"></i>
-
-                  <div  class="form-group">
-                    <div class="input-group">
-                      <input type="text" name="organization"  class="form-control"  [value]="order.loyaltyUser!=null ?  order.loyaltyUser?.login + ' | ' + order.loyaltyUser?.email : ''"  size="300" aria-describedby="organizationDesc"  [readonly]="true"   >
-                      <span class="input-group-addon" id="organizationDesc">Klient</span>
-                    </div>
-
-                  </div>
-                </p-panel>
-              </div>
-
-            </form>
-          </div>
-        </p-panel>
-      </div>
-      <div class="order_detail_form col-md-6">
-        <p-panel header="Dodatkowe informacje">
-          <form id="OrderFormAdditional" novalidate #formAdidtional="ngForm">
-
-
-
-            <div class="form-group">
-              <small id="fv_numbereDescript" class="text-muted">Numer FV</small>
-              <input type="text" name="fv_number" #fv_number="ngModel"  class="form-control"  [readonly]="!authenticationService.isAdmin() && !authenticationService.isBiuroUser()" aria-describedby="delivery_dateDesc" required [(ngModel)]="order.orderFvNumber">
-              <ul class="text-danger list-unstyled" *ngIf="fv_number.dirty|| formSubmitted">
-                <li  *ngIf="fv_number.errors?.required">Wprowadz numer FV</li>
-              </ul>
-            </div>
-
-
-
-            <div *ngIf="isEditOrderType()" class="form-group">
-              <div class="form-group">
-                <small id="order_date_Desc" class="text-muted">Data złożenia zamówienia</small>
-                <input type="text" name="order_date" class="form-control"  size="300" aria-describedby="order_date_Desc" [readonly]="isFormReadOnly() && !authenticationService.isAdmin() && !authenticationService.isBiuroUser()" [value]="order.orderDate| date: 'dd/MM/yyyy HH:mm:ss'"  >
-              </div>
-            </div>
-
-
-            <div *ngIf="isEditOrderType()" class="form-group">
-              <small id="statusDesc" class="text-muted">Status zamówienia</small>
-              <input type="text" name="order_status" class="form-control"  size="300" aria-describedby="order_status_Desc" [readonly]="true" [value]="order.orderStatus?.orderStatusName"  >
 
             </div>
+        </div>
 
-            <!--<div class="form-group">-->
-              <!--<small id="statusDesc" class="text-muted">Status zamówienia</small>-->
-              <!--<select [compareWith]="compareOrderStatus" class="form-control"  [(ngModel)]="order.orderStatus" name="status"  required >-->
-                <!--<option *ngFor="let item of orderStatus"  [ngValue]="item"  >{{item.orderStatusName}}</option>-->
-              <!--</select>-->
-            <!--</div>-->
-
-
-            <div *ngIf="isEditOrderType()" class="form-group">
-              <div class="form-group">
-                <small id="total_Desc" class="text-muted">Wartość zamówienia</small>
-                <input type="text" name="total" class="form-control"  size="300" aria-describedby="total_Desc" [readonly]="isFormReadOnly()" [(ngModel)]="totalAmount"  >
-              </div>
-            </div>
-
-            <div class="form-group">
-              <small id="delivery_typeDesc" class="text-muted">Rodzaj dostawy</small>
-              <select [compareWith]="compareDeliveryType" class="form-control" [disabled]="!authenticationService.isAdmin() && !authenticationService.isBiuroUser()" #delivery_type="ngModel" [(ngModel)]="order.deliveryType" name="delivery_type"  required >
-                <option *ngFor="let item of deliveryTypes"  [ngValue]="item"  >{{item.deliveryTypeName}}</option>
-              </select>
-              <ul class="text-danger list-unstyled" *ngIf="delivery_type.dirty|| formSubmitted">
-                <li  *ngIf="delivery_type.errors?.required">Wybierz typ dostawy</li>
-              </ul>
-            </div>
-
-
-
-            <div *ngIf="order.deliveryType?.deliveryTypeId==5 || order.deliveryType?.deliveryTypeId==6 || order.deliveryType?.deliveryTypeId==7">
-              <div class="form-group" >
-                <small id="codDescript" class="text-muted">Kwota pobrania</small>
-                <input type="number" name="cod" #cod="ngModel"  class="form-control" size="200"  aria-describedby="codDesc" [readonly]="!authenticationService.isAdmin() && !authenticationService.isBiuroUser()"  [(ngModel)]="order.cod" pattern="^(?=.*?\d)\d*[.]?\d{1,2}$">
-              </div>
-              <ul class="text-danger list-unstyled" *ngIf="cod?.dirty|| formSubmitted">
-                <li  *ngIf="cod.errors?.pattern">To pole musi zawierać format waluty z kropką np : 0.59 , 2.5 , 0.99 , 19.99</li>
-              </ul>
-            </div>
-
-
-
-            <div class="form-group">
-              <div class="input-group">
-                <input type="date" name="delivery_date" (change)="onDeliveryDataChange()"  class="form-control" #delivery_date="ngModel" [(ngModel)]="order.deliveryDate" [readonly]="!authenticationService.isAdmin() && !authenticationService.isBiuroUser()" aria-describedby="delivery_dateDesc" required>
-                <span class="input-group-addon" id="taxDesc">Planowana data wysyłki</span>
-              </div>
-              <ul class="text-danger list-unstyled" *ngIf="delivery_date.dirty|| formSubmitted">
-                <li  *ngIf="delivery_date.errors?.required">Wprowadz planowaną datę wysyłki</li>
-              </ul>
-              <ul class="text-danger list-unstyled" *ngIf="!isDeliveryDateValid">
-                <li >Data wysyłki nie może być wcześniej niż data zamówienia</li>
-              </ul>
-            </div>
-
-
-
-
-
-
-            <div class="form-groupS">
-
-              <div class="input-group ">
-                <div class="weekofyear_date">Tydzień  {{weekOfYear}}   </div> <input type="date" name="weekofyear_date" (input)="OnWeekOfYearDateChange()"  class="form-control" #weekofyear_date="ngModel" [(ngModel)]="weekOfYearTmp"  aria-describedby="weekofyear_dateDesc" >
-
-                <span class="input-group-addon" id="taxDesc">Tydzień dostawy </span>
-              </div>
-              <ul class="text-danger list-unstyled" *ngIf="weekofyear_date.dirty|| formSubmitted">
-                <li  *ngIf="weekofyear_date.errors?.required">Wybierz tydzień z kalenarza</li>
-              </ul>
-              <ul class="text-danger list-unstyled" *ngIf="!isDeliveryWeekDateValid">
-                <li >Tydzień dostawy nie moży być przed nr. tygodnia złożenia zamówienia</li>
-              </ul>
-            </div>
-
-
-            <div class="form-group">
-              <div class="form-group">
-                <small id="additional_informationDesc" class="text-muted">Dodatkowe informacje</small>
-                <textarea class="form-control" name="additional_information" id="additional_information" rows="3" [readonly]="!authenticationService.isAdmin() && !authenticationService.isBiuroUser()" [(ngModel)]="order.additionalInformation" ></textarea>
-              </div>
-            </div>
-
-            <div *ngIf="isTextToCardVisible" class="form-group">
-              <div class="form-group">
-                <small id="text_to_cardDesc" class="text-muted">Tekst na kartkę</small>
-                <textarea class="form-control"  name="text_to_card" id="text_to_card"  size="1000" rows="1" [(ngModel)]="order.textToCard"></textarea>
-              </div>
-            </div>
-
-            <div class="form-group">
-              <div class="form-group">
-                <p>
-                  <p-checkbox [(ngModel)]="checkedAdditionalSale" #additionalSaleCheckBox="ngModel" name="additionalSaleCheckBox"  binary="true"></p-checkbox>
-                  <span>dosprzedaż</span>
-                </p>
-              </div>
-            </div>
-
-
-
-            <div class="form-group">
-              <small id="add_file" class="text-muted">Wgraj plik</small>
-                <p-fileUpload [disabled]="!authenticationService.isAdmin() && !authenticationService.isBiuroUser()" name="files"  multiple="multiple"  maxFileSize="5000000"
-                              invalidFileSizeMessageSummary="{0} - plik jest za duży" invalidFileSizeMessageDetail="rozmiar pliku może wynosić maksymalnie {0}"
-                              chooseLabel="Wybierz plik" uploadLabel="Wgraj" cancelLabel="Anuluj" (onBeforeSend)="onBeforeUpload($event)" (onUpload)="refreshFileList()" >
-
-
-                  <ng-template pTemplate="content">
-
-                      <table>
-                          <thead>
-                          </thead>
-                              <tbody>
-                                  <tr class="fileLink"  *ngFor="let item of fileList" >
-                                    <td (click)="getFile(item.fileId)" >{{item.fileName}}</td>
-                                    <td *ngIf="authenticationService.isAdmin() || authenticationService.isBiuroUser()"> <i (click)="ShowConfirmModal(item)" class="fa fa-trash"></i></td>
-                                  </tr>
-                              </tbody>
-                      </table>
-
-                  </ng-template>
-
-                </p-fileUpload>
-            </div>
-
-
-
-
-          </form>
-          <button *ngIf="isCopyOfExistingOrder()"class="btn bg-primary " (click)="editOrderForm()"  >Stwórz zamówienie </button>
-          <button *ngIf="isEditOrderType()" class="btn bg-primary " (click)="editOrderForm()"  >Edytuj zamówienie</button>
-          <button class="btn bg-primary " (click)="cancelEdit()"  >Anuluj </button>
-          <div *ngIf="orderItems.length<1 && formSubmitted" class="alert alert-danger" role="alert">
-            <strong>Błąd. Zamówienie nie może być puste</strong>
-          </div>
-
-
-        </p-panel>
-
-      </div>
-    </div>
-
-  </p-fieldset>
+    </p-fieldset>
 </div>
 
 <div *ngIf="authenticationService.isAdmin() || authenticationService.isBiuroUser()" class="row">
-  <div class="picked_products_list col-md-6 ">
-    <p-fieldset legend="Pozycje zamówienia" [toggleable]="true">
-      <div class="d-table-wrapper">
+    <div class="picked_products_list col-md-6 ">
+        <p-fieldset legend="Pozycje zamówienia" [toggleable]="true">
+            <div class="d-table-wrapper">
 
 
-        <table class="d-table" *ngIf="isBasketLinesEmpty()==false">
-          <colgroup>
-            <col span="1" style="width: 70%;">
-            <col span="1" style="width: 25%;">
-            <col span="1" style="width: 5%;">
+                <table class="d-table" *ngIf="isBasketLinesEmpty()==false">
+                    <colgroup>
+                        <col span="1" style="width: 70%;">
+                        <col span="1" style="width: 25%;">
+                        <col span="1" style="width: 5%;">
 
-          </colgroup>
-          <thead>
-          <tr>
-            <th>Nazwa kosza</th>
-            <th class="col_quantity">Ilość</th>
-            <th>Usuń</th>
-          </tr>
-          </thead>
-          <tbody>
-          <tr *ngFor="let orderItems of orderItems">
-            <td scope="row">{{orderItems.basket.basketName}}</td>
-            <td><input type="number" class="form-control" name="" id="" aria-describedby="helpId" placeholder="" min="0"
-                       [value]="orderItems.quantity" (change)="updateQuantity(orderItems,$event.target.value)"
-                       [readonly]="(!authenticationService.isAdmin() && !authenticationService.isBiuroUser()) || order.orderStatus.orderStatusId == 6"></td>
-            <td *ngIf="order.orderStatus.orderStatusId != 6" class="col_delete"><i  class="fa fa-trash" aria-hidden="true"
-                                      (click)="deleteProductLine(orderItems.basket.basketId)"></i></td>
-          </tr>
-          </tbody>
-        </table>
-      </div>
-      <p *ngIf="isBasketLinesEmpty()==true">Brak pozycji w zamówieniu</p>
-    </p-fieldset>
-  </div>
-
-
-
-<div #basketsummary class="basket_summary col-md-6">
-  <p-fieldset legend="Podsumowanie koszyka" [toggleable]="true">
-    <div class="row">
-      <div class="col-lg-5">
-        <p class="tot">Kwota zamówienia: {{total/100| number : '1.2-2'}} zł</p>
-     </div>
+                    </colgroup>
+                    <thead>
+                    <tr>
+                        <th>Nazwa kosza</th>
+                        <th class="col_quantity">Ilość</th>
+                        <th>Usuń</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr *ngFor="let orderItems of orderItems">
+                        <td scope="row">{{orderItems.basket.basketName}}</td>
+                        <td><input type="number" class="form-control" name="" id="" aria-describedby="helpId"
+                                   placeholder="" min="0"
+                                   [value]="orderItems.quantity"
+                                   (change)="updateQuantity(orderItems,$event.target.value)"
+                                   [readonly]="(!authenticationService.isAdmin() && !authenticationService.isBiuroUser())
+                                    || order.orderStatus.orderStatusId == AppConstants.ORDER_STATUS_W_TRAKCIE_REALIZACJI">
+                        </td>
+                        <td *ngIf="order.orderStatus.orderStatusId != AppConstants.ORDER_STATUS_W_TRAKCIE_REALIZACJI"
+                            class="col_delete"><i class="fa fa-trash" aria-hidden="true"
+                                                  (click)="deleteProductLine(orderItems.basket.basketId)"></i>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <p *ngIf="isBasketLinesEmpty()==true">Brak pozycji w zamówieniu</p>
+        </p-fieldset>
     </div>
-  </p-fieldset>
-</div>
+
+
+    <div #basketsummary class="basket_summary col-md-6">
+        <p-fieldset legend="Podsumowanie koszyka" [toggleable]="true">
+            <div class="row">
+                <div class="col-lg-5">
+                    <p class="tot">Kwota zamówienia: {{total/100| number : '1.2-2'}} zł</p>
+                </div>
+            </div>
+        </p-fieldset>
+    </div>
 </div>
 
 
-  <div *ngIf="authenticationService.isAdmin() || authenticationService.isBiuroUser()" class="basketList">
+<div *ngIf="authenticationService.isAdmin() || authenticationService.isBiuroUser()" class="basketList">
     <p-fieldset legend="Dodaj kosz do zamówienia" [toggleable]="true">
 
-      <div class="input-group search_bar">
-            <span class="input-group-addon" id="basic-addon1">
+        <div class="input-group search_bar">
+            <span class="input-group-addon" >
                  <i class="fa fa-search" aria-hidden="true"></i>
             </span>
-        <input #gb type="text" class="form-control search_input" pInputText size="50" placeholder="Szukaj"aria-describedby="basic-addon1">
-      </div>
+            <input #gb type="text" class="form-control search_input" pInputText size="50" placeholder="Szukaj"
+                   aria-describedby="basic-addon1">
+        </div>
 
-      <p-dataTable [value]="baskets" [rows]="10" [paginator]="true" [globalFilter]="gb" #dtt
-                   [loading]="loading" loadingIcon="fa-circle-o-notch" expandableRows="true" (onRowDblclick)="addBasketToOrder($event.data)" (onContextMenuSelect)="contextMenuSelected($event)"   [contextMenu]="cm">
-        <p-column expander="true" header="Zawartość" styleClass="col-icon" [style]="{'width':'70px'}"></p-column>
-        <p-column  header="lp."  [style]="{'width':'70px'}">
-          <ng-template let-i="rowIndex" pTemplate="rowexpansion">
-            {{i+1}}
-          </ng-template>
-        </p-column>
-        <p-column field="basketName" header="Nazwa kosza" [sortable]="true"></p-column>
-        <p-column field="basketType.basketTypeName" header="Typ kosza" [sortable]="true" ></p-column>
-        <p-column field="basketTotalPrice"  header="Cena kosza "  [sortable]="true" >
-          <ng-template let-row="rowData" pTemplate="body">
-            {{row.basketTotalPrice/100| number : '1.2-2'}} zł.
-          </ng-template>
+        <p-dataTable [value]="baskets" [rows]="10" [paginator]="true" [globalFilter]="gb" #dtt
+                     [loading]="loading" loadingIcon="fa-circle-o-notch" expandableRows="true"
+                     (onRowDblclick)="addBasketToOrder($event.data)" (onContextMenuSelect)="contextMenuSelected($event)"
+                     [contextMenu]="cm">
+            <p-column expander="true" header="Zawartość" styleClass="col-icon" [style]="{'width':'70px'}"></p-column>
+            <p-column header="lp." [style]="{'width':'70px'}">
+                <ng-template let-i="rowIndex" pTemplate="rowexpansion">
+                    {{i+1}}
+                </ng-template>
+            </p-column>
+            <p-column field="basketName" header="Nazwa kosza" [sortable]="true"></p-column>
+            <p-column field="basketType.basketTypeName" header="Typ kosza" [sortable]="true"></p-column>
+            <p-column field="basketTotalPrice" header="Cena kosza " [sortable]="true">
+                <ng-template let-row="rowData" pTemplate="body">
+                    {{row.basketTotalPrice/100| number : '1.2-2'}} zł.
+                </ng-template>
 
-        </p-column>
+            </p-column>
 
-        <p-column field="basketSezon.basketSezonId" header="Sezon" [style]="{'width':'250px', 'text-align':'center'}"
-                  [filter]="true" filterMatchMode="equals" [sortable]="false">
+            <p-column field="basketSezon.basketSezonId" header="Sezon"
+                      [style]="{'width':'250px', 'text-align':'center'}"
+                      [filter]="true" filterMatchMode="equals" [sortable]="false">
 
-          <ng-template let-col pTemplate="filter">
-            <p-multiSelect [filter]="true" [showToggleAll]="false" [options]="basketSeasonList" defaultLabel="Wszystkie"
-                           (onChange)="basketTable.filter($event.value, col.field, 'in')"></p-multiSelect>
-          </ng-template>
+                <ng-template let-col pTemplate="filter">
+                    <p-multiSelect [filter]="true" [showToggleAll]="false" [options]="basketSeasonList"
+                                   defaultLabel="Wszystkie"
+                                   (onChange)="basketTable.filter($event.value, col.field, 'in')"></p-multiSelect>
+                </ng-template>
 
-          <ng-template let-row="rowData" pTemplate="body">
-            {{row.basketSezon.basketSezonName}}
-          </ng-template>
+                <ng-template let-row="rowData" pTemplate="body">
+                    {{row.basketSezon.basketSezonName}}
+                </ng-template>
 
-        </p-column>
+            </p-column>
 
 
-        <ng-template let-basket pTemplate="rowexpansion">
-          <div class="basket_products_info">
-            Zawartość kosza:  {{basket.basketName}}
-            <table class="product_tab" >
-              <thead>
-              <tr class="product_tab_row">
-                <th>Nazwa Produktu</th>
-                <th>Pojemność</th>
-                <th>Cena zakupu</th>
-                <th>Ilość</th>
-              </tr>
-              </thead>
-              <tbody>
-              <tr class="product_tab_row" *ngFor="let i of basket.basketItems">
-                <td>{{i.product.productName}}</td>
-                <td>{{i.product.capacity}}</td>
-                <td>{{i.product.price/100}} zł</td>
-                <td>{{i.quantity}} szt.</td>
-              </tr>
-              </tbody>
-            </table>
+            <ng-template let-basket pTemplate="rowexpansion">
+                <div class="basket_products_info">
+                    Zawartość kosza: {{basket.basketName}}
+                    <table class="product_tab">
+                        <thead>
+                        <tr class="product_tab_row">
+                            <th>Nazwa Produktu</th>
+                            <th>Pojemność</th>
+                            <th>Cena zakupu</th>
+                            <th>Ilość</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr class="product_tab_row" *ngFor="let i of basket.basketItems">
+                            <td>{{i.product.productName}}</td>
+                            <td>{{i.product.capacity}}</td>
+                            <td>{{i.product.price/100}} zł</td>
+                            <td>{{i.quantity}} szt.</td>
+                        </tr>
+                        </tbody>
+                    </table>
 
-          </div>
+                </div>
 
-        </ng-template>
+            </ng-template>
 
-      </p-dataTable>
+        </p-dataTable>
     </p-fieldset>
-  </div>
-
-<div *ngIf="authenticationService.isAdmin() || authenticationService.isBiuroUser()" >
-
-  <p-fieldset legend="Lista Edycji zamówienia" [toggleable]="true"  [collapsed]="true">
-
-
-    <p-dataTable [value]="auditList" [rows]="20" [paginator]="true"
-                 [loading]="loading" (onRowClick)="goToAuditPage($event)" loadingIcon="fa-circle-o-notch">
-      <p-column  header="lp."  [style]="{'width':'70px'}">
-        <ng-template let-i="rowIndex" pTemplate="rowexpansion">
-          {{i+1}}
-        </ng-template>
-      </p-column>
-
-      <p-column field="changeDate" header="Data zmiany" [sortable]="true">
-        <ng-template let-row="rowData" pTemplate="body"  >
-          {{row.changeTime| date: 'dd/MM/yyyy HH:mm:ss'}}
-        </ng-template>
-      </p-column>
-      <p-column ield="user" header="Zmiany dokonał"  >
-        <ng-template let-row="rowData" pTemplate="body"  >
-          {{row.user}}
-        </ng-template>
-      </p-column>
-
-
-
-    </p-dataTable>
-
-
-
-  </p-fieldset>
-
-
 </div>
 
+<div *ngIf="authenticationService.isAdmin() || authenticationService.isBiuroUser()">
+
+    <p-fieldset legend="Lista Edycji zamówienia" [toggleable]="true" [collapsed]="true">
+
+
+        <p-dataTable [value]="auditList" [rows]="20" [paginator]="true"
+                     [loading]="loading" (onRowClick)="goToAuditPage($event)" loadingIcon="fa-circle-o-notch">
+            <p-column header="lp." [style]="{'width':'70px'}">
+                <ng-template let-i="rowIndex" pTemplate="rowexpansion">
+                    {{i+1}}
+                </ng-template>
+            </p-column>
+
+            <p-column field="changeDate" header="Data zmiany" [sortable]="true">
+                <ng-template let-row="rowData" pTemplate="body">
+                    {{row.changeTime| date: 'dd/MM/yyyy HH:mm:ss'}}
+                </ng-template>
+            </p-column>
+            <p-column ield="user" header="Zmiany dokonał">
+                <ng-template let-row="rowData" pTemplate="body">
+                    {{row.user}}
+                </ng-template>
+            </p-column>
+
+        </p-dataTable>
+
+    </p-fieldset>
+
+</div>
 
 
 <p-confirmDialog header="Usuwanie pliku" icon="fa fa-question-circle" width="425"></p-confirmDialog>
 
-<p-contextMenu  #cm [model]="items"> </p-contextMenu>
+<p-contextMenu #cm [model]="items"></p-contextMenu>
 
-<p-dialog #choseAddressPanel header="Wybierz adres:" closeOnEscape="false" modal="true" width="900" [(visible)]="addressPickDialogShow"      >
-  <div >
+<p-dialog #choseAddressPanel header="Wybierz adres:" closeOnEscape="false" modal="true" width="900"
+          [(visible)]="addressPickDialogShow">
+    <div>
 
-    <div class="input-group search_bar">
-                <span class="input-group-addon" id="basic-addon1">
+        <div class="input-group search_bar">
+                <span class="input-group-addon" >
                     <i class="fa fa-search" aria-hidden="true"></i>
                 </span>
-      <input #globalfilter type="text" class="form-control search_input" pInputText size="50" placeholder="Szukaj"aria-describedby="basic-addon1">
+            <input #globalfilter type="text" class="form-control search_input" pInputText size="50" placeholder="Szukaj"
+                   aria-describedby="basic-addon1">
+
+        </div>
+        <p-dataTable [value]="companyAddressList" [rows]="10" [paginator]="true" #dt
+                     (onRowDblclick)="pickAddress($event.data)"
+                     [loading]="loading" loadingIcon="fa-circle-o-notch" [globalFilter]="globalfilter">
+            <p-column field="address" header="adres" [sortable]="true"></p-column>
+            <p-column field="zipCode" header="kod pocztowy" [sortable]="true"></p-column>
+            <p-column field="cityName" header="Miasto" [sortable]="true"></p-column>
+            <p-column field="contactPerson" header="Osoba kontaktowa" [sortable]="true"></p-column>
+            <p-column field="phoneNumber" header="Telefon" [sortable]="true"></p-column>
+            <p-column field="additionalInformation" header="dodatkowe informacje" [sortable]="true"></p-column>
+        </p-dataTable>
+    </div>
+</p-dialog>
+
+<p-dialog header="Wybierz klienta" modal="true" width="1300" [(visible)]="customerPickDialogShow"
+          (onHide)="closeCustomerPicker()">
+    <div>
+        <div class="input-group search_bar">
+                <span class="input-group-addon">
+                    <i class="fa fa-search" aria-hidden="true"></i>
+                </span>
+            <input #globalfilter2 type="text" class="form-control search_input"
+                   (input)="dtCustomer.reset();dtCustomer.filter($event.target.value, 'whatever', 'contains')"
+                   pInputText size="50" placeholder="Szukaj" aria-describedby="basic-addon1">
+
+        </div>
+        <p-dataTable [value]="customers" [rows]="10" [paginator]="true" #dtCustomer
+                     (onRowDblclick)="pickCustomer($event.data)"
+                     [loading]="loading" loadingIcon="fa-circle-o-notch" [globalFilter]="globalfilter2">
+            <p-column field="name" header="Imię i Nazwisko" [sortable]="true"></p-column>
+            <p-column field="company.companyName" header="Firma" [sortable]="false"></p-column>
+            <p-column [hidden]="true" field="company.companyId" header="id" [sortable]="false"></p-column>
+            <p-column field="email" header="Email" [sortable]="false"></p-column>
+            <p-column field="phoneNumber" header="Telefon" [sortable]="false"></p-column>
+
+        </p-dataTable>
+    </div>
+</p-dialog>
+
+
+<p-dialog #choseCompanyPanel header="Wybierz Firmę:" closeOnEscape="false" modal="true" width="600"
+          [(visible)]="companyPickDialogShow" (onHide)="onHideComapnyPanel()">
+    <div>
+
+        <div class="input-group search_bar">
+                <span class="input-group-addon">
+                    <i class="fa fa-search" aria-hidden="true"></i>
+                </span>
+            <input #globalfilter3 type="text" class="form-control search_input" pInputText size="50"
+                   placeholder="Szukaj" aria-describedby="basic-addon1">
+
+
+        </div>
+        <p-dataTable [value]="companyList" [rows]="10" [paginator]="true" #dt (onRowDblclick)="pickCompany($event.data)"
+                     [loading]="loading" loadingIcon="fa-circle-o-notch" [globalFilter]="globalfilter3">
+            <p-column field="companyName" header="Firma" [sortable]="true"></p-column>
+        </p-dataTable>
+    </div>
+</p-dialog>
+
+
+<p-dialog header="Dodaj Firmę:" closeOnEscape="false" modal="true" width="900" [(visible)]="companyAddDialogShow"
+          (onHide)="onHideComapnyPanel()">
+    <div>
+        <form id="companyAddForm" novalidate #formCompanyAdd="ngForm">
+
+            <div class="form-group">
+                <small id="nameDescript" class="text-muted">Nazwa Firmy</small>
+                <input type="text" name="nameCompany" class="form-control" [(ngModel)]="companyToPersist.companyName"
+                       #nameCompany="ngModel" aria-describedby="nameDescript" required>
+                <ul class="text-danger list-unstyled" *ngIf="nameCompany.dirty || formCompanyAddForm">
+                    <li *ngIf="nameCompany.errors?.required">To pole nie może być puste</li>
+                </ul>
+            </div>
+            <button class="btn bg-primary " (click)="submitCompanyAddForm(formCompanyAdd)"> Zatwierdź</button>
+
+        </form>
 
     </div>
-    <p-dataTable [value]="companyAddressList" [rows]="10" [paginator]="true"  #dt (onRowDblclick)="pickAddress($event.data)"
-                 [loading]="loading" loadingIcon="fa-circle-o-notch" [globalFilter]="globalfilter">
-      <p-column field="address" header="adres" [sortable]="true" ></p-column>
-      <p-column field="zipCode" header="kod pocztowy" [sortable]="true" ></p-column>
-      <p-column field="cityName" header="Miasto" [sortable]="true" ></p-column>
-      <p-column field="contactPerson" header="Osoba kontaktowa" [sortable]="true" ></p-column>
-      <p-column field="phoneNumber" header="Telefon" [sortable]="true" ></p-column>
-      <p-column field="additionalInformation" header="dodatkowe informacje" [sortable]="true" ></p-column>
-    </p-dataTable>
-  </div>
 </p-dialog>
 
-<p-dialog header="Wybierz klienta" modal="true" width="1300" [(visible)]="customerPickDialogShow" (onHide)="closeCustomerPicker()" >
-  <div >
+<p-dialog header="Wybierz klienta programu loyalnościowego" closeOnEscape="false" modal="true" width="900"
+          [(visible)]="loyaltyProgramUserPanelShow">
     <div class="input-group search_bar">
-                <span class="input-group-addon" id="basic-addon1">
+                <span class="input-group-addon">
                     <i class="fa fa-search" aria-hidden="true"></i>
                 </span>
-        <input #globalfilter2 type="text" class="form-control search_input" (input)="dtCustomer.reset();dtCustomer.filter($event.target.value, 'whatever', 'contains')"  pInputText size="50" placeholder="Szukaj"aria-describedby="basic-addon1" >
-
+        <input #globalfilter4 type="text" class="form-control search_input" pInputText size="50" placeholder="Szukaj"
+               aria-describedby="basic-addon1">
     </div>
-    <p-dataTable [value]="customers" [rows]="10" [paginator]="true"  #dtCustomer (onRowDblclick)="pickCustomer($event.data)"
-                 [loading]="loading" loadingIcon="fa-circle-o-notch" [globalFilter]="globalfilter2">
-      <p-column field="name" header="Imię i Nazwisko" [sortable]="true" ></p-column>
-      <p-column field="company.companyName" header="Firma" [sortable]="false"></p-column>
-        <p-column [hidden]="true" field="company.companyId" header="id" [sortable]="false"></p-column>
-      <p-column field="email" header="Email" [sortable]="false"></p-column>
-      <p-column field="phoneNumber" header="Telefon" [sortable]="false"></p-column>
 
+    <p-dataTable [value]="programUsers" [rows]="10" [paginator]="true" #dt
+                 (onRowDblclick)="pickLoyaltyUser($event.data)"
+                 [loading]="loading" loadingIcon="fa-circle-o-notch" [globalFilter]="globalfilter4">
+        <p-column field="login" header="Login" [sortable]="true" [style]="{'width':'200px'}"></p-column>
+        <p-column field="name" header="Imię i nazwisko" [sortable]="true" [style]="{'width':'200px'}"></p-column>
+        <p-column field="email" header="email" [style]="{'width':'200px'}"></p-column>
     </p-dataTable>
-  </div>
-</p-dialog>
-
-
-<p-dialog #choseCompanyPanel header="Wybierz Firmę:" closeOnEscape="false" modal="true" width="600" [(visible)]="companyPickDialogShow"  (onHide)="onHideComapnyPanel()"    >
-  <div >
-
-    <div class="input-group search_bar">
-                <span class="input-group-addon" id="basic-addon1">
-                    <i class="fa fa-search" aria-hidden="true"></i>
-                </span>
-      <input #globalfilter3 type="text" class="form-control search_input"   pInputText size="50" placeholder="Szukaj"aria-describedby="basic-addon1">
-
-
-    </div>
-    <p-dataTable [value]="companyList" [rows]="10" [paginator]="true"  #dt (onRowDblclick)="pickCompany($event.data)"
-                 [loading]="loading" loadingIcon="fa-circle-o-notch" [globalFilter]="globalfilter3">
-      <p-column field="companyName" header="Firma" [sortable]="true" ></p-column>
-      <!--<p-column  header="Scal"  [style]="{'width':'50px', 'text-align':'center'}">-->
-        <!--<ng-template let-row="rowData" pTemplate="rowexpansion">-->
-          <!--<p-checkbox name="group2" [value]="{'companyId':row.companyId,'companyName':row.companyName}"  [(ngModel)]="selectedCompanyToMarge"  (onChange)="test()"></p-checkbox>-->
-        <!--</ng-template>-->
-      <!--</p-column>-->
-    </p-dataTable>
-  </div>
-
-  <!--<button  [disabled]="selectedCompanyToMarge.length ==0" class="btn btn-success btn-lg  pull-right merge-button" (click)="mergeCompany()"> Scal zaznaczone</button>-->
-</p-dialog>
-
-
-
-<p-dialog  header="Dodaj Firmę:" closeOnEscape="false" modal="true" width="900" [(visible)]="companyAddDialogShow"  (onHide)="onHideComapnyPanel()"    >
-  <div >
-    <form id="companyAddForm" novalidate #formCompanyAdd="ngForm" >
-
-      <div class="form-group">
-        <small id="nameDescript" class="text-muted">Nazwa Firmy</small>
-        <input type="text" name="nameCompany" class="form-control" [(ngModel)]="companyToPersist.companyName" #nameCompany="ngModel" aria-describedby="nameDescript" required >
-        <ul class="text-danger list-unstyled" *ngIf="nameCompany.dirty || formCompanyAddForm">
-          <li  *ngIf="nameCompany.errors?.required">To pole nie może być puste</li>
-        </ul>
-      </div>
-      <button class="btn bg-primary " (click)="submitCompanyAddForm(formCompanyAdd)" > Zatwierdź</button>
-
-    </form>
-
-  </div>
-</p-dialog>
-
-<p-dialog  header="Wybierz klienta programu loyalnościowego" closeOnEscape="false" modal="true" width="900" [(visible)]="loyaltyProgramUserPanelShow"  >
-  <div class="input-group search_bar">
-                <span class="input-group-addon" id="basic-addon1">
-                    <i class="fa fa-search" aria-hidden="true"></i>
-                </span>
-    <input #globalfilter4 type="text" class="form-control search_input"   pInputText size="50" placeholder="Szukaj"aria-describedby="basic-addon1">
-
-
-  </div>
-
-  <p-dataTable [value]="programUsers" [rows]="10" [paginator]="true"  #dt (onRowDblclick)="pickLoyaltyUser($event.data)"
-               [loading]="loading" loadingIcon="fa-circle-o-notch" [globalFilter]="globalfilter4">
-    <p-column field="login" header="Login" [sortable]="true" [style]="{'width':'200px'}"></p-column>
-    <p-column field="name" header="Imię i nazwisko" [sortable]="true"  [style]="{'width':'200px'}"></p-column>
-    <p-column  field="email" header="email"  [style]="{'width':'200px'}"></p-column>
-  </p-dataTable>
 </p-dialog>

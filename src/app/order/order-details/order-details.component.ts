@@ -6,14 +6,12 @@ import {OrderItem} from "../../model/order_item";
 import {DeliveryType} from "../../model/delivery_type.model";
 import {Customer} from "../../model/customer.model";
 import {OrderStatus} from "../../model/OrderStatus";
-import {Product} from "../../model/product.model";
 import {Checkbox, ConfirmationService, DataTable, FileUpload, SelectItem} from "primeng/primeng";
-import {AuthenticationService} from "../../authentication.service";
+import {AuthenticationService, TOKEN} from "../../authentication.service";
 import {Basket} from "../../model/basket.model";
 import {BasketService} from "../../basket/basket.service";
 import {File} from "../../model/file";
 import {FileSendService} from "../../file-send/file-send.service";
-import {TOKEN, TOKEN_USER} from '../../authentication.service';
 import {MenuItem} from "primeng/api";
 import {Address} from "../../model/address.model";
 import {MessageServiceExt} from "../../messages/messageServiceExt";
@@ -23,7 +21,7 @@ import {CustomerService} from "../../customer/customer.service";
 import {StringUtils} from "../../string-utils";
 import {SpinerService} from "../../spiner.service";
 import {RoutingState} from "../../routing-stage";
-import {AppConstans} from "../../constans";
+import {AppConstants} from "../../constans";
 import {User} from "../../model/user.model";
 import {UserService} from "../../user.service";
 
@@ -33,10 +31,11 @@ import {UserService} from "../../user.service";
 	styleUrls: ['./order-details.component.css'],
 	encapsulation: ViewEncapsulation.None
 })
-export class OrderDetailsComponent implements OnInit {
+export class OrderDetailsComponent
+	implements OnInit {
 	private static SECOND_IN_MILLIS: number = 1000;
 	public order: Order = new Order();
-	public programUsers: User []=[];
+	public programUsers: User [] = [];
 	public originOrderIdCopy = null;
 	public orderItems: OrderItem[] = [];
 	public deliveryTypes: DeliveryType[] = [];
@@ -66,7 +65,7 @@ export class OrderDetailsComponent implements OnInit {
 	public items: MenuItem[];
 	public selectedBasketOnContextMenu: Basket = new Basket();
 	public confirmDialogShow: boolean = false;
-	filtersLoaded: Promise<boolean>;
+	public filtersLoaded: Promise<boolean>;
 	public weekOfYearTmp: Date;
 	public weekOfYear: number;
 	public checkedAdditionalSale: boolean = false;
@@ -86,8 +85,10 @@ export class OrderDetailsComponent implements OnInit {
 	public orderAddress: Address = new Address();
 
 	constructor(private confirmationService: ConfirmationService, private fileSendService: FileSendService,
-				private basketService: BasketService,private userService :UserService, private orderService: OrderService, activeRoute: ActivatedRoute,
-				private  router: Router, private routingState: RoutingState, private spinerService: SpinerService, public authenticationService: AuthenticationService, private customerService: CustomerService, private messageServiceExt: MessageServiceExt) {
+				private basketService: BasketService, private userService: UserService, private orderService: OrderService,
+				activeRoute: ActivatedRoute, private  router: Router, private routingState: RoutingState,
+				private spinerService: SpinerService, public authenticationService: AuthenticationService,
+				private customerService: CustomerService, private messageServiceExt: MessageServiceExt) {
 		this.orderId = activeRoute.snapshot.params["id"];
 		this.getBasketSeasonForDataTableFilter();
 		this.originOrderIdCopy = activeRoute.snapshot.params["id"];
@@ -103,15 +104,16 @@ export class OrderDetailsComponent implements OnInit {
 			this.orderStatus[1] = this.orderStatus[3];
 			this.orderStatus[3] = tmp;
 		}, error => {
-			//TODO magic number
 		}, () => {
-			this.orderStatus = this.orderStatus.filter(value => (value.orderStatusId == 1 || value.orderStatusId == 6))
+			this.orderStatus = this.orderStatus
+				.filter(value => (value.orderStatusId == AppConstants.ORDER_STATUS_NOWE
+					|| value.orderStatusId == AppConstants.ORDER_STATUS_W_TRAKCIE_REALIZACJI))
 		});
 		this.orderService.getFileList(this.orderId).subscribe(data => {
 			this.fileList = data;
 		});
 		this.basketService.getBaskets().subscribe(data => this.baskets = data);
-		this.orderService.getOrderAudit(this.orderId).subscribe(data => this.auditList = data)
+		this.orderService.getOrderAudit(this.orderId).subscribe(data => this.auditList = data);
 		this.customerService.getCustomers().subscribe(data => this.customers = data);
 		this.orderService.getCompany().subscribe(data => this.companyList = data);
 	}
@@ -127,11 +129,12 @@ export class OrderDetailsComponent implements OnInit {
 		if (this.isCopyOfExistingOrder()) {
 			this.fileUploadElement.url = null;
 		}
-
 	}
 
 	private setVisabilityOfTextToCardField() {
-		let isAnyCardInOrder = this.order.orderItems.find(data => data.basket.basketId == 187 || data.basket.basketId == 188);
+		let isAnyCardInOrder = this.order.orderItems
+			.find(data => data.basket.basketId == AppConstants.BASKET_KARTKA_BEZ_LOGO_ID ||
+				data.basket.basketId == AppConstants.BASKET_KARTKA_Z_LOGO_ID);
 		if (!isAnyCardInOrder) {
 			this.isTextToCardVisible = false;
 			this.order.textToCard = null;
@@ -147,8 +150,6 @@ export class OrderDetailsComponent implements OnInit {
 			});
 		});
 	}
-	
-
 
 	private setDataForOrderEdit() {
 		this.orderService.getOrder(this.orderId).subscribe(res => {
@@ -160,7 +161,7 @@ export class OrderDetailsComponent implements OnInit {
 			this.totalAmount = res.orderTotalAmount / 100;
 			this.order.cod /= 100;
 			this.recalculate();
-			this.fileUploadElement.url = "http://www.kosze.waw.pl:8080/uploadfiles?orderId=" + this.orderId;
+			this.fileUploadElement.url = AppConstants.FILE_UPLOAD_URL + this.orderId;
 			this.filtersLoaded = Promise.resolve(true);
 			this.weekOfYear = res.weekOfYear;
 			if (res.additionalSale == 1) {
@@ -178,14 +179,13 @@ export class OrderDetailsComponent implements OnInit {
 
 	private setDataForCopyOfOrder() {
 		this.order.orderId = null;
-		this.order.orderStatus = new OrderStatus(1);
+		this.order.orderStatus = new OrderStatus(AppConstants.ORDER_STATUS_NOWE);
 		this.order.orderDate = null;
 		this.order.orderFvNumber = null;
 		this.order.orderItems = [];
 		this.orderItems = [];
 		this.totalAmount = 0;
 		this.order.cod /= 0;
-		//this.fileUploadElement.url = null;
 		this.filtersLoaded = Promise.resolve(true);
 		this.orderService.getOrder(this.orderId).subscribe(res => {
 			this.orderAddress = res.address;
@@ -213,7 +213,7 @@ export class OrderDetailsComponent implements OnInit {
 		return this.routingState.getCurrentPage().substring(0, 12) == "/orders/copy";
 	};
 
-	 isEditOrderType(): boolean {
+	isEditOrderType(): boolean {
 		return !this.isCopyOfExistingOrder();
 	};
 
@@ -237,7 +237,6 @@ export class OrderDetailsComponent implements OnInit {
 
 	closeCustomerPicker() {
 		if (this.customer.name == null) {
-			//this.storedCustomerMode=false;
 		}
 	}
 
@@ -332,8 +331,11 @@ export class OrderDetailsComponent implements OnInit {
 	//todo refact
 	editOrderForm() {
 		this.formSubmitted = true;
-		if (this.orderForm.valid && this.additionalForm.valid && this.isDeliveryDateValid && this.isDeliveryWeekDateValid && this.orderItems.length > 0) {
-			if (this.order.deliveryType.deliveryTypeId == 5 || this.order.deliveryType.deliveryTypeId == 6 || this.order.deliveryType.deliveryTypeId == 7) {
+		if (this.orderForm.valid && this.additionalForm.valid && this.isDeliveryDateValid && this.isDeliveryWeekDateValid
+			&& this.orderItems.length > 0) {
+			if (this.order.deliveryType.deliveryTypeId == AppConstants.DELIVERY_TYPE_KURIER_PACZKA_POBRANIE
+				|| this.order.deliveryType.deliveryTypeId == AppConstants.DELIVERY_TYPE_OBIOR_OSOBISTY_POBRANIE
+				|| this.order.deliveryType.deliveryTypeId == AppConstants.DELIVERY_TYPE_NASZ_KIEROWCA_POBRANIE) {
 				this.order.cod *= 100;
 			} else {
 				this.order.cod = 0;
@@ -367,14 +369,16 @@ export class OrderDetailsComponent implements OnInit {
 			});
 			if (this.isEditOrderType()) {
 				this.orderService.saveOrder(this.order).subscribe(data => {
-					this.fileUploadElement.url = "http://www.kosze.waw.pl:8080/uploadfiles?orderId=" + this.orderId;  // PrimeNg fileUpload component
+					this.fileUploadElement.url = AppConstants.FILE_UPLOAD_URL + this.orderId;
 					this.fileUploadElement.upload();
 					setTimeout(() => {
 						this.router.navigateByUrl('/orders/all');
-						this.messageServiceExt.addMessageWithTime('success', 'Status', 'Dokonano edycji zamówienia', 5000);
+						this.messageServiceExt.addMessageWithTime(
+							'success', 'Status', 'Dokonano edycji zamówienia', 5000);
 					}, 400);
 				}, error => {
-					this.messageServiceExt.addMessage('error', 'Błąd', "Status: " + error._body + ' ' + error.statusText);
+					this.messageServiceExt.addMessage(
+						'error', 'Błąd', "Status: " + error._body + ' ' + error.statusText);
 				})
 			} else {
 				this.order.orderItems = this.orderItems;
@@ -385,22 +389,26 @@ export class OrderDetailsComponent implements OnInit {
 					orderItem.stateOnLogistics = 0;
 				});
 				this.orderService.saveOrderFromCopy(this.order, this.originOrderIdCopy).subscribe(data => {
-					this.fileUploadElement.url = "http://www.kosze.waw.pl:8080/uploadfiles?orderId=" + this.orderId;  // PrimeNg fileUpload component
+					this.fileUploadElement.url = AppConstants.FILE_UPLOAD_URL + this.orderId;
+
+
 					this.fileUploadElement.upload();
 					setTimeout(() => {
 						this.router.navigateByUrl('/orders/all');
-						this.messageServiceExt.addMessageWithTime('success', 'Informacja:', 'Dodano zamówienie na podstawie wzoru', 5000);
+						this.messageServiceExt.addMessageWithTime(
+							'success', 'Informacja:', 'Dodano zamówienie na podstawie wzoru', 5000);
 						this.originOrderIdCopy = null;
 					}, 400);
 				}, error => {
-					this.messageServiceExt.addMessage('error', 'Błąd', "Status: " + error._body + ' ' + error.statusText);
+					this.messageServiceExt.addMessage(
+						'error', 'Błąd', "Status: " + error._body + ' ' + error.statusText);
 				})
 			}
 		}
 	}
 
 	private autoAddTicketsToOrder() {
-		if (this.order.deliveryType.deliveryTypeId == AppConstans.DELIVERY_TYPE_PACZKA_KURIER_ID) {
+		if (this.order.deliveryType.deliveryTypeId == AppConstants.DELIVERY_TYPE_PACZKA_KURIER_ID) {
 			this.removeAllTicketsFromOrderIfExist();
 			let totalBasketNumberOfOrder = 0;
 			this.order.orderItems.forEach(orderItemLine => {
@@ -410,35 +418,39 @@ export class OrderDetailsComponent implements OnInit {
 			});
 			this.order.orderItems.push(new OrderItem(new Basket(326), totalBasketNumberOfOrder, null, 0, 0, 0));
 			if (totalBasketNumberOfOrder > 0) {
-				this.messageServiceExt.addMessage('success', 'Informacja', 'Dodano automatycznie ' + totalBasketNumberOfOrder + ' bilecik(ów) ');
+				this.messageServiceExt.addMessage(
+					'success', 'Informacja', 'Dodano automatycznie ' + totalBasketNumberOfOrder + ' bilecik(ów) ');
 			}
 		}
 	}
 
 	private removeAllTicketsFromOrderIfExist() {
-		let indexOfTicketInOrderLine = this.orderItems.findIndex(data => data.basket.basketId == 326);
+		let indexOfTicketInOrderLine = this.orderItems.findIndex(data => data.basket.basketId == AppConstants.BASKET_BILECIK_ID);
 		if (indexOfTicketInOrderLine > -1) {
 			this.orderItems.splice(indexOfTicketInOrderLine, 1);
 		}
 	}
 
 	private isProductKartkaOrGrawer(basketId: number): boolean {
-		return basketId == AppConstans.BASKET_GRAWER_ID || basketId == AppConstans.BASKET_KARTKA_BEZ_LOGO_ID || basketId == AppConstans.BASKET_KARTKA_Z_LOGO_ID
+		return basketId == AppConstants.BASKET_GRAWER_ID
+			|| basketId == AppConstants.BASKET_KARTKA_BEZ_LOGO_ID
+			|| basketId == AppConstants.BASKET_KARTKA_Z_LOGO_ID
 	}
 
 	addBasketToOrder(basket: Basket) {
-
-		if(this.order.orderStatus.orderStatusId == AppConstans.ORDER_STATUS_W_TRAKCIE_REALIZACJI ) {
-			this.messageServiceExt.addMessageWithTime('error', 'Uwaga', 'Zamówienie w trakcie realizacji, brak możliwości edycji pozycji zamówienia', 25000);
-		}else{
-
+		if (this.order.orderStatus.orderStatusId == AppConstants.ORDER_STATUS_W_TRAKCIE_REALIZACJI) {
+			this.messageServiceExt.addMessageWithTime(
+				'error', 'Uwaga', 'Zamówienie w trakcie realizacji, brak możliwości edycji pozycji zamówienia', 25000);
+		} else {
 			if (basket.basketId == 206) {
-				this.messageServiceExt.addMessageWithTime('success', 'Uwaga', 'Dodano do zamówienia grawer, pamiętaj o wgraniu plików', 25000);
-			} //todo
-			if (basket.basketId == 187 || basket.basketId == 188) {
+				this.messageServiceExt.addMessageWithTime(
+					'success', 'Uwaga', 'Dodano do zamówienia grawer, pamiętaj o wgraniu plików', 25000);
+			}
+			if (basket.basketId == AppConstants.BASKET_KARTKA_BEZ_LOGO_ID || basket.basketId == AppConstants.BASKET_KARTKA_Z_LOGO_ID) {
 				this.isTextToCardVisible = true;
-				this.messageServiceExt.addMessageWithTime('success', 'Uwaga', 'Dodano do zamówienia kartkę, pamiętaj o wpisaniu tekstu', 25000);
-			} //todo
+				this.messageServiceExt.addMessageWithTime(
+					'success', 'Uwaga', 'Dodano do zamówienia kartkę, pamiętaj o wpisaniu tekstu', 25000);
+			}
 			let line = this.orderItems.find(data => data.basket.basketId == basket.basketId);
 			if (line == undefined) {
 				this.orderItems.push(new OrderItem(basket, 1))
@@ -458,21 +470,15 @@ export class OrderDetailsComponent implements OnInit {
 			line.quantity = Number(quantity);
 		}
 		this.recalculate();
-		// this.recalculateTotalPlusMarkUp();
 	}
 
 	isBasketLinesEmpty(): boolean {
-		if (this.orderItems.length == 0) {
-			return true
-		} else {
-			return false
-		}
+		return this.orderItems.length == 0;
 	}
 
 	pickAddress(event) {
 		this.orderAddress = event;
 		this.addressPickDialogShow = false;
-		console.log(this.orderAddress);
 	}
 
 	cancelEdit() {
@@ -486,13 +492,12 @@ export class OrderDetailsComponent implements OnInit {
 			this.deactiveTextToCardIfNoCardInOrder(id);
 		}
 		this.recalculate();
-		// this.recalculateTotalPlusMarkUp();
 	}
 
 	private deactiveTextToCardIfNoCardInOrder(basketId: number) {
-		console.log("WWW" + basketId);//todo magic
-		if (basketId == 187 || basketId == 188) {
-			let isAnyCardInOrder = this.orderItems.find(data => data.basket.basketId == 187 || data.basket.basketId == 188);
+		if (basketId == AppConstants.BASKET_KARTKA_BEZ_LOGO_ID || basketId == AppConstants.BASKET_KARTKA_Z_LOGO_ID) {
+			let isAnyCardInOrder = this.orderItems.find(data => data.basket.basketId ==
+				AppConstants.BASKET_KARTKA_BEZ_LOGO_ID || data.basket.basketId == AppConstants.BASKET_KARTKA_Z_LOGO_ID);
 			if (!isAnyCardInOrder) {
 				this.isTextToCardVisible = false;
 				this.order.textToCard = null;
@@ -524,24 +529,21 @@ export class OrderDetailsComponent implements OnInit {
 			this.refreshFileList();
 		})
 	}
-	cleanLoyaltyUser(){
+
+	cleanLoyaltyUser() {
 		this.order.loyaltyUser = null;
 	}
 
-	pickLoyaltyUser(user){
-
+	pickLoyaltyUser(user) {
 		this.order.loyaltyUser = user;
 		this.loyaltyProgramUserPanelShow = false;
 	}
 
-	prepereLoyaltyUserPanel(){
-
+	prepareLoyaltyUserPanel() {
 		this.loyaltyProgramUserPanelShow = true;
-
-		this.userService.getProgramUsers().subscribe(data =>{
+		this.userService.getProgramUsers().subscribe(data => {
 			this.programUsers = data;
-		} )
-
+		})
 	}
 
 	cleanAddress() {
@@ -582,9 +584,8 @@ export class OrderDetailsComponent implements OnInit {
 		d = new Date(d);
 		d.setHours(0, 0, 0);
 		d.setDate(d.getDate() + 4 - (d.getDay() || 7));
-		var yearStart = new Date(d.getFullYear(), 0, 1);
-		var weekNo = Math.ceil((((d.valueOf() - yearStart.valueOf()) / 86400000) + 1) / 7);
-		return weekNo
+		let yearStart = new Date(d.getFullYear(), 0, 1);
+		return Math.ceil((((d.valueOf() - yearStart.valueOf()) / 86400000) + 1) / 7)
 	}
 
 	OnWeekOfYearDateChange() {
@@ -602,13 +603,9 @@ export class OrderDetailsComponent implements OnInit {
 	}
 
 	onDeliveryDataChange() {
-		var tmpDeliveryDate = new Date(this.order.deliveryDate);
+		let tmpDeliveryDate = new Date(this.order.deliveryDate);
 		tmpDeliveryDate.setHours(23, 59, 59, 99);
-		if (tmpDeliveryDate > this.order.orderDate) {
-			this.isDeliveryDateValid = true
-		} else {
-			this.isDeliveryDateValid = false
-		}
+		this.isDeliveryDateValid = tmpDeliveryDate > this.order.orderDate;
 	}
 
 	goToAuditPage(event) {

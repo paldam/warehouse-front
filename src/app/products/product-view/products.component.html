@@ -1,22 +1,22 @@
-
-
-
-<div  class="products_box">
-        <div class="input-group search_bar">
+<div class="products_box">
+    <div class="input-group search_bar">
     <span class="input-group-addon" id="basic-addon1">
                  <i class="fa fa-search" aria-hidden="true"></i>
             </span>
-    <input #gb type="text" class="form-control search_input" pInputText size="50" placeholder="Szukaj"aria-describedby="basic-addon1"  [(ngModel)]="findInputtext">
+        <input #gb type="text" class="form-control search_input" pInputText size="50" placeholder="Szukaj"
+               aria-describedby="basic-addon1" [(ngModel)]="findInputtext">
 
-    <i class="fa fa-refresh pull-right refresh_icon fa-2x" aria-hidden="true" (click)="refreshData()"></i>
-</div>
+        <i class="fa fa-refresh pull-right refresh_icon fa-2x" aria-hidden="true" (click)="refreshData()"></i>
+    </div>
 
-<p-dataTable [value]="products" [rows]="50" [paginator]="true" [globalFilter]="gb" #dt (onRowDblclick)="goToEditPage(1,$event.data.id)"
-             [loading]="loading" loadingIcon="fa-circle-o-notch"   [(first)]="lastVisitedPage"  [paginator]="true" [pageLinks]="5" [rowsPerPageOptions]= paginatorValues  >
+    <p-dataTable [value]="products" [rows]="50" [paginator]="true" [globalFilter]="gb" #dt
+                 (onRowDblclick)="goToEditPage(1,$event.data.id)"
+                 [loading]="loading" loadingIcon="fa-circle-o-notch" [(first)]="lastVisitedPage" [paginator]="true"
+                 [pageLinks]="5" [rowsPerPageOptions]=paginatorValues>
         <p-header>Lista Produktów</p-header>
 
 
-        <p-column  header="lp."   [style]="{'width':'50px','text-align': 'center'}">
+        <p-column header="lp." [style]="{'width':'50px','text-align': 'center'}">
             <ng-template let-row="rowData" let-i="rowIndex" pTemplate="rowexpansion">
                 {{i+1}}
             </ng-template>
@@ -24,74 +24,73 @@
 
         <p-column field="productName" styleClass="name_col" header="Nazwa" [sortable]="true"></p-column>
         <p-column field="capacity" styleClass="capacity_col" header="Pojemność" [sortable]="true"></p-column>
-        <!--<p-column field="supplier.supplierName" styleClass="deliver_col" header="Dostawca"  [sortable]="true" ></p-column>-->
+
+        <p-column field="suppliers" header="Dostawca" [filter]="true" filterMatchMode="inCollection"
+                  [style]="{'width':'220px'}">
+            <ng-template pTemplate="filter" let-col>
+                <p-dropdown [filter]="true" [options]="suppliers" placeholder="Wszyscy" [style]="{'width':'100%'}"
+                            (onChange)="dataTable.filter($event.value,col.field,col.filterMatchMode)"
+                            styleClass="ui-column-filter"></p-dropdown>
+            </ng-template>
+            <ng-template let-item="rowData" pTemplate="body">
+                <tr *ngFor="let supplier of item.suppliers"> {{supplier.supplierName}}</tr>
+            </ng-template>
+        </p-column>
 
 
-    <p-column field="suppliers" header="Dostawca" [filter]="true" filterMatchMode="inCollection" [style]="{'width':'220px'}">
-        <ng-template pTemplate="filter" let-col>
-            <p-dropdown [filter]="true" [options]="suppliers" placeholder="Wszyscy"  [style]="{'width':'100%'}" (onChange)="dataTable.filter($event.value,col.field,col.filterMatchMode)" styleClass="ui-column-filter"></p-dropdown>
-        </ng-template>
-        <ng-template  let-item="rowData"   pTemplate="body">
-            <tr *ngFor="let supplier of item.suppliers">  {{supplier.supplierName}}  </tr>
-        </ng-template>
-    </p-column>
-
-
-
-
-
-        <p-column field="productSubType.subTypeName" styleClass="type_col" [filter]="true" header="Typ produktu" filterMatchMode="equals" [sortable]="true" [style]="{'width':'220px'}">
-            <ng-template  let-col pTemplate="filter"  >
-                <p-multiSelect  [filter]="true" [showToggleAll]="false" [options]="productsType" defaultLabel="Wszystkie" (onChange)="dt.filter($event.value, col.field, 'in')"></p-multiSelect>
+        <p-column field="productSubType.subTypeName" styleClass="type_col" [filter]="true" header="Typ produktu"
+                  filterMatchMode="equals" [sortable]="true" [style]="{'width':'220px'}">
+            <ng-template let-col pTemplate="filter">
+                <p-multiSelect [filter]="true" [showToggleAll]="false" [options]="productsType" defaultLabel="Wszystkie"
+                               (onChange)="dt.filter($event.value, col.field, 'in')"></p-multiSelect>
             </ng-template>
 
-            <ng-template let-row="rowData" pTemplate="body"  >
+            <ng-template let-row="rowData" pTemplate="body">
                 <span> {{ row.productSubType?.subTypeName}} ({{row.productSubType?.productType?.typeName}}) </span>
             </ng-template>
         </p-column>
 
 
-
-
-
-
-
-
-
-        <p-column field="price" styleClass="price_col" header="Cena"  [sortable]="true">
-            <ng-template let-row="rowData" pTemplate="body"  >
+        <p-column field="price" styleClass="price_col" header="Cena" [sortable]="true">
+            <ng-template let-row="rowData" pTemplate="body">
                 {{row.price /100 |number: '1.2-2'}} zł
             </ng-template>
         </p-column>
 
-        <p-column field="stock" styleClass="stock_col" header="Stan"  [sortable]="true">
+        <p-column field="stock" styleClass="stock_col" header="Stan" [sortable]="true">
             <ng-template let-row="rowData" pTemplate="body">
                 {{row.stock}} szt.
             </ng-template>
 
         </p-column>
-    <p-column field="tmpStock" styleClass="state_col" header="Buffor" [sortable]="true">
+        <p-column field="tmpStock" styleClass="state_col" header="Buffor" [sortable]="true">
 
-        <ng-template let-row="rowData" pTemplate="body">
-            {{row.tmpStock}} szt.
-        </ng-template>
-    </p-column>
+            <ng-template let-row="rowData" pTemplate="body">
+                {{row.tmpStock}} szt.
+            </ng-template>
+        </p-column>
 
-    <p-column  field="tmpOrdered" styleClass="state_col" header="Liczba zam." [sortable]="true">
+        <p-column field="tmpOrdered" styleClass="state_col" header="Liczba zam." [sortable]="true">
 
-        <ng-template let-row="rowData" pTemplate="body">
-            {{row.tmpOrdered}} szt.
-        </ng-template>
-    </p-column>
+            <ng-template let-row="rowData" pTemplate="body">
+                {{row.tmpOrdered}} szt.
+            </ng-template>
+        </p-column>
 
 
-    <p-column  header="Akcja" styleClass="action_col">
-        <ng-template let-product="rowData" pTemplate="body" let-row="rowData" let-i="rowIndex" pTemplate="rowexpansion">
-            <img class="basket_icon" src="/assets/images/basket.png" height="30" width="30" (click)="getBasketsContainsSpecyficProduct(product.id)">
-            <i *ngIf="authenticationService.isAdmin() ||  authenticationService.isMagazynUser() " class="fa fa-pencil-square-o fa-2x" aria-hidden="true"  title="Edytuj produkt" (click)="goToEditPage(i+1,product.id)"></i>
-            <i *ngIf="authenticationService.isAdmin() ||  authenticationService.isMagazynUser() " class="fa fa-trash fa-2x edit_icon" aria-hidden="true" title="Usuń produkt"  (click)="ShowConfirmModal(product)"></i>
-        </ng-template>
-    </p-column>
+        <p-column header="Akcja" styleClass="action_col">
+            <ng-template let-product="rowData" pTemplate="body" let-row="rowData" let-i="rowIndex"
+                         pTemplate="rowexpansion">
+                <img class="basket_icon" src="/assets/images/basket.png" height="30" width="30"
+                     (click)="getBasketsContainsSpecyficProduct(product.id)">
+                <i *ngIf="authenticationService.isAdmin() ||  authenticationService.isMagazynUser() "
+                   class="fa fa-pencil-square-o fa-2x" aria-hidden="true" title="Edytuj produkt"
+                   (click)="goToEditPage(i+1,product.id)"></i>
+                <i *ngIf="authenticationService.isAdmin() ||  authenticationService.isMagazynUser() "
+                   class="fa fa-trash fa-2x edit_icon" aria-hidden="true" title="Usuń produkt"
+                   (click)="ShowConfirmModal(product)"></i>
+            </ng-template>
+        </p-column>
 
 
     </p-dataTable>
@@ -102,18 +101,17 @@
 <p-confirmDialog header="Usuwanie produktu" icon="fa fa-question-circle" width="425"></p-confirmDialog>
 
 
+<p-dialog header="Produkt występuje w koszach" [contentStyle]="{'height': '450px'}" closeOnEscape="false" modal="true"
+          width="600" height="520" [(visible)]="showBasketsContainsSpecyficProductModal">
 
-<p-dialog  header="Produkt występuje w koszach" [contentStyle]="{'height': '450px'}" closeOnEscape="false" modal="true" width="600" height="520" [(visible)]="showBasketsContainsSpecyficProductModal"  >
 
-
-    <table >
+    <table>
         <thead>
         </thead>
         <tbody>
-        <tr class="fileLink"  *ngFor="let item of basketsListByProduct" >
+        <tr class="fileLink" *ngFor="let item of basketsListByProduct">
 
-            <td (click)="goToEditBasketPage(item.basketId)" > {{item.basketName}}</td>
-            <!--<td *ngIf="authenticationService.isAdmin() || authenticationService.isBiuroUser()"> <i (click)="ShowConfirmModal(item)" class="fa fa-trash"></i></td>-->
+            <td (click)="goToEditBasketPage(item.basketId)"> {{item.basketName}}</td>
         </tr>
         </tbody>
     </table>

@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {UserService} from "../../user.service";
 import {User} from "../../model/user.model";
-import {AppConstans} from "../../constans";
+import {AppConstants} from "../../constans";
 import {AuthenticationService} from "../../authentication.service";
 import {NgForm} from "@angular/forms";
 import {Supplier} from "../../model/supplier.model";
@@ -18,7 +18,7 @@ import {ConfirmationService} from "primeng/api";
 export class ProgramUserComponent implements OnInit {
 	public loading: boolean;
 	public programUsers: User [] = [];
-	public paginatorValues = AppConstans.PAGINATOR_VALUES;
+	public paginatorValues = AppConstants.PAGINATOR_VALUES;
 	public showAddUserModal: boolean = false;
 	public formSubmitted: boolean = false;
 	public userToAdd: User = new User();

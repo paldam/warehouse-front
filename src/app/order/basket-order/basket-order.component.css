@@ -1,33 +1,34 @@
-.ui-overlaypanel{
+.ui-overlaypanel {
     width: 0%;
     z-index: 0;
     position: fixed;
     top: 30%;
     left: -30px;
 
+}
+
+.ui-overlaypanel-content {
+    width: 80%;
+    z-index: 99;
+    position: fixed;
+    top: 20%;
+    left: 10%;
 
 }
-.ui-overlaypanel-content{
-     width: 80%;
-     z-index: 99    ;
-     position: fixed;
-     top: 20%;
-     left: 10% ;
 
- }
 .ui-overlaypanel-content .ui-datatable {
     padding: 20px;
     padding-top: 8px;
 }
-.ui-overlaypanel-content .search_bar{
+
+.ui-overlaypanel-content .search_bar {
     padding: 20px;
     padding-bottom: 8px;
     width: 70%;
 }
 
-
-.dark_background{
-    background-color:black;
+.dark_background {
+    background-color: black;
     opacity: .80;
     position: fixed;
     top: 0px;
@@ -36,72 +37,95 @@
     height: 100%;
     z-index: 1000;
 }
-.popup_frame{
+
+.popup_frame {
     width: 80%;
-    z-index: 99    ;
+    z-index: 99;
     position: fixed;
     top: 20%;
-    left: 10% ;
+    left: 10%;
 }
-.input-group-addon{
+
+.input-group-addon {
     min-width: 130px;
 }
-.customer_data_form{
+
+.customer_data_form {
     margin-bottom: 26px;
 }
-.order_detail_form{
+
+.order_detail_form {
 }
-.errorDesc{
-    display:inline-block;
+
+.errorDesc {
+    display: inline-block;
 }
-.form-group{
+
+.form-group {
     margin-bottom: 5px;
 }
-input.ng-dirty.ng-invalid { border: 1px solid #ff0000 }
-input.ng-dirty.ng-valid { border: 1px solid #6bc502 }
 
-select.ng-dirty.ng-invalid { border: 1px solid #ff0000 }
-select.ng-dirty.ng-valid { border: 1px solid #6bc502 }
-.basket_products_info{
+input.ng-dirty.ng-invalid {
+    border: 1px solid #ff0000
+}
+
+input.ng-dirty.ng-valid {
+    border: 1px solid #6bc502
+}
+
+select.ng-dirty.ng-invalid {
+    border: 1px solid #ff0000
+}
+
+select.ng-dirty.ng-valid {
+    border: 1px solid #6bc502
+}
+
+.basket_products_info {
     padding: 10px;
 }
 
-.basket_products_info{
+.basket_products_info {
     padding: 10px;
 }
-.product_tab{
+
+.product_tab {
     width: 65%;
     border: 1px solid black;
 }
+
 .product_tab th {
     border: 1px solid black;
 }
-.product_tab td{
-    border: 1px solid black;
-}
-.product_tab tr{
+
+.product_tab td {
     border: 1px solid black;
 }
 
+.product_tab tr {
+    border: 1px solid black;
+}
 
-.product_tab th{
+.product_tab th {
     background-color: #ebedf0;
     text-align: left;
 
 }
 
-
-.product_tab_row{
+.product_tab_row {
     text-align: left;
 }
+
 .markup_percent {
     max-width: 240px;
 }
-.markup_const{
+
+.markup_const {
     max-width: 240px;
 }
-.total{
-    color:#91c176;
+
+.total {
+    color: #91c176;
     font-size: 17px;
     font-weight: bold;
 
@@ -109,36 +133,42 @@ select.ng-dirty.ng-valid { border: 1px solid #6bc502 }
     padding: 5px;
     margin-top: 10px;
 }
-.tot{
+
+.tot {
     padding: 5px;
     padding-top: 10px;
 }
 
-.markup_const .input-group-addon{
+.markup_const .input-group-addon {
     min-width: 145px;
     font-size: 14px;
 }
-.order_summary{
+
+.order_summary {
     padding-left: 0px;
     padding-right: 0px;
 }
-.tax_input1{
-     position: relative;
-     top: -28px;
+
+.tax_input1 {
+    position: relative;
+    top: -28px;
     margin-left: 22px;
- }
-.tax_input2{
+}
+
+.tax_input2 {
     position: relative;
     top: -55px;
     margin-left: 22px;
 }
-.markup_const_check{
-    position:relative;
+
+.markup_const_check {
+    position: relative;
     top: 0px;
     left: 20px;
 }
-.markup_const_percent{
-    position:relative;
+
+.markup_const_percent {
+    position: relative;
     top: 30px;
     left: 20px;
 }
@@ -154,36 +184,39 @@ select.ng-dirty.ng-valid { border: 1px solid #6bc502 }
     left: 10px;
 }
 
-
-.pickfromdb{
+.pickfromdb {
     position: absolute;
     top: 0px;
     right: 6px;
     padding: 5px;
 }
 
-.cont{
+.cont {
     position: relative;
 }
 
 .customerpanels .ui-panel {
     margin-top: 60px;
 }
+
 .customerpanels2 .ui-panel {
     margin-top: 30px;
 }
+
 .customerpanels3 .ui-panel {
     margin-top: 20px;
 }
 
-.clean-button{
+.clean-button {
     position: absolute;
     top: 50px;
     left: 30px;
     margin: 0px !important;
 }
 
-.pt { margin-top: 40px}
+.pt {
+    margin-top: 40px
+}
 
 .clean-company-icon {
     position: absolute;
@@ -199,14 +232,14 @@ select.ng-dirty.ng-valid { border: 1px solid #6bc502 }
     z-index: 9;
 }
 
-.add-company-icon{
+.add-company-icon {
     position: absolute;
     top: 5px;
     right: 55px;
     z-index: 9;
 }
 
-.edit-address-icon{
+.edit-address-icon {
     position: absolute;
     top: 5px;
     right: 82px;
@@ -214,22 +247,22 @@ select.ng-dirty.ng-valid { border: 1px solid #6bc502 }
     text-align: center;
 }
 
-.merge-button{
+.merge-button {
     margin-top: 20px;
 }
 
-.company_tab{
+.company_tab {
     border: 1px solid black;
     margin-top: 10px;
     margin-bottom: 10px;
 }
-.company_tab td{
+
+.company_tab td {
     padding: 7px;
     border: 1px solid black;
     cursor: pointer;
 }
 
-
-.d-table{
+.d-table {
     width: 400px;
 }

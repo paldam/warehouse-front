@@ -1,5 +1,5 @@
-import {filter, pairwise} from "rxjs/operators";
-import {NavigationEnd, Router, RoutesRecognized} from "@angular/router";
+import {filter} from "rxjs/operators";
+import {NavigationEnd, Router} from "@angular/router";
 import {Injectable} from "@angular/core";
 import {ServerSideEventsService} from "./server-side-events-service";
 
@@ -17,7 +17,6 @@ export class RoutingState {
 			.pipe(filter(event => event instanceof NavigationEnd))
 			.subscribe(({urlAfterRedirects}: NavigationEnd) => {
 				this.history = [...this.history, urlAfterRedirects];
-
 			});
 	}
 
@@ -32,9 +31,6 @@ export class RoutingState {
 	public getCurrentPage(): string {
 		return this.router.url
 	}
-
-
-
 }
 
 

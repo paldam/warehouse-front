@@ -1,48 +1,56 @@
-.basketList{
+.basketList {
     padding-top: 10px;
 }
-.basket_products_info{
+
+.basket_products_info {
     padding: 10px;
 }
-.product_tab{
+
+.product_tab {
     width: 65% !important;
     border: 1px solid black;
 }
-.product_tab th ,td,tr{
+
+.product_tab th, td, tr {
 
 }
-.product_tab th{
+
+.product_tab th {
     background-color: #ebedf0;
     text-align: left;
 
 }
 
-
 .product_tab_row {
     text-align: left;
 }
-.action_col{
+
+.action_col {
     width: 170px;
     max-height: 40px;
 }
-.status_col{
+
+.status_col {
     color: red;
 }
 
-.attach_col{
+.attach_col {
     width: 38px;
 }
 
 .onlyWithAttach {
     margin-left: 10px;
 }
-.quantity_col{
+
+.quantity_col {
     width: 120px;
     text-align: center;
 }
+
 .btn {
     margin: 20px;
 }
+
 .fa {
     margin-right: 4px;
 }
@@ -59,17 +67,18 @@ body .ui-datatable .ui-datatable-data tr.ui-datatable-even:hover {
 
 body .ui-datatable .ui-datatable-data tr.ui-datatable-odd:hover {
     cursor: pointer;
-    background-color:#d6f2c2;
+    background-color: #d6f2c2;
 }
-.fileprev{
+
+.fileprev {
     font-size: 16px;
 }
 
-.fileprev:hover{
+.fileprev:hover {
     cursor: pointer;
 
 }
 
-.ui-overlaypanel-content{
+.ui-overlaypanel-content {
     width: 400px;
 }

@@ -16,7 +16,6 @@ export class AuthenticationService {
 
 	constructor(private http: Http, private router: Router) {
 		this.baseUrl = `${this.protocol}://${location.hostname}:${this.port}`;
-		// set token if saved in local storage
 		this.id_token = localStorage.getItem(TOKEN);
 	}
 
@@ -60,77 +59,49 @@ export class AuthenticationService {
 	isAdmin(): boolean {
 		if (localStorage.getItem(TOKEN)) {
 			let authority = jwtHelperService.decodeToken(this.id_token).auth;
-			if (authority == "admin") {
-				return true;
-			} else {
-				return false;
-			}
+			return authority == "admin";
 		}
 	}
 
 	isUser(): boolean {
 		if (localStorage.getItem(TOKEN)) {
 			let authority = jwtHelperService.decodeToken(this.id_token).auth;
-			if (authority == "user") {
-				return true;
-			} else {
-				return false;
-			}
+			return authority == "user";
 		}
 	}
 
 	isBiuroUser(): boolean {
 		if (localStorage.getItem(TOKEN)) {
 			let authority = jwtHelperService.decodeToken(this.id_token).auth;
-			if (authority == "biuro") {
-				return true;
-			} else {
-				return false;
-			}
+			return authority == "biuro";
 		}
 	}
 
 	isMagazynUser(): boolean {
 		if (localStorage.getItem(TOKEN)) {
 			let authority = jwtHelperService.decodeToken(this.id_token).auth;
-			if (authority == "magazyn") {
-				return true;
-			} else {
-				return false;
-			}
+			return authority == "magazyn";
 		}
 	}
 
 	isProdukcjaUser(): boolean {
 		if (localStorage.getItem(TOKEN)) {
 			let authority = jwtHelperService.decodeToken(this.id_token).auth;
-			if (authority == "produkcja") {
-				return true;
-			} else {
-				return false;
-			}
+			return authority == "produkcja";
 		}
 	}
 
 	isWysylkaUser(): boolean {
 		if (localStorage.getItem(TOKEN)) {
 			let authority = jwtHelperService.decodeToken(this.id_token).auth;
-			if (authority == "wysylka") {
-				return true;
-			} else {
-				return false;
-			}
+			return authority == "wysylka";
 		}
 	}
 
 	isSuperUser(): boolean {
 		if (localStorage.getItem(TOKEN)) {
 			let authority = jwtHelperService.decodeToken(this.id_token).auth;
-			if (authority == "super-user") {
-				return true;
-			} else {
-				return false;
-			}
+			return authority == "super-user";
 		}
 	}
 

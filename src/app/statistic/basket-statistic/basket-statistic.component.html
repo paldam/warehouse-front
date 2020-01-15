@@ -1,66 +1,77 @@
 <div class="filterOptionRadioGroup">
-  <div class="form-check">
-    <input class="form-check-input" #sortByDeliveryDate type="radio" name="exampleRadios" id="exampleRadios1" value="option1" checked>
-    <label class="form-check-label" for="exampleRadios1">
-      Sortuj po dacie dostawy
-    </label>
-  </div>
-  <div class="form-check">
-    <input class="form-check-input"  #sortByOrderDate type="radio" name="exampleRadios" id="exampleRadios2" value="option2">
-    <label class="form-check-label" for="exampleRadios2">
-      Sortuj po dacie zamówienia
-    </label>
-  </div>
+    <div class="form-check">
+        <input class="form-check-input" #sortByDeliveryDate type="radio" name="exampleRadios" id="exampleRadios1"
+               value="option1" checked>
+        <label class="form-check-label" for="exampleRadios1">
+            Sortuj po dacie dostawy
+        </label>
+    </div>
+    <div class="form-check">
+        <input class="form-check-input" #sortByOrderDate type="radio" name="exampleRadios" id="exampleRadios2"
+               value="option2">
+        <label class="form-check-label" for="exampleRadios2">
+            Sortuj po dacie zamówienia
+        </label>
+    </div>
 </div>
 
 
 <div class="map_cont">
-  <div class="row input_form">
-    <form id="MapForm" novalidate #form="ngForm" (submit)="submitOrderForm(form)">
-      <label for="start_date" >Data początkowa</label>
-      <p-calendar [dataType]="'string'" [utc]="false"  [locale]="dateLang"  dateFormat="yy-mm-dd" name="start_date" [(ngModel)]="startDate" required></p-calendar>
-      <label for="end_date" >Data końcowa</label>
-      <p-calendar [dataType]="'string'" [utc]="false"  [locale]="dateLang" dateFormat="yy-mm-dd" id="end_date" name="end_date" #end_date="ngModel" aria-describedby="end_dateDesc" [(ngModel)]="endDate" ></p-calendar>
+    <div class="row input_form">
+        <form id="MapForm" novalidate #form="ngForm" (submit)="submitOrderForm(form)">
+            <label for="start_date">Data początkowa</label>
+            <p-calendar [dataType]="'string'" [utc]="false" [locale]="dateLang" dateFormat="yy-mm-dd" name="start_date"
+                        [(ngModel)]="startDate" required></p-calendar>
+            <label for="end_date">Data końcowa</label>
+            <p-calendar [dataType]="'string'" [utc]="false" [locale]="dateLang" dateFormat="yy-mm-dd" id="end_date"
+                        name="end_date" #end_date="ngModel" aria-describedby="end_dateDesc"
+                        [(ngModel)]="endDate"></p-calendar>
 
 
-      <button class="btn bg-primary " type="submit" form="MapForm" >Szukaj</button>
-      <button type="button" class="btn btn-primary" (click)="generateXls()"><i class="fa fa-file-excel-o fa-x" aria-hidden="true"></i> Export do Excela</button>
+            <button class="btn bg-primary " type="submit" form="MapForm">Szukaj</button>
+            <button type="button" class="btn btn-primary" (click)="generateXls()"><i class="fa fa-file-excel-o fa-x"
+                                                                                     aria-hidden="true"></i> Export do
+                Excela
+            </button>
 
-      <ul class="text-danger list-unstyled" *ngIf="dateError">
-        <li >Data początkowa nie może być większa od końcowej</li>
-      </ul>
-    </form>
-  </div>
+            <ul class="text-danger list-unstyled" *ngIf="dateError">
+                <li>Data początkowa nie może być większa od końcowej</li>
+            </ul>
+        </form>
+    </div>
 
 </div>
 
 
-<div  class="input-group search_bar" >
+<div class="input-group search_bar">
             <span class="input-group-addon" id="basic-addon1">
                  <i class="fa fa-search" aria-hidden="true"></i>
             </span>
-  <input #globalfilter type="text"  class="form-control search_input" pInputText size="50" placeholder="Szukaj"aria-describedby="basic-addon1" >
+    <input #globalfilter type="text" class="form-control search_input" pInputText size="50" placeholder="Szukaj"
+           aria-describedby="basic-addon1">
 
 </div>
 
 
 <p-dataTable [value]="basketStatistic" [rows]="20" [paginator]="true"
-             [loading]="loading" loadingIcon="fa-circle-o-notch" #dt  [globalFilter]="globalfilter" [pageLinks]="5" [rowsPerPageOptions]= paginatorValues>
-  <p-header>Liczba sprzedanych koszy</p-header>
+             [loading]="loading" loadingIcon="fa-circle-o-notch" #dt [globalFilter]="globalfilter" [pageLinks]="5"
+             [rowsPerPageOptions]=paginatorValues>
+    <p-header>Liczba sprzedanych koszy</p-header>
 
-  <p-column  header="lp."   [style]="{'width':'70px'}">
-    <ng-template let-row="rowData" let-i="rowIndex" pTemplate="rowexpansion">
-      {{i+1}}
-    </ng-template>
-  </p-column>
-  <p-column field="basketName"  header="Nazwa" [sortable]="true"></p-column>
-  <p-column field="quantity" [sortable]="true" header="Ilość"></p-column>
-  <p-column field="numberOfOrdersWhereBasketOccur" [sortable]="true" header="Ilość zamówień z tym koszem"></p-column>
+    <p-column header="lp." [style]="{'width':'70px'}">
+        <ng-template let-row="rowData" let-i="rowIndex" pTemplate="rowexpansion">
+            {{i+1}}
+        </ng-template>
+    </p-column>
+    <p-column field="basketName" header="Nazwa" [sortable]="true"></p-column>
+    <p-column field="quantity" [sortable]="true" header="Ilość"></p-column>
+    <p-column field="numberOfOrdersWhereBasketOccur" [sortable]="true" header="Ilość zamówień z tym koszem"></p-column>
 
-  <p-column class="action_col"  field="orders" header="Akcja" styleClass="action_col">
-    <ng-template let-row="rowData" let-i="rowIndex" pTemplate="body">
-      <i class="fa fa-pencil-square-o fa-2x" aria-hidden="true"  title="Lista zamowien z danym koszem" (click)="goToOrderListByBasket(row.basketId)"></i>
-    </ng-template>
-  </p-column>
+    <p-column class="action_col" field="orders" header="Akcja" styleClass="action_col">
+        <ng-template let-row="rowData" let-i="rowIndex" pTemplate="body">
+            <i class="fa fa-pencil-square-o fa-2x" aria-hidden="true" title="Lista zamowien z danym koszem"
+               (click)="goToOrderListByBasket(row.basketId)"></i>
+        </ng-template>
+    </p-column>
 
 </p-dataTable>

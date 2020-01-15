@@ -7,7 +7,7 @@ import {BasketSeason} from "../../model/basket_season.model";
 import {BasketService} from "../../basket/basket.service";
 import {NgForm} from "@angular/forms";
 import {SpinerService} from "../../spiner.service";
-import {AppConstans} from "../../constans";
+import {AppConstants} from "../../constans";
 
 @Component({
 	selector: 'app-points-scheme',
@@ -17,7 +17,7 @@ import {AppConstans} from "../../constans";
 export class PointsSchemeComponent
 	implements OnInit {
 	public loading: boolean;
-	public paginatorValues = AppConstans.PAGINATOR_VALUES;
+	public paginatorValues = AppConstants.PAGINATOR_VALUES;
 	public pointSchemes: PointScheme[] = [];
 	public showAddPointModal: boolean = false;
 	public basketSeasonSelectItemList: SelectItem[] = [];

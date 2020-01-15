@@ -12,7 +12,7 @@ import {MessageServiceExt} from "../../messages/messageServiceExt";
 import {BasketSeason} from "../../model/basket_season.model";
 import {Supplier} from "../../model/supplier.model";
 import {ProductSubType} from "../../model/product_sub_type";
-import {AppConstans} from "../../constans";
+import {AppConstants} from "../../constans";
 
 @Component({
 	selector: 'products-picker',
@@ -70,13 +70,13 @@ export class ProductPickerComponent
 			this.basketTypes = data;
 			this.basketTypes = this.basketTypes
 				.filter(value => {
-					return value.basketTypeId != AppConstans.BASKET_TYPE_ID_ARCHWIUM;
+					return value.basketTypeId != AppConstants.BASKET_TYPE_ID_ARCHWIUM;
 				})
 				.filter(value => {
-					return value.basketTypeId != AppConstans.BASKET_TYPE_ID_USUNIETY;
+					return value.basketTypeId != AppConstants.BASKET_TYPE_ID_USUNIETY;
 				})
 				.filter(value => {
-					return value.basketTypeId != AppConstans.BASKET_TYPE_ID_EXPORTOWY;
+					return value.basketTypeId != AppConstants.BASKET_TYPE_ID_EXPORTOWY;
 				});
 			this.filtersLoaded = Promise.resolve(true);
 		});
@@ -168,7 +168,7 @@ export class ProductPickerComponent
 			this.basket.stock = 0;
 			this.basket.basketProductsPrice = this.total;
 			if (!this.basket.basketSezon) {
-				this.basket.basketSezon = new BasketSeason(AppConstans.BASKET_SEASON_ID_NONE)
+				this.basket.basketSezon = new BasketSeason(AppConstants.BASKET_SEASON_ID_NONE)
 			}
 			if (this.fileUploadElement.files.length == 1) {
 				this.basketService.saveBasketWithImg(this.basket, this.fileToUpload).subscribe(data => {

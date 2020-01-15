@@ -2,11 +2,10 @@
     <p-fieldset [legend]="legend" [toggleable]="true">
 
 
-
         <div class="form-group">
             <small id="supplier_typeDesc" class="text-muted">Dostawca</small>
-            <select  class="form-control" #supplier="ngModel" [(ngModel)]="selectedSupplier"
-                     (ngModelChange)="filterTableBySupplier($event.supplierId)" name="supplier" required>
+            <select class="form-control" #supplier="ngModel" [(ngModel)]="selectedSupplier"
+                    (ngModelChange)="filterTableBySupplier($event.supplierId)" name="supplier" required>
                 <option *ngFor="let item of productSuppliers" [ngValue]="item">{{item.supplierName}}</option>
             </select>
         </div>

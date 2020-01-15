@@ -8,7 +8,7 @@ import {ProductsService} from "../products.service";
 import {Product} from "../../model/product.model";
 import {consoleTestResultsHandler} from "tslint/lib/test";
 import {AuthenticationService} from "../../authentication.service";
-import {AppConstans} from "../../constans";
+import {AppConstants} from "../../constans";
 import {ProductType} from "../../model/product_type.model";
 import {ProductSubType} from "../../model/product_sub_type";
 import {Supplier} from "../../model/supplier.model";
@@ -30,11 +30,12 @@ export class ProductsComponent implements OnInit {
 	public dataFilterLoaded: Promise<boolean>;
 	public productsType: SelectItem[] = [];
 	public suppliers: SelectItem[] = [];
-	public paginatorValues = AppConstans.PAGINATOR_VALUES;
+	public paginatorValues = AppConstants.PAGINATOR_VALUES;
 	@ViewChild('dt') dataTable: DataTable;
 
 	constructor(private productsService: ProductsService, activeRoute: ActivatedRoute, public spinerService: SpinerService,
-				private router: Router, private confirmationService: ConfirmationService, private authenticationService: AuthenticationService) {
+				private router: Router, private confirmationService: ConfirmationService,
+				private authenticationService: AuthenticationService) {
 		productsService.getProducts().subscribe(data => this.products = data);
 		productsService.getProductsSubTypes().subscribe((data: ProductSubType[]) => {
 			data.forEach(value => {
@@ -55,7 +56,6 @@ export class ProductsComponent implements OnInit {
 				pairwise()
 			).subscribe((e: any) => {
 			let previousUrlTmp = e[0].urlAfterRedirects;
-			console.log(previousUrlTmp.search('/product') == -1);
 			if (previousUrlTmp.search('/product') == -1) {
 				localStorage.removeItem('findInputtext');
 				localStorage.removeItem('lastPage');
@@ -73,13 +73,12 @@ export class ProductsComponent implements OnInit {
 		this.setCustomSupplierFilterToDataTable();
 		setTimeout(() => {
 			if (localStorage.getItem('lastPage')) {
-				this.lastVisitedPage = parseInt(localStorage.getItem('lastPage'));  // go to lastvisited page
+				this.lastVisitedPage = parseInt(localStorage.getItem('lastPage'));
 			}
 			else {
 				this.lastVisitedPage = 0;
 			}
 		}, 300);
-		console.log(this.dataTable);
 	}
 
 	private setCustomSupplierFilterToDataTable() {
@@ -112,9 +111,8 @@ export class ProductsComponent implements OnInit {
 
 	goToEditPage(index, id) {
 		let pageTmp = ((index - 1) / 20) + 1;
-		let first = this.dataTable.first
-		localStorage.setItem('lastPage', first.toString())
-		//localStorage.setItem('lastPage', pageTmp.toString());
+		let first = this.dataTable.first;
+		localStorage.setItem('lastPage', first.toString());
 		let textTmp = this.findInputtext;
 		localStorage.setItem('findInputtext', textTmp);
 		this.router.navigate(["/product/", id]);

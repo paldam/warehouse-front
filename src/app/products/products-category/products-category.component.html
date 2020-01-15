@@ -15,7 +15,7 @@
 
             <p-dataTable [value]="mainCategoriesList" [rows]="20" [paginator]="true" #dt
                          [loading]="loading" loadingIcon="fa-circle-o-notch" [editable]="true"
-                         (onEditComplete)="editMainCategory($event.data)" [globalFilter]="gb1" >
+                         (onEditComplete)="editMainCategory($event.data)" [globalFilter]="gb1">
                 <p-header>Lista kategorii głównych</p-header>
 
 
@@ -42,7 +42,7 @@
 
         <div class="products_box col-lg-11">
             <div class="input-group search_bar">
-    <span class="input-group-addon" id="basic-addon1">
+    <span class="input-group-addon" >
                  <i class="fa fa-search" aria-hidden="true"></i>
             </span>
                 <input #gb2 type="text" class="form-control search_input" pInputText size="50" placeholder="Szukaj"
@@ -52,23 +52,25 @@
             </div>
 
             <p-dataTable [value]="subCategoriesList" [rows]="20" [paginator]="true" #dt2
-                         [loading]="loading" loadingIcon="fa-circle-o-notch"  [globalFilter]="gb2">
+                         [loading]="loading" loadingIcon="fa-circle-o-notch" [globalFilter]="gb2">
 
                 <p-header>Lista podkategorii</p-header>
 
 
-                <p-column  [hidden]="true" field="subTypeName" styleClass="name_col" header="Nazwa kategorii"></p-column>
+                <p-column [hidden]="true" field="subTypeName" styleClass="name_col" header="Nazwa kategorii"></p-column>
 
-                <p-column  styleClass="name_col" header="Nazwa podkategorii">
-                    <ng-template let-subcategory="rowData" pTemplate="body" let-row="rowData" let-i="rowIndex" pTemplate="rowexpansion">
-                         {{subcategory.subTypeName}} ({{subcategory.productType?.typeName}})
+                <p-column styleClass="name_col" header="Nazwa podkategorii">
+                    <ng-template let-subcategory="rowData" pTemplate="body" let-row="rowData" let-i="rowIndex"
+                                 pTemplate="rowexpansion">
+                        {{subcategory.subTypeName}} ({{subcategory.productType?.typeName}})
                     </ng-template>
                 </p-column>
 
                 <p-column header="Akcja" [style]="{'width':'100px', 'text-align': 'center'}">
                     <ng-template let-subcat="rowData" pTemplate="body" let-row="rowData" let-i="rowIndex"
-                                 pTemplate="rowexpansion" >
-                        <i  class="fa fa-pencil-square-o fa-2x " aria-hidden="true"  title="Edytuj podkategorie" (click)="goToEditPage(subcat)"></i>
+                                 pTemplate="rowexpansion">
+                        <i class="fa fa-pencil-square-o fa-2x " aria-hidden="true" title="Edytuj podkategorie"
+                           (click)="goToEditPage(subcat)"></i>
                         <i *ngIf="authenticationService.isAdmin() ||  authenticationService.isMagazynUser() "
                            class="fa fa-trash fa-2x edit_icon" aria-hidden="true" title="Usuń dostawcę"
                            (click)="deleteSubCategory(row)"></i>
@@ -87,21 +89,11 @@
     </div>
 
 
-
-
-
-
-
-
-
 </div>
 
 
-
-
-
 <p-dialog header="Dodaj typ produktu" modal="true" width="600" [(visible)]="addProductTypeDialogShow"
-                     (onHide)="closeSupplierAddDialog()">
+          (onHide)="closeSupplierAddDialog()">
 
 
     <div class="form-group">
@@ -124,7 +116,7 @@
     <form id="subCatAddForm" novalidate #subCatAddForm="ngForm">
 
         <div class="form-group">
-            <small id="nameDescript" class="text-muted">Nazwa</small>
+            <small  class="text-muted">Nazwa</small>
             <input type="text" #sub_type_name name="sub_type_name" class="form-control"
                    [(ngModel)]="subCategory.subTypeName"
                    #name="ngModel" aria-describedby="nameDescript" required>
@@ -151,14 +143,13 @@
 </p-dialog>
 
 
-
 <p-dialog header="Edytuj Podkategorie" modal="true" width="600" [(visible)]="editProductSubTypeDialogShow"
           (onHide)="closeSubEditDialog()">
 
     <form id="subCatEditForm" novalidate #subCatEditForm="ngForm">
 
         <div class="form-group">
-            <small id="nameDescript" class="text-muted">Nazwa</small>
+            <small  class="text-muted">Nazwa</small>
             <input type="text" #sub_type_name name="sub_type_name" class="form-control"
                    [(ngModel)]="subCategoryToEdit.subTypeName"
                    #name="ngModel" aria-describedby="nameDescript" required>
@@ -168,7 +159,7 @@
         </div>
 
         <div class="form-group">
-            <small id="product_typeDesc" class="text-muted">Kategoria główna</small>
+            <small  class="text-muted">Kategoria główna</small>
             <select #hd [compareWith]="compareProductType" class="form-control" #product_type="ngModel"
                     [(ngModel)]="subCategoryToEdit.productType" name="product_type" required>
                 <option *ngFor="let item of mainCategoriesList" [ngValue]="item">{{item.typeName}}</option>

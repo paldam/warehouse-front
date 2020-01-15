@@ -1,9 +1,15 @@
 #productForm {
     max-width: 800px;
 }
+
 .btn {
     margin-right: 10px;
 }
 
-input.ng-dirty.ng-invalid { border: 2px solid #ff0000 }
-input.ng-dirty.ng-valid { border: 2px solid #6bc502 }
+input.ng-dirty.ng-invalid {
+    border: 2px solid #ff0000
+}
+
+input.ng-dirty.ng-valid {
+    border: 2px solid #6bc502
+}

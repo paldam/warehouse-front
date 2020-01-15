@@ -5,47 +5,48 @@ import {NgForm} from "@angular/forms";
 import {SelectItem} from "primeng/api";
 import * as XLSX from "xlsx";
 import {DataTable} from "primeng/primeng";
-import {AppConstans} from "../../constans";
+import {AppConstants} from "../../constans";
 import {ProductSubType} from "../../model/product_sub_type";
 import {Supplier} from "../../model/supplier.model";
-declare var $ :any;
+declare var $: any;
 
 @Component({
-  selector: 'app-statistic2',
-  templateUrl: './statistic2.component.html',
-  styleUrls: ['./statistic2.component.css']
+	selector: 'app-statistic2',
+	templateUrl: './statistic2.component.html',
+	styleUrls: ['./statistic2.component.css']
 })
-export class Statistic2Component implements OnInit {
-
-  public productsToOrder: any[] = [];
-  value: Date;
-  dateLang: any;
-  public formSubmitted: boolean = false;
-  public startDate: string;
-  public endDate: string;
-  public loading: boolean= false;
-  public suppliers: SelectItem[] = [];
-  public dateError: boolean = false;
+export class Statistic2Component
+	implements OnInit {
+	public productsToOrder: any[] = [];
+	value: Date;
+	dateLang: any;
+	public formSubmitted: boolean = false;
+	public startDate: string;
+	public endDate: string;
+	public loading: boolean = false;
+	public suppliers: SelectItem[] = [];
+	public dateError: boolean = false;
 	public productsType: SelectItem[] = [];
-  @ViewChild('dt') el:DataTable;
-    public paginatorValues = AppConstans.PAGINATOR_VALUES;
-    @ViewChild('sortByOrderDate') sortByOrderDateCheckBox :ElementRef;
+	@ViewChild('dt') el: DataTable;
+	public paginatorValues = AppConstants.PAGINATOR_VALUES;
+	@ViewChild('sortByOrderDate') sortByOrderDateCheckBox: ElementRef;
 
-
-  constructor(private productSerive: ProductsService,private calendarSetingsComponent: CalendarSetingsComponent) {
-    productSerive.getSuppliers().subscribe(data=> {
-
-      this.suppliers.push({label: '-- Wszyscy Dostawcy --', value: null});
-      data.forEach(data => {
-        this.suppliers.push({label: data.supplierName, value: data.supplierName});
-      })
-    });
-	  productSerive.getProductsSubTypes().subscribe((data: ProductSubType[]) => {
-		  data.forEach(value => {
-			  this.productsType.push({label: '' + value.subTypeName + '('+ value.productType.typeName +')', value: value.subTypeName});
-		  })
-	  });
-  }
+	constructor(private productSerive: ProductsService, private calendarSetingsComponent: CalendarSetingsComponent) {
+		productSerive.getSuppliers().subscribe(data => {
+			this.suppliers.push({label: '-- Wszyscy Dostawcy --', value: null});
+			data.forEach(data => {
+				this.suppliers.push({label: data.supplierName, value: data.supplierName});
+			})
+		});
+		productSerive.getProductsSubTypes().subscribe((data: ProductSubType[]) => {
+			data.forEach(value => {
+				this.productsType.push({
+					label: '' + value.subTypeName + '(' + value.productType.typeName + ')',
+					value: value.subTypeName
+				});
+			})
+		});
+	}
 
 	ngOnInit() {
 		this.dateLang = this.calendarSetingsComponent.dateLang;
@@ -70,9 +71,7 @@ export class Statistic2Component implements OnInit {
 			}
 			return false;
 		};
-
 	}
-
 
 	submitOrderForm(form: NgForm) {
 		this.formSubmitted = true;
@@ -98,11 +97,9 @@ export class Statistic2Component implements OnInit {
 	private setAdditionalColumnWithConcatSupplierString() {
 		this.productsToOrder.forEach(product => {
 			let suppliersConcatString = '';
-
 			product.suppliers.forEach((supplier: Supplier) => {
-				suppliersConcatString = suppliersConcatString +" " +supplier.supplierName;
+				suppliersConcatString = suppliersConcatString + " " + supplier.supplierName;
 			});
-
 			product.suppliersConcatString = suppliersConcatString;
 		})
 	}
@@ -114,34 +111,25 @@ export class Statistic2Component implements OnInit {
 		} else {
 			filt = this.el.filteredValue;
 		}
-
-
-        let dataToGenerateFile: any[]=[];
-
-
-        for (let i = 0; i < filt.length;i++) {
+		let dataToGenerateFile: any[] = [];
+		for (let i = 0; i < filt.length; i++) {
 			let tmpSupplierNameList = '';
-
-			for(let n = 0; n < filt[i].suppliers.length;n++){
+			for (let n = 0; n < filt[i].suppliers.length; n++) {
 				tmpSupplierNameList = tmpSupplierNameList + filt[i].suppliers[n].supplierName + " | ";
 			}
-
-
-			dataToGenerateFile[i] = {"Nazwa Produktu":filt[i].product_name, "Nazwa Dostawcy":tmpSupplierNameList,"Ilość":filt[i].suma,"Stan Magazynu":filt[i].stock,"Liczba zamówionych":filt[i].tmpOrdered}
+			dataToGenerateFile[i] = {
+				"Nazwa Produktu": filt[i].product_name,
+				"Nazwa Dostawcy": tmpSupplierNameList,
+				"Ilość": filt[i].suma,
+				"Stan Magazynu": filt[i].stock,
+				"Liczba zamówionych": filt[i].tmpOrdered
+			}
 		}
-
-
-
-        const worksheet: XLSX.WorkSheet = XLSX.utils.json_to_sheet(dataToGenerateFile);
-        const workbook: XLSX.WorkBook = { Sheets: { 'data': worksheet }, SheetNames: ['data'] };
-
-        let today = new Date();
-        let date = today.getFullYear() + '' + (today.getMonth() + 1) + '' + today.getDate() + '_';
-        //let time = today.getHours() + "-" + today.getMinutes() + "-" + today.getSeconds();
-        let fileName = "Zestawienie_" + date + ".xls" ;
-
-        XLSX.writeFile(workbook, fileName, { bookType: 'xls', type: 'buffer' });
-    }
-
-
+		const worksheet: XLSX.WorkSheet = XLSX.utils.json_to_sheet(dataToGenerateFile);
+		const workbook: XLSX.WorkBook = {Sheets: {'data': worksheet}, SheetNames: ['data']};
+		let today = new Date();
+		let date = today.getFullYear() + '' + (today.getMonth() + 1) + '' + today.getDate() + '_';
+		let fileName = "Zestawienie_" + date + ".xls";
+		XLSX.writeFile(workbook, fileName, {bookType: 'xls', type: 'buffer'});
+	}
 }

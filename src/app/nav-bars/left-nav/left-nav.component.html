@@ -1,6 +1,6 @@
 <div id="black">
 </div>
-<div id="mySidenav" class="sidenav" >
+<div id="mySidenav" class="sidenav">
 
 
     <div class="login_user_image">
@@ -10,9 +10,9 @@
     <div class="login_user">
         <span>{{userName}}</span>
     </div>
+
     <div class="line">
     </div>
-
 
     <div id="menu">
         <ul>
@@ -22,64 +22,100 @@
             </li>
 
 
-            <li  routerLinkActive="active_main" >
-            <h3 [class.cursor_dis]="isWysylkaUser() || isProdukcjaUser()" class="tak"><span class="fa fa-newspaper-o"></span>Produkty</h3>
-            <ul>
-                <li *ngIf="authenticationService.isAdmin() || authenticationService.isBiuroUser() || authenticationService.isMagazynUser() ||authenticationService.isProdukcjaUser()" ><a  [routerLink]="['/product/'] " routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Przeglądaj</a></li>
-                <li *ngIf="authenticationService.isAdmin() ||  authenticationService.isMagazynUser() " ><a [routerLink]="['/product/add'] " routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Dodaj</a></li>
-                <li *ngIf="authenticationService.isAdmin() || authenticationService.isMagazynUser()" ><a [routerLink]="['/products/delivery'] " routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Dostawa</a></li>
-                <li *ngIf="authenticationService.isAdmin() || authenticationService.isMagazynUser()" ><a [routerLink]="['products/setdelivery'] " routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Zamówienie produktów</a></li>
-                <li *ngIf="authenticationService.isAdmin() || authenticationService.isMagazynUser()" ><a [routerLink]="['products/suppliers'] " routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Dostawcy</a></li>
-                <li *ngIf="authenticationService.isAdmin()" ><a [routerLink]="['/products/category'] " routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Kategorie produktów</a></li>
-
-
-
-            </ul>
-        </li>
-
-
-            <li *ngIf="!isProdukcjaUser() " routerLinkActive="active_main" >
-                <h3 [class.cursor_dis]="isProdukcjaUser() || isMagazynUser()" class="tak"><span class="fa fa-address-card-o"></span>Klienci</h3>
+            <li routerLinkActive="active_main">
+                <h3 [class.cursor_dis]="isWysylkaUser() || isProdukcjaUser()" class="tak"><span
+                        class="fa fa-newspaper-o"></span>Produkty</h3>
                 <ul>
-                    <li *ngIf="isAdmin() || isBiuroUser() || isWysylkaUser()" ><a  [routerLink]="['/customer/list'] " routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Przeglądaj</a></li>
-                    <!--<li *ngIf="isAdmin() || isBiuroUser()" ><a [routerLink]="['/customer/add'] " routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Dodaj</a></li>-->
-                </ul>
-            </li>
-
-
-            <li  routerLinkActive="active_main">
-                <h3 [class.cursor_dis]="isWysylkaUser() || isMagazynUser()" ><span class="fa fa-shopping-basket"></span>Kosze</h3>
-                <ul>
-                    <li *ngIf="isAdmin() || isBiuroUser() || isProdukcjaUser()  "><a [routerLink]="['/baskets'] " routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Lista Koszy</a></li>
-                    <li *ngIf="isAdmin() || isBiuroUser()" ><a [routerLink]="['/baskets/add'] " routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Kreator Koszy</a></li>
-                    <li *ngIf="isAdmin() || isProdukcjaUser()" ><a [routerLink]="['baskets/inadvance'] " routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Dodaj kosze na stan</a></li>
+                    <li *ngIf="authenticationService.isAdmin() || authenticationService.isBiuroUser() ||
+                    authenticationService.isMagazynUser() ||authenticationService.isProdukcjaUser()">
+                        <a [routerLink]="['/product/'] " routerLinkActive="active"
+                           [routerLinkActiveOptions]="{ exact: true }">Przeglądaj</a></li>
+                    <li *ngIf="authenticationService.isAdmin() ||  authenticationService.isMagazynUser() "><a
+                            [routerLink]="['/product/add'] " routerLinkActive="active"
+                            [routerLinkActiveOptions]="{ exact: true }">Dodaj</a></li>
+                    <li *ngIf="authenticationService.isAdmin() || authenticationService.isMagazynUser()"><a
+                            [routerLink]="['/products/delivery'] " routerLinkActive="active"
+                            [routerLinkActiveOptions]="{ exact: true }">Dostawa</a></li>
+                    <li *ngIf="authenticationService.isAdmin() || authenticationService.isMagazynUser()"><a
+                            [routerLink]="['products/setdelivery'] " routerLinkActive="active"
+                            [routerLinkActiveOptions]="{ exact: true }">Zamówienie produktów</a></li>
+                    <li *ngIf="authenticationService.isAdmin() || authenticationService.isMagazynUser()"><a
+                            [routerLink]="['products/suppliers'] " routerLinkActive="active"
+                            [routerLinkActiveOptions]="{ exact: true }">Dostawcy</a></li>
+                    <li *ngIf="authenticationService.isAdmin()"><a [routerLink]="['/products/category'] "
+                                                                   routerLinkActive="active"
+                                                                   [routerLinkActiveOptions]="{ exact: true }">
+                        Kategorie produktów</a></li>
 
 
                 </ul>
             </li>
 
 
-            <li  routerLinkActive="active_main">
-                <h3 [class.cursor_dis]="false" ><span class="fa fa-shopping-basket"></span>Kosze EX</h3>
+            <li *ngIf="!isProdukcjaUser() " routerLinkActive="active_main">
+                <h3 [class.cursor_dis]="isProdukcjaUser() || isMagazynUser()" class="tak"><span
+                        class="fa fa-address-card-o"></span>Klienci</h3>
                 <ul>
-                    <li><a [routerLink]="['/basketsext'] " routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Lista Koszy EX</a></li>
-                    <li *ngIf="isAdmin()" ><a [routerLink]="['/basketsext/add'] " routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Kreator Koszy EX</a></li>
+                    <li *ngIf="isAdmin() || isBiuroUser() || isWysylkaUser()"><a [routerLink]="['/customer/list'] "
+                                                                                 routerLinkActive="active"
+                                                                                 [routerLinkActiveOptions]="{ exact: true }"
+                    >Przeglądaj</a>
+                    </li>
+                </ul>
+            </li>
+
+
+            <li routerLinkActive="active_main">
+                <h3 [class.cursor_dis]="isWysylkaUser() || isMagazynUser()"><span class="fa fa-shopping-basket"></span>
+                    Kosze
+                </h3>
+                <ul>
+                    <li *ngIf="isAdmin() || isBiuroUser() || isProdukcjaUser()  "><a [routerLink]="['/baskets'] "
+                                                                                     routerLinkActive="active"
+                                                                                     [routerLinkActiveOptions]="{ exact: true }">
+                        Lista Koszy</a></li>
+                    <li *ngIf="isAdmin() || isBiuroUser()"><a [routerLink]="['/baskets/add'] " routerLinkActive="active"
+                                                              [routerLinkActiveOptions]="{ exact: true }">
+                        Kreator Koszy</a></li>
+                    <li *ngIf="isAdmin() || isProdukcjaUser()"><a [routerLink]="['baskets/inadvance'] "
+                                                                  routerLinkActive="active"
+                                                                  [routerLinkActiveOptions]="{ exact: true }">
+                        Dodaj kosze na stan</a></li>
+
 
                 </ul>
             </li>
 
 
             <li routerLinkActive="active_main">
-                <h3 [class.cursor_dis]="false" ><span class="fa fa-pencil"></span>Zamówienia</h3>
+                <h3 [class.cursor_dis]="false"><span class="fa fa-shopping-basket"></span>Kosze EX</h3>
                 <ul>
-                    <li *ngIf="isProdukcjaUser()" ><a [routerLink]="['/orders/production']" routerLinkActive="active"[routerLinkActiveOptions]="{ exact: true }" >Lista zamówień</a></li>
-                    <li *ngIf="isAdmin() || isBiuroUser()" ><a [routerLink]="['/orders/baskets']" routerLinkActive="active"[routerLinkActiveOptions]="{ exact: true }" >Stwórz zamówienie</a></li>
-                    <li *ngIf="!isProdukcjaUser()"><a [routerLink]="['/orders/all']" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" >Lista zamówień</a></li>
+                    <li><a [routerLink]="['/basketsext'] " routerLinkActive="active"
+                           [routerLinkActiveOptions]="{ exact: true }">Lista Koszy EX</a></li>
+                    <li *ngIf="isAdmin()"><a [routerLink]="['/basketsext/add'] " routerLinkActive="active"
+                                             [routerLinkActiveOptions]="{ exact: true }">Kreator Koszy EX</a></li>
+
                 </ul>
             </li>
 
-            <li  *ngIf="isAdmin() || isWysylkaUser()">
-                <h3  [routerLink]="['/maps']"><span class="fa fa-map"></span>Mapy</h3>
+
+            <li routerLinkActive="active_main">
+                <h3 [class.cursor_dis]="false"><span class="fa fa-pencil"></span>Zamówienia</h3>
+                <ul>
+                    <li *ngIf="isProdukcjaUser()"><a [routerLink]="['/orders/production']" routerLinkActive="active"
+                                                     [routerLinkActiveOptions]="{ exact: true }">Lista zamówień</a></li>
+                    <li *ngIf="isAdmin() || isBiuroUser()"><a [routerLink]="['/orders/baskets']"
+                                                              routerLinkActive="active"
+                                                              [routerLinkActiveOptions]="{ exact: true }">Stwórz
+                        zamówienie</a></li>
+                    <li *ngIf="!isProdukcjaUser()"><a [routerLink]="['/orders/all']" routerLinkActive="active"
+                                                      [routerLinkActiveOptions]="{ exact: true }">Lista zamówień</a>
+                    </li>
+                </ul>
+            </li>
+
+            <li *ngIf="isAdmin() || isWysylkaUser()">
+                <h3 [routerLink]="['/maps']"><span class="fa fa-map"></span>Mapy</h3>
             </li>
 
             <li *ngIf="isAdmin() || isBiuroUser() || isWysylkaUser() || isProdukcjaUser()">
@@ -87,12 +123,16 @@
             </li>
 
             <li routerLinkActive="active_main">
-                <h3 ><span class="fa fa-pencil"></span>Program lojalnościowy</h3>
+                <h3><span class="fa fa-pencil"></span>Program lojalnościowy</h3>
                 <ul>
-                    <li *ngIf="isAdmin()" ><a [routerLink]="['/program/user']" routerLinkActive="active"[routerLinkActiveOptions]="{ exact: true }" >Użytkownicy</a></li>
-                    <li *ngIf="isAdmin()" ><a [routerLink]="['/program/orders']" routerLinkActive="active"[routerLinkActiveOptions]="{ exact: true }" >Zamówienia</a></li>
-                    <li *ngIf="isAdmin()" ><a [routerLink]="['/program/prize']" routerLinkActive="active"[routerLinkActiveOptions]="{ exact: true }" >Nagrody</a></li>
-                    <li *ngIf="isAdmin()" ><a [routerLink]="['/program/scheme']" routerLinkActive="active"[routerLinkActiveOptions]="{ exact: true }" >Schemat punktów</a></li>
+                    <li *ngIf="isAdmin()"><a [routerLink]="['/program/user']" routerLinkActive="active"
+                                             [routerLinkActiveOptions]="{ exact: true }">Użytkownicy</a></li>
+                    <li *ngIf="isAdmin()"><a [routerLink]="['/program/orders']" routerLinkActive="active"
+                                             [routerLinkActiveOptions]="{ exact: true }">Zamówienia</a></li>
+                    <li *ngIf="isAdmin()"><a [routerLink]="['/program/prize']" routerLinkActive="active"
+                                             [routerLinkActiveOptions]="{ exact: true }">Nagrody</a></li>
+                    <li *ngIf="isAdmin()"><a [routerLink]="['/program/scheme']" routerLinkActive="active"
+                                             [routerLinkActiveOptions]="{ exact: true }">Schemat punktów</a></li>
 
                 </ul>
             </li>
@@ -102,12 +142,22 @@
             </li>
 
             <li *ngIf="!isProdukcjaUser() ">
-                <h3 [class.cursor_dis]="isWysylkaUser() || isBiuroUser()" ><span class="fa fa-bar-chart"></span>Statystyki</h3>
+                <h3 [class.cursor_dis]="isWysylkaUser() || isBiuroUser()"><span class="fa fa-bar-chart"></span>
+                    Statystyki
+                </h3>
                 <ul>
-                    <li *ngIf="isMagazynOrProdukcjaOrAdmin()"><a [routerLink]="['/statistics/products']" routerLinkActive="active"[routerLinkActiveOptions]="{ exact: true }" >Statystka produktów</a></li>
-                    <li *ngIf="isMagazynOrProdukcjaOrAdmin()"><a [routerLink]="['/statistics/products2']" routerLinkActive="active"[routerLinkActiveOptions]="{ exact: true }" >Statystyka zużycia</a></li>
-                    <li *ngIf="isMagazynOrProdukcjaOrAdmin()" ><a [routerLink]="['/statistics/basket']" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" >Statystyka koszy</a></li>
-                    <!--<li *ngIf="isMagazynOrProdukcjaOrAdmin()" ><a [routerLink]="['/statistics/orderstats']" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" >Zamówienia  / Klienci</a></li>-->
+                    <li *ngIf="isMagazynOrProdukcjaOrAdmin()"><a [routerLink]="['/statistics/products']"
+                                                                 routerLinkActive="active"
+                                                                 [routerLinkActiveOptions]="{ exact: true }">
+                        Statystka produktów</a></li>
+                    <li *ngIf="isMagazynOrProdukcjaOrAdmin()"><a [routerLink]="['/statistics/products2']"
+                                                                 routerLinkActive="active"
+                                                                 [routerLinkActiveOptions]="{ exact: true }">
+                        Statystyka zużycia</a></li>
+                    <li *ngIf="isMagazynOrProdukcjaOrAdmin()"><a [routerLink]="['/statistics/basket']"
+                                                                 routerLinkActive="active"
+                                                                 [routerLinkActiveOptions]="{ exact: true }">
+                        Statystyka koszy</a></li>
 
                 </ul>
             </li>
@@ -130,34 +180,38 @@
 
         <div class="form-group">
             <small id="pass_Descript" class="text-muted">Podaj stare hasło</small>
-            <input type="password" name="pass_1" class="form-control"  [(ngModel)]="passwordChange.password" #pass="ngModel" aria-describedby="pass_Descript" required="">
+            <input type="password" name="pass_1" class="form-control" [(ngModel)]="passwordChange.password"
+                   #pass="ngModel" aria-describedby="pass_Descript" required="">
             <ul class="text-danger list-unstyled" *ngIf="pass.dirty|| formSubmitted">
-                <li  *ngIf="pass.errors?.required">Podaj stare hasło</li>
+                <li *ngIf="pass.errors?.required">Podaj stare hasło</li>
             </ul>
         </div>
 
         <div class="form-group">
             <small id="pass_1_Descript" class="text-muted">Podaj nowe hasło</small>
-            <input type="password" name="pass_1" class="form-control"  [(ngModel)]="passwordChange.newPassword" #pass_1="ngModel" aria-describedby="pass_1Descript" required="">
+            <input type="password" name="pass_1" class="form-control" [(ngModel)]="passwordChange.newPassword"
+                   #pass_1="ngModel" aria-describedby="pass_1Descript" required="">
             <ul class="text-danger list-unstyled" *ngIf="pass_1.dirty|| formSubmitted">
-                <li  *ngIf="pass_1.errors?.required">Podaj nowe hasło</li>
+                <li *ngIf="pass_1.errors?.required">Podaj nowe hasło</li>
             </ul>
         </div>
 
         <div class="form-group">
             <small id="pass_2_Descript" class="text-muted">Powtórz hasło</small>
-            <input type="password" name="pass_2" class="form-control"  [(ngModel)]="passwordConfirm" #pass_2="ngModel" aria-describedby="pass_2Descript" required="">
+            <input type="password" name="pass_2" class="form-control" [(ngModel)]="passwordConfirm" #pass_2="ngModel"
+                   aria-describedby="pass_2Descript" required="">
             <ul class="text-danger list-unstyled" *ngIf="pass_2.dirty|| formSubmitted">
-                <li  *ngIf="pass_2.errors?.required">Powtórz nowe hasło</li>
+                <li *ngIf="pass_2.errors?.required">Powtórz nowe hasło</li>
             </ul>
-            <ul class="text-danger list-unstyled" *ngIf="pass_1.dirty && pass_2.dirty && formSubmitted && passwordDontMatch">
+            <ul class="text-danger list-unstyled"
+                *ngIf="pass_1.dirty && pass_2.dirty && formSubmitted && passwordDontMatch">
                 <li>Hasła nie są takie same</li>
             </ul>
         </div>
 
-
         <p-footer>
-            <button class="btn bg-primary " type="submit" > Zmień</button> {{status}}
+            <button class="btn bg-primary " type="submit"> Zmień</button>
+            {{status}}
         </p-footer>
     </form>
 

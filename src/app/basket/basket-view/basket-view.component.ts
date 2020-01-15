@@ -5,7 +5,7 @@ import {Basket} from "../../model/basket.model";
 import {ConfirmationService, DataTable, LazyLoadEvent, OverlayPanel, SelectItem} from "primeng/primeng";
 import {BasketType} from "../../model/basket_type.model";
 import {AuthenticationService} from "../../authentication.service";
-import {AppConstans} from "../../constans";
+import {AppConstants} from "../../constans";
 import {ProductSubType} from "../../model/product_sub_type";
 import {ProductsService} from "../../products/products.service";
 import {SpinerService} from "../../spiner.service";
@@ -31,7 +31,7 @@ export class BasketComponent
 	@ViewChild('filterByProductsPrize') filterByProductsPrizeCheckBox: ElementRef;
 	@ViewChild('op') overlayPanel: OverlayPanel;
 	@ViewChild('dt') datatable: DataTable;
-	public paginatorValues = AppConstans.PAGINATOR_VALUES;
+	public paginatorValues = AppConstants.PAGINATOR_VALUES;
 	public productSubType: SelectItem[] = [];
 	public selectedCategories: any[] = [];
 	public selectedCategoriesIds: number[] = [];
@@ -129,11 +129,11 @@ export class BasketComponent
 	}
 
 	ShowConfirmModal(basket: Basket) {
-		if (basket.basketType.basketTypeId == AppConstans.BASKET_TYPE_ID_USUNIETY ) {
+		if (basket.basketType.basketTypeId == AppConstants.BASKET_TYPE_ID_USUNIETY ) {
 			this.confirmationService.confirm({
 				message: 'Jesteś pewny że chcesz trwale usunąć kosz ? ',
 				accept: () => {
-					basket.basketType = new BasketType(AppConstans.BASKET_TYPE_ID_ARCHWIUM);
+					basket.basketType = new BasketType(AppConstants.BASKET_TYPE_ID_ARCHWIUM);
 					this.basketService.saveBasketWithoutImg(basket).subscribe(data => {
 						this.refreshData();
 					});
@@ -145,7 +145,7 @@ export class BasketComponent
 			this.confirmationService.confirm({
 				message: 'Jesteś pewny że chcesz przenieś kosz  ' + basket.basketName + ' do archiwum ?',
 				accept: () => {
-					basket.basketType = new BasketType(AppConstans.BASKET_TYPE_ID_USUNIETY);
+					basket.basketType = new BasketType(AppConstants.BASKET_TYPE_ID_USUNIETY);
 					this.basketService.saveBasketWithoutImg(basket).subscribe(data => {
 						this.refreshData();
 					});
@@ -217,7 +217,7 @@ export class BasketComponent
 
 	printProductListInBasketPdf(basketId: number) {
 		this.basketService.getBasketPdf(basketId).subscribe(res => {
-				var fileURL = URL.createObjectURL(res);
+				let fileURL = URL.createObjectURL(res);
 				window.open(fileURL);
 			}
 		)

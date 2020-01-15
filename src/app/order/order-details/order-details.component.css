@@ -1,26 +1,40 @@
 
-.input-group-addon{
+.input-group-addon {
     min-width: 130px;
 }
-.customer_data_form{
+
+.customer_data_form {
     margin-bottom: 26px;
 }
-.order_detail_form{
+
+.order_detail_form {
 }
-.errorDesc{
-    display:inline-block;
+
+.errorDesc {
+    display: inline-block;
 }
-.form-group{
+
+.form-group {
     margin-bottom: 5px;
 }
-input.ng-dirty.ng-invalid { border: 1px solid #ff0000 }
-input.ng-dirty.ng-valid { border: 1px solid #6bc502 }
 
-select.ng-dirty.ng-invalid { border: 1px solid #ff0000 }
-select.ng-dirty.ng-valid { border: 1px solid #6bc502 }
+input.ng-dirty.ng-invalid {
+    border: 1px solid #ff0000
+}
 
+input.ng-dirty.ng-valid {
+    border: 1px solid #6bc502
+}
 
-.order_summary{
+select.ng-dirty.ng-invalid {
+    border: 1px solid #ff0000
+}
+
+select.ng-dirty.ng-valid {
+    border: 1px solid #6bc502
+}
+
+.order_summary {
     padding-left: 0px;
     padding-right: 0px;
 }
@@ -28,14 +42,11 @@ select.ng-dirty.ng-valid { border: 1px solid #6bc502 }
 button i {
     padding-right: 10px;
 }
+
 .customerpanels3 .ui-panel {
     margin-top: 20px;
 }
 
-/*.ui-fieldset-legend{*/
-    /*font-size: 25px;*/
-    /*color:#1e3850;*/
-/*}*/
 .btn {
     margin-right: 10px;
 }
@@ -43,6 +54,7 @@ button i {
 .fileLink {
     cursor: pointer;
 }
+
 .weekofyear_date {
     margin-right: 45px;
     position: relative;
@@ -50,24 +62,27 @@ button i {
     left: 10px;
 }
 
-.cont{
+.cont {
     position: relative;
 }
 
 .customerpanels .ui-panel {
     margin-top: 60px;
 }
+
 .customerpanels2 .ui-panel {
     margin-top: 30px;
 }
 
-.clean-button{
+.clean-button {
     position: absolute;
     top: 50px;
     left: 30px;
 }
 
-.pt { margin-top: 40px}
+.pt {
+    margin-top: 40px
+}
 
 .clean-company-icon {
     position: absolute;
@@ -76,14 +91,14 @@ button i {
     z-index: 9;
 }
 
-.edit-address-icon{
+.edit-address-icon {
     position: absolute;
     top: 5px;
     right: 82px;
     z-index: 9;
 }
 
-.pickfromdb{
+.pickfromdb {
     position: absolute;
     top: 0px;
     right: 6px;
@@ -104,14 +119,14 @@ button i {
     z-index: 9;
 }
 
-.add-company-icon{
+.add-company-icon {
     position: absolute;
     top: 5px;
     right: 55px;
     z-index: 9;
 }
 
-.edit-address-icon{
+.edit-address-icon {
     position: absolute;
     top: 5px;
     right: 82px;
@@ -119,21 +134,22 @@ button i {
     text-align: center;
 }
 
-.merge-button{
+.merge-button {
     margin-top: 20px;
 }
 
-.company_tab{
+.company_tab {
     border: 1px solid black;
     margin-top: 10px;
     margin-bottom: 10px;
 }
-.company_tab td{
+
+.company_tab td {
     padding: 7px;
     border: 1px solid black;
     cursor: pointer;
 }
 
-.d-table{
+.d-table {
     width: 400px;
 }
