@@ -11,7 +11,7 @@ import {MenuItem} from "primeng/api";
 import {File} from "../../model/file";
 import * as XLSX from "xlsx";
 import {OrderService} from "../../order/order.service";
-import {AppConstants} from "../../constans";
+import {AppConstants} from "../../constants";
 
 @Component({
 	selector: 'order-stats',
@@ -229,7 +229,7 @@ export class OrderStatsComponent
 
 	ShowConfirmModal(order: Order) {
 		console.log(order.orderStatus.orderStatusId);
-		if (order.orderStatus.AppConstants.ORDER_STATUS_NOWE) {
+		if (order.orderStatus.orderStatusId == AppConstants.ORDER_STATUS_NOWE) {
 			this.confirmationService.confirm({
 				message: 'Jesteś pewny że chcesz usunąć zamówienie nr:  ' + order.orderId + ' do kosza ?',
 				accept: () => {

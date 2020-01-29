@@ -7,7 +7,7 @@ import {BasketType} from "../../model/basket_type.model";
 import {AuthenticationService} from "../../authentication.service";
 import {MenuItem} from 'primeng/api';
 import {BasketExt} from '../../model/BasketExt';
-import {AppConstants} from "../../constans";
+import {AppConstants} from "../../constants";
 import {MessageServiceExt} from "../../messages/messageServiceExt";
 
 @Component({

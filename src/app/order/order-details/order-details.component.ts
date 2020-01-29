@@ -21,7 +21,7 @@ import {CustomerService} from "../../customer/customer.service";
 import {StringUtils} from "../../string-utils";
 import {SpinerService} from "../../spiner.service";
 import {RoutingState} from "../../routing-stage";
-import {AppConstants} from "../../constans";
+import {AppConstants} from "../../constants";
 import {User} from "../../model/user.model";
 import {UserService} from "../../user.service";
 
@@ -33,6 +33,9 @@ import {UserService} from "../../user.service";
 })
 export class OrderDetailsComponent
 	implements OnInit {
+	public DELIVERY_TYPE_KURIER_PACZKA_POBRANIE = AppConstants.DELIVERY_TYPE_KURIER_PACZKA_POBRANIE;
+	public DELIVERY_TYPE_OBIOR_OSOBISTY_POBRANIE = AppConstants.DELIVERY_TYPE_OBIOR_OSOBISTY_POBRANIE;
+	public DELIVERY_TYPE_NASZ_KIEROWCA_POBRANIE = AppConstants.DELIVERY_TYPE_NASZ_KIEROWCA_POBRANIE;
 	private static SECOND_IN_MILLIS: number = 1000;
 	public order: Order = new Order();
 	public programUsers: User [] = [];
@@ -217,11 +220,11 @@ export class OrderDetailsComponent
 		return !this.isCopyOfExistingOrder();
 	};
 
-	public getTitleForMainFieldset(fv: string): string {
+	public getTitleForMainFieldset(): string {
 		if (this.isCopyOfExistingOrder()) {
 			return "Duplikat zamówienia ";
 		} else {
-			return "Szczegóły zamówienia nr " + fv;
+			return "Szczegóły zamówienia nr " + this.order.orderFvNumber
 		}
 	}
 
@@ -519,7 +522,7 @@ export class OrderDetailsComponent
 			a.download = this.fileSendService.fileName;
 			a.href = blobURL
 			document.body.appendChild(a)
-			a.click()
+			a.click();
 			document.body.removeChild(a)
 		});
 	}

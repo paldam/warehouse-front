@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {UserService} from "../../user.service";
 import {User} from "../../model/user.model";
-import {AppConstants} from "../../constans";
+import {AppConstants} from "../../constants";
 import {AuthenticationService} from "../../authentication.service";
 import {NgForm} from "@angular/forms";
 import {Supplier} from "../../model/supplier.model";

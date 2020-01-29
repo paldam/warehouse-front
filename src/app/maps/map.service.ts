@@ -2,7 +2,7 @@ import {Injectable} from "@angular/core";
 import {Observable} from "rxjs/Observable";
 import {Headers, Http, RequestOptions} from "@angular/http";
 import {Order} from "../model/order.model";
-import {AppConstants} from "../constans";
+import {AppConstants} from "../constants";
 
 @Injectable()
 export class MapService {

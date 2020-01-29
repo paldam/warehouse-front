@@ -7,7 +7,7 @@ import {BasketSeason} from "../../model/basket_season.model";
 import {BasketService} from "../../basket/basket.service";
 import {NgForm} from "@angular/forms";
 import {SpinerService} from "../../spiner.service";
-import {AppConstants} from "../../constans";
+import {AppConstants} from "../../constants";
 
 @Component({
 	selector: 'app-points-scheme',

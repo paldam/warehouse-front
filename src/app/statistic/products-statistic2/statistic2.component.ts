@@ -5,7 +5,7 @@ import {NgForm} from "@angular/forms";
 import {SelectItem} from "primeng/api";
 import * as XLSX from "xlsx";
 import {DataTable} from "primeng/primeng";
-import {AppConstants} from "../../constans";
+import {AppConstants} from "../../constants";
 import {ProductSubType} from "../../model/product_sub_type";
 import {Supplier} from "../../model/supplier.model";
 declare var $: any;

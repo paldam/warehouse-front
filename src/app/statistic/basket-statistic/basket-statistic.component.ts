@@ -5,7 +5,7 @@ import {CalendarSetingsComponent} from "../../primeNgCalendarSetings/calendarSti
 import * as XLSX from "xlsx";
 import {DataTable} from "primeng/primeng";
 import {Router} from "@angular/router";
-import {AppConstants} from "../../constans";
+import {AppConstants} from "../../constants";
 declare var $: any;
 
 @Component({

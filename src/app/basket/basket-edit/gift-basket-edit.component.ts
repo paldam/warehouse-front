@@ -11,7 +11,7 @@ import {DataTable, FileUpload, SelectItem} from "primeng/primeng";
 import {MessageServiceExt} from "../../messages/messageServiceExt";
 import {BasketSeason} from "../../model/basket_season.model";
 import {Supplier} from "../../model/supplier.model";
-import {AppConstants} from "../../constans";
+import {AppConstants} from "../../constants";
 
 @Component({
 	selector: 'app-gift-basket-edit',

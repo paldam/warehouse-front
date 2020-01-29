@@ -12,7 +12,7 @@ import {MessageServiceExt} from "../../messages/messageServiceExt";
 import {BasketSeason} from "../../model/basket_season.model";
 import {Supplier} from "../../model/supplier.model";
 import {ProductSubType} from "../../model/product_sub_type";
-import {AppConstants} from "../../constans";
+import {AppConstants} from "../../constants";
 
 @Component({
 	selector: 'products-picker',

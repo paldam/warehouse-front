@@ -5,7 +5,7 @@ import {Basket} from "../../model/basket.model";
 import {ConfirmationService, DataTable, LazyLoadEvent, OverlayPanel, SelectItem} from "primeng/primeng";
 import {BasketType} from "../../model/basket_type.model";
 import {AuthenticationService} from "../../authentication.service";
-import {AppConstants} from "../../constans";
+import {AppConstants} from "../../constants";
 import {ProductSubType} from "../../model/product_sub_type";
 import {ProductsService} from "../../products/products.service";
 import {SpinerService} from "../../spiner.service";

@@ -248,8 +248,8 @@
                         </div>
 
 
-                        <div *ngIf="order.deliveryType?.deliveryTypeId==AppConstants.DELIVERY_TYPE_KURIER_PACZKA_POBRANIE || order.deliveryType?.deliveryTypeId==AppConstants.DELIVERY_TYPE_OBIOR_OSOBISTY_POBRANIE ||
-                         order.deliveryType?.deliveryTypeId==AppConstants.AppConstants.DELIVERY_TYPE_NASZ_KIEROWCA_POBRANIE">
+                        <div *ngIf="order.deliveryType?.deliveryTypeId==DELIVERY_TYPE_KURIER_PACZKA_POBRANIE || order.deliveryType?.deliveryTypeId==DELIVERY_TYPE_OBIOR_OSOBISTY_POBRANIE ||
+                         order.deliveryType?.deliveryTypeId==DELIVERY_TYPE_NASZ_KIEROWCA_POBRANIE">
                             <div class="form-group">
                                 <small id="codDescript" class="text-muted">Kwota pobrania</small>
                                 <input type="number" name="cod" #cod="ngModel" class="form-control" size="200"

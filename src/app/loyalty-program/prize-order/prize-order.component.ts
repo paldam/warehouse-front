@@ -3,7 +3,7 @@ import {UserService} from "../../user.service";
 import {AuthenticationService} from "../../authentication.service";
 import {MessageServiceExt} from "../../messages/messageServiceExt";
 import {User} from "../../model/user.model";
-import {AppConstants} from "../../constans";
+import {AppConstants} from "../../constants";
 import {PrizeOrder} from "../../model/prize-order.model";
 import {PrizeService} from "../prize.service";
 import {Order} from "../../model/order.model";

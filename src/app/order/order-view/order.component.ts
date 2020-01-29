@@ -8,7 +8,7 @@ import {FileSendService} from "../../file-send/file-send.service";
 import {MessageServiceExt} from "../../messages/messageServiceExt";
 import {MenuItem} from "primeng/api";
 import {File} from "../../model/file";
-import {AppConstants} from "../../constans";
+import {AppConstants} from "../../constants";
 import {RoutingState} from "../../routing-stage";
 import {UserService} from "../../user.service";
 import {User} from "../../model/user.model";
@@ -504,10 +504,10 @@ export class OrderComponent implements OnInit, OnDestroy {
 		})
 	}
 
-	//TODO
+	
 	changeOrderStatus(orderStatus: number) {
 		if (this.authenticationService.isProdukcjaUser()) {
-			if (this.selectedOrderFromRow.orderStatus.AppConstants.ORDER_STATUS_NOWE ||
+			if (this.selectedOrderFromRow.orderStatus == AppConstants.ORDER_STATUS_NOWE ||
 				this.selectedOrderFromRow.orderStatus.orderStatusId == this.ORDER_STATUS_W_TRAKCIE_REALIZACJI) {
 				this.orderService.changeOrderStatus(this.selectedToMenuOrder, orderStatus).subscribe(data => {
 					this.messageServiceExt.addMessage('success', 'Status', 'Zmieniono status zamówienia');
@@ -809,7 +809,7 @@ export class OrderComponent implements OnInit, OnDestroy {
 	}
 
 	ShowConfirmModal(order: Order) {
-		if (order.orderStatus.AppConstants.ORDER_STATUS_NOWE) {
+		if (order.orderStatus.orderStatusId == AppConstants.ORDER_STATUS_NOWE) {
 			this.confirmationService.confirm({
 				message: 'Jesteś pewny że chcesz usunąć zamówienie nr:  ' + order.orderId + ' do kosza ?',
 				accept: () => {
@@ -1047,8 +1047,16 @@ export class OrderComponent implements OnInit, OnDestroy {
 				zestawy += filt[i].orderItems[n].basket.basketName;
 				zestawy += " szt. " + filt[i].orderItems[n].quantity + " | ";
 			}
+
+			let companyTmp : string;
+			if(filt[i].customer.company == null){
+				companyTmp = "Brak"
+			}else{
+				companyTmp = filt[i].customer.company.companyName;
+			}
+
 			dataToGenerateFile[i] = {
-				"Firma": filt[i].customer.company.companyName,
+				"Firma": companyTmp,
 				"Nazwa Klienta": filt[i].customer.name,
 				"Telefon": filt[i].customer.phoneNumber,
 				"Email": filt[i].customer.email,

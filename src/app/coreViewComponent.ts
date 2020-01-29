@@ -1,6 +1,6 @@
 import {ViewChild} from "@angular/core";
 import {DataTable} from "primeng/primeng";
-import {AppConstants} from "./constans";
+import {AppConstants} from "./constants";
 
 export class CoreDataTableViewComponent {
 	public loading: boolean;

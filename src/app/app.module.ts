@@ -26,6 +26,7 @@ import {MapsComponent} from "./maps/maps.component";
 import {NotificationsService} from "./nav-bars/top-nav/notification.service";
 import {ServerSideEventsService} from "./server-side-events-service";
 import {FileSendService} from "./file-send/file-send.service";
+import {FileSendComponent} from "./file-send/file-send.component";
 
 export function httpExt(backend: XHRBackend, options: RequestOptions, router: Router, messageService: MessageService, messageServiceExt: MessageServiceExt) {
 	return new HttpService(backend, options, router, messageService, messageServiceExt);
@@ -37,6 +38,7 @@ export function httpExt(backend: XHRBackend, options: RequestOptions, router: Ro
 		NavComponent,
 		LeftNavComponent,
 		LoginComponent,
+		FileSendComponent,
 		MapsComponent
 	],
 	imports: [

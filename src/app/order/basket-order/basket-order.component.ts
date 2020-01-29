@@ -17,7 +17,7 @@ import {MessageServiceExt} from "../../messages/messageServiceExt";
 import {Company} from "../../model/company.model";
 import {StringUtils} from "../../string-utils";
 import {SpinerService} from "../../spiner.service";
-import {AppConstants} from "../../constans";
+import {AppConstants} from "../../constants";
 import {interval, Subscription} from "rxjs";
 import {UserService} from "../../user.service";
 import {User} from "../../model/user.model";
@@ -31,6 +31,9 @@ declare var $: any;
 	encapsulation: ViewEncapsulation.None
 })
 export class BasketOrderComponent implements OnInit, OnDestroy {
+	public DELIVERY_TYPE_KURIER_PACZKA_POBRANIE = AppConstants.DELIVERY_TYPE_KURIER_PACZKA_POBRANIE;
+	public DELIVERY_TYPE_OBIOR_OSOBISTY_POBRANIE = AppConstants.DELIVERY_TYPE_OBIOR_OSOBISTY_POBRANIE;
+	public DELIVERY_TYPE_NASZ_KIEROWCA_POBRANIE = AppConstants.DELIVERY_TYPE_NASZ_KIEROWCA_POBRANIE;
 	public selectedCompanyToMarge: Company [] = [];
 	public company: Company = {companyId: 0, companyName: "Klient indywidualny"};
 	public companyToPersist: Company = new Company();

@@ -1,5 +1,5 @@
 <div class="order_summary col-12">
-    <p-fieldset [legend]="getTitleForMainFieldset(order.orderFvNumber)" [toggleable]="true">
+    <p-fieldset [legend]="getTitleForMainFieldset()" [toggleable]="true">
 
         <div class="row">
             <div class="customer_data_form col-md-6">
@@ -273,8 +273,8 @@
                         </div>
 
 
-                        <div *ngIf="order.deliveryType?.deliveryTypeId==AppConstants.DELIVERY_TYPE_KURIER_PACZKA_POBRANIE || order.deliveryType?.deliveryTypeId==AppConstants.DELIVERY_TYPE_OBIOR_OSOBISTY_POBRANIE ||
-                        order.deliveryType?.deliveryTypeId==AppConstants.AppConstants.DELIVERY_TYPE_NASZ_KIEROWCA_POBRANIE">
+                        <div *ngIf="order.deliveryType?.deliveryTypeId==DELIVERY_TYPE_KURIER_PACZKA_POBRANIE || order.deliveryType?.deliveryTypeId==DELIVERY_TYPE_OBIOR_OSOBISTY_POBRANIE ||
+                        order.deliveryType?.deliveryTypeId==DELIVERY_TYPE_NASZ_KIEROWCA_POBRANIE">
                             <div class="form-group">
                                 <small id="codDescript" class="text-muted">Kwota pobrania</small>
                                 <input type="number" name="cod" #cod="ngModel" class="form-control" size="200"
@@ -435,9 +435,9 @@
                                    [value]="orderItems.quantity"
                                    (change)="updateQuantity(orderItems,$event.target.value)"
                                    [readonly]="(!authenticationService.isAdmin() && !authenticationService.isBiuroUser())
-                                    || order.orderStatus.orderStatusId == AppConstants.ORDER_STATUS_W_TRAKCIE_REALIZACJI">
+                                    || order.orderStatus.orderStatusId == ORDER_STATUS_W_TRAKCIE_REALIZACJI">
                         </td>
-                        <td *ngIf="order.orderStatus.orderStatusId != AppConstants.ORDER_STATUS_W_TRAKCIE_REALIZACJI"
+                        <td *ngIf="order.orderStatus.orderStatusId != ORDER_STATUS_W_TRAKCIE_REALIZACJI"
                             class="col_delete"><i class="fa fa-trash" aria-hidden="true"
                                                   (click)="deleteProductLine(orderItems.basket.basketId)"></i>
                         </td>

@@ -153,12 +153,12 @@
 
             <ng-template let-row="rowData" pTemplate="body">
 
-                <span *ngIf="(row.orderStatus.orderStatusId == AppConstants.ORDER_STATUS_W_TRAKCIE_REALIZACJI
+                <span *ngIf="(row.orderStatus.orderStatusId == ORDER_STATUS_W_TRAKCIE_REALIZACJI
                                 && (isCurrentPageOrdersView || isCurrentPageOrdersViewForProduction))">
                     <p-progressBar [ngClass]="{'progressbar-color-green': value < 50, 'progressbar-color-red': value > 50}"
                         [value]="row.progress">
                     </p-progressBar></span>
-                <span *ngIf="(row.orderStatus.orderStatusId != AppConstants.ORDER_STATUS_W_TRAKCIE_REALIZACJI ||
+                <span *ngIf="(row.orderStatus.orderStatusId != ORDER_STATUS_W_TRAKCIE_REALIZACJI ||
                                 isCurrentPageCustomerEdit || isCurrentPageOrdersViewRedirectedFromBasketStatitis)"
                       [ngStyle]="calculateStyles(row.orderStatus.orderStatusName)">{{row.orderStatus.orderStatusName }}</span>
             </ng-template>

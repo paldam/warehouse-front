@@ -5,7 +5,7 @@ import {Order} from "../../model/order.model";
 import {MessageServiceExt} from "../../messages/messageServiceExt";
 import {ConfirmationService} from "primeng/api";
 import {AuthenticationService} from "../../authentication.service";
-import {AppConstants} from "../../constans";
+import {AppConstants} from "../../constants";
 import {Router} from "@angular/router";
 import {RoutingState} from "../../routing-stage";
 

@@ -8,7 +8,7 @@ import {ProductsService} from "../products.service";
 import {Product} from "../../model/product.model";
 import {consoleTestResultsHandler} from "tslint/lib/test";
 import {AuthenticationService} from "../../authentication.service";
-import {AppConstants} from "../../constans";
+import {AppConstants} from "../../constants";
 import {ProductType} from "../../model/product_type.model";
 import {ProductSubType} from "../../model/product_sub_type";
 import {Supplier} from "../../model/supplier.model";

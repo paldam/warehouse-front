@@ -2,7 +2,7 @@ import {ChangeDetectorRef, Component, ElementRef, OnInit, ViewChild} from '@angu
 import {PrizeService} from "../prize.service";
 import {Prize} from "../../model/prize";
 import {User} from "../../model/user.model";
-import {AppConstants} from "../../constans";
+import {AppConstants} from "../../constants";
 import {JhiDataUtils} from "ng-jhipster";
 import {PrizeImgExt} from "../../model/prize_img_ext.model";
 import {NgForm} from "@angular/forms";
