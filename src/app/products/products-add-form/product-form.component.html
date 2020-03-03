@@ -13,6 +13,13 @@
             </div>
 
             <div class="form-group">
+                <small id="nameCatalogDescript" class="text-muted">Nazwa katalogowa</small>
+                <input type="text" name="catalog-name" class="form-control" [(ngModel)]="product.productCatalogName"
+                       #name="ngModel"
+                       aria-describedby="nameDescript">
+            </div>
+
+            <div class="form-group">
                 <small id="capacityDescript" class="text-muted">Pojemność</small>
                 <input type="text" name="capacity" class="form-control" [(ngModel)]="product.capacity"
                        #capacity="ngModel" aria-describedby="capacityDescript" required>
