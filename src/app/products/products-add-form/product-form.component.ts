@@ -52,7 +52,9 @@ export class ProductFormComponent
 			if (!this.product.price) {
 				this.product.price = 0;
 			}
-			this.product.price *= 100;
+
+			this.product.price = Math.round(this.product.price * 100);
+
 			this.product.isArchival = 0;
 			this.product.tmpStock = 0;
 			if (this.product.stock == null) {

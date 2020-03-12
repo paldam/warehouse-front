@@ -55,7 +55,7 @@ export class ProductEditFormComponent
 			if (!this.product.price) {
 				this.product.price = 0;
 			}
-			this.product.price = this.productPrice * 100;
+			this.product.price = Math.round(this.product.price * 100);
 			this.productsService.saveProduct(this.product).subscribe(
 				order => {
 					this.product = new Product();
