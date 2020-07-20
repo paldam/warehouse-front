@@ -83,7 +83,8 @@ export class StatisticComponent
 		this.productService.getProductsToOrder(this.startDate, this.endDate)
 			.subscribe(data => {
 				this.productsToOrder = data;
-				this.setAdditionalColumnWithConcatSupplierString()
+				this.setAdditionalColumnWithConcatSupplierString();
+				this.spinerService.showSpinner = false;
 			}, error1 => {
 				this.spinerService.showSpinner = false;
 			}, () => this.productsToOrder.forEach(value => {
@@ -102,7 +103,6 @@ export class StatisticComponent
 	}
 
 	orderProducts() {
-		console.log("qwdwq");
 		this.confirmationService.confirm({
 			message: 'Jesteś pewny że chcesz zamówić produkty widoczne w tabeli w ilościach z kolumny dostawa? ',
 			accept: () => {
