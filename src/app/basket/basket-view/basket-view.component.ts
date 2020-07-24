@@ -222,4 +222,12 @@ export class BasketComponent
 			}
 		)
 	}
+
+	printProductListInBasketCatalogNameVersionPdf(basketId: number) {
+		this.basketService.getBasketPdfCatalogNameVersion(basketId).subscribe(res => {
+				let fileURL = URL.createObjectURL(res);
+				window.open(fileURL);
+			}
+		)
+	}
 }

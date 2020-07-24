@@ -139,6 +139,9 @@
                    title="Pokaż zdjęcie kosza" (click)=" showBasketImg($event,basket.basketId)"></i>
                 <i class="fa fa-file-pdf-o fa-2x " aria-hidden="true" title="Drukuj skład kosza ze zdjęciem"
                    (click)="printProductListInBasketPdf(basket.basketId)"></i>
+                <i class="fa fa-file-pdf-o fa-2x " aria-hidden="true"
+                   title="Drukuj skład kosza ze zdjęciem (nazwa katalogowa)"
+                   (click)="printProductListInBasketCatalogNameVersionPdf(basket.basketId)"></i>
             </ng-template>
         </p-column>
 
@@ -148,17 +151,19 @@
 
                 <table class="d-table">
                     <colgroup>
-                        <col span="1" style="width: 50%;">
+                        <col span="1" style="width: 25%;">
+                        <col span="1" style="width: 25%;">
+                        <col span="1" style="width: 15%;">
+                        <col span="1" style="width: 15%;">
+                        <col span="1" style="width: 15%;">
                         <col span="1" style="width: 10%;">
-                        <col span="1" style="width: 15%;">
-                        <col span="1" style="width: 15%;">
-                        <col span="1" style="width: 15%;">
                         <col span="1" style="width: 10%;">
                     </colgroup>
 
                     <thead>
                     <tr>
                         <th>Nazwa Produktu</th>
+                        <th>Nazwa Katalogowa</th>
                         <th>Typ</th>
                         <th>Pojemność</th>
                         <th>Dostawca</th>
@@ -170,6 +175,7 @@
                     <tbody>
                     <tr *ngFor="let i of basket.basketItems">
                         <td>{{i.product.productName}}</td>
+                        <td>{{i.product.productCatalogName}}</td>
                         <td>{{i.product.productSubType?.subTypeName}}</td>
                         <td>{{i.product.capacity}}</td>
                         <td>{{i.product.suppliers[0]?.supplierName}}</td>

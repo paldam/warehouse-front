@@ -24,6 +24,7 @@
                 </ng-template>
             </p-column>
             <p-column field="productName" header="Nazwa" [sortable]="true"></p-column>
+            <p-column field="productCatalogName" header="Nazwa katalogowa" [sortable]="true"></p-column>
             <p-column field="capacity" header="Pojemność" [sortable]="true" [style]="{'width':'80px'}"></p-column>
 
 
@@ -81,6 +82,7 @@
                     <thead>
                     <tr>
                         <th>Nazwa</th>
+                        <th>Nazwa Katalogowa</th>
                         <th class="col_quantity">Ilość</th>
                         <th>Usuń</th>
                     </tr>
@@ -88,6 +90,7 @@
                     <tbody>
                     <tr *ngFor="let basketItems of basketItems">
                         <td scope="row">{{basketItems.product.productName}}</td>
+                        <td scope="row">{{basketItems.product.productCatalogName}}</td>
                         <td><input type="number" class="form-control" name="" id="" aria-describedby="helpId"
                                    placeholder="" min="0" [value]="basketItems.quantity"
                                    (change)="updateQuantity(basketItems,$event.target.value)"></td>
@@ -244,6 +247,7 @@
                         <thead>
                         <tr class="product_tab_row">
                             <th>Nazwa Produktu</th>
+                            <th>Nazwa Katalogowa</th>
                             <th>Pojemność</th>
                             <th>Cena zakupu</th>
                             <th>Ilość</th>
@@ -252,6 +256,7 @@
                         <tbody>
                         <tr class="product_tab_row" *ngFor="let i of basket.basketItems">
                             <td>{{i.product.productName}}</td>
+                            <td>{{i.product.productCatalogName}}</td>
                             <td>{{i.product.capacity}}</td>
                             <td>{{i.product.price/100| number : '1.2-2'}} zł</td>
                             <td>{{i.quantity}} szt.</td>

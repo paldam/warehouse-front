@@ -87,6 +87,13 @@ export class BasketService {
 			})
 	}
 
+	getBasketPdfCatalogNameVersion(id: number): any {
+		return this.http.get(this.baseUrl + `/basket/pdf/catalogname/${id}`, {responseType: ResponseContentType.Blob})
+			.map(res => {
+				return new Blob([res.blob()], {type: 'application/pdf'})
+			})
+	}
+
 	getBaskets(): Observable<Basket[]> {
 		return this.http.get(this.baseUrl + `/baskets/`)
 			.map((response: Response) => response.json());
