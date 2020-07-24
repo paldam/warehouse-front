@@ -29,6 +29,7 @@ export class ProductPickerComponent
 	public basketsToSchema: Basket[] = [];
 	public total: number = 0;
 	public formSubmitted: boolean = false;
+	public formSeasonSubmitted: boolean = false;
 	public fileToUpload: File = null;
 	public loading: boolean;
 	public basketPatterPickDialogShow: boolean = false;

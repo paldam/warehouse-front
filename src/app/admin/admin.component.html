@@ -101,6 +101,51 @@
     </div>
 </div>
 
+<div *ngIf="authenticationService.isAdmin()" class="row">
+    <div class="col-lg-4">
+
+        <p-fieldset legend="Sezony">
+
+
+            <form id="seasonForm" novalidate #formseason="ngForm" >
+
+                <div class="form-group">
+                    <small id="seasonDescript" class="text-muted">Nazwa sezonu</small>
+                    <input type="text" name="season" class="form-control" [(ngModel)]="basketSezonName" #season="ngModel"
+                           aria-describedby="loginDescript" required>
+                    <!--<ul class="text-danger list-unstyled" *ngIf="season.dirty || formSeasonSubmitted">-->
+                        <!--<li *ngIf="season.errors?.required && formSeasonSubmitted">To pole nie może być puste</li>-->
+                    <!--</ul>-->
+                </div>
+
+
+
+                <button class="btn bg-primary btn_dw " (click)="submitSeasonForm()"> Dodaj</button>
+            </form>
+
+
+
+
+            <p-dataTable [value]="basketSeasonList" [rows]="20" [paginator]="true" #dt
+                         [loading]="loading" loadingIcon="fa-circle-o-notch">
+                <p-header>Lista sezonów</p-header>
+
+                <p-column header="lp." [style]="{'width':'30px'}">
+                    <ng-template let-row="rowData" let-i="rowIndex" pTemplate="rowexpansion">
+                        {{i+1}}
+                    </ng-template>
+                </p-column>
+
+                <p-column field="basketSezonName" styleClass="name_col" header="Nazwa sezonu"
+                          [style]="{'width':'200px'}"></p-column>
+
+            </p-dataTable>
+
+        </p-fieldset>
+
+    </div>
+</div>
+
 <p-confirmDialog header="Usuwanie użytkownika" key="removeDialog" icon="fa fa-question-circle"
                  width="425"></p-confirmDialog>
 <p-confirmDialog header="Resetowanie hasła" key="resetDialog" icon="fa fa-question-circle"

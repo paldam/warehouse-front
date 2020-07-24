@@ -22,6 +22,13 @@ export class BasketService {
 			.map((response: Response) => response.json());
 	}
 
+	addBasketSeason(season: BasketSeason): Observable<Response> {
+		return this.http.post(this.baseUrl + `/baskets_seasons/add`, season)
+			.map((response: Response) => response.json());
+	}
+
+
+
 	saveBasketWithoutImg(basket: Basket): Observable<Response> {
 		return this.http.post(this.baseUrl + `/basketswithoutimage/`, basket)
 			.map((response: Response) => response.json());

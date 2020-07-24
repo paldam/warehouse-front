@@ -8,6 +8,8 @@ import {ConfirmationService} from "primeng/primeng";
 import {AuthenticationService, TOKEN_USER} from "../authentication.service";
 import {AdminService} from "./admin.service";
 import {MessageServiceExt} from "../messages/messageServiceExt";
+import {BasketSeason} from "../model/basket_season.model";
+import {BasketService} from "../basket/basket.service";
 
 @Component({
 	selector: 'app-admin',
@@ -17,9 +19,11 @@ import {MessageServiceExt} from "../messages/messageServiceExt";
 export class AdminComponent
 	implements OnInit {
 	public user: User = new User();
+	public basketSezonName: string;
 	public usersList: User[] = [];
 	public authorities: Authorities[] = [];
 	public formSubmitted: boolean = false;
+	public formSeasonSubmitted: boolean = false;
 	public passwordDontMatch: any = null;
 	public passwordConfirm: string = '';
 	public status: string = '';
@@ -27,9 +31,10 @@ export class AdminComponent
 	public changeModal: boolean = false;
 	public selectedUser: User = new User();
 	public authoritiesToSave: Authorities [] = [];
+	public basketSeasonList: BasketSeason[] = [];
 	public loading: boolean;
 
-	constructor(private userService: UserService, private router: Router, private confirmationService: ConfirmationService,
+	constructor(private basketService: BasketService,private userService: UserService, private router: Router, private confirmationService: ConfirmationService,
 				public authenticationService: AuthenticationService, public adminService: AdminService,
 				private messageServiceExt: MessageServiceExt) {
 		userService.getAuthorities().subscribe(data => {
@@ -37,14 +42,26 @@ export class AdminComponent
 		});
 		userService.getUsers().subscribe(data => {
 			this.usersList = data
-		})
+		});
+
+		this.basketService.getBasketSeason().subscribe(data => {
+			this.basketSeasonList = data;
+
+		});
+
 	}
 
 	ngOnInit() {
 	}
 
 	refreshData() {
-		this.userService.getUsers().subscribe(data => this.usersList = data)
+		console.log("refresh");
+		this.userService.getUsers().subscribe(data => this.usersList = data);
+		this.basketService.getBasketSeason().subscribe(data => {
+			this.basketSeasonList = data;
+			this.basketSeasonList.reverse();
+		});
+
 	}
 
 	submitForm(form: NgForm) {
@@ -70,6 +87,31 @@ export class AdminComponent
 			}
 		}
 	}
+
+	submitSeasonForm() {
+		this.formSeasonSubmitted = true;
+		if (this.basketSezonName) {
+
+			let season = new BasketSeason();
+			season.basketSezonName = this.basketSezonName.toUpperCase();
+
+			this.basketService.addBasketSeason(season).subscribe(data => {
+					this.basketSezonName= null;
+					this.refreshData();
+					this.formSeasonSubmitted = false;
+					this.messageServiceExt.addMessageWithTime('success', 'Status', 'Dodano sezon', 5000);
+
+				}, err => {
+					if (err.status == 500) {
+						this.status = "Błąd połączenia z bazą danych"
+					} else {
+						this.status = err.text();
+					}
+				});
+			}
+		}
+
+
 
 	submitChangeAuthForm(form: NgForm) {
 		this.selectedUser.authorities = this.authoritiesToSave;
