@@ -57,6 +57,7 @@ export class OrderComponent implements OnInit, OnDestroy {
 	public items: MenuItem[];
 	public exportItems: MenuItem[];
 	public productionUserList: any[] = [];
+	public productionUserListSelectItem: SelectItem[] = [];
 	public editCurrentOrderStateDialog: boolean = false;
 	public orderItemRowToEditState: OrderItem = new OrderItem();
 	public paginatorValues = AppConstants.PAGINATOR_VALUES;
@@ -103,6 +104,7 @@ export class OrderComponent implements OnInit, OnDestroy {
 
 	ngOnInit() {
 		this.getOrderStatusForDataTableFilter();
+		this.getProductionUserForDataTableFilter();
 		this.getOrderYearsForDataTableFilter();
 		this.getProductionUserForContextMenuSet();
 		this.setExportMenu();
@@ -147,7 +149,7 @@ export class OrderComponent implements OnInit, OnDestroy {
 			}, error1 => {
 			}, () => {
 				this.calculateOrderProcessInPercentForStatusInProgress();
-			})
+			});
 	}
 
 	private performSetDataActionForOrderViewProduction() {
@@ -229,6 +231,16 @@ export class OrderComponent implements OnInit, OnDestroy {
 		this.orderService.getOrderStatus().subscribe(data => {
 			data.forEach(value => {
 				this.orderStatusList.push({label: '' + value.orderStatusName, value: value.orderStatusId});
+			});
+		});
+	}
+
+
+
+	private getProductionUserForDataTableFilter() {
+		this.userService.getAllProductionUsers().subscribe(data => {
+			data.forEach(value => {
+				this.productionUserListSelectItem.push({label: '' + value.login, value: value.id});
 			});
 		});
 	}

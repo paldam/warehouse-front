@@ -127,8 +127,32 @@
         </p-column>
 
 
+
+
+
+
+
         <p-column [styleClass]="'removable-col'" field="productionUser.login" header="Produkcja"
-                  [style]="{'width':'60px', 'text-align':'center'}"></p-column>
+                  [style]="{'width':'150px', 'text-align':'center'}" [filter]="this.isCurrentPageOrdersView"
+                  filterMatchMode="equals">
+
+            <ng-template let-col pTemplate="filter">
+                <p-multiSelect [filter]="false" [showToggleAll]="false" [options]="productionUserListSelectItem"
+                               defaultLabel="Wszystkie"
+                               (onChange)="datatable.filter($event.value, col.field, 'in')"></p-multiSelect>
+            </ng-template>
+
+            <ng-template let-row="rowData" pTemplate="body">
+                {{row.productionUser?.login}}
+            </ng-template>
+
+        </p-column>
+
+
+
+
+
+
 
 
         <p-column [styleClass]="'removable-col'" field="weekOfYear" header="T" [sortable]="true"
@@ -143,7 +167,7 @@
 
 
         <p-column field="orderStatus.orderStatusName" header="Status" [style]="{'width':'150px', 'text-align':'center'}"
-                  [filter]="this.isCurrentPageOrdersView" filterMatchMode="equals" [sortable]="true">
+            [filter]="this.isCurrentPageOrdersView" filterMatchMode="equals" [sortable]="true">
 
             <ng-template let-col pTemplate="filter">
                 <p-multiSelect [filter]="false" [showToggleAll]="false" [options]="orderStatusList"
