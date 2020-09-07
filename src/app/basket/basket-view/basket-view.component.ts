@@ -85,6 +85,14 @@ export class BasketComponent
 		})
 	}
 
+	redirectToBasketEdit(basketId : number){
+
+		if(this.authenticationService.isAdmin() || this.authenticationService.isBiuroUser()){
+			this.router.navigateByUrl('/basket/' + basketId);
+		}
+
+	}
+
 	editBasketStock(basket: Basket) {
 		this.spinerService.showSpinner = true;
 		this.basketService.saveNewStockOfBasket(basket.basketId, basket.stock).subscribe(

@@ -66,11 +66,11 @@
 
 
             <li routerLinkActive="active_main">
-                <h3 [class.cursor_dis]="isWysylkaUser() || isMagazynUser()"><span class="fa fa-shopping-basket"></span>
+                <h3 [class.cursor_dis]="isWysylkaUser() "><span class="fa fa-shopping-basket"></span>
                     Kosze
                 </h3>
                 <ul>
-                    <li *ngIf="isAdmin() || isBiuroUser() || isProdukcjaUser()  "><a [routerLink]="['/baskets'] "
+                    <li><a [routerLink]="['/baskets'] "
                                                                                      routerLinkActive="active"
                                                                                      [routerLinkActiveOptions]="{ exact: true }">
                         Lista Koszy</a></li>

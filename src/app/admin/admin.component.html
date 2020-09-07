@@ -64,8 +64,16 @@
                 </p-column>
 
                 <p-column field="login" styleClass="name_col" header="Login" [style]="{'width':'200px'}"></p-column>
-                <p-column field="isArchival" styleClass="name_col" header="Archiwalny?"
-                          [style]="{'width':'200px'}"></p-column>
+
+
+                <p-column field="archival" styleClass="name_col" sortable="true" header="Archiwalny?"
+                          [style]="{'width':'200px'} ">
+                    <ng-template let-i="rowData" pTemplate="body">
+                        <i *ngIf="i.archival"> Tak </i>
+                        <i *ngIf="!i.archival"> Nie </i>
+                    </ng-template>
+                </p-column>
+
 
                 <p-column styleClass="price_col" header="Uprawnienia">
                     <ng-template let-i="rowData" pTemplate="body">

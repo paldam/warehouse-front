@@ -75,7 +75,7 @@
     <p-dataTable [value]="baskets" [rows]="20" [paginator]="true" [globalFilter]="gb" #dt
                  [loading]="loading" loadingIcon="fa-circle-o-notch" expandableRows="true" [paginator]="true"
                  [pageLinks]="5" [rowsPerPageOptions]=paginatorValues
-                 (onRowDblclick)="router.navigateByUrl('/basket/' + $event.data.basketId)"
+                 (onRowDblclick)="redirectToBasketEdit($event.data.basketId)"
                  [editable]="this.authenticationService.isAdmin()" (onEditComplete)="editBasketStock($event.data)"
                  [lazy]="true" (onLazyLoad)="loadBasketsLazy($event)" [totalRecords]="totalRecords">
         <p-column expander="true" header="Zawartość" styleClass="col-icon " [style]="{'width':'70px'}"></p-column>
