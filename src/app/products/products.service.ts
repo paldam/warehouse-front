@@ -1,12 +1,13 @@
 import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs/Observable';
 import {Product} from '../model/product.model';
-import {Response} from '@angular/http';
+import {Response, ResponseContentType} from '@angular/http';
 import 'rxjs/add/operator/map';
 import {ProductType} from '../model/product_type.model';
 import {HttpService} from "../http-service";
 import {Supplier} from "../model/supplier.model";
 import {ProductSubType} from "../model/product_sub_type";
+import {Basket} from "../model/basket.model";
 
 @Injectable()
 export class ProductsService {
@@ -126,6 +127,24 @@ export class ProductsService {
 		//.map((response: Response) => response.json());
 	}
 
+	saveProductWithImg(product: Product, fileToUpload: File): Observable<Response> {
+		const formData: FormData = new FormData();
+		formData.append('productimage', fileToUpload, fileToUpload.name);
+		const blobOverrides = new Blob([JSON.stringify(product)], {
+			type: 'application/json',
+		});
+		formData.append('productobject', blobOverrides);
+		return this.http.post(this.baseUrl + `/productwithimg/`, formData)
+			.map((response: Response) => response.json());
+	}
+
+
+	saveBasketWithoutImg(product: Product): Observable<Response> {
+		return this.http.post(this.baseUrl + `/productwithoutimage/`, product)
+			.map((response: Response) => response.json());
+	}
+
+
 	saveProductType(productType: ProductType): Observable<Response> {
 		return this.http.post(this.baseUrl + `/products/types`, productType)
 		//.map((response: Response) => response.json());
@@ -138,5 +157,12 @@ export class ProductsService {
 
 	deleteProduct(id: number): Observable<Response> {
 		return this.http.delete(this.baseUrl + `/products/${id}`)
+	}
+
+	getProductImg(productId: number): any {
+		return this.http.get(this.baseUrl + `/productimage/${productId}`, {responseType: ResponseContentType.Blob})
+			.map(res => {
+				return new Blob([res.blob()], {type: 'image/jpeg'})
+			})
 	}
 }

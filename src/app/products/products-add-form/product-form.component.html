@@ -82,6 +82,32 @@
                 </ul>
             </div>
 
+
+            <div class="form-group">
+                <small id="add_file" class="text-muted">Wgraj zdjęcie produktu</small>
+                <p-fileUpload name="files" accept=".jpg"
+                              invalidFileTypeMessageSummary="Niedozwolony typ pliku"
+                              invalidFileTypeMessageDetail="Dozwolone sa tylko pliki .jpg"
+                              maxFileSize="250000" [showUploadButton]="false"
+                              (onRemove)="enableUploadButton()" (onError)="enableUploadButton()"
+                              (onClear)="enableUploadButton()"
+                              invalidFileSizeMessageSummary="{0} - plik jest za duży"
+                              invalidFileSizeMessageDetail="rozmiar pliku może wynosić maksymalnie {0}"
+                              chooseLabel="Wybierz zdjęcie" uploadLabel="Wgraj" cancelLabel="Anuluj"
+                              (onSelect)="handleFileInput($event)">
+
+
+                </p-fileUpload>
+            </div>
+
+
+            <div *ngIf="this.fileUploadElement.files.length !=1 && formSubmitted
+                                     && this.basket.basketType?.basketTypeId == 1"
+                 class="alert alert-danger" role="alert">
+                <strong>Wgraj plik </strong>
+            </div>
+
+
             <button class="btn bg-primary " form="productForm" type="submit"> Zatwierdź</button>
 
             <button class="btn bg-primary" type="button" (click)="addSupplierWindowOn()"> Dodaj dostawcę</button>

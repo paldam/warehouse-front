@@ -84,6 +84,37 @@
             </div>
 
 
+            <p-panel class="panel_image" [header]="'Zdjęcie kosza'">
+
+
+                <div *ngIf="product.isProductImg== 1" class="imgcontener">
+                    <img [src]="productImage" [width]="200" [height]="200">
+                </div>
+
+                <div *ngIf="product.isProductImg== 0">Brak zdjęcia produktu</div>
+
+            </p-panel>
+
+            <div class="form-group">
+                <small id="add_file" class="text-muted">Wgraj zdjęcie produktu</small>
+                <p-fileUpload name="files" accept=".jpg"
+                              invalidFileTypeMessageSummary="Niedozwolony typ pliku"
+                              invalidFileTypeMessageDetail="Dozwolone sa tylko pliki .jpg"
+                              maxFileSize="250000" [showUploadButton]="false"
+                              (onRemove)="enableUploadButton();setWheterImgIsSet()"
+                              (onError)="enableUploadButton();setWheterImgIsSet()"
+                              (onClear)="enableUploadButton();setWheterImgIsSet()"
+                              invalidFileSizeMessageSummary="{0} - plik jest za duży"
+                              invalidFileSizeMessageDetail="rozmiar pliku może wynosić maksymalnie {0}"
+                              [chooseLabel]="product.isProductImg ==0 ? 'Wybierz zdjęcie' : 'Zmień zdjęcie'"
+                              uploadLabel="Wgraj" cancelLabel="Anuluj"
+                              (onSelect)="handleFileInput($event)">
+
+
+                </p-fileUpload>
+            </div>
+
+
             <button class="btn bg-primary" type="submit"> Zatwierdź</button>
 
         </form>

@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, ViewChild} from '@angular/core';
 import {Product} from '../../model/product.model';
 import {NgForm} from '@angular/forms';
 import {ProductsService} from '../products.service';
@@ -8,6 +8,7 @@ import {Supplier} from "../../model/supplier.model";
 import {MessageServiceExt} from "../../messages/messageServiceExt";
 import {ProductSubType} from "../../model/product_sub_type";
 import {SelectItem} from "primeng/api";
+import {FileUpload} from "primeng/primeng";
 
 @Component({
 	selector: 'product-form',
@@ -26,9 +27,11 @@ export class ProductFormComponent
 	public addSupplierWindow: boolean = false;
 	public selectedSuppliersToAddEdit: Supplier[] = [];
 	public supplierRequiredError: boolean = false;
+	@ViewChild(FileUpload) fileUploadElement: FileUpload;
+	public fileToUpload: File = null;
 
 	constructor(private productsService: ProductsService, private router: Router,
-                private messageServiceExt: MessageServiceExt) {
+				private messageServiceExt: MessageServiceExt) {
 		productsService.getSuppliers().subscribe(data => this.productSuppliers = data);
 		productsService.getProductsSubTypes().subscribe(data => {
 			this.productSubTypes = data;
@@ -58,18 +61,37 @@ export class ProductFormComponent
 			if (this.product.stock == null) {
 				this.product.stock = 0;
 			}
-			this.productsService.saveProduct(this.product).subscribe(
-				order => {
-					this.product = new Product();
-					this.selectedSuppliersToAddEdit = [];
-					form.reset();
-					this.formSubmitted = false;
-					this.messageServiceExt.addMessage('success', 'Status', 'Poprawnie dodano produkt do bazy');
-					this.router.navigateByUrl('/product');
-				}
-				, error => {
-					this.messageServiceExt.addMessage('error', 'Błąd', "Status: " + error.status + ' ' + error.statusText);
-				});
+			if (this.fileUploadElement.files.length == 1) {
+				this.productsService.saveProductWithImg(this.product, this.fileToUpload).subscribe(data => {
+					},
+					error => {
+						this.messageServiceExt.addMessage(
+							'error', 'Błąd', "Status: " + error.status + ' ' + error.statusText)
+					},
+					() => {
+						this.messageServiceExt.addMessage(
+							'success', 'Status', 'Poprawnie dodano produkt do bazy');
+						this.product = new Product();
+						this.selectedSuppliersToAddEdit = [];
+						form.reset();
+						this.formSubmitted = false;
+						this.fileUploadElement.clear();
+						this.router.navigateByUrl('/product');
+					});
+			} else {
+				this.productsService.saveProduct(this.product).subscribe(
+					order => {
+						this.product = new Product();
+						this.selectedSuppliersToAddEdit = [];
+						form.reset();
+						this.formSubmitted = false;
+						this.messageServiceExt.addMessage('success', 'Status', 'Poprawnie dodano produkt do bazy');
+						this.router.navigateByUrl('/product');
+					}
+					, error => {
+						this.messageServiceExt.addMessage('error', 'Błąd', "Status: " + error.status + ' ' + error.statusText);
+					});
+			}
 		}
 	}
 
@@ -106,5 +128,16 @@ export class ProductFormComponent
 
 	checkSupplierValid() {
 		this.supplierRequiredError = this.selectedSuppliersToAddEdit.length == 0;
+	}
+
+	enableUploadButton() {
+		this.fileUploadElement.disabled = false;
+	}
+
+	handleFileInput(event) {
+		this.fileToUpload = this.fileUploadElement.files[0];
+		if (this.fileUploadElement.files.length == 1) {
+			this.fileUploadElement.disabled = true;
+		}
 	}
 }

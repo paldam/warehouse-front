@@ -91,6 +91,10 @@
                 <i *ngIf="authenticationService.isAdmin() ||  authenticationService.isMagazynUser() "
                    class="fa fa-trash fa-2x edit_icon" aria-hidden="true" title="Usuń produkt"
                    (click)="ShowConfirmModal(product)"></i>
+                <i *ngIf="product.isProductImg!=1" class="fa fa-picture-o fa-2x" style="color:grey" aria-hidden="true"
+                   title="Zdjęcie produktu niedostępne"></i>
+                <i *ngIf="product.isProductImg==1" class="fa fa-picture-o fa-2x" aria-hidden="true"
+                   title="Pokaż zdjęcie kosza" (click)=" showProductImg($event,product.id)"></i>
             </ng-template>
         </p-column>
 
@@ -118,4 +122,8 @@
         </tbody>
     </table>
 
+</p-dialog>
+
+<p-dialog header="Produkt" [(visible)]="showImageFrame">
+    <img [src]="imageToShow" [height]="700" [width]="700">
 </p-dialog>

@@ -17,7 +17,8 @@ export class Product {
 		public suppliers?: Supplier[],
 		public productType?: ProductType,
 		public productSubType?: ProductSubType,
-		public lastStockEditDate?: Date
+		public lastStockEditDate?: Date,
+		public isProductImg?: number,
 	) {
 	}
 }

@@ -24,6 +24,8 @@ export class ProductsComponent implements OnInit {
 	public loading: boolean;
 	public products: Product[] = [];
 	public lastVisitedPage: number;
+	public imageToShow: any;
+	public showImageFrame: boolean = false;
 	public findInputtext: string = "";
 	public showBasketsContainsSpecyficProductModal: boolean = false;
 	public basketsListByProduct: any[];
@@ -157,4 +159,23 @@ export class ProductsComponent implements OnInit {
 			this.dataFilterLoaded = Promise.resolve(true);
 		})
 	}
+
+	showProductImg(event, productId: number) {
+		this.productsService.getProductImg(productId).subscribe(res => {
+			this.createImageFromBlob(res);
+		});
+		this.showImageFrame = true;
+	}
+
+	private createImageFromBlob(image: Blob) {
+		let reader = new FileReader();
+		reader.addEventListener("load", () => {
+			this.imageToShow = reader.result;
+		}, false);
+		if (image) {
+			reader.readAsDataURL(image);
+		}
+	}
+
+
 }
