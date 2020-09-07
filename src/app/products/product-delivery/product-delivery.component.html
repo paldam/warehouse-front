@@ -53,7 +53,7 @@
 
             <p-column field="add" styleClass="add_col" header="Dodaj" [sortable]="true">
                 <ng-template let-row="rowData" pTemplate="body" type="number">
-                    <p-spinner size="4" [(ngModel)]="row.add" [min]="0"></p-spinner>
+                    <p-spinner size="4"  [(ngModel)]="row.add" [min]="0"></p-spinner>
                     <i class="plusic fa fa-2x fa-plus-circle" aria-hidden="true"
                        (click)="addToStockOrToOrder(row.id, row.add)"> </i>
                 </ng-template>

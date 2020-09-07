@@ -45,7 +45,16 @@ export class ProductDeliveryComponent
 		}, () => {
 			this.productSuppliers.unshift(new Supplier(-99, 'WSZYSCY DOSTAWCY', null, null, null, null, null))
 		});
+
 		this.productsService.getProducts().subscribe(data => this.products = data);
+
+		this.productsService.getProducts().subscribe((data: any) => {
+			data.forEach(function (obj) {
+				obj.add = obj.tmpOrdered;
+			});
+
+			this.products = data;
+	});
 	}
 
 	ngOnInit() {
@@ -82,6 +91,9 @@ export class ProductDeliveryComponent
 		})
 	}
 
+
+
+
 	filterTableBySupplier(supplierId: number) {
 		this.spinerService.showSpinner = true;
 		setTimeout(() => {
@@ -98,15 +110,24 @@ export class ProductDeliveryComponent
 		}
 		this.productsService.saveProduct(event.data).subscribe(data => {
 			this.messageServiceExt.addMessageWithTime('success', 'Status', 'Dokonano edycji stanu produktu', 1000);
+
 		}, error => {
 			this.messageServiceExt.addMessage('error', 'Błąd', "Status: " + error.status + ' ' + error.statusText);
+		},() => {
+			this.refreshData();
 		});
 	}
 
 	refreshData() {
 		this.spinerService.showSpinner = true;
-		this.productsService.getProducts().subscribe(data => {
-			this.products = data
+
+		this.productsService.getProducts().subscribe((data: any) => {
+			data.forEach(function (obj) {
+				obj.add = obj.tmpOrdered;
+			});
+
+			this.products = data;
+
 		}, error1 => {
 			this.spinerService.showSpinner = false;
 		}, () => {

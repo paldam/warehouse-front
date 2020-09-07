@@ -56,6 +56,7 @@ export class ProductFormComponent
 				this.product.price = 0;
 			}
 			this.product.price *= 100;
+			this.product.productName = this.product.productName.toUpperCase();
 			this.product.isArchival = 0;
 			this.product.tmpStock = 0;
 			if (this.product.stock == null) {

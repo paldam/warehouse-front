@@ -57,6 +57,7 @@ export class ProductEditFormComponent
 	submitForm(form: NgForm) {
 		this.formSubmitted = true;
 		this.checkSupplierValid();
+		this.product.productName = this.product.productName.toUpperCase();
 		if (form.valid && this.selectedSuppliersToAddEdit.length > 0 && this.product.productSubType) {
 			this.product.suppliers = this.selectedSuppliersToAddEdit;
 			if (!this.product.price) {
