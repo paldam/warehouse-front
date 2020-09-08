@@ -418,7 +418,7 @@
                                    [disabled]="isProductionInputDisable(orders.orderStatus.orderStatusId) || row.quantityFromSurplus > 0"
                                    class="form-control" aria-describedby="helpId" placeholder="" min="0"
                                    [max]="row.quantity" [value]="row.stateOnProduction"
-                                   (change)="updateStateOnProduction(orders,$event.target.value,i);test($event)">
+                                   (change)="updateStateOnProduction(orders,$event.target.value,i)">
                         </td>
 
                         <td>

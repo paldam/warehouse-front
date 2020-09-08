@@ -31,7 +31,8 @@
             <p-column field="suppliers" header="Dostawca" [filter]="true" filterMatchMode="inCollection"
                       [style]="{'width':'220px'}">
                 <ng-template pTemplate="filter" let-col>
-                    <p-dropdown [filter]="true" [options]="suppliers" placeholder="Wszyscy" [style]="{'width':'100%'}"
+                    <p-dropdown [filter]="true" [options]="suppliers" placeholder="Wszyscy"
+                                [resetFilterOnHide]="true" [showClear]="true" [style]="{'width':'100%'}"
                                 (onChange)="dataTable.filter($event.value,col.field,col.filterMatchMode)"
                                 styleClass="ui-column-filter"></p-dropdown>
                 </ng-template>
@@ -41,9 +42,10 @@
             </p-column>
 
             <p-column field="productSubType.subTypeName" styleClass="type_col" [filter]="true" header="Typ produktu"
-                      [style]="{'width':'220px'}" filterMatchMode="equals" [sortable]="true">
+                      [style]="{'width':'220px'}" filterMatchMode="equals" [sortable]="true" >
                 <ng-template let-col pTemplate="filter">
-                    <p-multiSelect [filter]="true" [showToggleAll]="false" [options]="productsType"
+                    <p-multiSelect [filter]="true" [resetFilterOnHide]="true" [showToggleAll]="true"
+                                   [options]="productsType"
                                    defaultLabel="Wszystkie"
                                    (onChange)="dataTable.filter($event.value, col.field, 'in')"></p-multiSelect>
                 </ng-template>

@@ -27,7 +27,9 @@ import {Notification} from "../../model/notification";
 	templateUrl: './order.component.html',
 	styleUrls: ['./order.component.css']
 })
-export class OrderComponent implements OnInit, OnDestroy {
+export class OrderComponent
+	implements OnInit,
+			   OnDestroy {
 	public pageType: OrderViewPageType;
 	public selectedOrderFromRow: Order = new Order();
 	public ORDER_STATUS_W_TRAKCIE_REALIZACJI = AppConstants.ORDER_STATUS_W_TRAKCIE_REALIZACJI;
@@ -91,7 +93,6 @@ export class OrderComponent implements OnInit, OnDestroy {
 				private fileSendService: FileSendService, private serverSideEventsService: ServerSideEventsService,
 				private  messageServiceExt: MessageServiceExt, private routingState: RoutingState,
 				private spinerService: SpinerService, public notificationsService: NotificationsService) {
-
 		this.setCurentPageType();
 		this.setSearchOptions();
 		this.setOrderData();
@@ -235,8 +236,6 @@ export class OrderComponent implements OnInit, OnDestroy {
 		});
 	}
 
-
-
 	private getProductionUserForDataTableFilter() {
 		this.userService.getAllProductionUsers().subscribe(data => {
 			data.forEach(value => {
@@ -279,7 +278,8 @@ export class OrderComponent implements OnInit, OnDestroy {
 	}
 
 	updateOrderProgress(order: Order) {
-		this.orderService.changeOrderProgress(order.orderId, order.orderItems).subscribe(value => {
+		let orderTmp: Order = this.orders.find(data => data.orderId == order.orderId);
+		this.orderService.changeOrderProgress(orderTmp.orderId, orderTmp.orderItems).subscribe(value => {
 		}, error => {
 			let orderTmp: Order;
 			this.orderService.getOrder(order.orderId).subscribe(data => {
@@ -516,7 +516,6 @@ export class OrderComponent implements OnInit, OnDestroy {
 		})
 	}
 
-	
 	changeOrderStatus(orderStatus: number) {
 		if (this.authenticationService.isProdukcjaUser()) {
 			if (this.selectedOrderFromRow.orderStatus == AppConstants.ORDER_STATUS_NOWE ||
@@ -613,16 +612,16 @@ export class OrderComponent implements OnInit, OnDestroy {
 		this.orderService.getOrdersDto(
 			pageNumber, event.rows, event.globalFilter, sortField, event.sortOrder, orderStatusFilterList, orderDataFilterList)
 			.subscribe((data: any) => {
-				this.orders = data.orderDtoList;
-				this.totalRecords = data.totalRowsOfRequest;
-			}, null
-			, () => {
-				this.loading = false;
-				this.calculateOrderProcessInPercentForStatusInProgress();
-				if (this.expandedRowOrderId != 0) {
-					this.expandRowAfterRefresh();
-				}
-			})
+					this.orders = data.orderDtoList;
+					this.totalRecords = data.totalRowsOfRequest;
+				}, null
+				, () => {
+					this.loading = false;
+					this.calculateOrderProcessInPercentForStatusInProgress();
+					if (this.expandedRowOrderId != 0) {
+						this.expandRowAfterRefresh();
+					}
+				})
 	}
 
 	rowExpand(event) {
@@ -631,19 +630,13 @@ export class OrderComponent implements OnInit, OnDestroy {
 			let index;
 			let dataTmp;
 			console.log(event.data);
-
-
 			this.orderService.getOrder(event.data.orderId).subscribe(data => {
 				index = this.orders.findIndex((value: Order) => {
-
 					return value.orderId == event.data.orderId;
 				});
 				dataTmp = data;
 				this.orders[index] = dataTmp;
-
 				console.log(this.orders[index])
-
-
 			});
 		}
 	}
@@ -658,43 +651,43 @@ export class OrderComponent implements OnInit, OnDestroy {
 	updateSpecifiedOrderItemProgressOnWarehouse(orderItemId: number, newStateValueOnWarehouse: number) {
 		this.orderService.changeSpecifiedOrderItemProgressOnWarehouse(orderItemId, newStateValueOnWarehouse)
 			.subscribe(data => {
-			this.messageServiceExt.addMessage('success', 'Status', 'Zmieniono ilość gotowych koszy');
-		}, error => {
-			this.editCurrentOrderStateDialog = false;
-			this.refreshData();
-		}, () => {
-			this.editCurrentOrderStateDialog = false;
-			this.orderItemRowToEditState = new OrderItem();
-			this.refreshData();
-		})
+				this.messageServiceExt.addMessage('success', 'Status', 'Zmieniono ilość gotowych koszy');
+			}, error => {
+				this.editCurrentOrderStateDialog = false;
+				this.refreshData();
+			}, () => {
+				this.editCurrentOrderStateDialog = false;
+				this.orderItemRowToEditState = new OrderItem();
+				this.refreshData();
+			})
 	}
 
 	updateSpecifiedOrderItemProgressOnProduction(orderItemId: number, newStateValueOnWarehouse: number) {
 		this.orderService.changeSpecifiedOrderItemProgressOnProduction(orderItemId, newStateValueOnWarehouse)
 			.subscribe(data => {
-			this.messageServiceExt.addMessage('success', 'Status', 'Zmieniono ilość gotowych koszy');
-		}, error => {
-			this.editCurrentOrderStateDialog = false;
-			this.refreshData();
-		}, () => {
-			this.editCurrentOrderStateDialog = false;
-			this.orderItemRowToEditState = new OrderItem();
-			this.refreshData();
-		})
+				this.messageServiceExt.addMessage('success', 'Status', 'Zmieniono ilość gotowych koszy');
+			}, error => {
+				this.editCurrentOrderStateDialog = false;
+				this.refreshData();
+			}, () => {
+				this.editCurrentOrderStateDialog = false;
+				this.orderItemRowToEditState = new OrderItem();
+				this.refreshData();
+			})
 	}
 
 	updateSpecifiedOrderItemProgressOnLogistics(orderItemId: number, newStateValueOnWarehouse: number) {
 		this.orderService.changeSpecifiedOrderItemProgressOnLogistics(orderItemId, newStateValueOnWarehouse)
 			.subscribe(data => {
-			this.messageServiceExt.addMessage('success', 'Status', 'Zmieniono ilość gotowych koszy');
-		}, error => {
-			this.editCurrentOrderStateDialog = false;
-			this.refreshData();
-		}, () => {
-			this.editCurrentOrderStateDialog = false;
-			this.orderItemRowToEditState = new OrderItem();
-			this.refreshData();
-		})
+				this.messageServiceExt.addMessage('success', 'Status', 'Zmieniono ilość gotowych koszy');
+			}, error => {
+				this.editCurrentOrderStateDialog = false;
+				this.refreshData();
+			}, () => {
+				this.editCurrentOrderStateDialog = false;
+				this.orderItemRowToEditState = new OrderItem();
+				this.refreshData();
+			})
 	}
 
 	updateSpecifiedOrderItemProgressOnWarehouseByAddValue(orderItemId: number, newStateValueToAddOnWarehouse: number) {
@@ -702,13 +695,13 @@ export class OrderComponent implements OnInit, OnDestroy {
 			this.orderService
 				.changeSpecifiedOrderItemProgressOnWarehouseByAddValue(orderItemId, newStateValueToAddOnWarehouse)
 				.subscribe(data => {
-				this.messageServiceExt.addMessage('success', 'Status', 'Zmieniono ilość gotowych koszy');
-			}, error => {
-			}, () => {
-				this.editCurrentOrderStateDialog = false;
-				this.orderItemRowToEditState = new OrderItem();
-				this.refreshData();
-			})
+					this.messageServiceExt.addMessage('success', 'Status', 'Zmieniono ilość gotowych koszy');
+				}, error => {
+				}, () => {
+					this.editCurrentOrderStateDialog = false;
+					this.orderItemRowToEditState = new OrderItem();
+					this.refreshData();
+				})
 		}
 	}
 
@@ -717,13 +710,13 @@ export class OrderComponent implements OnInit, OnDestroy {
 			this.orderService
 				.changeSpecifiedOrderItemProgressOnProductionByAddValue(orderItemId, newStateValueToAddOnWarehouse)
 				.subscribe(data => {
-				this.messageServiceExt.addMessage('success', 'Status', 'Zmieniono ilość gotowych koszy');
-			}, error => {
-			}, () => {
-				this.editCurrentOrderStateDialog = false;
-				this.orderItemRowToEditState = new OrderItem();
-				this.refreshData();
-			})
+					this.messageServiceExt.addMessage('success', 'Status', 'Zmieniono ilość gotowych koszy');
+				}, error => {
+				}, () => {
+					this.editCurrentOrderStateDialog = false;
+					this.orderItemRowToEditState = new OrderItem();
+					this.refreshData();
+				})
 		}
 	}
 
@@ -732,13 +725,13 @@ export class OrderComponent implements OnInit, OnDestroy {
 			this.orderService
 				.changeSpecifiedOrderItemProgressOnLogisticsByAddValue(orderItemId, newStateValueToAddOnLogistics)
 				.subscribe(data => {
-				this.messageServiceExt.addMessage('success', 'Status', 'Zmieniono ilość gotowych koszy');
-			}, error => {
-			}, () => {
-				this.editCurrentOrderStateDialog = false;
-				this.orderItemRowToEditState = new OrderItem();
-				this.refreshData();
-			})
+					this.messageServiceExt.addMessage('success', 'Status', 'Zmieniono ilość gotowych koszy');
+				}, error => {
+				}, () => {
+					this.editCurrentOrderStateDialog = false;
+					this.orderItemRowToEditState = new OrderItem();
+					this.refreshData();
+				})
 		}
 	}
 
@@ -923,30 +916,30 @@ export class OrderComponent implements OnInit, OnDestroy {
 		this.orderService.getOrderBasketsProductsPdf(
 			this.selectedOrderToPrintBasketProducts.orderItems, this.selectedOrderToPrintBasketProducts.orderId)
 			.subscribe(res => {
-				if (this.authenticationService.isAdmin() || this.authenticationService.isProdukcjaUser()) {
-					this.changeOrderStatusToInProgress(this.selectedOrderToPrintBasketProducts);
+					if (this.authenticationService.isAdmin() || this.authenticationService.isProdukcjaUser()) {
+						this.changeOrderStatusToInProgress(this.selectedOrderToPrintBasketProducts);
+					}
+					var fileURL = URL.createObjectURL(res);
+					window.open(fileURL);
+					this.pdialogBasketProductsPrint = false;
+				}, error => {
+					this.messageServiceExt.addMessage('error', 'Błąd przy generowaniu wydruku', "Status: "
+						+ error.status + ' ' + error.statusText);
 				}
-				var fileURL = URL.createObjectURL(res);
-				window.open(fileURL);
-				this.pdialogBasketProductsPrint = false;
-			}, error => {
-				this.messageServiceExt.addMessage('error', 'Błąd przy generowaniu wydruku', "Status: "
-					+ error.status + ' ' + error.statusText);
-			}
-		)
+			)
 	}
 
 	ConfirmationPdf() {
 		this.orderService.getConfirmationPdf(this.selectedToPrintOrder.orderId, this.selectedToPrintOrder.orderItems)
 			.subscribe(res => {
-				var fileURL = URL.createObjectURL(res);
-				window.open(fileURL);
-				this.printDeliveryConfirmationPdFSettings = false;
-			}, error => {
-				this.messageServiceExt.addMessage('error', 'Błąd przy generowaniu wydruku', "Status: "
-					+ error.status + ' ' + error.statusText);
-			}
-		)
+					var fileURL = URL.createObjectURL(res);
+					window.open(fileURL);
+					this.printDeliveryConfirmationPdFSettings = false;
+				}, error => {
+					this.messageServiceExt.addMessage('error', 'Błąd przy generowaniu wydruku', "Status: "
+						+ error.status + ' ' + error.statusText);
+				}
+			)
 	}
 
 	printProductListInBasketPdf(basketId: number) {
@@ -960,14 +953,14 @@ export class OrderComponent implements OnInit, OnDestroy {
 	printConfirmationPdf() {
 		this.orderService.getConfirmationPdf(this.selectedToPrintOrder.orderId, this.selectedToPrintOrder.orderItems)
 			.subscribe(res => {
-				var fileURL = URL.createObjectURL(res);
-				window.open(fileURL);
-				this.printDeliveryConfirmationPdFSettings = false;
-			}, error => {
-				this.messageServiceExt.addMessage('error', 'Błąd przy generowaniu wydruku', "Status: " + error.status +
-					' ' + error.statusText);
-			}
-		)
+					var fileURL = URL.createObjectURL(res);
+					window.open(fileURL);
+					this.printDeliveryConfirmationPdFSettings = false;
+				}, error => {
+					this.messageServiceExt.addMessage('error', 'Błąd przy generowaniu wydruku', "Status: " + error.status +
+						' ' + error.statusText);
+				}
+			)
 	}
 
 	isLongCell(textFromCell: string): boolean {
@@ -1068,14 +1061,12 @@ export class OrderComponent implements OnInit, OnDestroy {
 				zestawy += filt[i].orderItems[n].basket.basketName;
 				zestawy += " szt. " + filt[i].orderItems[n].quantity + " | ";
 			}
-
-			let companyTmp : string;
-			if(filt[i].customer.company == null){
+			let companyTmp: string;
+			if (filt[i].customer.company == null) {
 				companyTmp = "Brak"
-			}else{
+			} else {
 				companyTmp = filt[i].customer.company.companyName;
 			}
-
 			dataToGenerateFile[i] = {
 				"Firma": companyTmp,
 				"Nazwa Klienta": filt[i].customer.name,
