@@ -6,6 +6,7 @@ import {NgForm} from "@angular/forms";
 import {ConfirmationService, MessageService} from "primeng/api";
 import {MessageServiceExt} from "../../messages/messageServiceExt";
 import {AuthenticationService} from "../../authentication.service";
+import {Address} from "../../model/address.model";
 
 @Component({
 	selector: 'app-customer-edit',
@@ -15,6 +16,7 @@ import {AuthenticationService} from "../../authentication.service";
 export class CustomerEditComponent
 	implements OnInit {
 	public customer: Customer = new Customer();
+	public lastUsedAddress: Address = new Address();
 	public addAddressDialogShow: boolean = false;
 	public changeMainAddressDialogShow: boolean = false;
 	public changeCustomerDataDialogShow: boolean = false;
@@ -29,7 +31,13 @@ export class CustomerEditComponent
 				private confirmationService: ConfirmationService, private messageServiceExt: MessageServiceExt, private authenticationService: AuthenticationService) {
 		customerService.getCustomer(activeRoute.snapshot.params["id"]).subscribe(data => {
 			this.customer = data;
+		});
+
+		this.customerService.getCustomerLastUsedAddress(activeRoute.snapshot.params["id"]).subscribe(data => {
+			this.lastUsedAddress = data;
 		})
+
+
 	}
 
 	ngOnInit() {

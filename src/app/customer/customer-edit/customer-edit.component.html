@@ -1,6 +1,6 @@
 <p-confirmDialog key="delete" header="Usuwanie produktu" icon="fa fa-question-circle" width="425"></p-confirmDialog>
 
-<div class="col-md-8">
+<div class="col-md-12">
     <p-panel [header]="'Szczegóły klienta nr:'+ customer.customerId">
         <table class="table">
             <thead>
@@ -10,7 +10,7 @@
                 <th>Email</th>
                 <th>Telefon</th>
                 <th>Uwagi</th>
-                <th></th>
+                <th>Ostatnio użyty adres</th>
             </tr>
             </thead>
             <tbody>
@@ -20,6 +20,9 @@
                 <td>{{customer.email}}</td>
                 <td>{{customer.phoneNumber}}</td>
                 <td>{{customer.additionalInformation}}</td>
+                <td>{{lastUsedAddress.address}} {{lastUsedAddress.zipCode}} {{lastUsedAddress.cityName}}
+                    {{lastUsedAddress.phoneNumber}} Osoba kontaktowa: {{lastUsedAddress.contactPerson}}
+                </td>
                 <td>
                     <button *ngIf="isAdmin()" class="btn bg-primary" (click)="showChangeCustomerDataWindow()"> Edytuj
                     </button>

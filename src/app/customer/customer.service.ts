@@ -34,6 +34,11 @@ export class CustomerService {
 			.map((response: Response) => response.json());
 	}
 
+	getCustomerLastUsedAddress(customerId: number): Observable<Address> {
+		return this.http.get(this.baseUrl + `/customerlastaddr/${customerId}`)
+			.map((response: Response) => response.json());
+	}
+
 	getAllCustomerWithPrimaryAddress(): Observable<any> {
 		return this.http.get(this.baseUrl + `/customersaddr/`)
 			.map((response: Response) => response.json());
