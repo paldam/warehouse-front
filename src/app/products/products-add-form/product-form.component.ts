@@ -9,6 +9,7 @@ import {MessageServiceExt} from "../../messages/messageServiceExt";
 import {ProductSubType} from "../../model/product_sub_type";
 import {SelectItem} from "primeng/api";
 import {FileUpload} from "primeng/primeng";
+import {ProductSeason} from "../../model/product_season.model";
 
 @Component({
 	selector: 'product-form',
@@ -20,6 +21,8 @@ export class ProductFormComponent
 	public product: Product = new Product();
 	public productSuppliers: Supplier[] = [];
 	public productSubTypes: ProductSubType[] = [];
+	public productSeasons: ProductSeason[] = [];
+	public productSeasonsSelectItems: SelectItem[] = [];
 	public productSubTypesSelectItems: SelectItem[] = [];
 	public productSupplierToAdd: Supplier = new Supplier();
 	public formSubmitted: boolean = false;
@@ -41,7 +44,18 @@ export class ProductFormComponent
 					value: value
 				})
 			})
+		});
+
+		productsService.getProductSeasons().subscribe(data => {
+			this.productSeasons = data;
+			this.productSeasons.forEach(value => {
+				this.productSeasonsSelectItems.push({
+					label: value.productSeasonName,
+					value: value
+				})
+			})
 		})
+
 	}
 
 	ngOnInit() {

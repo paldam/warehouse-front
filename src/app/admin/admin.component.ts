@@ -10,6 +10,8 @@ import {AdminService} from "./admin.service";
 import {MessageServiceExt} from "../messages/messageServiceExt";
 import {BasketSeason} from "../model/basket_season.model";
 import {BasketService} from "../basket/basket.service";
+import {ProductsService} from "../products/products.service";
+import {ProductSeason} from "../model/product_season.model";
 
 @Component({
 	selector: 'app-admin',
@@ -20,10 +22,14 @@ export class AdminComponent
 	implements OnInit {
 	public user: User = new User();
 	public basketSezonName: string;
+	public productSezonName: string;
 	public usersList: User[] = [];
 	public authorities: Authorities[] = [];
 	public formSubmitted: boolean = false;
 	public formSeasonSubmitted: boolean = false;
+	public formSeasonProductSubmitted: boolean = false;
+
+
 	public passwordDontMatch: any = null;
 	public passwordConfirm: string = '';
 	public status: string = '';
@@ -32,10 +38,11 @@ export class AdminComponent
 	public selectedUser: User = new User();
 	public authoritiesToSave: Authorities [] = [];
 	public basketSeasonList: BasketSeason[] = [];
+	public productSeasonList: ProductSeason[] = [];
 	public loading: boolean;
 
 	constructor(private basketService: BasketService,private userService: UserService, private router: Router, private confirmationService: ConfirmationService,
-				public authenticationService: AuthenticationService, public adminService: AdminService,
+				public authenticationService: AuthenticationService, public productService: ProductsService, public adminService: AdminService,
 				private messageServiceExt: MessageServiceExt) {
 		userService.getAuthorities().subscribe(data => {
 			this.authorities = data
@@ -49,18 +56,27 @@ export class AdminComponent
 
 		});
 
+		this.productService.getProductSeasons().subscribe(data => {
+			this.productSeasonList = data;
+
+		});
+
 	}
 
 	ngOnInit() {
 	}
 
 	refreshData() {
-		console.log("refresh");
 		this.userService.getUsers().subscribe(data => this.usersList = data);
 		this.basketService.getBasketSeason().subscribe(data => {
 			this.basketSeasonList = data;
 			this.basketSeasonList.reverse();
 		});
+		this.productService.getProductSeasons().subscribe(data => {
+			this.productSeasonList = data;
+
+		});
+
 
 	}
 
@@ -110,6 +126,30 @@ export class AdminComponent
 				});
 			}
 		}
+
+
+	submitProductSeasonForm() {
+		this.formSeasonProductSubmitted = true;
+		if (this.productSezonName) {
+
+			let season = new ProductSeason();
+			season.productSeasonName = this.productSezonName.toUpperCase();
+
+			this.productService.saveProductSeason(season).subscribe(data => {
+				this.productSezonName= null;
+				this.refreshData();
+				this.formSeasonProductSubmitted = false;
+				this.messageServiceExt.addMessageWithTime('success', 'Status', 'Dodano sezon', 5000);
+
+			}, err => {
+				if (err.status == 500) {
+					this.status = "Błąd połączenia z bazą danych"
+				} else {
+					this.status = err.text();
+				}
+			});
+		}
+	}
 
 
 

@@ -1059,7 +1059,8 @@ export class OrderComponent
 			let address = "";
 			for (let n = 0; n < filt[i].orderItems.length; n++) {
 				zestawy += filt[i].orderItems[n].basket.basketName;
-				zestawy += " szt. " + filt[i].orderItems[n].quantity + " | ";
+				zestawy += " sezon: " + filt[i].orderItems[n].basket.basketSezon.basketSezonName;
+				zestawy += " ilość. " + filt[i].orderItems[n].quantity + " szt. | ";
 			}
 			let companyTmp: string;
 			if (filt[i].customer.company == null) {
@@ -1068,13 +1069,13 @@ export class OrderComponent
 				companyTmp = filt[i].customer.company.companyName;
 			}
 			dataToGenerateFile[i] = {
-				"Firma": companyTmp,
-				"Nazwa Klienta": filt[i].customer.name,
-				"Telefon": filt[i].customer.phoneNumber,
-				"Email": filt[i].customer.email,
-				"Wartość zamówienia": filt[i].orderTotalAmount / 100,
 				"Data Zamówienia": orderDateTmp.toLocaleString(),
-				"Uwagi": filt[i].additionalInformation,
+				"FV": filt[i].orderFvNumber,
+				"Nazwa Klienta": filt[i].customer.name,
+				"Firma": companyTmp,
+				"Email": filt[i].customer.email,
+				"Telefon": filt[i].customer.phoneNumber,
+				"Wartość zamówienia": filt[i].orderTotalAmount / 100,
 				"Wybrane zestawy": zestawy
 			}
 		}
@@ -1102,8 +1103,8 @@ export class OrderComponent
 	}
 
 	changeRowPerPage() {
-		this.datatable.rows = 5000;
-		this.datatable._filter();
+		//this.datatable.rows = 5000;
+		//this.datatable._filter();
 	}
 
 	private setContextMenu() {

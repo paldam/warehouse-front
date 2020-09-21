@@ -62,6 +62,22 @@
 
             </div>
 
+            <div class="form-group">
+                <small id="product_seasonDesc" class="text-muted">Sezon Produktu</small>
+
+
+                <p-listbox name="season_list" [style]="{ 'width':'400px'}"
+                           [listStyle]="{'max-height':'100px', 'width':'390px'}"
+                           [options]="productSeasonsSelectItems"
+                           [(ngModel)]="product.productSeason" [filter]="true" >
+
+                    <p-header>
+                        Sezon Produktu:
+                    </p-header>
+                </p-listbox>
+
+            </div>
+
 
             <div class="form-group">
                 <small id="priceDescript" class="text-muted">Cena</small>

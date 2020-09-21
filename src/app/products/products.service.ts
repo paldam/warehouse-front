@@ -8,6 +8,7 @@ import {HttpService} from "../http-service";
 import {Supplier} from "../model/supplier.model";
 import {ProductSubType} from "../model/product_sub_type";
 import {Basket} from "../model/basket.model";
+import {ProductSeason} from "../model/product_season.model";
 
 @Injectable()
 export class ProductsService {
@@ -122,6 +123,12 @@ export class ProductsService {
 				response.json());
 	}
 
+	getProductSeasons(): Observable<any[]> {
+		return this.http.get(this.baseUrl + `/products/seasons`)
+			.map((response: Response) =>
+				response.json());
+	}
+
 	saveProduct(product: Product): Observable<Response> {
 		return this.http.post(this.baseUrl + `/products/`, product)
 		//.map((response: Response) => response.json());
@@ -152,6 +159,11 @@ export class ProductsService {
 
 	saveProductSubType(productSubType: ProductSubType): Observable<Response> {
 		return this.http.post(this.baseUrl + `/products/subtypes`, productSubType)
+		//.map((response: Response) => response.json());
+	}
+
+	saveProductSeason(productSeason: ProductSeason): Observable<Response> {
+		return this.http.post(this.baseUrl + `/products/seasons`, productSeason)
 		//.map((response: Response) => response.json());
 	}
 

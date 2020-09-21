@@ -63,6 +63,22 @@
             </div>
 
             <div class="form-group">
+                <small id="product_seasonDesc" class="text-muted">Sezon Produktu</small>
+
+
+                <p-listbox name="type_list" [style]="{ 'width':'400px'}"
+                           [listStyle]="{'max-height':'100px', 'width':'390px'}"
+                           [options]="productSeasonsSelectItems"
+                           [(ngModel)]="product.productSeason" [filter]="true" [checkbox]="true">
+
+                    <p-header>
+                        Sezon Produktu:
+                    </p-header>
+                </p-listbox>
+
+            </div>
+
+            <div class="form-group">
                 <small id="priceDescript" class="text-muted">Cena</small>
                 <input type="text" name="price" class="form-control" [(ngModel)]="product.price" #price="ngModel"
                        aria-describedby="priceDescript" pattern="^(?=.*?\d)\d*[.]?\d{1,2}$">

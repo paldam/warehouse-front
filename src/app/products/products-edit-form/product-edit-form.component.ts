@@ -10,6 +10,7 @@ import {ProductSubType} from "../../model/product_sub_type";
 import {SelectItem} from "primeng/api";
 import {FileUpload} from "primeng/primeng";
 import {Basket} from "../../model/basket.model";
+import {ProductSeason} from "../../model/product_season.model";
 
 @Component({
 	selector: 'product-edit-form',
@@ -23,6 +24,8 @@ export class ProductEditFormComponent
 	public formSubmitted: boolean = false;
 	public productSuppliers: Supplier[] = [];
 	public productSubTypes: ProductSubType[] = [];
+	public productSeasons: ProductSeason[] = [];
+	public productSeasonsSelectItems: SelectItem[] = [];
 	public isAddNewImg: boolean;
 	public productSubTypesSelectItems: SelectItem[] = [];
 	public selectedSuppliersToAddEdit: Supplier[] = [];
@@ -48,6 +51,17 @@ export class ProductEditFormComponent
 				})
 			})
 		});
+
+		productsService.getProductSeasons().subscribe(data => {
+			this.productSeasons = data;
+			this.productSeasons.forEach(value => {
+				this.productSeasonsSelectItems.push({
+					label: value.productSeasonName,
+					value: value
+				})
+			})
+		});
+
 		this.getProductImage(activeRoute.snapshot.params["id"]);
 	}
 

@@ -52,6 +52,15 @@
             </ng-template>
         </p-column>
 
+        <p-column field="productSeason" styleClass="" header="Sezon" [sortable]="true">
+            <ng-template let-row="rowData" pTemplate="body">
+                {{row.productSeason?.productSeasonName}}
+            </ng-template>
+
+        </p-column>
+
+
+
 
         <p-column field="price" styleClass="price_col" header="Cena" [sortable]="true">
             <ng-template let-row="rowData" pTemplate="body">

@@ -1,6 +1,7 @@
 import {ProductType} from './product_type.model';
 import {Supplier} from "./supplier.model";
 import {ProductSubType} from "./product_sub_type";
+import {ProductSeason} from "./product_season.model";
 
 export class Product {
 	constructor(
@@ -16,6 +17,7 @@ export class Product {
 		public isArchival?: number,
 		public suppliers?: Supplier[],
 		public productType?: ProductType,
+		public productSeason?: ProductSeason,
 		public productSubType?: ProductSubType,
 		public lastStockEditDate?: Date,
 		public isProductImg?: number,
