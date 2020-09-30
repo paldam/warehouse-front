@@ -16,6 +16,8 @@
 <button *ngIf="this.isCurrentPageOrdersViewRedirectedFromBasketStatitis" (click)="backToBasketStatistic()"
         class="btn bg-primary" type="button"> Powrót do statystyki koszy koszy
 </button>
+
+
 <div class="products_box">
 
     <div class="input-group search_bar">
@@ -41,6 +43,21 @@
 
     </div>
 
+    <p-panel header="Filtry" [toggleable]="true" collapsed="true" [style]="{ 'width':'600px'}">
+        <div class="form-group">
+            <p-listbox name="providence_list" [style]="{ 'width':'400px'}"
+                       [listStyle]="{'max-height':'100px', 'width':'390px'}" [options]="provinces"
+                       [(ngModel)]="selectedProvinces" multiple="multiple" checkbox="checkbox"
+                       filter="filter" (onChange)="filterByProvince()">
+                <p-header>
+                    Województwa
+                </p-header>
+            </p-listbox>
+
+            <p>Wybrane Wojewódzctwa: <span *ngFor="let c of selectedProvinces" style="margin-right: 10px">{{c}}</span>
+            </p>
+        </div>
+    </p-panel>
 
     <p-dataTable #dt [value]="orders" [rows]="50" [paginator]="true" [globalFilter]="globalfilter"
                  [totalRecords]="totalRecords" selectionMode="multiple"
@@ -155,8 +172,23 @@
 
 
 
-        <p-column [styleClass]="'removable-col'" field="weekOfYear" header="T" [sortable]="true"
-                  [style]="{'width':'35px', 'text-align':'center'}"></p-column>
+        <p-column [styleClass]="'removable-col'" field="weekOfYear" header="T" [sortable]="true" filterMatchMode="equals"
+                  [style]="{'width':'90px', 'text-align':'center'}" [filter]="this.isCurrentPageOrdersView">
+
+
+        <ng-template let-col pTemplate="filter">
+            <p-multiSelect [filter]="false" [showToggleAll]="true" [options]="weeksList"
+                           defaultLabel="Wszystkie" [overlayVisible]="true"
+                           (onChange)="datatable.filter($event.value, col.field, 'in')"></p-multiSelect>
+        </ng-template>
+
+            <ng-template let-row="rowData" pTemplate="body">
+               {{row.weekOfYear}}
+            </ng-template>
+
+        </p-column>
+
+
 
         <p-column field="orderTotalAmount" header="total" [style]="{'width':'90px', 'text-align':'center'}"
                   [sortable]="true">

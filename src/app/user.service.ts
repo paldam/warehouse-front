@@ -17,7 +17,7 @@ export class UserService {
 	}
 
 	getUsers(): Observable<User[]> {
-		return this.http.get(this.baseUrl + `/users`)
+		return this.http.get(this.baseUrl + `/users_without_del`)
 			.map((response: Response) =>
 				response.json());
 	}

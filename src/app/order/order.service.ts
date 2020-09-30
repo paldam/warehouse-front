@@ -113,7 +113,7 @@ export class OrderService {
 	}
 
 	getOrdersDto(page: number, size: number, text: string, sortField: string, sortingDirection: number,
-				 orderStatusFilterList: any[], orderDataFilterList: any[]): Observable<any[]> {
+				 orderStatusFilterList: any[], orderDataFilterList: any[],orderProductionUserFilterList: any[], orderWeeksFilterList: any[], provinces: any[]): Observable<any[]> {
 		return this.http.get(this.baseUrl + `/orderdao?
 		page=${page}
 		&size=${size}
@@ -121,7 +121,10 @@ export class OrderService {
 		&orderBy=${sortField}
 		&sortingDirection=${sortingDirection}
 		&orderStatusFilterList=${orderStatusFilterList}
-		&orderYearsFilterList=${orderDataFilterList}`)
+		&orderYearsFilterList=${orderDataFilterList}
+		&orderProductionUserFilterList=${orderProductionUserFilterList}
+		&orderWeeksFilterList=${orderWeeksFilterList}
+		&provinces=${provinces}`)
 			.map((response: Response) =>
 				response.json());
 	}

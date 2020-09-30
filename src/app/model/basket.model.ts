@@ -16,6 +16,7 @@ export class Basket {
 		public isBasketImg?: number,
 		public stock?: number,
 		public basketSezon?: BasketSeason,
+		public imgNumber?: string
 	) {
 	}
 }

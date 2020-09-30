@@ -38,6 +38,8 @@ export class ProductPickerComponent
 	public suppliers: SelectItem[] = [];
 	public basketSeasonList: BasketSeason[] = [];
 	public filtersLoaded: Promise<boolean>;
+	public imageToShow: any;
+	public showImageFrame: boolean = false;
 	public suppliersList: Supplier[] = [];
 	@ViewChild('dt') dataTable: DataTable;
 	@ViewChild(GiftBasketComponent) giftBasketComponent: GiftBasketComponent;
@@ -245,5 +247,22 @@ export class ProductPickerComponent
 
 	enableUploadButton() {
 		this.fileUploadElement.disabled = false;
+	}
+
+	showProductImg(event, productId: number) {
+		this.productsService.getProductImg(productId).subscribe(res => {
+			this.createImageFromBlob(res);
+		});
+		this.showImageFrame = true;
+	}
+
+	private createImageFromBlob(image: Blob) {
+		let reader = new FileReader();
+		reader.addEventListener("load", () => {
+			this.imageToShow = reader.result;
+		}, false);
+		if (image) {
+			reader.readAsDataURL(image);
+		}
 	}
 }

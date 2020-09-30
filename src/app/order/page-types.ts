@@ -10,7 +10,7 @@ export class RegularOrderView
 	getOrders() {
 		let totalRequestRow;
 		let orders;
-		this.orderService.getOrdersDto(0, 50, "", "orderDate", 1, [], []).subscribe(
+		this.orderService.getOrdersDto(0, 50, "", "orderDate", 1, [], [],[],[],[]).subscribe(
 			(data: any) => {
 				orders = data.orderDtoList;
 			}, error => {

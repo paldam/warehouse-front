@@ -208,6 +208,38 @@
         </div>
 
     </p-tabPanel>
+    <p-tabPanel header="Typy produktów wykluczonych">
+
+        <div>
+
+            <button class="btn bg-primary " (click)="showAddInactiveProductDialog()" type="submit">Dodaj do listy</button>
+
+            <p-dataTable [value]="inactiveProductsTypes" [rows]="20" [paginator]="true" #dt
+                         [loading]="loading" loadingIcon="fa-circle-o-notch">
+                <p-header>Lista typów produktów wykluczonych</p-header>
+
+                <p-column header="lp." [style]="{'width':'30px'}">
+                    <ng-template let-row="rowData" let-i="rowIndex" pTemplate="rowexpansion">
+                        {{i+1}}
+                    </ng-template>
+                </p-column>
+
+                <p-column field="typeName" styleClass="name_col" header="Nazwa sezonu"
+                          [style]="{'width':'200px'}"></p-column>
+
+                <p-column header="Akcja"  [style]="{'width':'90px'}">
+                    <ng-template let-type="rowData" pTemplate="body" let-row="rowData" let-i="rowIndex"
+                                 pTemplate="rowexpansion">
+
+                        <i class="fa fa-minus" (click)="removeFromInactive(type.typeId)" aria-hidden="true"
+                           title="Usuń z listy" ></i>
+
+                    </ng-template>
+                </p-column>
+
+            </p-dataTable>
+        </div>
+    </p-tabPanel>
 </p-tabView>
 
 
@@ -240,3 +272,33 @@
 
 </p-dialog>
 
+<p-dialog header="Dodaj do listy nieaktywnych" [(visible)]="addInactiveProductModal" modal="modal" width="600"
+          [responsive]="true">
+
+
+    <p-dataTable [value]="productsTypes" [rows]="20" [paginator]="true" #dt
+                 [loading]="loading" loadingIcon="fa-circle-o-notch">
+        <p-header>Lista typów produktów wykluczonych</p-header>
+
+        <p-column header="lp." [style]="{'width':'30px'}">
+            <ng-template let-row="rowData" let-i="rowIndex" pTemplate="rowexpansion">
+                {{i+1}}
+            </ng-template>
+        </p-column>
+
+        <p-column field="typeName" styleClass="name_col" header="Nazwa typu"
+                  [style]="{'width':'200px'}"></p-column>
+
+        <p-column header="Akcja"  [style]="{'width':'90px'}">
+            <ng-template let-type="rowData" pTemplate="body" let-row="rowData" let-i="rowIndex"
+                         pTemplate="rowexpansion">
+
+                <i class="fa fa-plus" (click)="addToInactive(type.typeId)" aria-hidden="true" title="Dodaj do listy" ></i>
+
+            </ng-template>
+        </p-column>
+
+
+    </p-dataTable>
+
+</p-dialog>

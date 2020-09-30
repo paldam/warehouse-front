@@ -87,7 +87,13 @@
         </p-column>
 
 
-        <p-column field="basketName" header="Nazwa kosza" [sortable]="true"></p-column>
+        <p-column field="basketName" header="Nazwa kosza" [sortable]="true">
+            <ng-template let-row="rowData" pTemplate="body">
+                {{row.basketName}}  {{row.imgNumber}}
+            </ng-template>
+        </p-column>
+
+
         <p-column field="basketType.basketTypeName" header="Typ kosza" [sortable]="false"
                   [style]="{'width':'120px'}"></p-column>
 
@@ -164,6 +170,7 @@
                     <tr>
                         <th>Nazwa Produktu</th>
                         <th>Nazwa Katalogowa</th>
+                        <th>Sezon Produktu</th>
                         <th>Typ</th>
                         <th>Pojemność</th>
                         <th>Dostawca</th>
@@ -176,6 +183,7 @@
                     <tr *ngFor="let i of basket.basketItems">
                         <td>{{i.product.productName}}</td>
                         <td>{{i.product.productCatalogName}}</td>
+                        <td>{{i.product.productSeason.productSeasonName}}</td>
                         <td>{{i.product.productSubType?.subTypeName}}</td>
                         <td>{{i.product.capacity}}</td>
                         <td>{{i.product.suppliers[0]?.supplierName}}</td>

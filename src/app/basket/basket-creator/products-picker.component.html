@@ -25,6 +25,7 @@
             </p-column>
             <p-column field="productName" header="Nazwa" [sortable]="true"></p-column>
             <p-column field="productCatalogName" header="Nazwa katalogowa" [sortable]="true"></p-column>
+            <p-column field="productSeason.productSeasonName" header="Sezon produktu" [sortable]="true"></p-column>
             <p-column field="capacity" header="Pojemność" [sortable]="true" [style]="{'width':'80px'}"></p-column>
 
 
@@ -42,7 +43,8 @@
             </p-column>
 
             <p-column field="productSubType.subTypeName" styleClass="type_col" [filter]="true" header="Typ produktu"
-                      [style]="{'width':'220px'}" filterMatchMode="equals" [sortable]="true" >
+                      [style]="{'width':'220px'}" filterMatchMode="equals" [sortable]="true"
+                      [excludeGlobalFilter]="true" >
                 <ng-template let-col pTemplate="filter">
                     <p-multiSelect [filter]="true" [resetFilterOnHide]="true" [showToggleAll]="true"
                                    [options]="productsType"
@@ -67,6 +69,16 @@
                     {{row.stock}} szt.
                 </ng-template>
 
+            </p-column>
+
+            <p-column header="Akcja" [style]="{'width':'60px'}">
+                <ng-template let-product="rowData" pTemplate="body" let-row="rowData" let-i="rowIndex"
+                             pTemplate="rowexpansion">
+                    <i *ngIf="product.isProductImg!=1" class="fa fa-picture-o fa-2x" style="color:grey" aria-hidden="true"
+                       title="Zdjęcie produktu niedostępne"></i>
+                    <i *ngIf="product.isProductImg==1" class="fa fa-picture-o fa-2x" aria-hidden="true"
+                       title="Pokaż zdjęcie kosza" (click)=" showProductImg($event,product.id)"></i>
+                </ng-template>
             </p-column>
 
         </p-dataTable>
@@ -142,6 +154,15 @@
                             <ul class="text-danger list-unstyled" *ngIf="basketName.dirty|| formSubmitted">
                                 <li *ngIf="basketName.errors?.required">To pole nie może być puste</li>
                             </ul>
+                        </div>
+
+
+                        <div class="form-group">
+                            <div class="input-group">
+                                <input type="text" name="basketImg" #basketImg="ngModel" class="form-control"
+                                       size="300" aria-describedby="imgDesc" [(ngModel)]="basket.imgNumber">
+                                <span class="input-group-addon" id="imgDesc">Numer zdjecia</span>
+                            </div>
                         </div>
 
 
@@ -272,4 +293,8 @@
 
         </p-dataTable>
     </div>
+</p-dialog>
+
+<p-dialog header="Produkt" [(visible)]="showImageFrame">
+    <img [src]="imageToShow" [height]="700" [width]="700">
 </p-dialog>

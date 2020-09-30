@@ -117,6 +117,25 @@ export class ProductsService {
 				response.json());
 	}
 
+	getInactiveProductsTypes(): Observable<ProductType[]> {
+		return this.http.get(this.baseUrl + `/products/types/inactive`)
+			.map((response: Response) =>
+				response.json());
+	}
+
+	setTypeInactive(id: number): Observable<ProductType[]> {
+		return this.http.get(this.baseUrl + `/products/types/inactive/${id}`)
+			.map((response: Response) =>
+				response.json());
+	}
+
+	setTypeActive(id: number): Observable<ProductType[]> {
+		return this.http.get(this.baseUrl + `/products/types/active/${id}`)
+			.map((response: Response) =>
+				response.json());
+	}
+
+
 	getProductsSubTypes(): Observable<any[]> {
 		return this.http.get(this.baseUrl + `/products/sub_types`)
 			.map((response: Response) =>

@@ -21,6 +21,7 @@ import {interval, Subscription} from 'rxjs';
 import {NotificationsService} from "../../nav-bars/top-nav/notification.service";
 import {ServerSideEventsService} from "../../server-side-events-service";
 import {Notification} from "../../model/notification";
+import {Supplier} from "../../model/supplier.model";
 
 @Component({
 	selector: 'order',
@@ -55,6 +56,7 @@ export class OrderComponent
 	public selectedToMenuOrder: number;
 	public selectedOrdersMultiselction: Order[] = [];
 	public orderStatusList: SelectItem[] = [];
+	public weeksList: SelectItem[] = [];
 	public ordersYears: SelectItem[] = [];
 	public items: MenuItem[];
 	public exportItems: MenuItem[];
@@ -80,6 +82,11 @@ export class OrderComponent
 	public showNotificationModal: boolean = false;
 	public notifications: Notification[] = [];
 	public notificationsTotal: number = 0;
+
+	public selectedProvinces: String[] = [];
+	public provinces: SelectItem[] = [];
+
+
 	@ViewChild('onlyWithAttach') el: ElementRef;
 	@ViewChild('action_extention') action_extention: ElementRef;
 	@ViewChild('statusFilter') statusFilterEl: Dropdown;
@@ -105,6 +112,8 @@ export class OrderComponent
 
 	ngOnInit() {
 		this.getOrderStatusForDataTableFilter();
+		this.getWeeksForDataTableFilter();
+		this.getProvincesForDataTableFilter();
 		this.getProductionUserForDataTableFilter();
 		this.getOrderYearsForDataTableFilter();
 		this.getProductionUserForContextMenuSet();
@@ -143,7 +152,7 @@ export class OrderComponent
 		setTimeout(() => {
 			this.datatable.lazy = true;
 		}, 500);
-		this.orderService.getOrdersDto(0, 50, "", "orderDate", 1, [], []).subscribe(
+		this.orderService.getOrdersDto(0, 50, "", "orderDate", 1, [], [],[],[],[]).subscribe(
 			(data: any) => {
 				this.orders = data.orderDtoList;
 				this.totalRecords = data.totalRowsOfRequest;
@@ -243,6 +252,39 @@ export class OrderComponent
 			});
 		});
 	}
+
+
+	private getWeeksForDataTableFilter() {
+		for (let i = 1; i < 53; i++) {
+			this.weeksList.push({label: '' + i, value: i});
+		}
+
+	}
+
+
+	private getProvincesForDataTableFilter(){
+		this.provinces = [
+			{label: 'Mazowieckie', value: 'Mazowieckie'},
+			{label: 'Dolnośląskie', value: 'Dolnośląskie'},
+			{label: 'Kujawsko-Pomorskie', value: 'Kujawsko-Pomorskie'},
+			{label: 'Lubelskie', value: 'Lubelskie'},
+			{label: 'Lubuskie', value: 'Lubuskie'},
+			{label: 'Łódzkie', value: 'Łódzkie'},
+			{label: 'Małopolskie', value: 'Małopolskie'},
+			{label: 'Opolskie', value: 'Opolskie'},
+			{label: 'Podkarpackie', value: 'Podkarpackie'},
+			{label: 'Podlaskie', value: 'Podlaskie'},
+			{label: 'Pomorskie', value: 'Pomorskie'},
+			{label: 'Śląskie', value: 'Śląskie'},
+			{label: 'Świętokrzyskie', value: 'Świętokrzyskie'},
+			{label: 'Warmińsko-Mazurskie', value: 'Warmińsko-Mazurskie'},
+			{label: 'Wielkopolskie', value: 'Wielkopolskie'},
+			{label: 'Zachodniopomorskie', value: 'Zachodniopomorskie'},
+
+		];
+	}
+
+
 
 	private getOrderYearsForDataTableFilter() {
 		this.orderService.getOrdersYears().subscribe((year: any) => {
@@ -573,7 +615,7 @@ export class OrderComponent
 		if (this.isCurrentPageOrdersViewForProduction) {
 			this.performSetDataActionForOrderViewProduction();
 		} else {
-			this.orderService.getOrdersDto(0, 50, "", "orderDate", 1, [], []).subscribe((data: any) => {
+			this.orderService.getOrdersDto(0, 50, "", "orderDate", 1, [], [],[],[],[]).subscribe((data: any) => {
 				this.orders = data.orderDtoList;
 				this.totalRecords = data.totalRowsOfRequest;
 			}, error => {
@@ -591,7 +633,12 @@ export class OrderComponent
 		}
 	}
 
+	filterByProvince(){
+		this.loadOrdersLazy(this.datatable.createLazyLoadMetadata());
+	}
+
 	loadOrdersLazy(event: LazyLoadEvent) {
+
 		this.loading = true;
 		let pageNumber = 0;
 		if (event.first) {
@@ -600,6 +647,9 @@ export class OrderComponent
 		let sortField = event.sortField;
 		let orderStatusFilterList: any[] = [];
 		let orderDataFilterList: any[] = [];
+		let orderProductionUserFilterList: any[] = [];
+		let orderWeeksFilterList: any[] = [];
+
 		if (sortField == undefined) {
 			sortField = "orderDate";
 		}
@@ -609,8 +659,19 @@ export class OrderComponent
 		if (event.filters != undefined && event.filters["orderDate"] != undefined) {
 			orderDataFilterList = event.filters["orderDate"].value;
 		}
+		if (event.filters["productionUser.login"] != undefined) {
+			orderProductionUserFilterList = event.filters["productionUser.login"].value;
+		}
+
+		if (event.filters["weekOfYear"] != undefined) {
+			orderWeeksFilterList = event.filters["weekOfYear"].value;
+		}
+
+
+		
+		
 		this.orderService.getOrdersDto(
-			pageNumber, event.rows, event.globalFilter, sortField, event.sortOrder, orderStatusFilterList, orderDataFilterList)
+			pageNumber, event.rows, event.globalFilter, sortField, event.sortOrder, orderStatusFilterList, orderDataFilterList,orderProductionUserFilterList,orderWeeksFilterList,this.selectedProvinces)
 			.subscribe((data: any) => {
 					this.orders = data.orderDtoList;
 					this.totalRecords = data.totalRowsOfRequest;
@@ -885,7 +946,7 @@ export class OrderComponent
 			});
 			this.orders = fillteredOrderList;
 		} else {
-			this.orderService.getOrdersDto(0, 50, "", "orderDate", 1, [], []).subscribe((data: any) => {
+			this.orderService.getOrdersDto(0, 50, "", "orderDate", 1, [], [],[],[],[]).subscribe((data: any) => {
 				this.orders = data.orderDtoList;
 				this.totalRecords = data.totalRowsOfRequest;
 			})
@@ -1055,12 +1116,14 @@ export class OrderComponent
 		let dataToGenerateFile: any[] = [];
 		for (let i = 0; i < filt.length; i++) {
 			let zestawy = "";
+			let sezon ="";
 			let orderDateTmp = new Date(filt[i].orderDate);
 			let address = "";
 			for (let n = 0; n < filt[i].orderItems.length; n++) {
 				zestawy += filt[i].orderItems[n].basket.basketName;
-				zestawy += " sezon: " + filt[i].orderItems[n].basket.basketSezon.basketSezonName;
+				//zestawy += " sezon: " + filt[i].orderItems[n].basket.basketSezon.basketSezonName;
 				zestawy += " ilość. " + filt[i].orderItems[n].quantity + " szt. | ";
+				sezon += filt[i].orderItems[n].basket.basketSezon.basketSezonName + " ";
 			}
 			let companyTmp: string;
 			if (filt[i].customer.company == null) {
@@ -1076,6 +1139,7 @@ export class OrderComponent
 				"Email": filt[i].customer.email,
 				"Telefon": filt[i].customer.phoneNumber,
 				"Wartość zamówienia": filt[i].orderTotalAmount / 100,
+				"Sezon": sezon,
 				"Wybrane zestawy": zestawy
 			}
 		}

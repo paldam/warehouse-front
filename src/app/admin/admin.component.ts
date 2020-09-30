@@ -12,6 +12,7 @@ import {BasketSeason} from "../model/basket_season.model";
 import {BasketService} from "../basket/basket.service";
 import {ProductsService} from "../products/products.service";
 import {ProductSeason} from "../model/product_season.model";
+import {ProductType} from "../model/product_type.model";
 
 @Component({
 	selector: 'app-admin',
@@ -27,6 +28,7 @@ export class AdminComponent
 	public authorities: Authorities[] = [];
 	public formSubmitted: boolean = false;
 	public formSeasonSubmitted: boolean = false;
+	public addInactiveProductModal: boolean = false;
 	public formSeasonProductSubmitted: boolean = false;
 
 
@@ -39,6 +41,8 @@ export class AdminComponent
 	public authoritiesToSave: Authorities [] = [];
 	public basketSeasonList: BasketSeason[] = [];
 	public productSeasonList: ProductSeason[] = [];
+	public inactiveProductsTypes: ProductType[]=[];
+	public productsTypes: ProductType[]=[];
 	public loading: boolean;
 
 	constructor(private basketService: BasketService,private userService: UserService, private router: Router, private confirmationService: ConfirmationService,
@@ -60,6 +64,17 @@ export class AdminComponent
 			this.productSeasonList = data;
 
 		});
+
+		this.productService.getInactiveProductsTypes().subscribe(data => {
+			this.inactiveProductsTypes = data;
+
+		});
+
+		this.productService.getProductsTypes().subscribe(data => {
+			this.productsTypes = data;
+
+		})
+
 
 	}
 
@@ -193,6 +208,40 @@ export class AdminComponent
 			reject: () => {
 			}
 		});
+	}
+
+	showAddInactiveProductDialog() {
+		this.addInactiveProductModal = true;
+
+	}
+
+	addToInactive(typeId: number) {
+		this.addInactiveProductModal = false;
+		this.productService.setTypeInactive(typeId).subscribe(value => {
+		}, error1 => {
+		}, () => {
+		});
+
+		setTimeout(() => {
+			this.productService.getInactiveProductsTypes().subscribe(data => {
+				this.inactiveProductsTypes = data;
+			});
+
+		}, 1000);
+
+	}
+
+	removeFromInactive(typeId :number){
+		this.addInactiveProductModal = false;
+		this.productService.setTypeActive(typeId).subscribe(value => {
+
+		});
+		setTimeout(() => {
+			this.productService.getInactiveProductsTypes().subscribe(data => {
+				this.inactiveProductsTypes = data;
+			});
+
+		}, 1000);
 	}
 
 	showChangeDialog(user: User) {
