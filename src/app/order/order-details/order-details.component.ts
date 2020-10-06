@@ -608,7 +608,7 @@ export class OrderDetailsComponent
 	onDeliveryDataChange() {
 		let tmpDeliveryDate = new Date(this.order.deliveryDate);
 		tmpDeliveryDate.setHours(23, 59, 59, 99);
-		this.isDeliveryDateValid = tmpDeliveryDate > this.order.orderDate;
+		this.isDeliveryDateValid = tmpDeliveryDate > new Date(this.order.orderDate);
 	}
 
 	goToAuditPage(event) {
