@@ -149,6 +149,7 @@ export class OrderComponent
 	}
 
 	private performSetDataActionForRegularOrderView() {
+
 		setTimeout(() => {
 			this.datatable.lazy = true;
 		}, 500);
@@ -215,6 +216,7 @@ export class OrderComponent
 							orderItems.stateOnWarehouse;
 					});
 					order.progress = Math.floor(((totalComplete / 3) / totalBasketItem) * 100);
+
 				}
 			});
 		}, 800);
@@ -621,14 +623,16 @@ export class OrderComponent
 			}, error => {
 				this.spinerService.showSpinner = false;
 			}, () => {
+				this.calculateOrderProcessInPercentForStatusInProgress();
 				setTimeout(() => {
 					this.lastPaginationPageNumberOnOrderViewPage = paginationPageTmp;
 				}, 50);
-				this.expandRowAfterRefresh();
+
 				setTimeout(() => {
+					this.expandRowAfterRefresh();
 					this.spinerService.showSpinner = false;
 				}, 1000);
-				this.calculateOrderProcessInPercentForStatusInProgress();
+
 			});
 		}
 	}

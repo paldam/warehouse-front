@@ -173,12 +173,12 @@
 
 
         <p-column [styleClass]="'removable-col'" field="weekOfYear" header="T" [sortable]="true" filterMatchMode="equals"
-                  [style]="{'width':'90px', 'text-align':'center'}" [filter]="this.isCurrentPageOrdersView">
+                  [style]="{'width':'90px', 'text-align':'center'}" [filter]="true">
 
 
         <ng-template let-col pTemplate="filter">
             <p-multiSelect [filter]="false" [showToggleAll]="true" [options]="weeksList"
-                           defaultLabel="Wszystkie" [overlayVisible]="true"
+                           defaultLabel="Wszystkie"
                            (onChange)="datatable.filter($event.value, col.field, 'in')"></p-multiSelect>
         </ng-template>
 
