@@ -15,10 +15,10 @@ export class NotificationsService {
 
 	public constructor(private http: HttpService) {
 		this.baseUrl = `${this.protocol}://${location.hostname}:${this.port}`;
-		this.checkNumberOfNotifications();
-		this.getNotifications().subscribe(data => {
-			this.notifications = data;
-		});
+		//this.checkNumberOfNotifications();
+		//this.getNotifications().subscribe(data => {
+			//this.notifications = data;
+		//});
 	}
 
 	getNotifications(): Observable<Notification[]> {
@@ -52,8 +52,10 @@ export class NotificationsService {
 
 	showNotificationModalF() {
 		this.showNotificationModal = true;
-		this.getNotifications().subscribe(data => {
-			this.notifications = data;
-		});
+		this.notifications = null;
+
+		//this.getNotifications().subscribe(data => {
+		//	this.notifications = data;
+		//});
 	}
 }
