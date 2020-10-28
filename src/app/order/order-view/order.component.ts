@@ -56,6 +56,7 @@ export class OrderComponent
 	public selectedToMenuOrder: number;
 	public selectedOrdersMultiselction: Order[] = [];
 	public orderStatusList: SelectItem[] = [];
+	public deliveryTypesList: SelectItem[] = [];
 	public weeksList: SelectItem[] = [];
 	public ordersYears: SelectItem[] = [];
 	public items: MenuItem[];
@@ -116,6 +117,7 @@ export class OrderComponent
 		this.getProvincesForDataTableFilter();
 		this.getProductionUserForDataTableFilter();
 		this.getOrderYearsForDataTableFilter();
+		this.getDeliveryTypeForDataTableFilter();
 		this.getProductionUserForContextMenuSet();
 		this.setExportMenu();
 		this.notificationsService.checkNumberOfNotifications();
@@ -153,7 +155,7 @@ export class OrderComponent
 		setTimeout(() => {
 			this.datatable.lazy = true;
 		}, 500);
-		this.orderService.getOrdersDto(0, 50, "", "orderDate", 1, [], [],[],[],[]).subscribe(
+		this.orderService.getOrdersDto(0, 50, "", "orderDate", 1, [], [],[],[],[],[]).subscribe(
 			(data: any) => {
 				this.orders = data.orderDtoList;
 				this.totalRecords = data.totalRowsOfRequest;
@@ -243,6 +245,14 @@ export class OrderComponent
 		this.orderService.getOrderStatus().subscribe(data => {
 			data.forEach(value => {
 				this.orderStatusList.push({label: '' + value.orderStatusName, value: value.orderStatusId});
+			});
+		});
+	}
+
+	private getDeliveryTypeForDataTableFilter() {
+		this.orderService.getDeliveryTypes().subscribe(data => {
+			data.forEach(value => {
+				this.deliveryTypesList.push({label: '' + value.deliveryTypeName, value: value.deliveryTypeId});
 			});
 		});
 	}
@@ -560,6 +570,19 @@ export class OrderComponent
 		})
 	}
 
+	changePaymentStatus(status: number) {
+
+		this.orderService.changePaymentStatus(this.selectedToMenuOrder,status).subscribe(data => {
+			this.messageServiceExt.addMessage('success', 'Status', 'Zmieniono status płatnosci');
+		}, error => {
+			this.messageServiceExt.addMessage('error', 'Błąd ', error._body);
+		}, () => {
+			this.refreshData();
+		});
+
+	}
+
+
 	changeOrderStatus(orderStatus: number) {
 		if (this.authenticationService.isProdukcjaUser()) {
 			if (this.selectedOrderFromRow.orderStatus == AppConstants.ORDER_STATUS_NOWE ||
@@ -617,7 +640,7 @@ export class OrderComponent
 		if (this.isCurrentPageOrdersViewForProduction) {
 			this.performSetDataActionForOrderViewProduction();
 		} else {
-			this.orderService.getOrdersDto(0, 50, "", "orderDate", 1, [], [],[],[],[]).subscribe((data: any) => {
+			this.orderService.getOrdersDto(0, 50, "", "orderDate", 1, [], [],[],[],[],[]).subscribe((data: any) => {
 				this.orders = data.orderDtoList;
 				this.totalRecords = data.totalRowsOfRequest;
 			}, error => {
@@ -650,6 +673,9 @@ export class OrderComponent
 		}
 		let sortField = event.sortField;
 		let orderStatusFilterList: any[] = [];
+		let deliveryTypeFilterList: any[] = [];
+
+
 		let orderDataFilterList: any[] = [];
 		let orderProductionUserFilterList: any[] = [];
 		let orderWeeksFilterList: any[] = [];
@@ -660,6 +686,11 @@ export class OrderComponent
 		if (event.filters != undefined && event.filters["orderStatus.orderStatusName"] != undefined) {
 			orderStatusFilterList = event.filters["orderStatus.orderStatusName"].value;
 		}
+
+		if (event.filters != undefined && event.filters["deliveryType.deliveryTypeName"] != undefined) {
+			deliveryTypeFilterList = event.filters["deliveryType.deliveryTypeName"].value;
+		}
+
 		if (event.filters != undefined && event.filters["orderDate"] != undefined) {
 			orderDataFilterList = event.filters["orderDate"].value;
 		}
@@ -675,7 +706,7 @@ export class OrderComponent
 		
 		
 		this.orderService.getOrdersDto(
-			pageNumber, event.rows, event.globalFilter, sortField, event.sortOrder, orderStatusFilterList, orderDataFilterList,orderProductionUserFilterList,orderWeeksFilterList,this.selectedProvinces)
+			pageNumber, event.rows, event.globalFilter, sortField, event.sortOrder, orderStatusFilterList, orderDataFilterList,orderProductionUserFilterList,orderWeeksFilterList,this.selectedProvinces,deliveryTypeFilterList)
 			.subscribe((data: any) => {
 					this.orders = data.orderDtoList;
 					this.totalRecords = data.totalRowsOfRequest;
@@ -923,6 +954,14 @@ export class OrderComponent
 		}
 	}
 
+	calculatePaymantInfoStyles(a: any) {
+		if (a == 0) {
+			return {'color': 'red'};
+		} else {
+			return {'color': 'green'};
+		}
+	}
+
 	showBacketImg(event, basketId: number) {
 		this.basketService.getBasketImg(basketId).subscribe(res => {
 			this.createImageFromBlob(res);
@@ -950,7 +989,7 @@ export class OrderComponent
 			});
 			this.orders = fillteredOrderList;
 		} else {
-			this.orderService.getOrdersDto(0, 50, "", "orderDate", 1, [], [],[],[],[]).subscribe((data: any) => {
+			this.orderService.getOrdersDto(0, 50, "", "orderDate", 1, [], [],[],[],[],[]).subscribe((data: any) => {
 				this.orders = data.orderDtoList;
 				this.totalRecords = data.totalRowsOfRequest;
 			})
@@ -1285,6 +1324,18 @@ export class OrderComponent
 							icon: 'pi pi-fw pi-plus',
 							command: () => this.showDeleteOrderPanel(this.selectedOrderFromRow)
 						},
+					]
+				},
+				{
+					label: 'Status płatności', icon: 'fa fa-share',
+					items: [
+						{label: 'opłacone', icon: 'pi pi-fw pi-plus', command: () => this.changePaymentStatus(1)},
+						{
+							label: 'nieopłacone',
+							icon: 'pi pi-fw pi-plus',
+							command: () => this.changePaymentStatus(0)
+						},
+
 					]
 				},
 				{label: 'Pokaż załącznik(i)', icon: 'fa fa-paperclip', command: () => this.showAttachment()},

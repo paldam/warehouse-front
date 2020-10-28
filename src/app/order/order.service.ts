@@ -113,7 +113,7 @@ export class OrderService {
 	}
 
 	getOrdersDto(page: number, size: number, text: string, sortField: string, sortingDirection: number,
-				 orderStatusFilterList: any[], orderDataFilterList: any[],orderProductionUserFilterList: any[], orderWeeksFilterList: any[], provinces: any[]): Observable<any[]> {
+				 orderStatusFilterList: any[], orderDataFilterList: any[],orderProductionUserFilterList: any[], orderWeeksFilterList: any[], provinces: any[],deliveryTypeFilterList: any[] ): Observable<any[]> {
 		return this.http.get(this.baseUrl + `/orderdao?
 		page=${page}
 		&size=${size}
@@ -124,7 +124,9 @@ export class OrderService {
 		&orderYearsFilterList=${orderDataFilterList}
 		&orderProductionUserFilterList=${orderProductionUserFilterList}
 		&orderWeeksFilterList=${orderWeeksFilterList}
-		&provinces=${provinces}`)
+		&provinces=${provinces}
+		&deliveryTypeFilterList=${deliveryTypeFilterList}
+		`)
 			.map((response: Response) =>
 				response.json());
 	}
@@ -152,6 +154,9 @@ export class OrderService {
 
 	changeOrderStatus(orderId: number, statusId: number): Observable<Response> {
 		return this.http.post(this.baseUrl + `/order/status/${orderId}/${statusId}`, null)
+	}
+	changePaymentStatus(orderId: number, status: number): Observable<Response> {
+		return this.http.post(this.baseUrl + `/order/paymentstatus/${orderId}/${status}`, null)
 	}
 
 	getMergeCompanies(companies: Company[], newcompanyname: string): Observable<Company> {

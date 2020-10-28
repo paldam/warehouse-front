@@ -88,8 +88,18 @@
         <p-column expander="true" header="" styleClass="col-icon " [style]="{'width':'40px'}"></p-column>
 
 
-        <p-column field="orderFvNumber" header="Numer FV" [style]="{'width':'90px'}"></p-column>
+        <p-column field="orderFvNumber" header="Numer FV" [style]="{'width':'90px'}">
 
+        <ng-template let-row="rowData" pTemplate="body" >
+
+            <span [ngStyle]="calculatePaymantInfoStyles(row.paid)">
+                {{row.orderFvNumber}}
+            </span>
+
+
+        </ng-template>
+
+        </p-column>
 
         <p-column field="orderDate" header="Data zamówienia" [style]="{'width':'140px', 'text-align':'center'}"
                   [sortable]="true" [filter]="this.isCurrentPageOrdersView" filterMatchMode="equals">
@@ -223,7 +233,22 @@
 
 
         <p-column [styleClass]="'removable-col'" field="deliveryType.deliveryTypeName" header="Rodzaj dostawy"
-                  [style]="{'width':'130px', 'text-align':'center'}"></p-column>
+                  [style]="{'width':'130px', 'text-align':'center'}" [filter]="true">
+
+            <ng-template let-col pTemplate="filter">
+                <p-multiSelect [filter]="false" [showToggleAll]="true" [options]="deliveryTypesList"
+                               defaultLabel="Wszystkie"
+                               (onChange)="datatable.filter($event.value, col.field, 'in')"></p-multiSelect>
+            </ng-template>
+
+            <ng-template let-row="rowData" pTemplate="body">
+
+               {{row.deliveryType.deliveryTypeName}}
+            </ng-template>
+
+
+
+        </p-column>
 
 
         <p-column [styleClass]="'removable-col2'" class="attach_col" field="dbFileId" [sortable]="false" header="Z"
