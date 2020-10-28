@@ -694,14 +694,14 @@ export class OrderComponent
 			this.expandedRowOrderId = event.data.orderId;
 			let index;
 			let dataTmp;
-			console.log(event.data);
 			this.orderService.getOrder(event.data.orderId).subscribe(data => {
 				index = this.orders.findIndex((value: Order) => {
 					return value.orderId == event.data.orderId;
 				});
 				dataTmp = data;
 				this.orders[index] = dataTmp;
-				console.log(this.orders[index])
+				console.log(this.orders[index]);
+				console.log(dataTmp);
 			});
 		}
 	}
