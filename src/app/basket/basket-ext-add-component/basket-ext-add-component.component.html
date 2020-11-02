@@ -24,6 +24,7 @@
                 </ng-template>
             </p-column>
             <p-column field="productName" header="Nazwa" [sortable]="true"></p-column>
+            <p-column field="productCatalogName" header="Nazwa Katalogowa" [sortable]="true"></p-column>
             <p-column field="capacity" header="Pojemność" [sortable]="true" [style]="{'width':'120px'}"></p-column>
             <p-column field="supplier.supplierName" header="Dostawca" [sortable]="true"></p-column>
             <p-column field="price" styleClass="price_col" header="Cena" [sortable]="true">
@@ -186,7 +187,8 @@
                     <table class="product_tab">
                         <thead>
                         <tr class="product_tab_row">
-                            <th>Nazwa Produktu</th>
+                            <th>Nazwa produktu</th>
+                            <th>Nazwa katalogowa</th>
                             <th>Pojemność</th>
                             <th>Cena zakupu</th>
                             <th>Ilość</th>
@@ -195,6 +197,7 @@
                         <tbody>
                         <tr class="product_tab_row" *ngFor="let i of basket.basketItems">
                             <td>{{i.product.productName}}</td>
+                            <th>{{i.product.productCatalogName}}</th>
                             <td>{{i.product.capacity}}</td>
                             <td>{{i.product.price/100| number : '1.2-2'}} zł</td>
                             <td>{{i.quantity}} szt.</td>

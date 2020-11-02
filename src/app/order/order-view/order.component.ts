@@ -21,7 +21,6 @@ import {interval, Subscription} from 'rxjs';
 import {NotificationsService} from "../../nav-bars/top-nav/notification.service";
 import {ServerSideEventsService} from "../../server-side-events-service";
 import {Notification} from "../../model/notification";
-import {Supplier} from "../../model/supplier.model";
 
 @Component({
 	selector: 'order',
@@ -571,15 +570,16 @@ export class OrderComponent
 	}
 
 	changePaymentStatus(status: number) {
-
-		this.orderService.changePaymentStatus(this.selectedToMenuOrder,status).subscribe(data => {
+		this.orderService.changePaymentStatus(this.selectedToMenuOrder, status).subscribe(data => {
 			this.messageServiceExt.addMessage('success', 'Status', 'Zmieniono status płatnosci');
 		}, error => {
 			this.messageServiceExt.addMessage('error', 'Błąd ', error._body);
 		}, () => {
-			this.refreshData();
+			let index = this.orders.findIndex((value: Order) => {
+				return value.orderId == this.selectedToMenuOrder;
+			});
+			this.orders[index].paid = status != 0;
 		});
-
 	}
 
 
@@ -1020,7 +1020,7 @@ export class OrderComponent
 		this.orderService.getOrderBasketsProductsPdf(
 			this.selectedOrderToPrintBasketProducts.orderItems, this.selectedOrderToPrintBasketProducts.orderId)
 			.subscribe(res => {
-					if (this.authenticationService.isAdmin() || this.authenticationService.isProdukcjaUser()) {
+					if (this.authenticationService.isAdmin() || this.authenticationService.isProdukcjaUser() ||this.authenticationService.isMagazynUser() ) {
 						this.changeOrderStatusToInProgress(this.selectedOrderToPrintBasketProducts);
 					}
 					var fileURL = URL.createObjectURL(res);
