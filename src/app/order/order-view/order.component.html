@@ -67,7 +67,7 @@
                  rowExpandMode=single [paginator]="true" [pageLinks]="5" [rowsPerPageOptions]=paginatorValues
                  [lazy]="false"
                  (onContextMenuSelect)="OnSelectRow($event)"
-                 (onRowExpand)="rowExpand($event)"
+                 (onRowExpand)="fetchAdditionalDataForOrder($event)"
                  (onRowCollapse)="onRowCollapse($event)"
                  (onPage)="hideActionExtention2($event)"
                  (onSort)="hideActionExtention2($event)"

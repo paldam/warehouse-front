@@ -722,7 +722,7 @@ export class OrderComponent
 				})
 	}
 
-	rowExpand(event) {
+	fetchAdditionalDataForOrder(event) {
 		if (event.data) {
 			this.expandedRowOrderId = event.data.orderId;
 			let index;
@@ -733,14 +733,12 @@ export class OrderComponent
 				});
 				dataTmp = data;
 				this.orders[index] = dataTmp;
-				console.log(this.orders[index]);
-				console.log(dataTmp);
+
 			});
 		}
 	}
 
 	onRowCollapse(event) {
-		console.log("RowCollapse");
 		if (this.datatable.first == 0) {
 			this.expandedRowOrderId = 0;
 		}
@@ -1009,6 +1007,8 @@ export class OrderComponent
 		this.pdialogBasketProductsPrint = true;
 		this.orderService.getOrder(orderId).subscribe(data => {
 				this.selectedOrderToPrintBasketProducts = data;
+
+
 			}, null,
 			() => {
 				this.selectedOrderToPrintBasketProducts.orderItems.forEach(orderItems => {
