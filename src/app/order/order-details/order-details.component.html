@@ -475,8 +475,9 @@
 
         <p-dataTable [value]="baskets" [rows]="10" [paginator]="true" [globalFilter]="gb" #dtt
                      [loading]="loading" loadingIcon="fa-circle-o-notch" expandableRows="true"
-                     (onRowDblclick)="addBasketToOrder($event.data)" (onContextMenuSelect)="contextMenuSelected($event)"
-                     [contextMenu]="cm">
+                     (onRowDblclick)="addBasketToOrder($event.data)" [totalRecords]="totalRecords"
+                     (onContextMenuSelect)="contextMenuSelected($event)"
+                     [contextMenu]="cm" [lazy]="true" (onLazyLoad)="loadBasketsLazy($event)" (onRowExpand)="rowExpand($event)">
             <p-column expander="true" header="Zawartość" styleClass="col-icon" [style]="{'width':'70px'}"></p-column>
             <p-column header="lp." [style]="{'width':'70px'}">
                 <ng-template let-i="rowIndex" pTemplate="rowexpansion">

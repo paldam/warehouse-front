@@ -3,32 +3,73 @@
         <div class="basket_summary col-xl-4">
             <p-fieldset legend="Zawartość kosza" [toggleable]="true">
                 <div class="d-table-wrapper">
-                    <table class="d-table" *ngIf="isProductLinesEmpty()==false">
-                        <colgroup>
-                            <col span="1" style="width: 70%;">
-                            <col span="1" style="width: 25%;">
-                            <col span="1" style="width: 5%;">
+                    <!--<table class="d-table" *ngIf="isProductLinesEmpty()==false">-->
+                        <!--<colgroup>-->
+                            <!--<col span="1" style="width: 70%;">-->
+                            <!--<col span="1" style="width: 25%;">-->
+                            <!--<col span="1" style="width: 5%;">-->
 
-                        </colgroup>
-                        <thead>
-                        <tr>
-                            <th>Nazwa</th>
-                            <th class="col_quantity">Ilość</th>
-                            <th>Usuń</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr *ngFor="let basketItems of basketItems">
-                            <td scope="row">{{basketItems.product.productName}}</td>
-                            <td><input type="number" class="form-control" name="" id="" aria-describedby="helpId"
-                                       placeholder="" min="0"
-                                       [value]="basketItems.quantity"
-                                       (change)="updateQuantity(basketItems,$event.target.value)"></td>
-                            <td class="col_delete"><i class="fa fa-trash" aria-hidden="true"
-                                                      (click)="deleteProductLine(basketItems.product.id)"></i></td>
-                        </tr>
-                        </tbody>
-                    </table>
+                        <!--</colgroup>-->
+                        <!--<thead>-->
+                        <!--<tr>-->
+                            <!--<th>Nazwa</th>-->
+                            <!--<th class="col_quantity">Ilość</th>-->
+                            <!--<th>Usuń</th>-->
+                        <!--</tr>-->
+                        <!--</thead>-->
+                        <!--<tbody>-->
+                        <!--<tr *ngFor="let basketItems of basketItems">-->
+                            <!--<td scope="row">{{basketItems.product.productName}}</td>-->
+                            <!--<td><input type="number" class="form-control" name="" id="" aria-describedby="helpId"-->
+                                       <!--placeholder="" min="0"-->
+                                       <!--[value]="basketItems.quantity"-->
+                                       <!--(change)="updateQuantity(basketItems,$event.target.value)"></td>-->
+                            <!--<td class="col_delete"><i class="fa fa-trash" aria-hidden="true"-->
+                                                      <!--(click)="deleteProductLine(basketItems.product.id)"></i></td>-->
+                        <!--</tr>-->
+                        <!--</tbody>-->
+                    <!--</table>-->
+
+                    <p-orderList [value]="basketItems"  dragdrop="true" dragdropScope="basketItems" controlsPosition="left"
+                                 [listStyle]="{'height':'400px', 'max-width':'900px', 'margin-left':'20px'}" >
+
+
+                        <ng-template let-items let-i="index" pTemplate="item">
+
+                            <div class="ui-helper-clearfix">
+
+                                <div style="font-size:14px;float:left;margin:15px 5px 0 0;width:20px">
+                                    {{i+1}}
+                                </div>
+
+
+                                <div
+                                        style="font-size:14px;float:left;margin:15px 5px 0 0;width:160px">{{items.product
+                                    .productName}}
+                                </div>
+                                <div
+                                        style="font-size:14px;float:left;margin:15px 5px 0 0;width:160px">{{items.product
+                                    .productCatalogName}}
+                                </div>
+                                <div style="font-size:14px;float:left;margin:9px 5px 0 0;width:65px">
+                                    <input type="number" class="form-control" name="" aria-describedby="helpId"
+                                           placeholder="" min="0" [value]="items.quantity"
+                                           (change)="updateQuantity(items,$event.target.value)">
+                                </div>
+                                <div style="font-size:14px;float:left;margin:15px 5px 0 15px;width:10px">
+                                    <i class="fa fa-trash" aria-hidden="true"
+                                       (click)="deleteProductLine(items.product.id)"></i>
+                                </div>
+
+                            </div>
+
+
+                        </ng-template>
+
+
+                    </p-orderList>
+
+
                     <p *ngIf="isProductLinesEmpty()==true"> Kosz jest pusty</p>
                 </div>
             </p-fieldset>

@@ -6,7 +6,7 @@
 <p-tabView>
     <p-tabPanel header="Sezony koszy">
         <div *ngIf="authenticationService.isAdmin()" class="row">
-            <div class="col-lg-4">
+            <div class="col-lg-6">
 
                 <p-fieldset legend="Sezony koszy">
 
@@ -42,6 +42,26 @@
 
                         <p-column field="basketSezonName" styleClass="name_col" header="Nazwa sezonu"
                                   [style]="{'width':'200px'}"></p-column>
+
+                        <p-column header="Aktywny" [style]="{'width':'20px'}">
+                            <ng-template let-row="rowData" pTemplate="body">
+                                <span *ngIf="row.isActive == 1">TAK</span>
+                                <span [ngStyle]="calculatePaymantInfoStyles()" *ngIf="row.isActive == 0">NIE</span>
+                            </ng-template>
+                        </p-column>
+
+                        <p-column header="Akcja" [style]="{'width':'20px'}">
+                            <ng-template let-row="rowData" pTemplate="body">
+                                <i class="fa fa-trash fa-2x" aria-hidden="true" title="Usuń Sezon"
+                                   (click)="ShowDelSeasonConfirmModal(row)" ></i>
+                            </ng-template>
+                        </p-column>
+
+
+
+
+
+
 
                     </p-dataTable>
 
@@ -86,6 +106,14 @@
 
                         <p-column field="productSeasonName" styleClass="name_col" header="Nazwa sezonu"
                                   [style]="{'width':'200px'}"></p-column>
+
+                        <p-column header="Akcja" [style]="{'width':'20px'}">
+                            <ng-template let-row="rowData" pTemplate="body">
+                                <i class="fa fa-trash fa-2x" aria-hidden="true" title="Usuń Sezon"
+                                   (click)="ShowDelProductSeasonConfirmModal(row)" ></i>
+                            </ng-template>
+                        </p-column>
+
 
                     </p-dataTable>
 
@@ -244,14 +272,15 @@
 
 
 
-
-
-
+<p-confirmDialog header="Usuwanie użytkownika" key="delProductSeason" icon="fa fa-question-circle"
+                 width="425"></p-confirmDialog>
 <p-confirmDialog header="Usuwanie użytkownika" key="removeDialog" icon="fa fa-question-circle"
                  width="425"></p-confirmDialog>
 <p-confirmDialog header="Resetowanie hasła" key="resetDialog" icon="fa fa-question-circle"
                  width="425"></p-confirmDialog>
 <p-confirmDialog header="Resetowanie stanu magazynowego" key="resetState" icon="fa fa-question-circle"
+                 width="425"></p-confirmDialog>
+<p-confirmDialog header="Usuwanie sezonu" key="delSeason" icon="fa fa-question-circle"
                  width="425"></p-confirmDialog>
 
 <p-dialog header="Zmień uprawnienia" [(visible)]="changeModal" modal="modal" width="300" [responsive]="true">

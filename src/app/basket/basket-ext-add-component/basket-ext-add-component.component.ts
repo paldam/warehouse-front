@@ -96,6 +96,7 @@ export class BasketExtAddComponentComponent
 		if (form.valid && this.basketItems.length > 0) {
 			this.basket.basketItems = this.basketItems;
 			this.basket.basketTotalPrice *= 100;
+			this.assignProductPosition();
 			if (this.checkedAlcoholic == true) {
 				this.basket.isAlcoholic = 1;
 			} else {
@@ -112,6 +113,13 @@ export class BasketExtAddComponentComponent
 				},
 				err => console.log("error "));
 		}
+	}
+
+	private assignProductPosition() {
+		this.basketItems.forEach((basketItem,index) => {
+				basketItem.position= index+1
+			}
+		)
 	}
 
 	pickBasket(basket: Basket) {

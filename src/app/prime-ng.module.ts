@@ -4,11 +4,24 @@ import {
 	CalendarModule,
 	CardModule,
 	CheckboxModule,
-	ConfirmDialogModule, ContextMenuModule,
+	ConfirmDialogModule,
+	ContextMenuModule,
 	DataTableModule,
-	DialogModule, DropdownModule,
-	FieldsetModule, FileUploadModule, LightboxModule, MenuModule, MultiSelectModule, OverlayPanelModule,
-	PanelMenuModule, PanelModule, ProgressSpinnerModule, RadioButtonModule, SharedModule, SliderModule, SpinnerModule
+	DialogModule,
+	DropdownModule,
+	FieldsetModule,
+	FileUploadModule,
+	LightboxModule,
+	MenuModule,
+	MultiSelectModule, OrderListModule,
+	OverlayPanelModule,
+	PanelMenuModule,
+	PanelModule,
+	ProgressSpinnerModule,
+	RadioButtonModule,
+	SharedModule,
+	SliderModule,
+	SpinnerModule
 } from "primeng/primeng";
 import {FormsModule} from "@angular/forms";
 
@@ -22,7 +35,7 @@ import {ListboxModule} from 'primeng/listbox';
 	exports:[FormsModule,DialogModule,CheckboxModule,ConfirmDialogModule,PanelMenuModule,
 		PanelModule,DropdownModule,ListboxModule,RadioButtonModule,ToastModule,TableModule,FileUploadModule,DataTableModule,
 		SharedModule,SliderModule,MultiSelectModule,SpinnerModule,CardModule,ProgressSpinnerModule,FieldsetModule,
-		LightboxModule,OverlayPanelModule,ContextMenuModule, MenuModule,CalendarModule]
+		LightboxModule,OverlayPanelModule,ContextMenuModule, MenuModule,CalendarModule,OrderListModule]
 })
 export class PrimeNgModule {
 }

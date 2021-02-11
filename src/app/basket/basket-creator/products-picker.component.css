@@ -74,3 +74,10 @@
     margin-left: 20px;
     margin-bottom: 20px;
 }
+.order_list{
+    height: 5px;
+}
+
+.btnd {
+    margin-left: 0px !important;
+}

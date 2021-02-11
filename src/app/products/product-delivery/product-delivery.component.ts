@@ -48,19 +48,26 @@ export class ProductDeliveryComponent
 
 		this.productsService.getProducts().subscribe(data => this.products = data);
 
+
+	}
+
+	ngOnInit() {
+		this.setCustomSupplierFilterToDataTable();
+		this.assignNumberOfOrderedToAddValue();
+
+
+	}
+
+
+	private assignNumberOfOrderedToAddValue(){
 		this.productsService.getProducts().subscribe((data: any) => {
 			data.forEach(function (obj) {
 				obj.add = obj.tmpOrdered;
 			});
 
 			this.products = data;
-	});
+		});
 	}
-
-	ngOnInit() {
-		this.setCustomSupplierFilterToDataTable();
-	}
-
 	private setCustomSupplierFilterToDataTable() {
 		this.dataTable.filterConstraints['inCollection'] = function inCollection(value: Supplier[], filter: any): boolean {
 			if (filter === undefined || filter === null) {

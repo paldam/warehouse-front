@@ -257,3 +257,19 @@ body .ui-toast .ui-toast-message.ui-toast-message-error .ui-toast-close-icon {
     color: #212121;
 }
 
+.ui-orderlist-controls{
+    width: 50px;
+    height: 80px !important;
+}
+
+.ui-orderlist .ui-orderlist-droppoint{
+    height: 0px;
+}
+
+.ui-orderlist-item{
+    border: 2px;
+    margin: 0px;
+    padding: 0px;
+    font-size: 6px;
+    padding-left: 10px;
+}

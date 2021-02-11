@@ -360,6 +360,8 @@ export class OrderComponent
 
 	updateStateOnWarehouse(orderToChange, value, i: number) {
 		let orderLine = this.orders.find(order => order.orderId == orderToChange.orderId);
+		console.log(this.orders);
+		console.log(orderLine);
 		if (orderLine != undefined) {
 			orderLine.orderItems[i].stateOnWarehouse = Number(value);
 		}

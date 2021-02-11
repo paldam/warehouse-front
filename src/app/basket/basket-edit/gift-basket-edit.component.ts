@@ -43,6 +43,7 @@ export class GiftBasketEditComponent
 			this.basket = data;
 			this.basketItems = data.basketItems;
 			this.basket.basketTotalPrice /= 100;
+			this.sortProductsOrderInBasket()
 		});
 		this.basketService.getBasketSeason().subscribe(data => {
 			this.basketSeasonList = data;
@@ -104,6 +105,11 @@ export class GiftBasketEditComponent
 
 	compareBasketType(optionOne: BasketType, optionTwo: BasketType): boolean {
 		return optionTwo && optionTwo ? optionOne.basketTypeId === optionTwo.basketTypeId : optionOne === optionTwo;
+	}
+
+	private sortProductsOrderInBasket(){
+
+		this.basketItems.sort(function(basketItems, basketItems2){return basketItems.position-basketItems2.position});
 	}
 
 	addProductToGiftBasket(product: Product) {
@@ -186,6 +192,9 @@ export class GiftBasketEditComponent
 			this.basket.basketProductsPrice = this.total;
 			this.basket.basketItems = this.basketItems;
 			this.basket.basketTotalPrice *= 100;
+
+			this.assignProductPosition();
+
 			if (this.basket.basketType.basketTypeId == 1) {
 				this.isAddNewImg ?
 					this.performActionForBasketWithNewImg(form) : this.performActionForBasketWhichHasImgInDb(form);
@@ -198,6 +207,13 @@ export class GiftBasketEditComponent
 				}
 			}
 		}
+	}
+
+	private assignProductPosition() {
+		this.basketItems.forEach((basketItem,index) => {
+				basketItem.position= index+1
+			}
+		)
 	}
 
 	private performActionForBasketWithNewImg(form: NgForm) {

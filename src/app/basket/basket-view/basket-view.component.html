@@ -99,10 +99,10 @@
 
 
         <p-column field="basketSezon.basketSezonName" header="Sezon" [style]="{'width':'150px', 'text-align':'center'}"
-                  [filter]="true" filterMatchMode="equals" [sortable]="false">
+                  [filter]="true"  filterMatchMode="equals" [sortable]="false">
 
             <ng-template let-col pTemplate="filter">
-                <p-multiSelect [filter]="true" [showToggleAll]="false" [options]="basketSeasonList"
+                <p-multiSelect [filter]="true" [showToggleAll]="true" [options]="basketSeasonList"
                                defaultLabel="Wszystkie"
                                (onChange)="datatable.filter($event.value, col.field, 'in')"></p-multiSelect>
             </ng-template>

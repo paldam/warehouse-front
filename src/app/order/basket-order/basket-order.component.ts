@@ -46,6 +46,7 @@ export class BasketOrderComponent implements OnInit, OnDestroy {
 	public addressPickDialogShow: boolean = false;
 	public order: Order = new Order();
 	public total: number = 0;
+	public expandedRowOrderId: number = 0;
 	public formSubmitted: boolean = false;
 	public formCompanyAddForm = false;
 	public formCompanyMargeForm: boolean = false;
@@ -277,7 +278,25 @@ export class BasketOrderComponent implements OnInit, OnDestroy {
 			this.total += (orderItem.basket.basketTotalPrice * orderItem.quantity);
 		})
 	}
+	rowExpand(event) {
 
+
+
+		if (event.data) {
+			this.expandedRowOrderId = event.data.basketId;
+			let index;
+			let dataTmp;
+
+			this.basketService.getBasket(event.data.basketId).subscribe(data => {
+				index = this.baskets.findIndex((value: Basket) => {
+					return value.basketId == event.data.basketId;
+				});
+				dataTmp = data;
+				this.baskets[index].basketItems = dataTmp.basketItems;
+			})
+
+		}
+	}
 	pickCustomer(customer: Customer) {
 		this.customer = customer;
 		if (customer.company == null) {

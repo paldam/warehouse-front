@@ -6,7 +6,7 @@ import {OrderItem} from "../../model/order_item";
 import {DeliveryType} from "../../model/delivery_type.model";
 import {Customer} from "../../model/customer.model";
 import {OrderStatus} from "../../model/OrderStatus";
-import {Checkbox, ConfirmationService, DataTable, FileUpload, SelectItem} from "primeng/primeng";
+import {Checkbox, ConfirmationService, DataTable, FileUpload, LazyLoadEvent, SelectItem} from "primeng/primeng";
 import {AuthenticationService, TOKEN} from "../../authentication.service";
 import {Basket} from "../../model/basket.model";
 import {BasketService} from "../../basket/basket.service";
@@ -66,8 +66,10 @@ export class OrderDetailsComponent
 	public auditList: any[] = [];
 	public orderId: number;
 	public items: MenuItem[];
+	public expandedRowOrderId: number = 0;
 	public selectedBasketOnContextMenu: Basket = new Basket();
 	public confirmDialogShow: boolean = false;
+	public totalRecords: number;
 	public filtersLoaded: Promise<boolean>;
 	public weekOfYearTmp: Date;
 	public weekOfYear: number;
@@ -115,7 +117,16 @@ export class OrderDetailsComponent
 		this.orderService.getFileList(this.orderId).subscribe(data => {
 			this.fileList = data;
 		});
-		this.basketService.getBaskets().subscribe(data => this.baskets = data);
+
+		basketService.getBasketsPage(
+			1, 20, "", "basketName", -1, false, [])
+			.subscribe((data: any) => {
+				this.baskets = data.basketsList;
+				this.totalRecords = data.totalRowsOfRequest;
+			});
+
+
+
 		this.orderService.getOrderAudit(this.orderId).subscribe(data => this.auditList = data);
 		this.customerService.getCustomers().subscribe(data => this.customers = data);
 		this.orderService.getCompany().subscribe(data => this.companyList = data);
@@ -152,6 +163,51 @@ export class OrderDetailsComponent
 				this.basketSeasonList.push({label: '' + value.basketSezonName, value: value.basketSezonId});
 			});
 		});
+	}
+
+	loadBasketsLazy(event: LazyLoadEvent) {
+		this.loading = true;
+		let pageNumber = 0;
+		if (event.first) {
+			pageNumber = event.first / event.rows;
+		}
+		let sortField = event.sortField;
+		if (sortField == undefined) {
+			sortField = "basketName";
+		}
+		let basketSeasonList: any[] = [];
+		if (event.filters != undefined && event.filters["basketSezon.basketSezonId"] != undefined) {
+			basketSeasonList = event.filters["basketSezon.basketSezonId"].value;
+		}
+		this.basketService.getBasketsPage(
+			pageNumber, event.rows, event.globalFilter, sortField, event.sortOrder, false, basketSeasonList)
+			.subscribe((data: any) => {
+					this.baskets = data.basketsList;
+					this.totalRecords = data.totalRowsOfRequest;
+				}, null
+				, () => {
+					this.loading = false;
+				})
+	}
+
+	rowExpand(event) {
+
+		
+
+		if (event.data) {
+			this.expandedRowOrderId = event.data.basketId;
+			let index;
+			let dataTmp;
+
+			this.basketService.getBasket(event.data.basketId).subscribe(data => {
+				index = this.baskets.findIndex((value: Basket) => {
+					return value.basketId == event.data.basketId;
+				});
+				dataTmp = data;
+				this.baskets[index].basketItems = dataTmp.basketItems;
+			})
+
+		}
 	}
 
 	private setDataForOrderEdit() {

@@ -13,6 +13,7 @@ import {BasketService} from "../basket/basket.service";
 import {ProductsService} from "../products/products.service";
 import {ProductSeason} from "../model/product_season.model";
 import {ProductType} from "../model/product_type.model";
+import {Notification} from "../model/notification";
 
 @Component({
 	selector: 'app-admin',
@@ -83,16 +84,27 @@ export class AdminComponent
 
 	refreshData() {
 		this.userService.getUsers().subscribe(data => this.usersList = data);
-		this.basketService.getBasketSeason().subscribe(data => {
-			this.basketSeasonList = data;
-			this.basketSeasonList.reverse();
-		});
+
 		this.productService.getProductSeasons().subscribe(data => {
 			this.productSeasonList = data;
 
 		});
 
 
+	}
+
+
+	refreshBasketSeason(){
+		this.basketService.getBasketSeason().subscribe(data => {
+			this.basketSeasonList = data;
+			//this.basketSeasonList.reverse();
+		});
+	}
+
+	refreshProductSeason(){
+		this.productService.getProductSeasons().subscribe(data => {
+			this.productSeasonList = data;
+		});
 	}
 
 	submitForm(form: NgForm) {
@@ -128,9 +140,10 @@ export class AdminComponent
 
 			this.basketService.addBasketSeason(season).subscribe(data => {
 					this.basketSezonName= null;
-					this.refreshData();
+				    this.refreshBasketSeason();
 					this.formSeasonSubmitted = false;
 					this.messageServiceExt.addMessageWithTime('success', 'Status', 'Dodano sezon', 5000);
+
 
 				}, err => {
 					if (err.status == 500) {
@@ -138,7 +151,8 @@ export class AdminComponent
 					} else {
 						this.status = err.text();
 					}
-				});
+				},() => {
+			});
 			}
 		}
 
@@ -197,6 +211,56 @@ export class AdminComponent
 		});
 	}
 
+	ShowDelSeasonConfirmModal(season: BasketSeason) {
+		this.confirmationService.confirm({
+			key: "delSeason",
+			message: 'Jesteś pewny że chcesz usunąć sezon kosza  ' + season.basketSezonName + ' ?',
+			accept: () => {
+
+
+
+				season.isActive = false;
+				this.basketService.addBasketSeason(season).subscribe(data => {
+					setTimeout(() => {
+						this.messageServiceExt.addMessageWithTime('success', 'Status', 'Usunieto sezon', 5000);
+					}, 400);
+				}, error => {
+					setTimeout(() => {
+						this.messageServiceExt.addMessage('error', 'Błąd', "Status: " + error._body + ' ');
+					}, 400);
+				},() => {
+					this.refreshBasketSeason();
+				})
+			},
+			reject: () => {
+			}
+		});
+	}
+
+	ShowDelProductSeasonConfirmModal(season: ProductSeason) {
+		this.confirmationService.confirm({
+			key: "delProductSeason",
+			message: 'Jesteś pewny że chcesz usunąć sezon produktu  ' + season.productSeasonName + ' ?',
+			accept: () => {
+
+				season.isActive = false;
+				this.productService.saveProductSeason(season).subscribe(data => {
+					setTimeout(() => {
+						this.messageServiceExt.addMessageWithTime('success', 'Status', 'Usunieto sezon', 5000);
+					}, 400);
+				}, error => {
+					setTimeout(() => {
+						this.messageServiceExt.addMessage('error', 'Błąd', "Status: " + error._body + ' ');
+					}, 400);
+				},() => {
+					this.refreshProductSeason();
+				})
+			},
+			reject: () => {
+			}
+		});
+	}
+
 	ShowConfirmResetModal(user: User) {
 		this.confirmationService.confirm({
 			key: "resetDialog",
@@ -247,6 +311,10 @@ export class AdminComponent
 	showChangeDialog(user: User) {
 		this.changeModal = true;
 		this.selectedUser = user;
+	}
+
+	calculatePaymantInfoStyles() {
+			return {'color': 'red'};
 	}
 
 	resetDbAllStockState() {

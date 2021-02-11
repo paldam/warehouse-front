@@ -52,7 +52,7 @@ export class ProductPickerComponent
 		this.basketService.getBasketSeason().subscribe(data => {
 			this.basketSeasonList = data;
 			this.basketSeasonList.forEach(value => {
-				this.basketSeasonSelectItemList.push({label: value.basketSezonName, value: value})
+			this.basketSeasonSelectItemList.push({label: value.basketSezonName, value: value});
 			})
 		});
 		productsService.getProductsSubTypes().subscribe((data: ProductSubType[]) => {
@@ -170,6 +170,7 @@ export class ProductPickerComponent
 			this.basket.isAvailable = 0;
 			this.basket.stock = 0;
 			this.basket.basketProductsPrice = this.total;
+			this.assignProductPosition();
 			if (!this.basket.basketSezon) {
 				this.basket.basketSezon = new BasketSeason(AppConstants.BASKET_SEASON_ID_NONE)
 			}
@@ -254,6 +255,14 @@ export class ProductPickerComponent
 			this.createImageFromBlob(res);
 		});
 		this.showImageFrame = true;
+	}
+
+
+	private assignProductPosition() {
+		this.basketItems.forEach((basketItem,index) => {
+				basketItem.position= index+1
+			}
+		)
 	}
 
 	private createImageFromBlob(image: Blob) {
