@@ -18,6 +18,7 @@ export class GiftBasketComponent
 	public basketSeasonList: SelectItem[] = [];
 	public gb: any;
 	public totalRecords: number;
+	public expandedRowBasketId: number = 0;
 	@ViewChild('dt') dataTable: DataTable;
 
 	constructor(private basketService: BasketService, private router: Router) {
@@ -40,6 +41,21 @@ export class GiftBasketComponent
 				this.basketSeasonList.push({label: '' + value.basketSezonName, value: value.basketSezonId});
 			});
 		});
+	}
+
+	rowExpand(event) {
+		if (event.data) {
+			this.expandedRowBasketId = event.data.basketId;
+			let index;
+			let dataTmp;
+			this.basketService.getBasket(event.data.basketId).subscribe(data => {
+				index = this.baskets.findIndex((value: Basket) => {
+					return value.basketId == event.data.basketId;
+				});
+				dataTmp = data;
+				this.baskets[index].basketItems = dataTmp.basketItems;
+			})
+		}
 	}
 
 	loadBasketsLazy(event: LazyLoadEvent) {

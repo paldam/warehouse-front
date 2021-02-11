@@ -11,7 +11,8 @@
 
         <p-dataTable [value]="baskets" [rows]="10" [paginator]="true" [globalFilter]="gb" #dt
                      [loading]="loading" loadingIcon="fa-circle-o-notch" expandableRows="true"
-                     [lazy]="true" (onLazyLoad)="loadBasketsLazy($event)" [totalRecords]="totalRecords">
+                     [lazy]="true" (onLazyLoad)="loadBasketsLazy($event)" [totalRecords]="totalRecords"
+                     (onRowExpand)="rowExpand($event)">
 
             <p-column expander="true" header="Zawartość" styleClass="col-icon " [style]="{'width':'70px'}"></p-column>
 

@@ -12,7 +12,8 @@
         <p-dataTable [value]="baskets" [rows]="10" [paginator]="true" [globalFilter]="gb" #dt
                      loadingIcon="fa-circle-o-notch" expandableRows="true"
                      (onRowDblclick)="addBasketToOrder($event.data)"
-                     [editable]="this.authenticationService.isAdmin()" (onEditComplete)="editBasketStock($event.data)">
+                     [editable]="this.authenticationService.isAdmin()"
+                     (onEditComplete)="editBasketStock($event.data)" (onRowExpand)="rowExpand($event)">
             <p-column expander="true" header="Zawartość" styleClass="col-icon" [style]="{'width':'70px'}"></p-column>
             <p-column header="lp." [style]="{'width':'70px'}">
                 <ng-template let-i="rowIndex" pTemplate="rowexpansion">

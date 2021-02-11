@@ -13,7 +13,7 @@
                  (onEditComplete)="updateBasketExtRow($event)"
                  [loading]="loading" loadingIcon="fa-circle-o-notch" expandableRows="true" [contextMenu]="cm"
                  (onContextMenuSelect)="contextMenuSelected($event)" [paginator]="true" [pageLinks]="5"
-                 [rowsPerPageOptions]=paginatorValues>
+                 [rowsPerPageOptions]=paginatorValues (onRowExpand)="rowExpand($event)">
         <p-column expander="true" header="Zawartość" styleClass="col-icon " [style]="{'width':'70px'}"></p-column>
 
         <p-column header="lp." [style]="{'width':'70px'}">

@@ -22,6 +22,7 @@ export class BasketExtComponentComponent
 	public gb: any;
 	public url: string = '';
 	public items: MenuItem[];
+	public expandedRowBasketId: number = 0;
 	public alcoholOptions: SelectItem[];
 	public selectedBasketOnContextMenu: BasketExt = new BasketExt();
 	@ViewChild('onlyDeleted') el: ElementRef;
@@ -69,6 +70,21 @@ export class BasketExtComponentComponent
 
 	contextMenuSelected(event) {
 		this.selectedBasketOnContextMenu = event.data;
+	}
+
+	rowExpand(event) {
+		if (event.data) {
+			this.expandedRowBasketId = event.data.basketId;
+			let index;
+			let dataTmp;
+			this.basketService.getBasket(event.data.basketId).subscribe(data => {
+				index = this.baskets.findIndex((value: Basket) => {
+					return value.basketId == event.data.basketId;
+				});
+				dataTmp = data;
+				this.baskets[index].basketItems = dataTmp.basketItems;
+			})
+		}
 	}
 
 	refreshData() {

@@ -17,6 +17,7 @@ export class BasketsInAdvanceComponent
 	implements OnInit {
 	public baskets: Basket[] = [];
 	public orderItems: OrderItem[] = [];
+	public expandedRowBasketId: number = 0;
 
 	constructor(private router: Router, private basketService: BasketService, private spinerService: SpinerService,
 				private messageServiceExt: MessageServiceExt, private confirmationService: ConfirmationService,
@@ -50,6 +51,21 @@ export class BasketsInAdvanceComponent
 			this.orderItems.push(new OrderItem(basket, 1))
 		} else {
 			line.quantity = line.quantity + 1;
+		}
+	}
+
+	rowExpand(event) {
+		if (event.data) {
+			this.expandedRowBasketId = event.data.basketId;
+			let index;
+			let dataTmp;
+			this.basketService.getBasket(event.data.basketId).subscribe(data => {
+				index = this.baskets.findIndex((value: Basket) => {
+					return value.basketId == event.data.basketId;
+				});
+				dataTmp = data;
+				this.baskets[index].basketItems = dataTmp.basketItems;
+			})
 		}
 	}
 
