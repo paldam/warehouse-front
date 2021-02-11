@@ -34,6 +34,7 @@ export class BasketComponent
 	public paginatorValues = AppConstants.PAGINATOR_VALUES;
 	public productSubType: SelectItem[] = [];
 	public selectedCategories: any[] = [];
+	public expandedRowBasketId: number = 0;
 	public selectedCategoriesIds: number[] = [];
 	public basketSeasonList: SelectItem[] = [];
 
@@ -134,6 +135,26 @@ export class BasketComponent
 			, () => {
 				this.loading = false;
 			})
+	}
+
+	rowExpand(event) {
+
+
+
+		if (event.data) {
+			this.expandedRowBasketId = event.data.basketId;
+			let index;
+			let dataTmp;
+
+			this.basketService.getBasket(event.data.basketId).subscribe(data => {
+				index = this.baskets.findIndex((value: Basket) => {
+					return value.basketId == event.data.basketId;
+				});
+				dataTmp = data;
+				this.baskets[index].basketItems = dataTmp.basketItems;
+			})
+
+		}
 	}
 
 	ShowConfirmModal(basket: Basket) {

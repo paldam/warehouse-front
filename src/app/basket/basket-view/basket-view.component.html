@@ -77,7 +77,8 @@
                  [pageLinks]="5" [rowsPerPageOptions]=paginatorValues
                  (onRowDblclick)="redirectToBasketEdit($event.data.basketId)"
                  [editable]="this.authenticationService.isAdmin()" (onEditComplete)="editBasketStock($event.data)"
-                 [lazy]="true" (onLazyLoad)="loadBasketsLazy($event)" [totalRecords]="totalRecords">
+                 [lazy]="true" (onLazyLoad)="loadBasketsLazy($event)" [totalRecords]="totalRecords"
+                 (onRowExpand)="rowExpand($event)">
         <p-column expander="true" header="Zawartość" styleClass="col-icon " [style]="{'width':'70px'}"></p-column>
 
         <p-column header="lp." [style]="{'width':'70px'}">
