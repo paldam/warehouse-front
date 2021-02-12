@@ -24,7 +24,8 @@
         <p-dataTable [value]="products" [rows]="30" [editable]="true"
                      (onEditComplete)="updateStockRow($event)" [paginator]="true" [globalFilter]="globalfilter" #dt
                      [loading]="loading" loadingIcon="fa-circle-o-notch"
-                     [rowStyleClass]="currentPageMode == 1 ? getRowStyle : getRowStyle2">
+                     [rowStyleClass]="currentPageMode == 1 ? getRowStyle : getRowStyle2"
+                     [lazy]="true" (onLazyLoad)="loadProductsLazy($event)" [totalRecords]="totalRecords">
             <!--sortField="lastStockEditDate" sortOrder="-1"-->
             <p-header>Lista Produktów</p-header>
 

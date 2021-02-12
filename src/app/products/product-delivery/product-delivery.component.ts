@@ -3,7 +3,7 @@ import {ProductsService} from "../products.service";
 import {Supplier} from "../../model/supplier.model";
 import {MessageServiceExt} from "../../messages/messageServiceExt";
 import {Router} from "@angular/router";
-import {DataTable} from "primeng/primeng";
+import {DataTable, LazyLoadEvent} from "primeng/primeng";
 import {SpinerService} from "../../spiner.service";
 
 @Component({
@@ -24,6 +24,7 @@ export class ProductDeliveryComponent
 	public selectedSupplierId: number;
 	public gb: any;
 	public legend: string;
+	public totalRecords: number;
 	public currentPageMode: number;
 	public findInputtextOrder: any;
 	@ViewChild('globalfilter') el: ElementRef;
@@ -46,28 +47,60 @@ export class ProductDeliveryComponent
 			this.productSuppliers.unshift(new Supplier(-99, 'WSZYSCY DOSTAWCY', null, null, null, null, null))
 		});
 
-		this.productsService.getProducts().subscribe(data => this.products = data);
-
-
+		productsService.getProductsPage(1,20,"","productName",-1,[],[])
+			.subscribe((data: any) => {
+				this.products = data.productList;
+				this.totalRecords = data.totalRowsOfRequest;
+			});
 	}
 
 	ngOnInit() {
 		this.setCustomSupplierFilterToDataTable();
 		this.assignNumberOfOrderedToAddValue();
-
-
 	}
-
 
 	private assignNumberOfOrderedToAddValue(){
-		this.productsService.getProducts().subscribe((data: any) => {
-			data.forEach(function (obj) {
-				obj.add = obj.tmpOrdered;
-			});
-
-			this.products = data;
+		this.products.forEach(value => {
+			value.add = value.tmpOrdered
 		});
+
 	}
+
+	loadProductsLazy(event: LazyLoadEvent) {
+		console.log(event.filters);
+		this.loading = true;
+		let pageNumber = 0;
+		if (event.first) {
+			pageNumber = event.first / event.rows;
+		}
+		let sortField = event.sortField;
+		if (sortField == undefined) {
+			sortField = "productName";
+		}
+		let productSubTypeFilter: any[] = [];
+		if (event.filters != undefined && event.filters["productSubType.subTypeName"] != undefined) {
+			productSubTypeFilter = event.filters["productSubType.subTypeName"].value;
+		}
+		let basketSeasonFilter: any[] = [];
+		if (event.filters != undefined && event.filters["suppliers"] != undefined) {
+			if(event.filters["suppliers"].value != -99){
+				basketSeasonFilter = event.filters["suppliers"].value;
+			}
+
+		}
+		this.productsService
+			.getProductsPage(pageNumber, event.rows, event.globalFilter, sortField, event.sortOrder, productSubTypeFilter,basketSeasonFilter)
+			.subscribe((data: any) => {
+					this.products = data.productList;
+					this.totalRecords = data.totalRowsOfRequest;
+				}, null
+				, () => {
+					this.assignNumberOfOrderedToAddValue();
+					this.loading = false;
+
+				})
+	}
+
 	private setCustomSupplierFilterToDataTable() {
 		this.dataTable.filterConstraints['inCollection'] = function inCollection(value: Supplier[], filter: any): boolean {
 			if (filter === undefined || filter === null) {
