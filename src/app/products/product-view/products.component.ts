@@ -1,15 +1,13 @@
 import {AfterViewChecked, Component, OnInit, ViewChild, ViewEncapsulation} from '@angular/core';
 import {ActivatedRoute, Router, RoutesRecognized} from '@angular/router';
-import {ConfirmationService, DataTable, SelectItem} from "primeng/primeng";
+import {ConfirmationService, DataTable, LazyLoadEvent, SelectItem} from "primeng/primeng";
 import {isUndefined} from "util";
 import {filter} from 'rxjs/operators';
 import {pairwise} from "rxjs/internal/operators";
 import {ProductsService} from "../products.service";
 import {Product} from "../../model/product.model";
-import {consoleTestResultsHandler} from "tslint/lib/test";
 import {AuthenticationService} from "../../authentication.service";
 import {AppConstants} from "../../constants";
-import {ProductType} from "../../model/product_type.model";
 import {ProductSubType} from "../../model/product_sub_type";
 import {Supplier} from "../../model/supplier.model";
 import {SpinerService} from "../../spiner.service";
@@ -30,6 +28,7 @@ export class ProductsComponent implements OnInit {
 	public showBasketsContainsSpecyficProductModal: boolean = false;
 	public basketsListByProduct: any[];
 	public dataFilterLoaded: Promise<boolean>;
+	public totalRecords: number;
 	public productsType: SelectItem[] = [];
 	public suppliers: SelectItem[] = [];
 	public paginatorValues = AppConstants.PAGINATOR_VALUES;
@@ -38,12 +37,16 @@ export class ProductsComponent implements OnInit {
 	constructor(private productsService: ProductsService, activeRoute: ActivatedRoute, public spinerService: SpinerService,
 				private router: Router, private confirmationService: ConfirmationService,
 				private authenticationService: AuthenticationService) {
-		productsService.getProducts().subscribe(data => this.products = data);
+		productsService.getProductsPage(1,20,"","productName",-1,[],[])
+			.subscribe((data: any) => {
+				this.products = data.productList;
+				this.totalRecords = data.totalRowsOfRequest;
+			});
 		productsService.getProductsSubTypes().subscribe((data: ProductSubType[]) => {
 			data.forEach(value => {
 				this.productsType.push({
 					label: '' + value.subTypeName + '(' + value.productType.typeName + ')',
-					value: value.subTypeName
+					value: value.subTypeId
 				});
 			});
 			productsService.getSuppliers().subscribe(data => {
@@ -106,7 +109,11 @@ export class ProductsComponent implements OnInit {
 	refreshData() {
 		this.loading = true;
 		setTimeout(() => {
-			this.productsService.getProducts().subscribe(data => this.products = data);
+			this.productsService.getProductsPage(1,50,"","productName",-1,[],[])
+				.subscribe((data: any) => {
+					this.products = data.productList;
+					this.totalRecords = data.totalRowsOfRequest;
+				});
 			this.loading = false;
 		}, 1000);
 	}
@@ -175,6 +182,36 @@ export class ProductsComponent implements OnInit {
 		if (image) {
 			reader.readAsDataURL(image);
 		}
+	}
+
+	loadProductsLazy(event: LazyLoadEvent) {
+		console.log(event.filters);
+		this.loading = true;
+		let pageNumber = 0;
+		if (event.first) {
+			pageNumber = event.first / event.rows;
+		}
+		let sortField = event.sortField;
+		if (sortField == undefined) {
+			sortField = "productName";
+		}
+		let productSubTypeFilter: any[] = [];
+		if (event.filters != undefined && event.filters["productSubType.subTypeName"] != undefined) {
+			productSubTypeFilter = event.filters["productSubType.subTypeName"].value;
+		}
+		let basketSeasonFilter: any[] = [];
+		if (event.filters != undefined && event.filters["suppliers"] != undefined) {
+			basketSeasonFilter = event.filters["suppliers"].value;
+		}
+		this.productsService
+			.getProductsPage(pageNumber, event.rows, event.globalFilter, sortField, event.sortOrder, productSubTypeFilter,basketSeasonFilter)
+			.subscribe((data: any) => {
+					this.products = data.productList;
+					this.totalRecords = data.totalRowsOfRequest;
+				}, null
+				, () => {
+					this.loading = false;
+				})
 	}
 
 

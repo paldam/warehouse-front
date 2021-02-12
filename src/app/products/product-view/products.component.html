@@ -12,7 +12,10 @@
     <p-dataTable [value]="products" [rows]="50" [paginator]="true" [globalFilter]="gb" #dt
                  (onRowDblclick)="goToEditPage(1,$event.data.id)"
                  [loading]="loading" loadingIcon="fa-circle-o-notch" [(first)]="lastVisitedPage" [paginator]="true"
-                 [pageLinks]="5" [rowsPerPageOptions]=paginatorValues>
+                 [pageLinks]="5" [rowsPerPageOptions]=paginatorValues
+                 [lazy]="true" (onLazyLoad)="loadProductsLazy($event)" [totalRecords]="totalRecords">
+
+
         <p-header>Lista Produktów</p-header>
 
 
@@ -43,7 +46,7 @@
         <p-column field="productSubType.subTypeName" styleClass="type_col" [filter]="true" header="Typ produktu"
                   filterMatchMode="equals" [sortable]="true" [style]="{'width':'220px'}">
             <ng-template let-col pTemplate="filter">
-                <p-multiSelect [filter]="true" [showToggleAll]="false" [options]="productsType" defaultLabel="Wszystkie"
+                <p-multiSelect [filter]="true" [showToggleAll]="true" [options]="productsType" defaultLabel="Wszystkie"
                                (onChange)="dt.filter($event.value, col.field, 'in')"></p-multiSelect>
             </ng-template>
 

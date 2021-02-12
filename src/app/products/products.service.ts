@@ -38,6 +38,21 @@ export class ProductsService {
 				response.json());
 	}
 
+	getProductsPage(page: number, size: number, text: string, sortField: string, sortingDirection: number,
+					productSubTypeFilter: any[], productSuppliersFilter:any[]): Observable<any[]> {
+		return this.http.get(this.baseUrl + `/productspage?
+				page=${page}
+				&size=${size}
+				&searchtext=${text}
+				&orderBy=${sortField}
+				&sortingDirection=${sortingDirection}
+				&productSubTypeFilter=${productSubTypeFilter}
+				&productSuppliersFilter=${productSuppliersFilter}
+				`)
+			.map((response: Response) =>
+				response.json());
+	}
+
 	saveSupplier(supplier: Supplier): Observable<Response> {
 		return this.http.post(this.baseUrl + `/products/supplier/`, supplier)
 	}
