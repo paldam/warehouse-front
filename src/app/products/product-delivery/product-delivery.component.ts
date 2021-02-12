@@ -47,7 +47,7 @@ export class ProductDeliveryComponent
 			this.productSuppliers.unshift(new Supplier(-99, 'WSZYSCY DOSTAWCY', null, null, null, null, null))
 		});
 
-		productsService.getProductsPage(1,20,"","productName",-1,[],[])
+		productsService.getProductsPage(0,20,"","productName",-1,[],[],false)
 			.subscribe((data: any) => {
 				this.products = data.productList;
 				this.totalRecords = data.totalRowsOfRequest;
@@ -89,7 +89,7 @@ export class ProductDeliveryComponent
 
 		}
 		this.productsService
-			.getProductsPage(pageNumber, event.rows, event.globalFilter, sortField, event.sortOrder, productSubTypeFilter,basketSeasonFilter)
+			.getProductsPage(pageNumber, event.rows, event.globalFilter, sortField, event.sortOrder, productSubTypeFilter,basketSeasonFilter,false)
 			.subscribe((data: any) => {
 					this.products = data.productList;
 					this.totalRecords = data.totalRowsOfRequest;

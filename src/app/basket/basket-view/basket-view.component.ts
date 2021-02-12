@@ -44,7 +44,7 @@ export class BasketComponent
 				public authenticationService: AuthenticationService) {
 
 		basketService
-			.getBasketsPage(1,20,"","basketName", -1, false,[])
+			.getBasketsPage(0,20,"","basketName", -1, false,[])
 			.subscribe((data: any) => {
 			this.baskets = data.basketsList;
 			this.totalRecords = data.totalRowsOfRequest;
@@ -192,7 +192,7 @@ export class BasketComponent
 	clickOnlyDeletedBasketChceckBox() {
 		if (this.el.nativeElement.checked) {
 			this.basketService
-				.getBasketsPage(1, 20, "", "basketName", -1, true, [])
+				.getBasketsPage(0, 20, "", "basketName", -1, true, [])
 				.subscribe((data: any) => {
 				this.baskets = data.basketsList;
 				this.totalRecords = data.totalRowsOfRequest;
@@ -202,7 +202,7 @@ export class BasketComponent
 			});
 		} else {
 			this.basketService
-				.getBasketsPage(1, 20, "", "basketName", -1, false, [])
+				.getBasketsPage(0, 20, "", "basketName", -1, false, [])
 				.subscribe((data: any) => {
 				this.baskets = data.basketsList;
 				this.totalRecords = data.totalRowsOfRequest;

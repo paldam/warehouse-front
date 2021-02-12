@@ -39,7 +39,7 @@ export class ProductsService {
 	}
 
 	getProductsPage(page: number, size: number, text: string, sortField: string, sortingDirection: number,
-					productSubTypeFilter: any[], productSuppliersFilter:any[]): Observable<any[]> {
+					productSubTypeFilter: any[], productSuppliersFilter:any[], onlyAvailable :boolean): Observable<any[]> {
 		return this.http.get(this.baseUrl + `/productspage?
 				page=${page}
 				&size=${size}
@@ -48,6 +48,7 @@ export class ProductsService {
 				&sortingDirection=${sortingDirection}
 				&productSubTypeFilter=${productSubTypeFilter}
 				&productSuppliersFilter=${productSuppliersFilter}
+				&onlyAvailable=${onlyAvailable}
 				`)
 			.map((response: Response) =>
 				response.json());

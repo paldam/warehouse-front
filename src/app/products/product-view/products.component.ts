@@ -37,7 +37,7 @@ export class ProductsComponent implements OnInit {
 	constructor(private productsService: ProductsService, activeRoute: ActivatedRoute, public spinerService: SpinerService,
 				private router: Router, private confirmationService: ConfirmationService,
 				private authenticationService: AuthenticationService) {
-		productsService.getProductsPage(1,20,"","productName",-1,[],[])
+		productsService.getProductsPage(0,20,"","productName",-1,[],[],false)
 			.subscribe((data: any) => {
 				this.products = data.productList;
 				this.totalRecords = data.totalRowsOfRequest;
@@ -109,7 +109,7 @@ export class ProductsComponent implements OnInit {
 	refreshData() {
 		this.loading = true;
 		setTimeout(() => {
-			this.productsService.getProductsPage(1,50,"","productName",-1,[],[])
+			this.productsService.getProductsPage(0,50,"","productName",1,[],[],false)
 				.subscribe((data: any) => {
 					this.products = data.productList;
 					this.totalRecords = data.totalRowsOfRequest;
@@ -204,7 +204,7 @@ export class ProductsComponent implements OnInit {
 			basketSeasonFilter = event.filters["suppliers"].value;
 		}
 		this.productsService
-			.getProductsPage(pageNumber, event.rows, event.globalFilter, sortField, event.sortOrder, productSubTypeFilter,basketSeasonFilter)
+			.getProductsPage(pageNumber, event.rows, event.globalFilter, sortField, event.sortOrder, productSubTypeFilter,basketSeasonFilter,false)
 			.subscribe((data: any) => {
 					this.products = data.productList;
 					this.totalRecords = data.totalRowsOfRequest;

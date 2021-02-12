@@ -98,7 +98,7 @@ export class BasketOrderComponent implements OnInit, OnDestroy {
 		orderService.getDeliveryTypes().subscribe(data => this.deliveryTypes = data);
 		this.getBasketSeasonForDataTableFilter();
 		basketService.getBasketsPage(
-			1, 20, "", "basketName", -1, false, [])
+			0, 20, "", "basketName", -1, false, [])
 			.subscribe((data: any) => {
 			this.baskets = data.basketsList;
 			this.totalRecords = data.totalRowsOfRequest;

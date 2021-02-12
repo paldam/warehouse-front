@@ -217,7 +217,8 @@
                    aria-describedby="basic-addon1">
 
             <label class="form-check-label only_available_product_checkbox">
-                <input class="form-check-input" type="checkbox" (change)="filtrOnlyAvaileble($event)"> pokaż tylko
+                <input class="form-check-input" #availablecheck name="only_available_product_checkbox" type="checkbox"
+                       (change)="filtrOnlyAvaileble($event)"> pokaż tylko
                 dostępne produkty
             </label>
 
@@ -225,7 +226,9 @@
         </div>
         <p-dataTable [value]="products" [rows]="10" [paginator]="true" [globalFilter]="gb" #dt
                      [loading]="loading" loadingIcon="fa-circle-o-notch"
-                     (onRowDblclick)="addProductToGiftBasket($event.data)">
+                     (onRowDblclick)="addProductToGiftBasket($event.data)" [lazy]="true"
+                     (onLazyLoad)="loadProductsLazy($event)"
+                     [totalRecords]="totalRecords" >
             <p-column field="id" header="ID" [sortable]="true" [style]="{'width':'70px'}"></p-column>
             <p-column field="productName" header="Nazwa" [sortable]="true"></p-column>
             <p-column field="productCatalogName" header="Nazwa katalogowa" [sortable]="true"></p-column>

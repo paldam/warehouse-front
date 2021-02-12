@@ -1,4 +1,4 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
+import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import {BasketService} from "../basket.service";
 import {ActivatedRoute, Router} from "@angular/router";
 import {Basket} from "../../model/basket.model";
@@ -7,11 +7,12 @@ import {ProductsService} from "../../products/products.service";
 import {Product} from "../../model/product.model";
 import {BasketItems} from "../../model/basket_items.model";
 import {NgForm} from '@angular/forms';
-import {DataTable, FileUpload, SelectItem} from "primeng/primeng";
+import {DataTable, FileUpload, LazyLoadEvent, SelectItem} from "primeng/primeng";
 import {MessageServiceExt} from "../../messages/messageServiceExt";
 import {BasketSeason} from "../../model/basket_season.model";
 import {Supplier} from "../../model/supplier.model";
 import {AppConstants} from "../../constants";
+import {ProductSubType} from "../../model/product_sub_type";
 
 @Component({
 	selector: 'app-gift-basket-edit',
@@ -29,6 +30,8 @@ export class GiftBasketEditComponent
 	public loading: boolean;
 	public isAddNewImg: boolean;
 	public productTmp: Product[] = [];
+	public totalRecords: number = 0;
+	public productsType: SelectItem[] = [];
 	public fileToUpload: File = null;
 	public basketImege: any = null;
 	public basketSeasonSelectItemList: SelectItem[] = [];
@@ -36,6 +39,8 @@ export class GiftBasketEditComponent
 	public basketSeasonList: BasketSeason[] = [];
 	@ViewChild(FileUpload) fileUploadElement: FileUpload;
 	@ViewChild('dt') dataTable: DataTable;
+	@ViewChild('availablecheck') availablecheck: ElementRef;
+
 
 	constructor(private productsService: ProductsService, private basketService: BasketService,
 				private router: Router, activeRoute: ActivatedRoute, private messageServiceExt: MessageServiceExt) {
@@ -43,7 +48,7 @@ export class GiftBasketEditComponent
 			this.basket = data;
 			this.basketItems = data.basketItems;
 			this.basket.basketTotalPrice /= 100;
-			this.sortProductsOrderInBasket()
+			this.sortProductsOrderInBasket();
 		});
 		this.basketService.getBasketSeason().subscribe(data => {
 			this.basketSeasonList = data;
@@ -51,6 +56,16 @@ export class GiftBasketEditComponent
 				this.basketSeasonSelectItemList.push({label: value.basketSezonName, value: value})
 			})
 		});
+
+		productsService.getProductsSubTypes().subscribe((data: ProductSubType[]) => {
+			data.forEach(value => {
+				this.productsType.push({
+					label: '' + value.subTypeName + '(' + value.productType.typeName + ')',
+					value: value.subTypeId
+				})
+			});
+		});
+
 		productsService.getSuppliers().subscribe(data => {
 			productsService.getSuppliers().subscribe(data => {
 				this.suppliers.push({label: '-- Wszyscy Dostawcy --', value: null});
@@ -59,6 +74,10 @@ export class GiftBasketEditComponent
 				})
 			});
 		});
+
+
+
+
 		basketService.getBasketsTypes().subscribe(data => {
 			this.basketTypes = data;
 			this.basketTypes = this.basketTypes
@@ -75,6 +94,7 @@ export class GiftBasketEditComponent
 		productsService.getProducts().subscribe(data => this.products = data);
 		this.getBasketImage(activeRoute.snapshot.params["basketId"]);
 	}
+
 
 	ngOnInit() {
 		setTimeout(() => {
@@ -122,16 +142,8 @@ export class GiftBasketEditComponent
 		this.recalculate();
 	}
 
-	filtrOnlyAvaileble(event) {
-		let isChecked = event.target.checked;
-		if (isChecked) {
-			if (this.productTmp.length == 0) {
-				this.productTmp = this.products;
-			}
-			this.products = this.products.filter(data => data.stock > 0);
-		} else {
-			this.products = this.productTmp;
-		}
+	filtrOnlyAvaileble() {
+		this.dataTable._filter();
 	}
 
 	isProductLinesEmpty(): boolean {
@@ -269,6 +281,36 @@ export class GiftBasketEditComponent
 		} else {
 			return false;
 		}
+	}
+
+	loadProductsLazy(event: LazyLoadEvent) {
+		console.log(event.filters);
+		this.loading = true;
+		let pageNumber = 0;
+		if (event.first) {
+			pageNumber = event.first / event.rows;
+		}
+		let sortField = event.sortField;
+		if (sortField == undefined) {
+			sortField = "productName";
+		}
+		let productSubTypeFilter: any[] = [];
+		if (event.filters != undefined && event.filters["productSubType.subTypeName"] != undefined) {
+			productSubTypeFilter = event.filters["productSubType.subTypeName"].value;
+		}
+		let basketSeasonFilter: any[] = [];
+		if (event.filters != undefined && event.filters["suppliers"] != undefined) {
+			basketSeasonFilter = event.filters["suppliers"].value;
+		}
+		this.productsService
+			.getProductsPage(pageNumber, event.rows, event.globalFilter, sortField, event.sortOrder, productSubTypeFilter,basketSeasonFilter,this.availablecheck.nativeElement.checked)
+			.subscribe((data: any) => {
+					this.products = data.productList;
+					this.totalRecords = data.totalRowsOfRequest;
+				}, null
+				, () => {
+					this.loading = false;
+				})
 	}
 
 	getBasketImage(basketId: number) {

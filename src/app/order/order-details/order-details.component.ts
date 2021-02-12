@@ -119,7 +119,7 @@ export class OrderDetailsComponent
 		});
 
 		basketService.getBasketsPage(
-			1, 20, "", "basketName", -1, false, [])
+			0, 20, "", "basketName", -1, false, [])
 			.subscribe((data: any) => {
 				this.baskets = data.basketsList;
 				this.totalRecords = data.totalRowsOfRequest;
