@@ -8,7 +8,7 @@
                    aria-describedby="basic-addon1">
 
             <label class="form-check-label only_available_product_checkbox">
-                <input class="form-check-input" type="checkbox" (change)="filerOnlyAvailable($event)"> pokaż tylko
+                <input class="form-check-input" #availablecheck type="checkbox" (change)="filtrOnlyAvailable()"> pokaż tylko
                 dostępne produkty
             </label>
 
@@ -16,7 +16,9 @@
         </div>
         <p-dataTable [value]="products" [rows]="10" [paginator]="true" [globalFilter]="gb" #dt
                      [loading]="loading" loadingIcon="fa-circle-o-notch"
-                     (onRowDblclick)="addProductToGiftBasket($event.data)">
+                     (onRowDblclick)="addProductToGiftBasket($event.data)"  [lazy]="true"
+                     (onLazyLoad)="loadProductsLazy($event)"
+                     [totalRecords]="totalRecords">
 
             <p-column header="lp." [style]="{'width':'70px'}">
                 <ng-template let-i="rowIndex" pTemplate="rowexpansion">
@@ -26,7 +28,18 @@
             <p-column field="productName" header="Nazwa" [sortable]="true"></p-column>
             <p-column field="productCatalogName" header="Nazwa Katalogowa" [sortable]="true"></p-column>
             <p-column field="capacity" header="Pojemność" [sortable]="true" [style]="{'width':'120px'}"></p-column>
-            <p-column field="supplier.supplierName" header="Dostawca" [sortable]="true"></p-column>
+            <p-column field="suppliers" header="Dostawca" [filter]="true" filterMatchMode="inCollection"
+                      [style]="{'width':'220px'}">
+                <ng-template pTemplate="filter" let-col>
+                    <p-dropdown [filter]="true" [options]="suppliers" placeholder="Wszyscy"
+                                [resetFilterOnHide]="true" [showClear]="true" [style]="{'width':'100%'}"
+                                (onChange)="dataTable.filter($event.value,col.field,col.filterMatchMode)"
+                                styleClass="ui-column-filter"></p-dropdown>
+                </ng-template>
+                <ng-template let-item="rowData" pTemplate="body">
+                    <tr *ngFor="let supplier of item.suppliers"> {{supplier.supplierName}}</tr>
+                </ng-template>
+            </p-column>
             <p-column field="price" styleClass="price_col" header="Cena" [sortable]="true">
                 <ng-template let-row="rowData" pTemplate="body">
                     {{row.price/100| number : '1.2-2'}} zł
@@ -209,7 +222,8 @@
         <p-dataTable [value]="basketsToSchema" [rows]="10" [paginator]="true" #dt
                      (onRowDblclick)="pickBasket($event.data)"
                      [loading]="loading" loadingIcon="fa-circle-o-notch" [globalFilter]="globalfilter"
-                     expandableRows="true">
+                     expandableRows="true"  [lazy]="true" (onLazyLoad)="loadBasketsLazy($event)" [totalRecords]="totalBasketRecords"
+                     (onRowClick)="getOrderAdditional($event)"   (onRowExpand)="getOrderAdditional($event)">
 
             <p-column expander="true" header="Zawartość" styleClass="col-icon " [style]="{'width':'70px'}"></p-column>
             <p-column header="lp." [style]="{'width':'70px'}">

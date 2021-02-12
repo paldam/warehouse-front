@@ -142,7 +142,7 @@ export class GiftBasketEditComponent
 		this.recalculate();
 	}
 
-	filtrOnlyAvaileble() {
+	filtrOnlyAvailable() {
 		this.dataTable._filter();
 	}
 

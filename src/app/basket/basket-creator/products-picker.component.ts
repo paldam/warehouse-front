@@ -1,4 +1,4 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
+import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import {ProductsService} from '../../products/products.service';
 import {Product} from '../../model/product.model';
 import {BasketItems} from '../../model/basket_items.model';
@@ -7,7 +7,7 @@ import {BasketType} from '../../model/basket_type.model';
 import {BasketService} from '../basket.service';
 import {NgForm} from '@angular/forms';
 import {GiftBasketComponent} from '../basket-helper-list/gift-baskets.component';
-import {DataTable, FileUpload, SelectItem} from "primeng/primeng";
+import {DataTable, FileUpload, LazyLoadEvent, SelectItem} from "primeng/primeng";
 import {MessageServiceExt} from "../../messages/messageServiceExt";
 import {BasketSeason} from "../../model/basket_season.model";
 import {Supplier} from "../../model/supplier.model";
@@ -38,17 +38,26 @@ export class ProductPickerComponent
 	public suppliers: SelectItem[] = [];
 	public basketSeasonList: BasketSeason[] = [];
 	public filtersLoaded: Promise<boolean>;
+	public expandedRowBasketId: number = 0;
 	public imageToShow: any;
 	public showImageFrame: boolean = false;
 	public suppliersList: Supplier[] = [];
 	@ViewChild('dt') dataTable: DataTable;
 	@ViewChild(GiftBasketComponent) giftBasketComponent: GiftBasketComponent;
 	@ViewChild(FileUpload) fileUploadElement: FileUpload;
+	@ViewChild('availablecheck') availablecheck: ElementRef;
+	private totalRecords: number;
+	private totalBasketRecords: number;
 
 	constructor(private productsService: ProductsService, private basketService: BasketService,
 				private messageServiceExt: MessageServiceExt) {
 
-		productsService.getProducts().subscribe(data => this.products = data);
+		productsService.getProductsPage(0,20,"","productName",-1,[],[],false)
+			.subscribe((data: any) => {
+				this.products = data.productList;
+				this.totalRecords = data.totalRowsOfRequest;
+			});
+
 		this.basketService.getBasketSeason().subscribe(data => {
 			this.basketSeasonList = data;
 			this.basketSeasonList.forEach(value => {
@@ -122,16 +131,9 @@ export class ProductPickerComponent
 		this.recalculate();
 	}
 
-	filerOnlyAvailable(event) {
-		let isChecked = event.target.checked;
-		if (isChecked) {
-			if (this.productTmp.length == 0) {
-				this.productTmp = this.products;
-			}
-			this.products = this.products.filter(data => data.stock > 0);
-		} else {
-			this.products = this.productTmp;
-		}
+
+	filtrOnlyAvaileble() {
+		this.dataTable._filter();
 	}
 
 	isProductLinesEmpty(): boolean {
@@ -236,8 +238,14 @@ export class ProductPickerComponent
 
 	showBasketPatterList() {
 		this.basketPatterPickDialogShow = true;
-		this.basketService.getBasketsWithDeleted().subscribe(data => this.basketsToSchema = data);
+		this.basketService
+			.getBasketsPage(0,20,"","basketName", -1, false,[])
+			.subscribe((data: any) => {
+				this.basketsToSchema = data.basketsList;
+				this.totalBasketRecords = data.totalRowsOfRequest;
+			});
 	}
+
 
 	handleFileInput(event) {
 		this.fileToUpload = this.fileUploadElement.files[0];
@@ -257,6 +265,78 @@ export class ProductPickerComponent
 		this.showImageFrame = true;
 	}
 
+
+
+	loadProductsLazy(event: LazyLoadEvent) {
+		console.log(event.filters);
+		this.loading = true;
+		let pageNumber = 0;
+		if (event.first) {
+			pageNumber = event.first / event.rows;
+		}
+		let sortField = event.sortField;
+		if (sortField == undefined) {
+			sortField = "productName";
+		}
+		let productSubTypeFilter: any[] = [];
+		if (event.filters != undefined && event.filters["productSubType.subTypeName"] != undefined) {
+			productSubTypeFilter = event.filters["productSubType.subTypeName"].value;
+		}
+		let basketSeasonFilter: any[] = [];
+		if (event.filters != undefined && event.filters["suppliers"] != undefined) {
+			basketSeasonFilter = event.filters["suppliers"].value;
+		}
+		this.productsService
+			.getProductsPage(pageNumber, event.rows, event.globalFilter, sortField, event.sortOrder, productSubTypeFilter,basketSeasonFilter,this.availablecheck.nativeElement.checked)
+			.subscribe((data: any) => {
+					this.products = data.productList;
+					this.totalRecords = data.totalRowsOfRequest;
+				}, null
+				, () => {
+					this.loading = false;
+				})
+	}
+
+	loadBasketsLazy(event: LazyLoadEvent) {
+		this.loading = true;
+		let pageNumber = 0;
+		if (event.first) {
+			pageNumber = event.first / event.rows;
+		}
+		let sortField = event.sortField;
+		if (sortField == undefined) {
+			sortField = "basketName";
+		}
+		let basketSeasonList: any[] = [];
+		if (event.filters != undefined && event.filters["basketSezon.basketSezonName"] != undefined) {
+			basketSeasonList = event.filters["basketSezon.basketSezonName"].value;
+		}
+		this.basketService
+			.getBasketsPage(
+				pageNumber, event.rows, event.globalFilter, sortField, event.sortOrder,false, basketSeasonList)
+			.subscribe((data: any) => {
+					this.basketsToSchema = data.basketsList;
+					this.totalBasketRecords = data.totalRowsOfRequest;
+				}, null
+				, () => {
+					this.loading = false;
+				})
+	}
+
+	getOrderAdditional(event) {
+		if (event.data) {
+			this.expandedRowBasketId = event.data.basketId;
+			let index;
+			let dataTmp;
+			this.basketService.getBasket(event.data.basketId).subscribe(data => {
+				index = this.basketsToSchema.findIndex((value: Basket) => {
+					return value.basketId == event.data.basketId;
+				});
+				dataTmp = data;
+				this.basketsToSchema[index].basketItems = dataTmp.basketItems;
+			})
+		}
+	}
 
 	private assignProductPosition() {
 		this.basketItems.forEach((basketItem,index) => {
