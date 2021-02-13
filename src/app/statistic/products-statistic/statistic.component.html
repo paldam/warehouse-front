@@ -57,7 +57,7 @@
             {{i+1}}
         </ng-template>
     </p-column>
-    <p-column field="product_name" header="Nazwa" [sortable]="true"></p-column>
+    <p-column field="productName" header="Nazwa" [sortable]="true"></p-column>
 
 
     <p-column field="suppliers" header="Dostawca" [filter]="true" filterMatchMode="inCollection">
@@ -101,12 +101,12 @@
     </p-column>
 
 
-    <p-column *ngIf="deliveryFnAvailable" field="lastEditNumberOfOrderedDate" [style]="{'width':'142px'}"
+    <p-column *ngIf="deliveryFnAvailable" field="lastNumberOfOrderedEditDate" [style]="{'width':'142px'}"
               header="Modyfikacja"
               [sortable]="true">
 
         <ng-template let-row="rowData" pTemplate="body">
-            {{row.lastEditNumberOfOrderedDate| date: 'dd/MM/yyyy HH:mm:ss'}}
+            {{row.lastNumberOfOrderedEditDate| date: 'dd/MM/yyyy HH:mm:ss'}}
         </ng-template>
 
     </p-column>

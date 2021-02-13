@@ -32,6 +32,7 @@ export class BasketExtAddComponentComponent
 	public totalRecords: number = 0;
 	public basketPatterPickDialogShow: boolean = false;
 	public checkedAlcoholic: boolean = false;
+	public expandedRowBasketId: number = 0;
 	public suppliers: SelectItem[] = [];
 	public items: MenuItem[];
 	@ViewChild(GiftBasketComponent) giftBasketComponent: GiftBasketComponent;

@@ -130,7 +130,7 @@ export class StatisticComponent
 	private setAdditionalColumnWithConcatSupplierString() {
 		this.productsToOrder.forEach(product => {
 			let suppliersConcatString = '';
-			product.suppliers.forEach((supplier: Supplier) => {
+			product.suppliers.forEach(supplier => {
 				suppliersConcatString = suppliersConcatString + " " + supplier.supplierName;
 			});
 			product.suppliersConcatString = suppliersConcatString;
@@ -139,7 +139,7 @@ export class StatisticComponent
 
 	getRowStyle(rowData: any, rowIndex: number): string {
 		let timeNow = new Date().getTime();
-		if ((timeNow - rowData.lastEditNumberOfOrderedDate) / 1000 / 60 < 60) {
+		if ((timeNow - rowData.lastNumberOfOrderedEditDate) / 1000 / 60 < 60) {
 			return 'ddd';
 		} else {
 			return '';
@@ -160,7 +160,7 @@ export class StatisticComponent
 				tmpSupplierNameList = tmpSupplierNameList + filt[i].suppliers[n].supplierName + " | ";
 			}
 			dataToGenerateFile[i] = {
-				"Nazwa Produktu": filt[i].product_name,
+				"Nazwa Produktu": filt[i].productName,
 				"Pojemność": filt[i].capacity,
 				"Nazwa Dostawcy": tmpSupplierNameList,
 				"Ilość": filt[i].suma,

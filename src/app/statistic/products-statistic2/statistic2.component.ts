@@ -97,7 +97,7 @@ export class Statistic2Component
 	private setAdditionalColumnWithConcatSupplierString() {
 		this.productsToOrder.forEach(product => {
 			let suppliersConcatString = '';
-			product.suppliers.forEach((supplier: Supplier) => {
+			product.suppliers.forEach(supplier => {
 				suppliersConcatString = suppliersConcatString + " " + supplier.supplierName;
 			});
 			product.suppliersConcatString = suppliersConcatString;
@@ -118,7 +118,7 @@ export class Statistic2Component
 				tmpSupplierNameList = tmpSupplierNameList + filt[i].suppliers[n].supplierName + " | ";
 			}
 			dataToGenerateFile[i] = {
-				"Nazwa Produktu": filt[i].product_name,
+				"Nazwa Produktu": filt[i].productName,
 				"Nazwa Dostawcy": tmpSupplierNameList,
 				"Ilość": filt[i].suma,
 				"Stan Magazynu": filt[i].stock,
