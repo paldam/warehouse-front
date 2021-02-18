@@ -65,7 +65,7 @@
                  [(first)]="lastPaginationPageNumberOnOrderViewPage" [(selection)]="selectedOrdersMultiselction"
                  dataKey="orderId" [contextMenu]="cm"
                  rowExpandMode=single [paginator]="true" [pageLinks]="5" [rowsPerPageOptions]=paginatorValues
-                 [lazy]="false"
+                 [lazy]="true"
                  (onContextMenuSelect)="OnSelectRow($event)"
                  (onRowExpand)="fetchAdditionalDataForOrder($event)"
                  (onRowCollapse)="onRowCollapse($event)"

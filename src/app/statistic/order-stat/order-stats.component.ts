@@ -169,7 +169,7 @@ export class OrderStatsComponent
 		localStorage.setItem('lastPaginationPageNumberOnOrderViewPage', pageTmp.toString());
 		let textTmp = this.findInputtextOrder;
 		localStorage.setItem('findInputtextOrder', textTmp);
-		this.router.navigate(["/orders/", id]);
+		this.router.navigate(["/orders/detail", id]);
 	}
 
 	OnSelectRow(event) {

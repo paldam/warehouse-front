@@ -1,7 +1,7 @@
 import {Component, ElementRef, HostListener, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {Order} from '../../model/order.model';
 import {OrderService} from '../order.service';
-import {ActivatedRoute, Router} from "@angular/router";
+import {ActivatedRoute, NavigationEnd, Router} from "@angular/router";
 import {ConfirmationService, DataTable, Dropdown, LazyLoadEvent, OverlayPanel, SelectItem} from "primeng/primeng";
 import {AuthenticationService} from "../../authentication.service";
 import {FileSendService} from "../../file-send/file-send.service";
@@ -85,6 +85,7 @@ export class OrderComponent
 
 	public selectedProvinces: String[] = [];
 	public provinces: SelectItem[] = [];
+	public routerObserver = null;
 
 
 	@ViewChild('onlyWithAttach') el: ElementRef;
@@ -100,17 +101,19 @@ export class OrderComponent
 				private fileSendService: FileSendService, private serverSideEventsService: ServerSideEventsService,
 				private  messageServiceExt: MessageServiceExt, private routingState: RoutingState,
 				private spinerService: SpinerService, public notificationsService: NotificationsService) {
-		this.setCurentPageType();
-		this.setSearchOptions();
+		this.setCurrentPageType();
 		this.setOrderData();
+
 	}
 
 	ngOnDestroy() {
 		this.serverSideEventsService.newOrderEventSource.close();
 		this.serverSideEventsService.orderCopyEventSource.close();
-	}
+		this.routerObserver.unsubscribe();
 
+	}
 	ngOnInit() {
+		this.checkIfUpdateOrderRowAfterRedirectFromOrderDetails();
 		this.getOrderStatusForDataTableFilter();
 		this.getWeeksForDataTableFilter();
 		this.getProvincesForDataTableFilter();
@@ -130,12 +133,49 @@ export class OrderComponent
 		this.action_extention.nativeElement.hidden = true;
 	}
 
-	private setCurentPageType() {
+	private checkIfUpdateOrderRowAfterRedirectFromOrderDetails(){
+		this.routerObserver =this.router.events.subscribe(event => {
+			if (event instanceof NavigationEnd) {
+				if (this.routingState.getPreviousUrl().substr(0, 14) == '/order/detail/') {
+					let id = parseInt(this.routingState.getPreviousUrl().substr(14, this.routingState.getPreviousUrl().length));
+					this.refreshOrderRowInDataTable(id);
+
+				}
+			}
+		})
+
+	}
+
+	private setCurrentPageType() {
 		this.isCurrentPageCustomerEdit = this.routingState.getCurrentPage().substring(0, 9) == "/customer";
 		this.isCurrentPageOrdersView = this.routingState.getCurrentPage().substring(0, 11) == "/orders/all";
 		this.isCurrentPageOrdersViewRedirectedFromBasketStatitis = this.routingState.getCurrentPage().substring(0, 14) == "/orders/all;id";
 		this.isCurrentPageOrdersViewForProduction = this.routingState.getCurrentPage().substring(0, 18) == "/orders/production";
 	}
+
+	private refreshOrderRowInDataTable(id :number){
+		this.orderService.getOrder(id).subscribe(data => {
+			let index = this.orders.findIndex((value: Order) => {
+				return value.orderId == id;
+			});
+			this.orders[index] = data;
+			this.orders = this.orders.slice(); //Tip to refresh PrimeNg datatable
+			this.toggleRow(id);
+
+		}, error => {
+		}, () => {
+			this.goToSavedScrollPosition();
+		})
+	}
+
+	private goToSavedScrollPosition(){
+		window.scrollTo(0, this.routingState.getlastScrollYPosition());
+	}
+	private toggleRow(orderId: number){
+		let rowIndex = this.orders.findIndex(value => value.orderId == orderId);
+		this.datatable.toggleRow(this.orders[rowIndex]);
+	}
+
 
 	private setOrderData() {
 		if (this.isCurrentPageCustomerEdit) {
@@ -150,10 +190,6 @@ export class OrderComponent
 	}
 
 	private performSetDataActionForRegularOrderView() {
-
-		setTimeout(() => {
-			this.datatable.lazy = true;
-		}, 500);
 		this.orderService.getOrdersDto(0, 50, "", "orderDate", 1, [], [],[],[],[],[]).subscribe(
 			(data: any) => {
 				this.orders = data.orderDtoList;
@@ -310,24 +346,6 @@ export class OrderComponent
 			this.productionUserList = data;
 		}, error => {
 		}, () => this.setContextMenu());
-	}
-
-	setSearchOptions() {
-		let previousUrlTmp = this.routingState.getPreviousUrl();
-		if (previousUrlTmp.search('/order') == -1) {
-			localStorage.removeItem('findInputTextOnOrderViewPage');
-			localStorage.removeItem('lastPaginationPageNumberOnOrderViewPage');
-		}
-		this.findInputTextOnOrderViewPage = localStorage.getItem('findInputTextOnOrderViewPage') ?
-			(localStorage.getItem('findInputTextOnOrderViewPage')) : "";
-		setTimeout(() => {
-			if (localStorage.getItem('lastPaginationPageNumberOnOrderViewPage')) {
-				let tmplastVisitedPage = parseInt(localStorage.getItem('lastPaginationPageNumberOnOrderViewPage'));
-				this.lastPaginationPageNumberOnOrderViewPage = (tmplastVisitedPage - 1) * 50;
-			} else {
-				this.lastPaginationPageNumberOnOrderViewPage = 0;
-			}
-		}, 300);
 	}
 
 	updateOrderProgress(order: Order) {
@@ -497,7 +515,6 @@ export class OrderComponent
 		this.router.navigate(["/orders/all"]);
 		this.isCurrentPageOrdersViewRedirectedFromBasketStatitis = false;
 		this.isCurrentPageOrdersView = true;
-		this.setSearchOptions();
 		this.setOrderData();
 	}
 
@@ -528,7 +545,8 @@ export class OrderComponent
 			localStorage.setItem('lastPaginationPageNumberOnOrderViewPage', pageTmp.toString());
 			let textTmp = this.findInputTextOnOrderViewPage;
 			localStorage.setItem('findInputTextOnOrderViewPage', textTmp);
-			this.router.navigate(["/orders/", id]);
+			this.router.navigate(["/order/detail", id]);
+			this.routingState.setlastScrollYPosition(window.scrollY);
 		}
 	}
 

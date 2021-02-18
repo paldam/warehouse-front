@@ -11,7 +11,7 @@ const routes: Routes = [
 	{path: 'orders/baskets', component: BasketOrderComponent, canActivate: [AuthGuard]},
 	{path: 'orders/all', component: OrderComponent, canActivate: [AuthGuard]},
 	{path: 'orders/production', component: OrderViewProductionComponent, canActivate: [AuthGuard]},
-	{path: 'orders/:id', component: OrderDetailsComponent, canActivate: [AuthGuard]},
+	{path: 'order/detail/:id', component: OrderDetailsComponent, canActivate: [AuthGuard]},
 	{path: 'orders/copy/:id', component: OrderDetailsComponent, canActivate: [AuthGuard]}
 ];
 export const routing: ModuleWithProviders = RouterModule.forChild(routes);

@@ -11,7 +11,7 @@ import {LoginComponent} from './login/login.component';
 import {AuthGuard} from "./guard/auth.guard";
 import {AuthenticationService} from "./authentication.service";
 import {HttpService} from "./http-service";
-import {Router} from "@angular/router";
+import {Router, RouteReuseStrategy} from "@angular/router";
 import {AdminGuard} from "./guard/admin.guard";
 import {UserService} from "./user.service";
 import {AdminOrSuperUserGuard} from "./guard/adminOrSuperUser.guard";
@@ -27,6 +27,7 @@ import {NotificationsService} from "./nav-bars/top-nav/notification.service";
 import {ServerSideEventsService} from "./server-side-events-service";
 import {FileSendService} from "./file-send/file-send.service";
 import {FileSendComponent} from "./file-send/file-send.component";
+import {CacheRouteReuseStrategy} from "./CacheRouteReuseStrategy";
 
 export function httpExt(backend: XHRBackend, options: RequestOptions, router: Router, messageService: MessageService, messageServiceExt: MessageServiceExt) {
 	return new HttpService(backend, options, router, messageService, messageServiceExt);
@@ -48,7 +49,8 @@ export function httpExt(backend: XHRBackend, options: RequestOptions, router: Ro
 		provide: HttpService,
 		useFactory: (httpExt),
 		deps: [XHRBackend, RequestOptions, Router, MessageService, MessageServiceExt]
-	},
+	},   {provide: RouteReuseStrategy,
+	     useClass: CacheRouteReuseStrategy},
 		CalendarSetingsComponent, MessageServiceExt, RoutingState, SpinerService, MessageService, FileSendService, MapService,
 		ConfirmationService, AuthGuard, AdminGuard, AdminOrSuperUserGuard, AuthenticationService, UserService,
 		NotificationsService, ServerSideEventsService],
