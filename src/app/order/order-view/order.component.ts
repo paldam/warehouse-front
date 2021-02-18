@@ -37,7 +37,6 @@ export class OrderComponent
 	public totalRecords: number;
 	public orders: any[] = [];
 	public ordersNotFiltered: any[] = [];
-	public lastPaginationPageNumberOnOrderViewPage: number;
 	public findInputTextOnOrderViewPage: string = "";
 	public isCurrentPageCustomerEdit: boolean = false;
 	public isCurrentPageOrdersView: boolean = false;
@@ -541,10 +540,6 @@ export class OrderComponent
 	goToEditPage(id) {
 		if (this.authenticationService.isAdmin() || this.authenticationService.isBiuroUser()) {
 			this.information_extention.hide();
-			let pageTmp = (this.datatable.first / this.datatable.rows) + 1;
-			localStorage.setItem('lastPaginationPageNumberOnOrderViewPage', pageTmp.toString());
-			let textTmp = this.findInputTextOnOrderViewPage;
-			localStorage.setItem('findInputTextOnOrderViewPage', textTmp);
 			this.router.navigate(["/order/detail", id]);
 			this.routingState.setlastScrollYPosition(window.scrollY);
 		}
@@ -649,8 +644,6 @@ export class OrderComponent
 
 	refreshData() {
 		this.notificationsService.checkNumberOfNotifications();
-		let paginationPageTmp = this.datatable.first;
-		this.lastPaginationPageNumberOnOrderViewPage = 0;
 		this.action_extention.nativeElement.hidden = true;
 		this.getProductionUserForContextMenuSet();
 		this.spinerService.showSpinner = true;
@@ -667,10 +660,6 @@ export class OrderComponent
 				this.spinerService.showSpinner = false;
 			}, () => {
 				this.calculateOrderProcessInPercentForStatusInProgress();
-				setTimeout(() => {
-					this.lastPaginationPageNumberOnOrderViewPage = paginationPageTmp;
-				}, 50);
-
 				setTimeout(() => {
 					this.expandRowAfterRefresh();
 					this.spinerService.showSpinner = false;

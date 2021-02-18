@@ -5,6 +5,7 @@ import {MessageServiceExt} from "../../messages/messageServiceExt";
 import {Router} from "@angular/router";
 import {DataTable, LazyLoadEvent} from "primeng/primeng";
 import {SpinerService} from "../../spiner.service";
+import {Product} from "../../model/product.model";
 
 @Component({
 	selector: 'app-product-delivery',
@@ -46,8 +47,7 @@ export class ProductDeliveryComponent
 		}, () => {
 			this.productSuppliers.unshift(new Supplier(-99, 'WSZYSCY DOSTAWCY', null, null, null, null, null))
 		});
-
-		productsService.getProductsPage(0,20,"","productName",-1,[],[],false)
+		productsService.getProductsPage(0, 20, "", "productName", -1, [], [], false)
 			.subscribe((data: any) => {
 				this.products = data.productList;
 				this.totalRecords = data.totalRowsOfRequest;
@@ -59,11 +59,10 @@ export class ProductDeliveryComponent
 		this.assignNumberOfOrderedToAddValue();
 	}
 
-	private assignNumberOfOrderedToAddValue(){
+	private assignNumberOfOrderedToAddValue() {
 		this.products.forEach(value => {
 			value.add = value.tmpOrdered
 		});
-
 	}
 
 	loadProductsLazy(event: LazyLoadEvent) {
@@ -83,13 +82,12 @@ export class ProductDeliveryComponent
 		}
 		let basketSeasonFilter: any[] = [];
 		if (event.filters != undefined && event.filters["suppliers"] != undefined) {
-			if(event.filters["suppliers"].value != -99){
+			if (event.filters["suppliers"].value != -99) {
 				basketSeasonFilter = event.filters["suppliers"].value;
 			}
-
 		}
 		this.productsService
-			.getProductsPage(pageNumber, event.rows, event.globalFilter, sortField, event.sortOrder, productSubTypeFilter,basketSeasonFilter,false)
+			.getProductsPage(pageNumber, event.rows, event.globalFilter, sortField, event.sortOrder, productSubTypeFilter, basketSeasonFilter, false)
 			.subscribe((data: any) => {
 					this.products = data.productList;
 					this.totalRecords = data.totalRowsOfRequest;
@@ -97,7 +95,6 @@ export class ProductDeliveryComponent
 				, () => {
 					this.assignNumberOfOrderedToAddValue();
 					this.loading = false;
-
 				})
 	}
 
@@ -131,9 +128,6 @@ export class ProductDeliveryComponent
 		})
 	}
 
-
-
-
 	filterTableBySupplier(supplierId: number) {
 		this.spinerService.showSpinner = true;
 		setTimeout(() => {
@@ -150,40 +144,42 @@ export class ProductDeliveryComponent
 		}
 		this.productsService.saveProduct(event.data).subscribe(data => {
 			this.messageServiceExt.addMessageWithTime('success', 'Status', 'Dokonano edycji stanu produktu', 1000);
-
 		}, error => {
 			this.messageServiceExt.addMessage('error', 'Błąd', "Status: " + error.status + ' ' + error.statusText);
-		},() => {
-			this.refreshData();
+		}, () => {
+			this.refreshUpdatedRow(event.data.id);
 		});
 	}
 
-	refreshData() {
+	refreshUpdatedRow(productId: number) {
 		this.spinerService.showSpinner = true;
-
-		this.productsService.getProducts().subscribe((data: any) => {
-			data.forEach(function (obj) {
-				obj.add = obj.tmpOrdered;
+		this.productsService.getProduct(productId).subscribe(data => {
+			let index = this.products.findIndex((value: Product) => {
+				return value.id == productId;
 			});
-
-			this.products = data;
-
+			this.products[index] = data;
+			this.products[index].add = this.products[index].tmpOrdered;
+			this.products = this.products.slice();
 		}, error1 => {
-			this.spinerService.showSpinner = false;
+			setTimeout(() => {
+				this.spinerService.showSpinner = false;
+			}, 200);
 		}, () => {
-			this.spinerService.showSpinner = false;
+			setTimeout(() => {
+				this.spinerService.showSpinner = false;
+			}, 200);
 		});
 	}
 
 	addToStockOrToOrder(id: number, add: number) {
 		if (this.currentPageMode == 1) {
 			this.productsService.changeStockEndResetOfProductsToDelivery(id, add).subscribe(data => {
-				this.refreshData();
+				this.refreshUpdatedRow(id);
 			});
 		}
 		if (this.currentPageMode == 2) {
 			this.productsService.addNumberOfProductsDelivery(id, add).subscribe(data => {
-				this.refreshData();
+				this.refreshUpdatedRow(id);
 			})
 		}
 	}

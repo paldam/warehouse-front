@@ -5,7 +5,8 @@ export class CacheRouteReuseStrategy implements RouteReuseStrategy{
 	storedRouteHandles = new Map<string, DetachedRouteHandle>();
 
 	allowRetriveCache = {
-		'orders/all': true
+		'orders/all': true ,
+		'product' : true
 	};
 
 
@@ -15,6 +16,14 @@ export class CacheRouteReuseStrategy implements RouteReuseStrategy{
 		} else {
 			this.allowRetriveCache['orders/all'] = false;
 		}
+
+		if (this.getPath(before) === 'product/detail/:id' && this.getPath(curr) === 'product') {
+			this.allowRetriveCache['product'] = true;
+		} else {
+			this.allowRetriveCache['product'] = false;
+		}
+
+
 		return before.routeConfig === curr.routeConfig;
 	}
 	retrieve(route: ActivatedRouteSnapshot): DetachedRouteHandle | null {

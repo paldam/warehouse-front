@@ -14,7 +14,7 @@ const routes: Routes = [
 	{path: 'products/setdelivery', component: ProductDeliveryComponent, canActivate: [AuthGuard]},
 	{path: 'product', component: ProductsComponent, canActivate: [AuthGuard]},
 	{path: 'product/add', component: ProductFormComponent, canActivate: [AuthGuard]},
-	{path: 'product/:id', component: ProductEditFormComponent, canActivate: [AuthGuard]},
+	{path: 'product/detail/:id', component: ProductEditFormComponent, canActivate: [AuthGuard]},
 	{path: 'products/suppliers', component: SuppliersComponent},
 	{path: 'products/category', component: ProductsCategoryComponent}
 ];

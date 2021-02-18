@@ -62,7 +62,7 @@
     <p-dataTable #dt [value]="orders" [rows]="50" [paginator]="true" [globalFilter]="globalfilter"
                  [totalRecords]="totalRecords" selectionMode="multiple"
                  [loading]="loading" loadingIcon="fa-circle-o-notch" expandableRows="true"
-                 [(first)]="lastPaginationPageNumberOnOrderViewPage" [(selection)]="selectedOrdersMultiselction"
+                 [(selection)]="selectedOrdersMultiselction"
                  dataKey="orderId" [contextMenu]="cm"
                  rowExpandMode=single [paginator]="true" [pageLinks]="5" [rowsPerPageOptions]=paginatorValues
                  [lazy]="true"

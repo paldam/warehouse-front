@@ -1,9 +1,6 @@
-import {AfterViewChecked, Component, OnInit, ViewChild, ViewEncapsulation} from '@angular/core';
-import {ActivatedRoute, Router, RoutesRecognized} from '@angular/router';
+import {Component, OnDestroy, OnInit, ViewChild, ViewEncapsulation} from '@angular/core';
+import {ActivatedRoute, NavigationEnd, Router, RoutesRecognized} from '@angular/router';
 import {ConfirmationService, DataTable, LazyLoadEvent, SelectItem} from "primeng/primeng";
-import {isUndefined} from "util";
-import {filter} from 'rxjs/operators';
-import {pairwise} from "rxjs/internal/operators";
 import {ProductsService} from "../products.service";
 import {Product} from "../../model/product.model";
 import {AuthenticationService} from "../../authentication.service";
@@ -11,6 +8,7 @@ import {AppConstants} from "../../constants";
 import {ProductSubType} from "../../model/product_sub_type";
 import {Supplier} from "../../model/supplier.model";
 import {SpinerService} from "../../spiner.service";
+import {RoutingState} from "../../routing-stage";
 
 @Component({
 	selector: 'app-products',
@@ -18,10 +16,9 @@ import {SpinerService} from "../../spiner.service";
 	styleUrls: ['./products.component.css'],
 	encapsulation: ViewEncapsulation.None
 })
-export class ProductsComponent implements OnInit {
+export class ProductsComponent implements OnInit,OnDestroy {
 	public loading: boolean;
 	public products: Product[] = [];
-	public lastVisitedPage: number;
 	public imageToShow: any;
 	public showImageFrame: boolean = false;
 	public findInputtext: string = "";
@@ -33,9 +30,10 @@ export class ProductsComponent implements OnInit {
 	public suppliers: SelectItem[] = [];
 	public paginatorValues = AppConstants.PAGINATOR_VALUES;
 	@ViewChild('dt') dataTable: DataTable;
+	public routerObserver = null;
 
 	constructor(private productsService: ProductsService, activeRoute: ActivatedRoute, public spinerService: SpinerService,
-				private router: Router, private confirmationService: ConfirmationService,
+				private router: Router, private confirmationService: ConfirmationService,private routingState: RoutingState,
 				private authenticationService: AuthenticationService) {
 		productsService.getProductsPage(0,20,"","productName",-1,[],[],false)
 			.subscribe((data: any) => {
@@ -56,34 +54,53 @@ export class ProductsComponent implements OnInit {
 				})
 			});
 		});
-		this.router.events
-			.pipe(filter((e: any) => e instanceof RoutesRecognized),
-				pairwise()
-			).subscribe((e: any) => {
-			let previousUrlTmp = e[0].urlAfterRedirects;
-			if (previousUrlTmp.search('/product') == -1) {
-				localStorage.removeItem('findInputtext');
-				localStorage.removeItem('lastPage');
-			} else {
-			}
-		});
-		if (localStorage.getItem('findInputtext')) {
-			this.findInputtext = (localStorage.getItem('findInputtext'));
-		} else {
-			this.findInputtext = "";
-		}
+
+		this.checkIfUpdateOrderRowAfterRedirectFromProductDetails();
 	}
 
 	ngOnInit() {
 		this.setCustomSupplierFilterToDataTable();
-		setTimeout(() => {
-			if (localStorage.getItem('lastPage')) {
-				this.lastVisitedPage = parseInt(localStorage.getItem('lastPage'));
+
+	}
+
+	ngOnDestroy() {
+		this.routerObserver.unsubscribe();
+	}
+
+	private checkIfUpdateOrderRowAfterRedirectFromProductDetails(){
+		this.routerObserver =this.router.events.subscribe(event => {
+			if (event instanceof NavigationEnd) {
+				if (this.routingState.getPreviousUrl().substr(0, 16) == '/product/detail/') {
+					let id = parseInt(this.routingState.getPreviousUrl().substr(16, this.routingState.getPreviousUrl().length));
+					this.refreshProductRowInDataTable(id);
+
+				}
 			}
-			else {
-				this.lastVisitedPage = 0;
-			}
-		}, 300);
+		})
+
+	}
+	private refreshProductRowInDataTable(id :number){
+		this.productsService.getProduct(id).subscribe(data => {
+			let index = this.products.findIndex((value: Product) => {
+				return value.id == id;
+			});
+			this.products[index] = data;
+			this.products = this.products.slice(); //Tip to refresh PrimeNg datatable
+			this.toggleRow(id);
+
+		}, error => {
+		}, () => {
+			this.goToSavedScrollPosition();
+		})
+	}
+
+	private goToSavedScrollPosition(){
+		window.scrollTo(0, this.routingState.getlastScrollYPosition());
+	}
+
+	private toggleRow(productId: number){
+		let rowIndex = this.products.findIndex(value => value.id == productId);
+		this.dataTable.toggleRow(this.products[rowIndex]);
 	}
 
 	private setCustomSupplierFilterToDataTable() {
@@ -119,30 +136,13 @@ export class ProductsComponent implements OnInit {
 	}
 
 	goToEditPage(index, id) {
-		let pageTmp = ((index - 1) / 20) + 1;
-		let first = this.dataTable.first;
-		localStorage.setItem('lastPage', first.toString());
-		let textTmp = this.findInputtext;
-		localStorage.setItem('findInputtext', textTmp);
-		this.router.navigate(["/product/", id]);
+		this.routingState.setlastScrollYPosition(window.scrollY);
+		this.router.navigate(["/product/detail", id]);
+
 	}
 
 	goToEditBasketPage(id) {
 		this.router.navigate(["/basket/", id]);
-	}
-
-	selectProduct(id: number) {
-		this.router.navigateByUrl('/products/${id}');
-	}
-
-	filterTableBySupplier(supplierId: number) {
-		this.spinerService.showSpinner = true;
-		setTimeout(() => {
-			this.dataTable.filter(supplierId, 'suppliers', 'inCollection');
-		}, 100);
-		setTimeout(() => {
-			this.spinerService.showSpinner = false;
-		}, 1500);
 	}
 
 	ShowConfirmModal(product: Product) {

@@ -11,7 +11,7 @@
 
     <p-dataTable [value]="products" [rows]="50" [paginator]="true" [globalFilter]="gb" #dt
                  (onRowDblclick)="goToEditPage(1,$event.data.id)"
-                 [loading]="loading" loadingIcon="fa-circle-o-notch" [(first)]="lastVisitedPage" [paginator]="true"
+                 [loading]="loading" loadingIcon="fa-circle-o-notch"  [paginator]="true"
                  [pageLinks]="5" [rowsPerPageOptions]=paginatorValues
                  [lazy]="true" (onLazyLoad)="loadProductsLazy($event)" [totalRecords]="totalRecords">
 
