@@ -81,6 +81,7 @@ export class OrderComponent
 	public showNotificationModal: boolean = false;
 	public notifications: Notification[] = [];
 	public notificationsTotal: number = 0;
+	public isDataTableLazy: boolean = true;
 
 	public selectedProvinces: String[] = [];
 	public provinces: SelectItem[] = [];
@@ -93,6 +94,11 @@ export class OrderComponent
 	@ViewChild('yearFilter') yearFilterEl: Dropdown;
 	@ViewChild('dt') datatable: DataTable;
 	@ViewChild('information_extention') information_extention: OverlayPanel;
+	public multiSelectOrderYearsValues: any[];
+	public multiSelectProductionUserValues: any[];
+	public multiSelectDeliveryTypesValues: any[];
+	public multiSelectWeeksValues: any[];
+	public multiSelectOrderStatusValues: any[];
 
 	constructor(private basketService: BasketService, private activatedRoute: ActivatedRoute,
 				private orderService: OrderService, private userService: UserService, private router: Router,
@@ -125,6 +131,7 @@ export class OrderComponent
 		setTimeout(() => {
 			this.setEventSources();
 		}, 1000);
+
 	}
 
 	@HostListener('window:resize', ['$event'])
@@ -228,6 +235,8 @@ export class OrderComponent
 	}
 
 	private performSetDataActionForCustomerEditPage() {
+
+		this.isDataTableLazy = false;
 		this.orderService.getOrderByCustomer(this.activatedRoute.snapshot.params["id"]).subscribe(data => {
 				this.orders = data;
 				this.ordersNotFiltered = data;
@@ -663,10 +672,25 @@ export class OrderComponent
 				setTimeout(() => {
 					this.expandRowAfterRefresh();
 					this.spinerService.showSpinner = false;
+					this.cleanFilter()
 				}, 1000);
 
 			});
 		}
+	}
+
+	private cleanFilter(){
+		this.findInputTextOnOrderViewPage='';
+		this.selectedProvinces=[];
+		this.el.nativeElement.checked= false;
+		this.multiSelectOrderYearsValues = [];
+		this.multiSelectProductionUserValues = [];
+		this.multiSelectWeeksValues =[];
+		this.multiSelectOrderStatusValues =[];
+		this.multiSelectDeliveryTypesValues=[];
+
+		
+
 	}
 
 	filterByProvince(){

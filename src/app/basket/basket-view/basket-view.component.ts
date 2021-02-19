@@ -1,6 +1,6 @@
-import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
+import {Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {BasketService} from "../basket.service";
-import {Router} from "@angular/router";
+import {NavigationEnd, Router} from "@angular/router";
 import {Basket} from "../../model/basket.model";
 import {ConfirmationService, DataTable, LazyLoadEvent, OverlayPanel, SelectItem} from "primeng/primeng";
 import {BasketType} from "../../model/basket_type.model";
@@ -10,6 +10,8 @@ import {ProductSubType} from "../../model/product_sub_type";
 import {ProductsService} from "../../products/products.service";
 import {SpinerService} from "../../spiner.service";
 import {MessageServiceExt} from "../../messages/messageServiceExt";
+import {RoutingState} from "../../routing-stage";
+import {Order} from "../../model/order.model";
 
 @Component({
 	selector: 'app-basket',
@@ -17,7 +19,7 @@ import {MessageServiceExt} from "../../messages/messageServiceExt";
 	styleUrls: ['./basket-view.component.css']
 })
 export class BasketComponent
-	implements OnInit {
+	implements OnInit,OnDestroy {
 	public priceMin: number = 0;
 	public priceMax: number = 9999;
 	public baskets: Basket[] = [];
@@ -37,11 +39,14 @@ export class BasketComponent
 	public expandedRowBasketId: number = 0;
 	public selectedCategoriesIds: number[] = [];
 	public basketSeasonList: SelectItem[] = [];
+	public routerObserver = null;
+	public findInputtext : string = '';
+	public seasonMultiSelect: any;
 
 	constructor(private messageServiceExt: MessageServiceExt, private spinerService: SpinerService,
 				private productsService: ProductsService, private basketService: BasketService,
 				public router: Router, private confirmationService: ConfirmationService,
-				public authenticationService: AuthenticationService) {
+				public authenticationService: AuthenticationService, private routingState :RoutingState ) {
 
 		basketService
 			.getBasketsPage(0,20,"","basketName", -1, false,[])
@@ -62,7 +67,43 @@ export class BasketComponent
 	}
 
 	ngOnInit() {
+		this.checkIfUpdateOrderRowAfterRedirectFromOrderDetails();
 	}
+
+	ngOnDestroy() {
+		this.routerObserver.unsubscribe();
+	}
+
+	private checkIfUpdateOrderRowAfterRedirectFromOrderDetails(){
+		this.routerObserver =this.router.events.subscribe(event => {
+			if (event instanceof NavigationEnd) {
+				if (this.routingState.getPreviousUrl().substr(0, 15) == '/basket/detail/') {
+					let id = parseInt(this.routingState.getPreviousUrl().substr(15, this.routingState.getPreviousUrl().length));
+					this.refreshOrderRowInDataTable(id);
+				}
+			}
+		})
+
+	}
+
+	private refreshOrderRowInDataTable(id :number){
+		this.basketService.getBasket(id).subscribe(data => {
+			let index = this.baskets.findIndex((value: Basket) => {
+				return value.basketId == id;
+			});
+			this.baskets[index] = data;
+			this.baskets = this.baskets.slice(); //Tip to refresh PrimeNg datatable
+		}, error => {
+		}, () => {
+			this.goToSavedScrollPosition();
+		})
+	}
+
+	private goToSavedScrollPosition(){
+		window.scrollTo(0, this.routingState.getlastScrollYPosition());
+	}
+
+
 
 	getBasketWithFilter() {
 		this.datatable.lazy = false;
@@ -89,7 +130,8 @@ export class BasketComponent
 	redirectToBasketEdit(basketId : number){
 
 		if(this.authenticationService.isAdmin() || this.authenticationService.isBiuroUser()){
-			this.router.navigateByUrl('/basket/' + basketId);
+			this.routingState.setlastScrollYPosition(window.scrollY);
+			this.router.navigateByUrl('/basket/detail/' + basketId);
 		}
 
 	}
@@ -186,7 +228,19 @@ export class BasketComponent
 		setTimeout(() => {
 			this.clickOnlyDeletedBasketChceckBox();
 			this.loading = false;
+			this.cleanFilter();
 		}, 1000);
+	}
+
+	private cleanFilter(){
+		this.findInputtext='';
+		this.priceMin = 0;
+		this.priceMax =9999;
+		this.selectedCategories = [];
+		 this.filterByProductsPrizeCheckBox.nativeElement.checked = false;
+		this.el.nativeElement.checked = false;
+		this.seasonMultiSelect = [];
+
 	}
 
 	clickOnlyDeletedBasketChceckBox() {

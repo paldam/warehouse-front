@@ -68,7 +68,7 @@ export class ProductPickerComponent
 			data.forEach(value => {
 				this.productsType.push({
 					label: '' + value.subTypeName + '(' + value.productType.typeName + ')',
-					value: value.subTypeName
+					value: value.subTypeId
 				});
 			});
 			productsService.getSuppliers().subscribe(data => {

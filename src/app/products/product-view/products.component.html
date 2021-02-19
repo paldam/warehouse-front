@@ -35,7 +35,7 @@
             <ng-template pTemplate="filter" let-col>
                 <p-dropdown [filter]="true" [options]="suppliers" placeholder="Wszyscy" [style]="{'width':'100%'}"
                             (onChange)="dataTable.filter($event.value,col.field,col.filterMatchMode)"
-                            styleClass="ui-column-filter"></p-dropdown>
+                            styleClass="ui-column-filter" [(ngModel)]="suppliersDropDown"></p-dropdown>
             </ng-template>
             <ng-template let-item="rowData" pTemplate="body">
                 <tr *ngFor="let supplier of item.suppliers"> {{supplier.supplierName}}</tr>
@@ -46,7 +46,8 @@
         <p-column field="productSubType.subTypeName" styleClass="type_col" [filter]="true" header="Typ produktu"
                   filterMatchMode="equals" [sortable]="true" [style]="{'width':'220px'}">
             <ng-template let-col pTemplate="filter">
-                <p-multiSelect [filter]="true" [showToggleAll]="true" [options]="productsType" defaultLabel="Wszystkie"
+                <p-multiSelect [filter]="true" [(ngModel)]="productTypeMultiSelect" [showToggleAll]="true"
+                               [options]="productsType" defaultLabel="Wszystkie"
                                (onChange)="dt.filter($event.value, col.field, 'in')"></p-multiSelect>
             </ng-template>
 

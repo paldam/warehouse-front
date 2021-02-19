@@ -28,6 +28,8 @@ export class ProductsComponent implements OnInit,OnDestroy {
 	public totalRecords: number;
 	public productsType: SelectItem[] = [];
 	public suppliers: SelectItem[] = [];
+	public suppliersDropDown: any;
+	public productTypeMultiSelect: any;
 	public paginatorValues = AppConstants.PAGINATOR_VALUES;
 	@ViewChild('dt') dataTable: DataTable;
 	public routerObserver = null;
@@ -131,18 +133,26 @@ export class ProductsComponent implements OnInit,OnDestroy {
 					this.products = data.productList;
 					this.totalRecords = data.totalRowsOfRequest;
 				});
+			this.cleanFilter();
 			this.loading = false;
 		}, 1000);
 	}
 
+
+	cleanFilter(){
+		this.suppliersDropDown = [];
+		this.productTypeMultiSelect=[];
+		this.findInputtext='';
+	}
+
 	goToEditPage(index, id) {
 		this.routingState.setlastScrollYPosition(window.scrollY);
-		this.router.navigate(["/product/detail", id]);
+		this.router.navigate(["/product/detail/", id]);
 
 	}
 
 	goToEditBasketPage(id) {
-		this.router.navigate(["/basket/", id]);
+		this.router.navigate(["/basket/detail/", id]);
 	}
 
 	ShowConfirmModal(product: Product) {

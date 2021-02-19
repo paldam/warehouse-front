@@ -235,7 +235,7 @@ export class GiftBasketEditComponent
 			form.resetForm();
 			this.formSubmitted = false;
 			this.recalculate();
-			this.router.navigateByUrl('/baskets');
+			this.router.navigateByUrl('/baskets/all');
 		})
 	}
 
@@ -246,7 +246,7 @@ export class GiftBasketEditComponent
 			form.resetForm();
 			this.formSubmitted = false;
 			this.recalculate();
-			this.router.navigateByUrl('/baskets');
+			this.router.navigateByUrl('/baskets/all');
 		})
 	}
 
@@ -266,7 +266,7 @@ export class GiftBasketEditComponent
 				this.formSubmitted = false;
 				this.recalculate();
 				this.fileUploadElement.clear();
-				this.router.navigateByUrl('/baskets');
+				this.router.navigateByUrl('/baskets/all');
 			});
 	}
 

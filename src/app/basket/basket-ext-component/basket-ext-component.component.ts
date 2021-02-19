@@ -27,6 +27,7 @@ export class BasketExtComponentComponent
 	public selectedBasketOnContextMenu: BasketExt = new BasketExt();
 	@ViewChild('onlyDeleted') el: ElementRef;
 	public paginatorValues = AppConstants.PAGINATOR_VALUES;
+	public findInputtext: string = '';
 
 	constructor(private basketService: BasketExtService, private router: Router,
 				private messageServiceExt: MessageServiceExt, private confirmationService: ConfirmationService,
@@ -98,7 +99,12 @@ export class BasketExtComponentComponent
 					})
 				});
 			this.loading = false;
+			this.cleanFilter();
 		}, 1000);
+	}
+
+	private cleanFilter() {
+		this.findInputtext = '';
 	}
 
 	updateBasketExtRow(event: any) {

@@ -58,7 +58,7 @@
                  <i class="fa fa-search" aria-hidden="true"></i>
             </span>
         <input #gb type="text" class="dd form-control search_input" pInputText size="50" placeholder="Szukaj"
-               aria-describedby="basic-addon1">
+               aria-describedby="basic-addon1" [(ngModel)]="findInputtext">
 
         <div class="onlyDeleted form-check">
             <label class="form-check-label">
@@ -104,7 +104,7 @@
 
             <ng-template let-col pTemplate="filter">
                 <p-multiSelect [filter]="true" [showToggleAll]="true" [options]="basketSeasonList"
-                               defaultLabel="Wszystkie"
+                               defaultLabel="Wszystkie" [(ngModel)]="seasonMultiSelect"
                                (onChange)="datatable.filter($event.value, col.field, 'in')"></p-multiSelect>
             </ng-template>
 
@@ -137,7 +137,7 @@
             <ng-template let-basket="rowData" pTemplate="body">
                 <i *ngIf="authenticationService.isAdmin() || authenticationService.isBiuroUser() "
                    class="fa fa-pencil-square-o fa-2x" aria-hidden="true" title="Edytuj kosz"
-                   [routerLink]="['/basket/', basket.basketId] "></i>
+                   (click)="redirectToBasketEdit(basket.basketId)"></i>
                 <i *ngIf="authenticationService.isAdmin()" class="fa fa-trash fa-2x edit_icon" aria-hidden="true"
                    title="Usuń kosz" (click)="ShowConfirmModal(basket)"></i>
                 <i *ngIf="basket.isBasketImg!=1" class="fa fa-picture-o fa-2x" style="color:grey" aria-hidden="true"

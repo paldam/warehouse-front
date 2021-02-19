@@ -1,4 +1,4 @@
-import {Component, OnInit, ViewEncapsulation} from '@angular/core';
+import {Component, OnInit, ViewChild, ViewEncapsulation} from '@angular/core';
 import {CustomerService} from "../customer.service";
 import {OrderService} from "../../order/order.service";
 import {Order} from "../../model/order.model";
@@ -6,8 +6,10 @@ import {MessageServiceExt} from "../../messages/messageServiceExt";
 import {ConfirmationService} from "primeng/api";
 import {AuthenticationService} from "../../authentication.service";
 import {AppConstants} from "../../constants";
-import {Router} from "@angular/router";
+import {NavigationEnd, Router} from "@angular/router";
 import {RoutingState} from "../../routing-stage";
+import {Customer} from "../../model/customer.model";
+import {DataTable} from "primeng/primeng";
 
 @Component({
 	selector: 'app-customer',
@@ -20,20 +22,22 @@ export class CustomerComponent
 	public loading: boolean = false;
 	public customersList: any[] = [];
 	public allOrdersByCustomerList: Order[] = [];
-	public findInputTextOnCustomerViewPage: string = "";
-	public lastPaginationPageNumberOnCustomerViewPage: number;
+	public lastPaginationPageNumberOnCustomerViewPage: number = 0;
 	public selectedValue: any;
 	public paginatorValues = AppConstants.PAGINATOR_VALUES;
+	public findInputtext: string = '';
+	public routerObserver = null;
+	@ViewChild('dt') datatable: DataTable;
 
 	constructor(private customerService: CustomerService, private  orderService: OrderService, private messageServiceExt: MessageServiceExt,
 				private confirmationService: ConfirmationService, private authenticationService: AuthenticationService, public router: Router, private routingState: RoutingState) {
-		this.setSearchOptions();
 		customerService.getCustomers().subscribe(data => {
 			this.customersList = data;
 		})
 	}
 
 	ngOnInit() {
+		this.checkIfUpdateOrderRowAfterRedirectFromOrderDetails()
 	}
 
 	refreshData() {
@@ -43,29 +47,50 @@ export class CustomerComponent
 				this.customersList = data;
 			});
 			this.loading = false;
+			this.cleanFilter();
 		}, 1000);
 	}
 
-	setSearchOptions() {
-		let previousUrlTmp = this.routingState.getPreviousUrl();
-		if (previousUrlTmp.search('/customer') == -1) {
-			localStorage.removeItem('findInputTextOnCustomerViewPage');
-			localStorage.removeItem('lastPaginationPageNumberOnOrderViewPage');
-		} else {
-		}
-		if (localStorage.getItem('findInputTextOnCustomerViewPage')) {
-			this.findInputTextOnCustomerViewPage = (localStorage.getItem('findInputTextOnCustomerViewPage'));
-		} else {
-			this.findInputTextOnCustomerViewPage = "";
-		}
-		setTimeout(() => {
-			if (localStorage.getItem('lastPaginationPageNumberOnCustomerViewPage')) {
-				let tmplastVisitedPage = parseInt(localStorage.getItem('lastPaginationPageNumberOnCustomerViewPage'));
-				this.lastPaginationPageNumberOnCustomerViewPage = (tmplastVisitedPage - 1) * 20;
-			} else {
-				this.lastPaginationPageNumberOnCustomerViewPage = 0;
+	private cleanFilter(){
+		this.findInputtext='';
+	}
+
+	private checkIfUpdateOrderRowAfterRedirectFromOrderDetails() {
+		this.routerObserver = this.router.events.subscribe(event => {
+			if (event instanceof NavigationEnd) {
+				if (this.routingState.getPreviousUrl().substr(0, 17) == '/customer/detail/') {
+					if (localStorage.getItem('lastPaginationPageNumberOnCustomerViewPage')) {
+						let tmplastVisitedPage = parseInt(localStorage.getItem('lastPaginationPageNumberOnCustomerViewPage'));
+						this.lastPaginationPageNumberOnCustomerViewPage = (tmplastVisitedPage - 1) * 50;
+						console.log(this.lastPaginationPageNumberOnCustomerViewPage);
+					} else {
+						this.lastPaginationPageNumberOnCustomerViewPage = 0;
+					}
+					let id = parseInt(this.routingState.getPreviousUrl().substr(17, this.routingState.getPreviousUrl().length));
+					this.refreshCustomerRowInDataTable(id);
+				}
 			}
-		}, 300);
+		})
+	}
+
+	private goToSavedScrollPosition() {
+		window.scrollTo(0, this.routingState.getlastScrollYPosition());
+	}
+
+	private refreshCustomerRowInDataTable(id: number) {
+		this.customerService.getCustomer(id).subscribe(data => {
+			let index = this.customersList.findIndex((value: Customer) => {
+				return value.customerId == id;
+			});
+			this.customersList[index] = data;
+			this.customersList = this.customersList.slice(); //Tip to refresh PrimeNg datatable
+		}, error => {
+		}, () => {
+			this.goToSavedScrollPosition();
+			setTimeout(() => {
+				this.datatable.first = this.lastPaginationPageNumberOnCustomerViewPage;
+			}, 150);
+		})
 	}
 
 	getOrdersByCustomer(id: number) {
@@ -74,20 +99,20 @@ export class CustomerComponent
 		})
 	}
 
-	goToEditPageFromDoubleclick(event) {
-		let pageTmp = 1;
-		localStorage.setItem('lastPaginationPageNumberOnCustomerViewPage', pageTmp.toString());
-		let textTmp = this.findInputTextOnCustomerViewPage;
-		localStorage.setItem('findInputTextOnCustomerViewPage', textTmp);
-		this.router.navigate(["/customer/", event.data.customerId]);
-	}
-
+	// goToEditPageFromDoubleclick(event) {
+	// 	let index = this.customersList.findIndex((value: Customer) => {
+	// 		return value.customerId == event.data.customerId;
+	// 	});
+	// 	let pageTmp = ((index) / 50) + 1;
+	// 	localStorage.setItem('lastPaginationPageNumberOnCustomerViewPage', pageTmp.toString());
+	// 	this.router.navigate(["/customer/detail/", event.data.customerId]);
+	// 	this.routingState.setlastScrollYPosition(window.scrollY);
+	//}
 	goToEditPage(index, id) {
-		let pageTmp = ((index - 1) / 20) + 1;
+		let pageTmp = ((index - 1) / 50) + 1;
 		localStorage.setItem('lastPaginationPageNumberOnCustomerViewPage', pageTmp.toString());
-		let textTmp = this.findInputTextOnCustomerViewPage;
-		localStorage.setItem('findInputTextOnCustomerViewPage', textTmp);
-		this.router.navigate(["/customer/", id]);
+		this.router.navigate(["/customer/detail", id]);
+		this.routingState.setlastScrollYPosition(window.scrollY);
 	}
 
 	showDeleteConfirmWindow(customerId: number) {

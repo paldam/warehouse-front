@@ -6,7 +6,9 @@ export class CacheRouteReuseStrategy implements RouteReuseStrategy{
 
 	allowRetriveCache = {
 		'orders/all': true ,
-		'product' : true
+		'product' : true,
+		'customer/list' : true,
+		'baskets/all' : true
 	};
 
 
@@ -23,6 +25,20 @@ export class CacheRouteReuseStrategy implements RouteReuseStrategy{
 			this.allowRetriveCache['product'] = false;
 		}
 
+		if (this.getPath(before) === 'customer/detail/:id' && this.getPath(curr) === 'customer/list') {
+			this.allowRetriveCache['customer/list'] = true;
+		} else {
+			this.allowRetriveCache['customer/list'] = false;
+		}
+
+		console.log(this.getPath(before));
+		console.log(this.getPath(curr));
+
+		if (this.getPath(before) === 'basket/detail/:basketId' && this.getPath(curr) === 'baskets/all') {
+			this.allowRetriveCache['baskets/all'] = true;
+		} else {
+			this.allowRetriveCache['baskets/all'] = false;
+		}
 
 		return before.routeConfig === curr.routeConfig;
 	}

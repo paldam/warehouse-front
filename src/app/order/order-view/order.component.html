@@ -43,7 +43,8 @@
 
     </div>
 
-    <p-panel header="Filtry" [toggleable]="true" collapsed="true" [style]="{ 'width':'600px'}">
+    <p-panel *ngIf="!isCurrentPageCustomerEdit" header="Filtry" [toggleable]="true" collapsed="true"
+             [style]="{ 'width':'600px'}">
         <div class="form-group">
             <p-listbox name="providence_list" [style]="{ 'width':'400px'}"
                        [listStyle]="{'max-height':'100px', 'width':'390px'}" [options]="provinces"
@@ -65,7 +66,7 @@
                  [(selection)]="selectedOrdersMultiselction"
                  dataKey="orderId" [contextMenu]="cm"
                  rowExpandMode=single [paginator]="true" [pageLinks]="5" [rowsPerPageOptions]=paginatorValues
-                 [lazy]="true"
+                 [lazy]="isDataTableLazy"
                  (onContextMenuSelect)="OnSelectRow($event)"
                  (onRowExpand)="fetchAdditionalDataForOrder($event)"
                  (onRowCollapse)="onRowCollapse($event)"
@@ -107,7 +108,8 @@
             <ng-template *ngIf="this.isCurrentPageOrdersView" let-col pTemplate="filter">
                 <div>
                     <p-multiSelect *ngIf="!this.isCurrentPageOrdersViewRedirectedFromBasketStatitis" [filter]="false"
-                                   [showToggleAll]="false" [options]="ordersYears" defaultLabel="Wszystkie"
+                                   [showToggleAll]="false" [options]="ordersYears" [(ngModel)]="multiSelectOrderYearsValues"
+                                   defaultLabel="Wszystkie"
                                    (onChange)="datatable.filter($event.value, col.field, 'in')"></p-multiSelect>
                 </div>
 
@@ -165,7 +167,7 @@
 
             <ng-template let-col pTemplate="filter">
                 <p-multiSelect [filter]="false" [showToggleAll]="false" [options]="productionUserListSelectItem"
-                               defaultLabel="Wszystkie"
+                               defaultLabel="Wszystkie" [(ngModel)]="multiSelectProductionUserValues"
                                (onChange)="datatable.filter($event.value, col.field, 'in')"></p-multiSelect>
             </ng-template>
 
@@ -188,7 +190,7 @@
 
         <ng-template let-col pTemplate="filter">
             <p-multiSelect [filter]="false" [showToggleAll]="true" [options]="weeksList"
-                           defaultLabel="Wszystkie"
+                           defaultLabel="Wszystkie" [(ngModel)]="multiSelectWeeksValues"
                            (onChange)="datatable.filter($event.value, col.field, 'in')"></p-multiSelect>
         </ng-template>
 
@@ -213,7 +215,7 @@
 
             <ng-template let-col pTemplate="filter">
                 <p-multiSelect [filter]="false" [showToggleAll]="false" [options]="orderStatusList"
-                               defaultLabel="Wszystkie"
+                               defaultLabel="Wszystkie" [(ngModel)]="multiSelectOrderStatusValues"
                                (onChange)="datatable.filter($event.value, col.field, 'in')"></p-multiSelect>
             </ng-template>
 
@@ -237,7 +239,7 @@
 
             <ng-template let-col pTemplate="filter">
                 <p-multiSelect [filter]="false" [showToggleAll]="true" [options]="deliveryTypesList"
-                               defaultLabel="Wszystkie"
+                               defaultLabel="Wszystkie" [(ngModel)]="multiSelectDeliveryTypesValues"
                                (onChange)="datatable.filter($event.value, col.field, 'in')"></p-multiSelect>
             </ng-template>
 

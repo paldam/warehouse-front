@@ -4,7 +4,7 @@
                  <i class="fa fa-search" aria-hidden="true"></i>
             </span>
         <input #gb type="text" class="dd form-control search_input" pInputText size="50" placeholder="Szukaj"
-               aria-describedby="basic-addon1">
+               aria-describedby="basic-addon1" [(ngModel)]="findInputtext">
 
         <i class="fa fa-refresh pull-right refresh_icon fa-2x" aria-hidden="true" (click)="refreshData()"></i>
     </div>

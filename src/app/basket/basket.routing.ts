@@ -9,12 +9,12 @@ import {GiftBasketEditComponent} from "./basket-edit/gift-basket-edit.component"
 import {BasketsInAdvanceComponent} from "./baskets-in-advance/baskets-in-advance.component";
 
 const routes: Routes = [
-	{path: 'basket/:basketId', component: GiftBasketEditComponent, canActivate: [AuthGuard]},
+	{path: 'basket/detail/:basketId', component: GiftBasketEditComponent, canActivate: [AuthGuard]},
 	{path: 'baskets/add', component: ProductPickerComponent, canActivate: [AuthGuard]},
 	{path: 'basketsext/add', component: BasketExtAddComponentComponent, canActivate: [AuthGuard]},
 	{path: 'basketsext', component: BasketExtComponentComponent, canActivate: [AuthGuard]},
 	{path: 'baskets/inadvance', component: BasketsInAdvanceComponent, canActivate: [AuthGuard]},
-	{path: 'baskets', component: BasketComponent, canActivate: [AuthGuard]},
+	{path: 'baskets/all', component: BasketComponent, canActivate: [AuthGuard]},
 
 ];
 export const routing: ModuleWithProviders = RouterModule.forChild(routes);

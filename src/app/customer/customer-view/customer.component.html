@@ -4,15 +4,13 @@
                  <i class="fa fa-search" aria-hidden="true"></i>
             </span>
         <input #gb type="text" class="dd form-control search_input" pInputText size="50" placeholder="Szukaj"
-               aria-describedby="basic-addon1" [(ngModel)]="findInputTextOnCustomerViewPage">
-
-
+               aria-describedby="basic-addon1" [(ngModel)]="findInputtext">
         <i class="fa fa-refresh pull-right refresh_icon fa-2x" aria-hidden="true" (click)="refreshData()"></i>
 
     </div>
 
     <p-dataTable [value]="customersList" [rows]="50" [globalFilter]="gb" #dt
-                 (onRowDblclick)="goToEditPageFromDoubleclick($event)"
+
                  [loading]="loading" loadingIcon="fa-circle-o-notch"
                  [(first)]="lastPaginationPageNumberOnCustomerViewPage" expandableRows="true" [paginator]="true"
                  [pageLinks]="5" [rowsPerPageOptions]=paginatorValues>
