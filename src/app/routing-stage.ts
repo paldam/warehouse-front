@@ -9,6 +9,7 @@ export class RoutingState {
 	private lastEvent :any;
 	private _lastScrollYPosition: number = 0;
 
+
 	constructor(
 		private router: Router, private serverSideEventsService: ServerSideEventsService
 	) {

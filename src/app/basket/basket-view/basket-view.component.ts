@@ -77,6 +77,7 @@ export class BasketComponent
 	private checkIfUpdateOrderRowAfterRedirectFromOrderDetails(){
 		this.routerObserver =this.router.events.subscribe(event => {
 			if (event instanceof NavigationEnd) {
+				console.log("TTTTTTTTTTTTTTT");
 				if (this.routingState.getPreviousUrl().substr(0, 15) == '/basket/detail/') {
 					let id = parseInt(this.routingState.getPreviousUrl().substr(15, this.routingState.getPreviousUrl().length));
 					this.refreshOrderRowInDataTable(id);

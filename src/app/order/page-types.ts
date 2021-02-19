@@ -52,7 +52,8 @@ export class OrderViewForStatistics
 		let basketIdTmp = this.activatedRoute.snapshot.paramMap.get('id');
 		let startDateTmp = this.activatedRoute.snapshot.paramMap.get('startDate');
 		let endDateTmp = this.activatedRoute.snapshot.paramMap.get('endDate');
-		this.orderService.getOrdersByBasketIdAndOrderDateRange(basketIdTmp, startDateTmp, endDateTmp).subscribe(data => {
+		let isByOrderDate = this.activatedRoute.snapshot.paramMap.get('isByOrderDate');
+		this.orderService.getOrdersByBasketIdAndOrderDateRange(basketIdTmp, startDateTmp, endDateTmp,isByOrderDate).subscribe(data => {
 			orders = ordersNotFiltered = data;
 		}, error => {
 			return null;

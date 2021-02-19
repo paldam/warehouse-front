@@ -6,6 +6,7 @@ import * as XLSX from "xlsx";
 import {DataTable} from "primeng/primeng";
 import {Router} from "@angular/router";
 import {AppConstants} from "../../constants";
+import {RoutingState} from "../../routing-stage";
 declare var $: any;
 
 @Component({
@@ -29,7 +30,7 @@ export class BasketStatisticComponent
 	@ViewChild('dt') el: DataTable;
 
 	constructor(private basketService: BasketService, private calendarSetingsComponent: CalendarSetingsComponent,
-                private router: Router
+                private router: Router, private routerStage :RoutingState
 	) {
 	}
 
@@ -85,7 +86,9 @@ export class BasketStatisticComponent
 		XLSX.writeFile(workbook, fileName, {bookType: 'xls', type: 'buffer'});
 	}
 
-	goToOrderListByBasket(id) {
-		this.router.navigate(["/orders/all", {id: id, startDate: this.startDate, endDate: this.endDate}]);
+	goToOrderListByBasket(id,isByOrderDate) {
+		this.router.navigate(["/orders/all", {id: id, startDate: this.startDate, endDate: this.endDate, isByOrderDate}]);
+
+
 	}
 }

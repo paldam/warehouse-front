@@ -112,8 +112,7 @@ export class OrderComponent
 	}
 
 	ngOnDestroy() {
-		this.serverSideEventsService.newOrderEventSource.close();
-		this.serverSideEventsService.orderCopyEventSource.close();
+
 		this.routerObserver.unsubscribe();
 
 	}
@@ -127,10 +126,7 @@ export class OrderComponent
 		this.getDeliveryTypeForDataTableFilter();
 		this.getProductionUserForContextMenuSet();
 		this.setExportMenu();
-		this.notificationsService.checkNumberOfNotifications();
-		setTimeout(() => {
-			this.setEventSources();
-		}, 1000);
+
 
 	}
 
@@ -166,7 +162,7 @@ export class OrderComponent
 			});
 			this.orders[index] = data;
 			this.orders = this.orders.slice(); //Tip to refresh PrimeNg datatable
-			this.toggleRow(id);
+			//this.toggleRow(id);
 
 		}, error => {
 		}, () => {
@@ -222,10 +218,13 @@ export class OrderComponent
 	}
 
 	private performSetDataActionForOrderPageRedirectedFromStatistic() {
+
+		this.isDataTableLazy = false;
 		let basketIdTmp = this.activatedRoute.snapshot.paramMap.get('id');
 		let startDateTmp = this.activatedRoute.snapshot.paramMap.get('startDate');
 		let endDateTmp = this.activatedRoute.snapshot.paramMap.get('endDate');
-		this.orderService.getOrdersByBasketIdAndOrderDateRange(basketIdTmp, startDateTmp, endDateTmp).subscribe(data => {
+		let isByOrderDate = this.activatedRoute.snapshot.paramMap.get('isByOrderDate');
+		this.orderService.getOrdersByBasketIdAndOrderDateRange(basketIdTmp, startDateTmp, endDateTmp,isByOrderDate).subscribe(data => {
 			this.orders = data;
 			this.ordersNotFiltered = data;
 		}, error => {
@@ -528,6 +527,7 @@ export class OrderComponent
 
 	backToBasketStatistic() {
 		this.router.navigate(["/statistics/basket"]);
+
 	}
 
 	getFile(id: number) {
@@ -652,7 +652,7 @@ export class OrderComponent
 	}
 
 	refreshData() {
-		this.notificationsService.checkNumberOfNotifications();
+
 		this.action_extention.nativeElement.hidden = true;
 		this.getProductionUserForContextMenuSet();
 		this.spinerService.showSpinner = true;

@@ -138,5 +138,5 @@
 </p-dialog>
 
 <p-dialog header="Produkt" [(visible)]="showImageFrame">
-    <img [src]="imageToShow" [height]="700" [width]="700">
+    <img *ngIf="imageToShow" [src]="imageToShow" [height]="700" [width]="700">
 </p-dialog>

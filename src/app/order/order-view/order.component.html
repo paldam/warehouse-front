@@ -598,7 +598,7 @@
 </div>
 
 <p-dialog header="Kosz" [(visible)]="showImageFrame">
-    <img [src]="imageToShow" [height]="700" [width]="700">
+    <img  *ngIf="imageToShow" [src]="imageToShow" [height]="700" [width]="700">
 </p-dialog>
 
 <p-menu #menuExport [popup]="true" [model]="exportItems"></p-menu>

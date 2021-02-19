@@ -70,7 +70,7 @@
     <p-column class="action_col" field="orders" header="Akcja" styleClass="action_col">
         <ng-template let-row="rowData" let-i="rowIndex" pTemplate="body">
             <i class="fa fa-pencil-square-o fa-2x" aria-hidden="true" title="Lista zamowien z danym koszem"
-               (click)="goToOrderListByBasket(row.basketId)"></i>
+               (click)="goToOrderListByBasket(row.basketId,sortByOrderDateCheckBox.nativeElement.checked)"></i>
         </ng-template>
     </p-column>
 
