@@ -58,6 +58,25 @@
             <p>Wybrane Wojewódzctwa: <span *ngFor="let c of selectedProvinces" style="margin-right: 10px">{{c}}</span>
             </p>
         </div>
+
+        <div>
+
+
+                <div>
+                    <p-checkbox [(ngModel)]="onlyWithFullAvailability" label="Zamówienia z pełnym pokryciem produktów"
+                                binary="true"
+                                (onChange)="showOrdersWithFullAvailability()"></p-checkbox>
+                    </div>
+
+
+
+
+
+
+        </div>
+
+
+
     </p-panel>
 
     <p-dataTable #dt [value]="orders" [rows]="50" [paginator]="true" [globalFilter]="globalfilter"

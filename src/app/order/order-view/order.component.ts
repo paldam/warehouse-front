@@ -50,6 +50,7 @@ export class OrderComponent
 	public selectedToPrintOrder: Order = new Order();
 	public showImageFrame: boolean = false;
 	public imageToShow: any;
+	public onlyWithFullAvailability: boolean = false;
 	public selectedOrderToPrintBasketProducts: any;
 	public selectedToMenuOrder: number;
 	public selectedOrdersMultiselction: Order[] = [];
@@ -523,10 +524,28 @@ export class OrderComponent
 		this.isCurrentPageOrdersViewRedirectedFromBasketStatitis = false;
 		this.isCurrentPageOrdersView = true;
 		this.setOrderData();
+		this.datatable.lazy = true;
 	}
 
 	backToBasketStatistic() {
 		this.router.navigate(["/statistics/basket"]);
+
+	}
+
+	showOrdersWithFullAvailability(){
+
+
+		if(this.onlyWithFullAvailability){
+			this.datatable.lazy = false;
+			this.orderService.getOrdersWithFullAv().subscribe(data => {
+				this.orders = data;
+
+			})
+		}else{
+			this.refreshData();
+		}
+
+
 
 	}
 
@@ -653,6 +672,7 @@ export class OrderComponent
 
 	refreshData() {
 
+		this.datatable.lazy = true;
 		this.action_extention.nativeElement.hidden = true;
 		this.getProductionUserForContextMenuSet();
 		this.spinerService.showSpinner = true;
@@ -688,6 +708,7 @@ export class OrderComponent
 		this.multiSelectWeeksValues =[];
 		this.multiSelectOrderStatusValues =[];
 		this.multiSelectDeliveryTypesValues=[];
+		this.onlyWithFullAvailability = false;
 
 		
 

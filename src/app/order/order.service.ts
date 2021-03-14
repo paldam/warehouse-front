@@ -94,6 +94,8 @@ export class OrderService {
 				response.json());
 	}
 
+
+
 	getOrderAudit(id: number): Observable<any> {
 		return this.http.get(this.baseUrl + `/order/audit/${id}`)
 			.map((response: Response) =>
@@ -106,8 +108,8 @@ export class OrderService {
 				response.json());
 	}
 
-	getOrders(): Observable<Order[]> {
-		return this.http.get(this.baseUrl + `/orders/`)
+	getOrdersWithFullAv(): Observable<Order[]> {
+		return this.http.get(this.baseUrl + `/orders/full_product_availability`)
 			.map((response: Response) =>
 				response.json());
 	}
