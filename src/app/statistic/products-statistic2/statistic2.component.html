@@ -88,6 +88,13 @@
 
     <p-column field="capacity" header="Pojemność " [style]="{'width':'120px'}"></p-column>
 
+    <p-column field="price" [sortable]="true" header="Cena">
+        <ng-template let-row="rowData" pTemplate="body">
+            {{row.price/100| number : '1.2-2'}} zł.
+        </ng-template>
+    </p-column>
+
+
     <p-column field="stock" header="Stan Magazynu" [style]="{'width':'120px'}"></p-column>
     <p-column field="suma" header="Potrzebna ilość" [sortable]="true" [style]="{'width':'120px'}"></p-column>
     <p-column field="tmpOrdered" styleClass="capacity_col" header="Liczba zamówionych" [sortable]="true"></p-column>
