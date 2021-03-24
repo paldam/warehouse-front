@@ -38,7 +38,7 @@ export class BasketExtAddComponentComponent
 	@ViewChild(GiftBasketComponent) giftBasketComponent: GiftBasketComponent;
 	@ViewChild('availablecheck') availablecheck: ElementRef;
 	@ViewChild('dt') dataTable: DataTable;
-	private totalBasketRecords: number;
+	public totalBasketRecords: number;
 
 	constructor(private productsService: ProductsService, private basketExtService: BasketExtService,
                 private basketService: BasketService, private dataUtils: JhiDataUtils) {

@@ -46,8 +46,8 @@ export class ProductPickerComponent
 	@ViewChild(GiftBasketComponent) giftBasketComponent: GiftBasketComponent;
 	@ViewChild(FileUpload) fileUploadElement: FileUpload;
 	@ViewChild('availablecheck') availablecheck: ElementRef;
-	private totalRecords: number;
-	private totalBasketRecords: number;
+	public totalRecords: number;
+	public totalBasketRecords: number;
 
 	constructor(private productsService: ProductsService, private basketService: BasketService,
 				private messageServiceExt: MessageServiceExt) {

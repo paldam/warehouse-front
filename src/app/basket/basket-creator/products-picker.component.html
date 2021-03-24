@@ -9,7 +9,7 @@
 
             <label class="form-check-label only_available_product_checkbox">
                 <input class="form-check-input" #availablecheck   type="checkbox"
-                       (change)="filtrOnlyAvaileble($event)"> pokaż tylko
+                       (change)="filtrOnlyAvaileble()"> pokaż tylko
                 dostępne produkty
             </label>
 
@@ -121,7 +121,7 @@
             <!--</div>-->
 
                 <p-orderList [value]="basketItems"  dragdrop="true" dragdropScope="basketItems"
-                             controlsPosition="left" (onSelectionChange)="assignPosition($event)"
+                             controlsPosition="left"
                             [listStyle]="{'height':'400px', 'max-width':'900px', 'margin-left':'20px'}" >
 
 
