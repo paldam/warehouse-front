@@ -119,10 +119,9 @@ export class Statistic2Component
 			}
 			dataToGenerateFile[i] = {
 				"Nazwa Produktu": filt[i].productName,
-				"Nazwa Dostawcy": tmpSupplierNameList,
-				"Ilość": filt[i].suma,
-				"Stan Magazynu": filt[i].stock,
-				"Liczba zamówionych": filt[i].tmpOrdered
+				"Pojemność": filt[i].capacity,
+				"Cena": filt[i].price,
+				"Potrzebna Ilość": filt[i].suma
 			}
 		}
 		const worksheet: XLSX.WorkSheet = XLSX.utils.json_to_sheet(dataToGenerateFile);

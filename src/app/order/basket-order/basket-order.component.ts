@@ -23,6 +23,7 @@ import {UserService} from "../../user.service";
 import {User} from "../../model/user.model";
 declare var jquery: any;
 declare var $: any;
+import * as moment from 'moment';
 
 @Component({
 	selector: 'basket-order',
@@ -503,7 +504,8 @@ export class BasketOrderComponent implements OnInit, OnDestroy {
 		this.autoAddTicketsToOrder();
 		this.order.orderStatus = new OrderStatus(AppConstants.ORDER_STATUS_NOWE);
 		this.order.userName = localStorage.getItem(TOKEN_USER);
-		this.order.weekOfYear = this.getWeekNumber(this.weekOfYearTmp);
+		this.order.weekOfYear = moment(this.weekOfYearTmp).isoWeek();
+
 	}
 
 	cleanAfterSave(form: NgForm, formAdidtional: NgForm) {
@@ -601,16 +603,10 @@ export class BasketOrderComponent implements OnInit, OnDestroy {
 		event.xhr.setRequestHeader('Authorization', `Bearer ${token}`);
 	}
 
-	getWeekNumber(d: Date): number {
-		d = new Date(d);
-		d.setHours(0, 0, 0);
-		d.setDate(d.getDate() + 4 - (d.getDay() || 7));
-		let yearStart = new Date(d.getFullYear(), 0, 1);
-		return Math.ceil((((d.valueOf() - yearStart.valueOf()) / 86400000) + 1) / 7)
-	}
-
 	OnWeekOfYearDateChange() {
-		this.weekOfYear = this.getWeekNumber(this.weekOfYearTmp);
+		let tmpDate = new Date(this.weekOfYearTmp);
+		tmpDate.setHours(23, 59, 59, 99);
+		this.weekOfYear = moment(tmpDate).isoWeek();
 		this.isDeliveryWeekValid();
 	}
 
@@ -620,7 +616,7 @@ export class BasketOrderComponent implements OnInit, OnDestroy {
 	}
 
 	isDeliveryWeekValid() {
-		let weekOfYearFromNowDate = this.getWeekNumber(new Date());
+		let weekOfYearFromNowDate = moment(new Date()).isoWeek();
 		this.isDeliveryWeekDateValid = weekOfYearFromNowDate <= this.weekOfYear;
 	}
 
@@ -628,7 +624,6 @@ export class BasketOrderComponent implements OnInit, OnDestroy {
 		let tmpDeliveryDate = new Date(this.order.deliveryDate);
 		tmpDeliveryDate.setHours(23, 59, 59, 99);
 		let now = new Date();
-		console.log(now.getTime());
 		this.isDeliveryDateValid = tmpDeliveryDate.getTime() > now.getTime();
 	}
 

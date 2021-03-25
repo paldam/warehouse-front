@@ -24,6 +24,7 @@ import {RoutingState} from "../../routing-stage";
 import {AppConstants} from "../../constants";
 import {User} from "../../model/user.model";
 import {UserService} from "../../user.service";
+import * as moment from "moment";
 
 @Component({
 	selector: 'order-details',
@@ -117,16 +118,12 @@ export class OrderDetailsComponent
 		this.orderService.getFileList(this.orderId).subscribe(data => {
 			this.fileList = data;
 		});
-
 		basketService.getBasketsPage(
 			0, 20, "", "basketName", -1, false, [])
 			.subscribe((data: any) => {
 				this.baskets = data.basketsList;
 				this.totalRecords = data.totalRowsOfRequest;
 			});
-
-
-
 		this.orderService.getOrderAudit(this.orderId).subscribe(data => this.auditList = data);
 		this.customerService.getCustomers().subscribe(data => this.customers = data);
 		this.orderService.getCompany().subscribe(data => this.companyList = data);
@@ -191,14 +188,10 @@ export class OrderDetailsComponent
 	}
 
 	rowExpand(event) {
-
-		
-
 		if (event.data) {
 			this.expandedRowOrderId = event.data.basketId;
 			let index;
 			let dataTmp;
-
 			this.basketService.getBasket(event.data.basketId).subscribe(data => {
 				index = this.baskets.findIndex((value: Basket) => {
 					return value.basketId == event.data.basketId;
@@ -206,7 +199,6 @@ export class OrderDetailsComponent
 				dataTmp = data;
 				this.baskets[index].basketItems = dataTmp.basketItems;
 			})
-
 		}
 	}
 
@@ -449,8 +441,6 @@ export class OrderDetailsComponent
 				});
 				this.orderService.saveOrderFromCopy(this.order, this.originOrderIdCopy).subscribe(data => {
 					this.fileUploadElement.url = AppConstants.FILE_UPLOAD_URL + this.orderId;
-
-
 					this.fileUploadElement.upload();
 					setTimeout(() => {
 						this.router.navigateByUrl('/orders/all');
@@ -639,26 +629,16 @@ export class OrderDetailsComponent
 		});
 	}
 
-	getWeekNumber(d: Date): number {
-		d = new Date(d);
-		d.setHours(0, 0, 0);
-		d.setDate(d.getDate() + 4 - (d.getDay() || 7));
-		let yearStart = new Date(d.getFullYear(), 0, 1);
-		return Math.ceil((((d.valueOf() - yearStart.valueOf()) / 86400000) + 1) / 7)
-	}
-
 	OnWeekOfYearDateChange() {
-		this.weekOfYear = this.getWeekNumber(this.weekOfYearTmp)
+		let tmpDate = new Date(this.weekOfYearTmp);
+		tmpDate.setHours(23, 59, 59, 99);
+		this.weekOfYear = moment(tmpDate).isoWeek();
 		this.isDeliveryWeekValid();
 	}
 
 	isDeliveryWeekValid() {
-		let weekOfYearFromOrderDate = this.getWeekNumber(this.order.orderDate);
-		if (weekOfYearFromOrderDate > this.weekOfYear) {
-			this.isDeliveryWeekDateValid = false
-		} else {
-			this.isDeliveryWeekDateValid = true
-		}
+		let weekOfYearFromNowDate = moment(new Date()).isoWeek();
+		this.isDeliveryWeekDateValid = weekOfYearFromNowDate <= this.weekOfYear;
 	}
 
 	onDeliveryDataChange() {
