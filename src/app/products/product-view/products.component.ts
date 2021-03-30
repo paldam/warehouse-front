@@ -152,7 +152,11 @@ export class ProductsComponent implements OnInit,OnDestroy {
 	}
 
 	goToEditBasketPage(id) {
-		this.router.navigate(["/basket/detail/", id]);
+		this.showBasketsContainsSpecyficProductModal = false;
+		setTimeout(() => {
+			this.router.navigate(["/basket/detail/", id]);
+		}, 500);
+
 	}
 
 	ShowConfirmModal(product: Product) {
@@ -168,7 +172,7 @@ export class ProductsComponent implements OnInit,OnDestroy {
 			}
 		});
 	}
-
+k
 	getBasketsContainsSpecyficProduct(productId: number) {
 		this.showBasketsContainsSpecyficProductModal = true;
 		this.productsService.getBasketsContainSpecyficProduct(productId).subscribe(data => {
